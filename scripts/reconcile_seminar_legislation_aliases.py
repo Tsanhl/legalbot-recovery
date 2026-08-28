@@ -17,12 +17,10 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PARENT = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
 )
 DEFAULT_OUTPUT = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-legislation-alias-reconciliation-2026-08-26.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-alias-reconciliation-2026-08-26.json"
 )
 EXPECTED_PARENT_SCHEMA = "legalbot.seminar-gap-legislation-title-resolution.v1"
 REPORT_SCHEMA = "legalbot.seminar-gap-legislation-alias-reconciliation.v1"
@@ -45,9 +43,7 @@ ALIASES = {
     "Capital and Income) Act 2013": Alias(
         "Trusts (Capital and Income) Act 2013", "short_title_completion"
     ),
-    "CJI Act 2008": Alias(
-        "Criminal Justice and Immigration Act 2008", "abbreviation_expansion"
-    ),
+    "CJI Act 2008": Alias("Criminal Justice and Immigration Act 2008", "abbreviation_expansion"),
     "Consumer Contracts Regulations 2013": Alias(
         "The Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013",
         "short_title_completion",
@@ -90,9 +86,7 @@ ALIASES = {
         "Private International Law (Implementation of Agreements) Act 2020",
         "short_title_completion",
     ),
-    "Insanity) Act 1964": Alias(
-        "Criminal Procedure (Insanity) Act 1964", "short_title_completion"
-    ),
+    "Insanity) Act 1964": Alias("Criminal Procedure (Insanity) Act 1964", "short_title_completion"),
     "Investment) Regulations 2005": Alias(
         "The Occupational Pension Schemes (Investment) Regulations 2005",
         "short_title_completion",
@@ -121,12 +115,8 @@ ALIASES = {
         "The Personal and Occupational Pension Schemes (Pensions Ombudsman) Regulations 1996",
         "short_title_completion",
     ),
-    "Pensions Scheme Act 1993": Alias(
-        "Pension Schemes Act 1993", "typographical_normalisation"
-    ),
-    "Pensions Schemes Act 2021": Alias(
-        "Pension Schemes Act 2021", "typographical_normalisation"
-    ),
+    "Pensions Scheme Act 1993": Alias("Pension Schemes Act 1993", "typographical_normalisation"),
+    "Pensions Schemes Act 2021": Alias("Pension Schemes Act 2021", "typographical_normalisation"),
     "Preservation) Act 1929": Alias(
         "Infant Life (Preservation) Act 1929", "short_title_completion"
     ),
@@ -179,9 +169,7 @@ ALIASES = {
     "UK Internal Market Act 2020": Alias(
         "United Kingdom Internal Market Act 2020", "abbreviation_expansion"
     ),
-    "Withdrawal) Act 2018": Alias(
-        "European Union (Withdrawal) Act 2018", "short_title_completion"
-    ),
+    "Withdrawal) Act 2018": Alias("European Union (Withdrawal) Act 2018", "short_title_completion"),
     "Withdrawal Agreement) Act 2020": Alias(
         "European Union (Withdrawal Agreement) Act 2020", "short_title_completion"
     ),
@@ -323,9 +311,9 @@ def reconcile(*, parent_path: Path, timeout_seconds: float) -> dict[str, Any]:
         "active_pointer_written": False,
         "live_activation_authorized": False,
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     return report
 

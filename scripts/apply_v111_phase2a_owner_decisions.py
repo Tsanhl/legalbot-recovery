@@ -39,8 +39,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -157,10 +156,7 @@ def _apply_category(
         record["owner_review"] = review
         record["owner_decision_required"] = review["status"] == "OWNER_REQUESTED_MORE_EVIDENCE"
         applied.append(record)
-    if (
-        (require_complete_source_inventory and seen != set(source))
-        or len(applied) != len(entries)
-    ):
+    if (require_complete_source_inventory and seen != set(source)) or len(applied) != len(entries):
         raise ValueError("phase2a_decision_application_inventory_incomplete")
     return applied
 

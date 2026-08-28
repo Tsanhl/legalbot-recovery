@@ -46,9 +46,7 @@ def _canonical_json(value: Any) -> bytes:
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -306,9 +304,7 @@ def apply_approval(
     source_material = {
         "schema": "legalbot.v111.phase2a.owner-approved-source-admission-scope.v1",
         "status": "OWNER_APPROVED_AWAITING_ONE_CONSOLIDATED_SUCCESSOR_MANIFEST",
-        "source_owner_approved_package_content_sha256": package[
-            "approved_package_content_sha256"
-        ],
+        "source_owner_approved_package_content_sha256": package["approved_package_content_sha256"],
         "authority_count": len(authorities),
         "authority_identity_ids": sorted(authorities),
         "row_count": len(source_rows),
@@ -324,9 +320,7 @@ def apply_approval(
     rebind_material = {
         "schema": "legalbot.v111.phase2a.owner-approved-rebinding-scope.v1",
         "status": "OWNER_APPROVED_AWAITING_ONE_CONSOLIDATED_SUCCESSOR_DECISION",
-        "source_owner_approved_package_content_sha256": package[
-            "approved_package_content_sha256"
-        ],
+        "source_owner_approved_package_content_sha256": package["approved_package_content_sha256"],
         "row_count": len(rebind_rows),
         "rows": rebind_rows,
         "sealed_predecessor_mutated": False,

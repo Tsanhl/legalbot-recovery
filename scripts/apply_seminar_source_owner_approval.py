@@ -22,9 +22,7 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
-DEFAULT_SOURCE_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
-)
+DEFAULT_SOURCE_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
 DEFAULT_OUTPUT_ROOT = (
     OWNER_REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-approved"
 )
@@ -32,9 +30,7 @@ DEFAULT_OUTPUT_ROOT = (
 EXPECTED_APPROVAL_PAYLOAD_SHA256 = (
     "20e21e43aefc6348db5344782ddc3ab9d41a05c2c19aeb24b58a3fcd02371c73"
 )
-EXPECTED_DECISION_BATCH_SHA256 = (
-    "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
-)
+EXPECTED_DECISION_BATCH_SHA256 = "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
 EXPECTED_SOURCE_COUNT = 142
 EXPECTED_FAMILY_COUNTS = {"legislation": 43, "official_judgment": 99}
 EXPECTED_PACKET_FILES = frozenset(
@@ -79,15 +75,13 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json(value: Any) -> bytes:
-    return json.dumps(
-        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -149,9 +143,7 @@ def _write_exclusive(path: Path, raw: bytes) -> None:
         raise
 
 
-def _sealed_artifact(
-    schema: str, material: Mapping[str, Any], digest_field: str
-) -> dict[str, Any]:
+def _sealed_artifact(schema: str, material: Mapping[str, Any], digest_field: str) -> dict[str, Any]:
     payload = {"schema": schema, **material}
     return {**payload, digest_field: _sealed(payload)}
 
@@ -166,11 +158,7 @@ def _verify_packet_checksums(source_root: Path) -> str:
         if len(parts) != 2:
             raise ValueError("seminar_owner_approval_checksum_line_invalid")
         expected, name = parts
-        if (
-            not _SHA256.fullmatch(expected)
-            or Path(name).name != name
-            or name in observed_names
-        ):
+        if not _SHA256.fullmatch(expected) or Path(name).name != name or name in observed_names:
             raise ValueError("seminar_owner_approval_checksum_entry_invalid")
         path = source_root / name
         if path.is_symlink() or not path.is_file() or _sha256_file(path) != expected:
@@ -200,19 +188,16 @@ def _verify_source_packet(source_root: Path) -> dict[str, Any]:
     scope = payload.get("approval_scope_if_explicitly_owner_approved")
     records = batch.get("records")
     if (
-        payload.get("owner_decision_batch_content_sha256")
-        != EXPECTED_DECISION_BATCH_SHA256
+        payload.get("owner_decision_batch_content_sha256") != EXPECTED_DECISION_BATCH_SHA256
         or not isinstance(scope, Mapping)
         or scope.get("source_authority_count") != EXPECTED_SOURCE_COUNT
         or scope.get("source_admission_for_private_research_index") is not True
         or scope.get("retain_currentness_and_later_treatment_holds") is not True
         or scope.get("answer_release_eligible") is not False
         or scope.get("one_full_source_scan_authorized") is not True
-        or scope.get("one_successor_candidate_build_and_embedding_authorized")
-        is not True
+        or scope.get("one_successor_candidate_build_and_embedding_authorized") is not True
         or scope.get("successor_must_remain_non_active") is not True
-        or frozenset(payload.get("expressly_not_authorized", []))
-        != EXPECTED_NOT_AUTHORIZED
+        or frozenset(payload.get("expressly_not_authorized", [])) != EXPECTED_NOT_AUTHORIZED
         or batch.get("source_authority_count") != EXPECTED_SOURCE_COUNT
         or batch.get("source_family_counts") != EXPECTED_FAMILY_COUNTS
         or not isinstance(records, list)
@@ -254,9 +239,7 @@ def _verify_source_packet(source_root: Path) -> dict[str, Any]:
             raise ValueError("seminar_owner_approval_record_boundary_invalid")
         content_sha256 = str(selected.get("content_sha256") or "")
         version_sha256 = str(selected.get("version_sha256") or "")
-        if not _SHA256.fullmatch(content_sha256) or not _SHA256.fullmatch(
-            version_sha256
-        ):
+        if not _SHA256.fullmatch(content_sha256) or not _SHA256.fullmatch(version_sha256):
             raise ValueError("seminar_owner_approval_source_digest_invalid")
         source_keys.add(source_key)
         identities.add(identity)
@@ -289,9 +272,7 @@ def apply_approval(
 ) -> dict[str, Any]:
     if recorded_at.tzinfo is None:
         raise ValueError("seminar_owner_approval_recorded_at_naive")
-    if _normalize_statement(owner_statement) != _normalize_statement(
-        OWNER_APPROVAL_STATEMENT
-    ):
+    if _normalize_statement(owner_statement) != _normalize_statement(OWNER_APPROVAL_STATEMENT):
         raise ValueError("seminar_owner_approval_statement_not_exact")
     if output_root.exists() or output_root.is_symlink():
         raise ValueError("seminar_owner_approval_output_already_exists")
@@ -362,9 +343,7 @@ def apply_approval(
         {
             "status": "IMMUTABLE_EXACT_OWNER_APPROVAL_RECEIPT_NO_EXECUTION",
             "created_at": recorded_at.astimezone(UTC).isoformat(timespec="seconds"),
-            "approval_receipt_content_sha256": receipt[
-                "approval_receipt_content_sha256"
-            ],
+            "approval_receipt_content_sha256": receipt["approval_receipt_content_sha256"],
             "file_count": len(entries),
             "files": entries,
             "source_scan_started": False,
@@ -377,9 +356,7 @@ def apply_approval(
     index_name = "PACKAGE-INDEX.json"
     _write_exclusive(output_root / index_name, _pretty_json(package))
     checksum_names = (*indexed_names, index_name)
-    checksums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in checksum_names
-    )
+    checksums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in checksum_names)
     _write_exclusive(output_root / "SHA256SUMS.txt", checksums.encode())
     return {**receipt, "output_root": output_root}
 
@@ -400,9 +377,7 @@ def main() -> int:
         json.dumps(
             {
                 "output_root": str(result["output_root"]),
-                "approval_receipt_content_sha256": result[
-                    "approval_receipt_content_sha256"
-                ],
+                "approval_receipt_content_sha256": result["approval_receipt_content_sha256"],
                 "source_authority_count": result["source_authority_count"],
                 "source_scan_started": result["source_scan_started"],
                 "candidate_build_started": result["candidate_build_started"],

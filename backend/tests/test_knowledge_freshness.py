@@ -62,9 +62,7 @@ def test_source_change_is_durable_staging_only_and_idempotent(database, cipher) 
     assert first.writes_index is False
     assert first.stages_quarantine_only is True
     assert len(admitter.calls) == 1
-    row = database.fetchone(
-        "SELECT * FROM knowledge_update_events WHERE id=?", (first.event_id,)
-    )
+    row = database.fetchone("SELECT * FROM knowledge_update_events WHERE id=?", (first.event_id,))
     assert row is not None
     assert row["source_date"] == "1977-07-29"
     assert row["as_of_date"] == "2026-08-14"

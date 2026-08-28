@@ -27,8 +27,7 @@ DEFAULT_PARENT_MANIFEST = (
 )
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_MANIFEST = (
-    PROJECT_ROOT
-    / "config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json"
+    PROJECT_ROOT / "config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json"
 )
 EXPECTED_INGESTION_SCHEMA = "legalbot.seminar-gap-official-legislation-explicit-ingestion.v1"
 EXPECTED_PARENT_SCHEMA = "legalbot.seminar-gap-official-legislation-enacted-repair.v1"
@@ -223,8 +222,7 @@ def main() -> int:
     )
     _write_exclusive(
         args.manifest,
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
-        + b"\n",
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
     )
     print(
         json.dumps(
@@ -234,8 +232,7 @@ def main() -> int:
                     for target in manifest["targets"]
                 ),
                 "ready_count": sum(
-                    target["runtime_parser_status"] == "ready"
-                    for target in manifest["targets"]
+                    target["runtime_parser_status"] == "ready" for target in manifest["targets"]
                 ),
                 "target_count": len(manifest["targets"]),
             },

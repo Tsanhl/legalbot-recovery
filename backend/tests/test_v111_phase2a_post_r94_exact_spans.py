@@ -40,9 +40,7 @@ def _candidate(rank: int, chunk_id: str) -> dict[str, object]:
     return {**material, "candidate_content_sha256": verifier._sealed(material)}
 
 
-def _checkpoint_row(
-    *, status: str, candidates: object
-) -> dict[str, object]:
+def _checkpoint_row(*, status: str, candidates: object) -> dict[str, object]:
     material: dict[str, object] = {
         "schema": "legalbot.v111.phase2a.post-r94-candidate-recovery-row.v2",
         "ordinal": 1,
@@ -55,9 +53,7 @@ def _checkpoint_row(
         "planned_authority_ids": [],
         "planned_source_identities_in_candidate": [],
         "planned_authority_ids_outside_candidate": [],
-        "source_issue_registry_content_sha256": (
-            verifier.EXPECTED_ISSUE_REGISTRY_DIGEST
-        ),
+        "source_issue_registry_content_sha256": (verifier.EXPECTED_ISSUE_REGISTRY_DIGEST),
         "source_issue_registry_row_content_sha256": "1" * 64,
         "query": "example issue exact rule",
         "candidates": candidates,
@@ -74,9 +70,7 @@ def _recovery(row: dict[str, object]) -> dict[str, object]:
         "schema": "legalbot.v111.phase2a.post-r94-candidate-recovery-361.v2",
         "status": "ADVISORY_EXACT_CANDIDATE_RECOVERY_COMPLETE_OWNER_REVIEW_REQUIRED",
         "candidate_manifest_sha256": verifier.EXPECTED_CANDIDATE_MANIFEST_DIGEST,
-        "source_issue_registry_content_sha256": (
-            verifier.EXPECTED_ISSUE_REGISTRY_DIGEST
-        ),
+        "source_issue_registry_content_sha256": (verifier.EXPECTED_ISSUE_REGISTRY_DIGEST),
         "row_count": 1,
         "rows": [row],
         "deterministic_query_strategy": {
@@ -120,12 +114,8 @@ def test_static_findings_are_explicit_and_unknown_status_fails_closed() -> None:
         )
         is None
     )
-    with pytest.raises(
-        ValueError, match="phase2a_post_r94_span_recovery_status_invalid"
-    ):
-        verifier._static_finding(
-            {"row_id": "live30-q01:issue-01", "status": "UNSEEN_STATUS"}
-        )
+    with pytest.raises(ValueError, match="phase2a_post_r94_span_recovery_status_invalid"):
+        verifier._static_finding({"row_id": "live30-q01:issue-01", "status": "UNSEEN_STATUS"})
 
 
 def test_review_projection_preserves_full_text_and_records_omissions() -> None:
@@ -164,17 +154,13 @@ def test_recovery_loader_rejects_non_list_candidates_and_unknown_status(
     )
     malformed_path = tmp_path / "malformed.json"
     malformed_path.write_text(json.dumps(malformed), encoding="utf-8")
-    with pytest.raises(
-        ValueError, match="phase2a_post_r94_span_recovery_row_boundary_invalid"
-    ):
+    with pytest.raises(ValueError, match="phase2a_post_r94_span_recovery_row_boundary_invalid"):
         verifier._load_recovery(malformed_path)
 
     unknown = _recovery(_checkpoint_row(status="UNKNOWN", candidates=[]))
     unknown_path = tmp_path / "unknown.json"
     unknown_path.write_text(json.dumps(unknown), encoding="utf-8")
-    with pytest.raises(
-        ValueError, match="phase2a_post_r94_span_recovery_status_invalid"
-    ):
+    with pytest.raises(ValueError, match="phase2a_post_r94_span_recovery_status_invalid"):
         verifier._load_recovery(unknown_path)
 
 

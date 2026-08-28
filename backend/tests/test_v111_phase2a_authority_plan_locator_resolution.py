@@ -156,12 +156,8 @@ def test_source_candidate_prefers_in_ceiling_version_over_later_snapshot() -> No
 
 
 def test_explicit_source_or_snapshot_date_after_ceiling_is_rejected() -> None:
-    assert resolver._record_is_after_target_ceiling(
-        {"as_of_date": "2026-08-15"}
-    )
-    assert resolver._record_is_after_target_ceiling(
-        {"source_date": "2026-08-15", "as_of_date": ""}
-    )
+    assert resolver._record_is_after_target_ceiling({"as_of_date": "2026-08-15"})
+    assert resolver._record_is_after_target_ceiling({"source_date": "2026-08-15", "as_of_date": ""})
     assert resolver._record_is_after_target_ceiling(
         {"stable_identifier": "ukpga:1990:18:latest-available@2026-08-17"}
     )

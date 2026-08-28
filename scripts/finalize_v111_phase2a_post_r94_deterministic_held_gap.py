@@ -25,30 +25,20 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 DEFAULT_R100_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r100-debugged-held-exact-span-repair"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r100-debugged-held-exact-span-repair"
 )
-DEFAULT_R98D_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r98d-candidate-recovery"
-)
+DEFAULT_R98D_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r98d-candidate-recovery"
 DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r101-deterministic-held-gap-resolution"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r101-deterministic-held-gap-resolution"
 )
 
 R100_ARTIFACT_NAME = "REPAIRED-EXACT-SPAN-ADVISORY-361.json"
 R100_REPAIR_NAME = "DEBUGGED-HELD-REPAIRS-95.json"
-R100_DIAGNOSTIC_RELATIVE_PATH = (
-    "diagnostics/008-24128cbf0ebeb29b4170e23d.json"
-)
+R100_DIAGNOSTIC_RELATIVE_PATH = "diagnostics/008-24128cbf0ebeb29b4170e23d.json"
 R98D_ARTIFACT_NAME = "CANDIDATE-RECOVERY-361.json"
 
-EXPECTED_R100_CONTENT_SHA256 = (
-    "ca28380093dfdae60715ffa2ac47aadce84cbfe8e0d0cdd6664869f04da543a6"
-)
-EXPECTED_R100_FILE_SHA256 = (
-    "742b1a2cae86d489285366c1b6d9d81849ca1b36f63302a8e32112b894d920d5"
-)
+EXPECTED_R100_CONTENT_SHA256 = "ca28380093dfdae60715ffa2ac47aadce84cbfe8e0d0cdd6664869f04da543a6"
+EXPECTED_R100_FILE_SHA256 = "742b1a2cae86d489285366c1b6d9d81849ca1b36f63302a8e32112b894d920d5"
 EXPECTED_R100_REPAIR_CONTENT_SHA256 = (
     "a2746b69c764e05dc00f7bfbd00d5ed425c328ce8ccfd38de09c66fd944e8eb2"
 )
@@ -61,12 +51,8 @@ EXPECTED_R100_DIAGNOSTIC_CONTENT_SHA256 = (
 EXPECTED_R100_DIAGNOSTIC_FILE_SHA256 = (
     "d592240ae8418c08c01559a533b355d1a9711bdb82643cb1431b6e1c1b2a91e0"
 )
-EXPECTED_R98D_CONTENT_SHA256 = (
-    "ad1d23ce7feabbd8936eb083fe678be2028f4723b60ffb8b42228a220de02ebf"
-)
-EXPECTED_R98D_FILE_SHA256 = (
-    "94d729a2eb802b05b25c36d0f8a9bd7a5b7095cfac885e1ec11a8712a937c3f6"
-)
+EXPECTED_R98D_CONTENT_SHA256 = "ad1d23ce7feabbd8936eb083fe678be2028f4723b60ffb8b42228a220de02ebf"
+EXPECTED_R98D_FILE_SHA256 = "94d729a2eb802b05b25c36d0f8a9bd7a5b7095cfac885e1ec11a8712a937c3f6"
 HELD_ROW_ID = "live60-q50:issue-07"
 EXPECTED_PLANNED_AUTHORITIES = (
     "neutral-citation:[2012] EWCA Civ 638",
@@ -83,15 +69,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -127,11 +110,7 @@ def _verify_seal(
 ) -> str:
     material = dict(value)
     supplied = str(material.pop(field, ""))
-    if (
-        not _SHA256.fullmatch(supplied)
-        or supplied != expected
-        or supplied != _sealed(material)
-    ):
+    if not _SHA256.fullmatch(supplied) or supplied != expected or supplied != _sealed(material):
         raise ValueError(code)
     return supplied
 
@@ -241,9 +220,7 @@ def build_resolution(
         for item in repair["findings"]
         if str(item.get("assessment", "")).startswith("HELD_")
     ]
-    recovery_rows = {
-        str(item.get("row_id")): item for item in r98d["rows"]
-    }
+    recovery_rows = {str(item.get("row_id")): item for item in r98d["rows"]}
     if (
         len(held) != 1
         or len(repair_held) != 1
@@ -263,16 +240,19 @@ def build_resolution(
     planned = tuple(recovery.get("planned_authority_ids_outside_candidate", []))
     if (
         recovery.get("issue_label") != EXPECTED_ISSUE_LABEL
-        or recovery.get("official_source_search_query")
-        != EXPECTED_OFFICIAL_SOURCE_SEARCH_QUERY
-        or recovery.get("status")
-        != "EXACT_CANDIDATE_CHUNKS_READY_FOR_SPAN_VERIFICATION"
+        or recovery.get("official_source_search_query") != EXPECTED_OFFICIAL_SOURCE_SEARCH_QUERY
+        or recovery.get("status") != "EXACT_CANDIDATE_CHUNKS_READY_FOR_SPAN_VERIFICATION"
         or recovery.get("planned_source_identities_in_candidate") != []
         or planned != EXPECTED_PLANNED_AUTHORITIES
         or not isinstance(candidates, list)
         or len(candidates) != 6
-        or any(candidate.get("already_in_exact_sealed_candidate") is not True for candidate in candidates)
-        or any(candidate.get("candidate_manifest_source_bound") is not True for candidate in candidates)
+        or any(
+            candidate.get("already_in_exact_sealed_candidate") is not True
+            for candidate in candidates
+        )
+        or any(
+            candidate.get("candidate_manifest_source_bound") is not True for candidate in candidates
+        )
     ):
         raise ValueError("phase2a_r101_recovery_evidence_changed")
 
@@ -289,16 +269,12 @@ def build_resolution(
         "issue_label": EXPECTED_ISSUE_LABEL,
         "official_source_search_query": EXPECTED_OFFICIAL_SOURCE_SEARCH_QUERY,
         "planned_authority_ids_outside_candidate": list(planned),
-        "inspected_candidate_chunk_ids": [
-            str(candidate["chunk_id"]) for candidate in candidates
-        ],
+        "inspected_candidate_chunk_ids": [str(candidate["chunk_id"]) for candidate in candidates],
         "inspected_candidate_binding_sha256s": [
             str(candidate["candidate_content_sha256"]) for candidate in candidates
         ],
         "source_r100_held_finding_sha256": _sealed(held[0]),
-        "source_r100_diagnostic_content_sha256": diagnostic[
-            "diagnostic_content_sha256"
-        ],
+        "source_r100_diagnostic_content_sha256": diagnostic["diagnostic_content_sha256"],
         "conservative_no_support_outcome": True,
         "additional_model_invocations": 0,
         "model_output_text_salvaged": False,
@@ -311,13 +287,9 @@ def build_resolution(
         "record_content_sha256": _sealed(disposition_material),
     }
     merged_findings = [
-        disposition if item["row_id"] == HELD_ROW_ID else dict(item)
-        for item in r100["findings"]
+        disposition if item["row_id"] == HELD_ROW_ID else dict(item) for item in r100["findings"]
     ]
-    if any(
-        str(item.get("assessment", "")).startswith("HELD_")
-        for item in merged_findings
-    ):
+    if any(str(item.get("assessment", "")).startswith("HELD_") for item in merged_findings):
         raise ValueError("phase2a_r101_resolution_still_held")
     counts = Counter(str(item["assessment"]) for item in merged_findings)
     if counts != Counter(
@@ -331,20 +303,13 @@ def build_resolution(
 
     merged_material = {
         "schema": (
-            "legalbot.v111.phase2a.post-r94-exact-span-advisory-361-"
-            "deterministically-complete.v1"
+            "legalbot.v111.phase2a.post-r94-exact-span-advisory-361-deterministically-complete.v1"
         ),
         "status": "ADVISORY_EXACT_SPAN_CLASSIFICATION_COMPLETE_OWNER_REVIEW_REQUIRED",
-        "source_r100_artifact_content_sha256": r100[
-            "artifact_content_sha256"
-        ],
+        "source_r100_artifact_content_sha256": r100["artifact_content_sha256"],
         "source_r100_artifact_file_sha256": EXPECTED_R100_FILE_SHA256,
-        "source_r100_repair_artifact_content_sha256": repair[
-            "artifact_content_sha256"
-        ],
-        "source_r98d_artifact_content_sha256": r98d[
-            "artifact_content_sha256"
-        ],
+        "source_r100_repair_artifact_content_sha256": repair["artifact_content_sha256"],
+        "source_r98d_artifact_content_sha256": r98d["artifact_content_sha256"],
         "row_count": len(merged_findings),
         "assessment_counts": dict(sorted(counts.items())),
         "positive_binding_count": 38,
@@ -370,12 +335,8 @@ def build_resolution(
     disposition_artifact_material = {
         "schema": "legalbot.v111.phase2a.post-r94-deterministic-held-resolution.v1",
         "status": "SOLE_R100_HELD_ROW_RETAINED_AS_MATERIAL_GAP_ADVISORY",
-        "source_r100_artifact_content_sha256": r100[
-            "artifact_content_sha256"
-        ],
-        "source_r98d_artifact_content_sha256": r98d[
-            "artifact_content_sha256"
-        ],
+        "source_r100_artifact_content_sha256": r100["artifact_content_sha256"],
+        "source_r98d_artifact_content_sha256": r98d["artifact_content_sha256"],
         "row_count": 1,
         "records": [disposition],
         "additional_model_invocations": 0,
@@ -397,9 +358,7 @@ def build_resolution(
     if stat.S_IMODE(output_root.stat().st_mode) != 0o700:
         raise ValueError("phase2a_r101_output_mode_invalid")
     files = {
-        "DETERMINISTIC-HELD-GAP-DISPOSITION-1.json": _pretty_json(
-            disposition_artifact
-        ),
+        "DETERMINISTIC-HELD-GAP-DISPOSITION-1.json": _pretty_json(disposition_artifact),
         "COMPLETE-EXACT-SPAN-ADVISORY-361.json": _pretty_json(merged),
         "OUTCOME.txt": (
             b"EXACT-SPAN ADVISORY CLASSIFICATION COMPLETE. OWNER DECISIONS "
@@ -408,9 +367,7 @@ def build_resolution(
     }
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in sorted(files)
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in sorted(files))
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return merged
 
@@ -434,9 +391,7 @@ def main() -> None:
                 "remaining_held_row_count": artifact["remaining_held_row_count"],
                 "output_root": str(args.output_root.resolve()),
                 "phase2b_authorized": artifact["phase2b_authorized"],
-                "development30_authorized": artifact[
-                    "development30_authorized"
-                ],
+                "development30_authorized": artifact["development30_authorized"],
             },
             sort_keys=True,
         )

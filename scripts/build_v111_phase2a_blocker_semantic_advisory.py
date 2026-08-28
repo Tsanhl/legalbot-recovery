@@ -42,9 +42,7 @@ FALLBACK_PATH = (
 )
 CASES_PATH = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
 MANIFEST_PATH = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/manifest.json"
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-28-blocker-semantic-advisory-r1"
-)
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-28-blocker-semantic-advisory-r1"
 
 EXPECTED_FILE_HASHES = {
     R3_PATH: "7cb044a4c9539162281e10ac41e5e0cb1f0cd846b0eb597a0443b0e67fb48899",
@@ -142,8 +140,7 @@ def main() -> None:
     package_path = output / "PACKAGE-MANIFEST.json"
     _write_new(package_path, _canonical(package))
     checksums = "\n".join(
-        f"{_sha256(path.read_bytes())}  {path.name}"
-        for path in (advisory_path, package_path)
+        f"{_sha256(path.read_bytes())}  {path.name}" for path in (advisory_path, package_path)
     )
     _write_new(output / "SHA256SUMS.txt", (checksums + "\n").encode("utf-8"))
     print(

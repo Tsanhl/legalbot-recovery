@@ -25,24 +25,16 @@ from .phase2a_successor_qualification import content_sha256, sealed
 SCHEMA = "legalbot.v111.phase2a.blocker-semantic-routing-advisory.v1"
 ROW_SCHEMA = "legalbot.v111.phase2a.blocker-semantic-routing-row.v1"
 
-R3_REPORT_CONTENT_SHA256 = (
-    "5efc17b16adcae1ceb2ea1bbd7efcaba469ab0340c24b65c1e994132cb337980"
-)
-ORIGINAL_PACKET_CONTENT_SHA256 = (
-    "93ad9113af76896f0570a3666c446472af7587b7e3ff32b7464e670777ec6b6c"
-)
+R3_REPORT_CONTENT_SHA256 = "5efc17b16adcae1ceb2ea1bbd7efcaba469ab0340c24b65c1e994132cb337980"
+ORIGINAL_PACKET_CONTENT_SHA256 = "93ad9113af76896f0570a3666c446472af7587b7e3ff32b7464e670777ec6b6c"
 FALLBACK_ADVISORY_CONTENT_SHA256 = (
     "035316cac6f9559744400bc9db7c05bdf74a85c7d120c59eae5cfc41f0462af8"
 )
 CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 MANIFEST_FILE_SHA256 = "b7a92403c13220e7dbb17d6e72e5342de024b974d425e56494ef92b23ca89072"
 
-EXPECTED_R3_BLOCKER_SET_SHA256 = (
-    "b9c03979b9cc4891cc513bc1aa9b768b7fbaf8f80b5ccdbcfbfe227c02faf175"
-)
-EXPECTED_FALLBACK_ROW_IDS = frozenset(
-    {"live60-q58:issue-09", "live60-q58:issue-14"}
-)
+EXPECTED_R3_BLOCKER_SET_SHA256 = "b9c03979b9cc4891cc513bc1aa9b768b7fbaf8f80b5ccdbcfbfe227c02faf175"
+EXPECTED_FALLBACK_ROW_IDS = frozenset({"live60-q58:issue-09", "live60-q58:issue-14"})
 
 # Human-reviewed against the complete proposition and every raw hold for each
 # row, not inferred from the issue label.  These rows have no separate missing
@@ -218,7 +210,9 @@ def build_blocker_semantic_advisory(
         or not isinstance(contract, Mapping)
         or contract.get("dual_legal_source_and_fact_gap_fallback_prohibited") is not True
         or contract.get("fallback_must_not_hide_a_legal_knowledge_or_source_gap") is not True
-        or contract.get("strict_fact_only_requires_no_unresolved_legal_authority_currentness_later_treatment_jurisdiction_or_evidence_identity_blocker")
+        or contract.get(
+            "strict_fact_only_requires_no_unresolved_legal_authority_currentness_later_treatment_jurisdiction_or_evidence_identity_blocker"
+        )
         is not True
         or not isinstance(remaining, Mapping)
         or remaining.get("automatic_safe_fallback_eligibility") is not False
@@ -230,9 +224,7 @@ def build_blocker_semantic_advisory(
     if not isinstance(decisions, list) or len(decisions) != 361:
         raise ValueError("phase2a_semantic_advisory_decision_inventory_changed")
     decision_by_row = {
-        str(decision["row_id"]): decision
-        for decision in decisions
-        if isinstance(decision, Mapping)
+        str(decision["row_id"]): decision for decision in decisions if isinstance(decision, Mapping)
     }
     if len(decision_by_row) != 361:
         raise ValueError("phase2a_semantic_advisory_decision_identity_duplicate")
@@ -258,9 +250,7 @@ def build_blocker_semantic_advisory(
         decision = decision_by_row.get(row_id)
         if registry_row is None or decision is None:
             raise ValueError("phase2a_semantic_advisory_upstream_row_missing")
-        if decision.get("decision_content_sha256") != report_row.get(
-            "decision_content_sha256"
-        ):
+        if decision.get("decision_content_sha256") != report_row.get("decision_content_sha256"):
             raise ValueError("phase2a_semantic_advisory_decision_binding_changed")
 
         components = report_row.get("blocking_components")
@@ -335,9 +325,7 @@ def build_blocker_semantic_advisory(
                 "component_ordinal": component["component_ordinal"],
                 "proposition_text_sha256": component["proposition_text_sha256"],
                 "support_fit": component["support_fit"],
-                "deterministic_blocker_reason_code": component[
-                    "deterministic_blocker_reason_code"
-                ],
+                "deterministic_blocker_reason_code": component["deterministic_blocker_reason_code"],
                 "authority_content_sha256s": [
                     authority["authority_content_sha256"]
                     for authority in component.get("authorities", [])
@@ -383,8 +371,7 @@ def build_blocker_semantic_advisory(
     mixed_problem = sorted(
         row["row_id"]
         for row in rows
-        if row["semantic_category_proposal"]
-        == "MIXED_LEGAL_EVIDENCE_AND_MATTER_INFORMATION"
+        if row["semantic_category_proposal"] == "MIXED_LEGAL_EVIDENCE_AND_MATTER_INFORMATION"
     )
     mixed_other = sorted(
         row["row_id"]

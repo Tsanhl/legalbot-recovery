@@ -141,9 +141,7 @@ def reconcile_embedding_checkpoint_to_observed_prefix(
         }
 
     summary = summarize_expected_prefix(expected_rows, len(observed_rows))
-    lane_counts = Counter(
-        {str(key): 0 for key in dict(checkpoint.physical_lane_counts)}
-    )
+    lane_counts = Counter({str(key): 0 for key in dict(checkpoint.physical_lane_counts)})
     lane_counts.update(summary["physical_lane_counts"])
     reconciled = build_checkpoint(
         build_id=checkpoint.build_id,
@@ -187,9 +185,7 @@ def reconcile_embedding_checkpoint_to_observed_prefix(
         "new_checkpoint_file_sha256": _sha256_file(checkpoint_path(staging)),
         "exact_ordered_prefix": True,
         "ordered_prefix_rolling_digest": reconciled.rolling_digest,
-        "ordered_prefix_last_deterministic_chunk_key": (
-            reconciled.last_deterministic_chunk_key
-        ),
+        "ordered_prefix_last_deterministic_chunk_key": (reconciled.last_deterministic_chunk_key),
         "physical_lane_counts": dict(reconciled.physical_lane_counts),
         "source_bytes_changed": False,
         "source_scope_changed": False,
@@ -505,9 +501,10 @@ def resume_lease_lost_index_build(
             raise RuntimeError("lease-loss recovery attempt count changed")
         if str(job["pinned_index_build_id"] or "") != expected_build_id:
             raise RuntimeError("lease-loss recovery pinned build changed")
-        if str(job["error_code"] or "") != "lease_lost" or str(
-            job["terminal_reason_code"] or ""
-        ) != "lease_lost":
+        if (
+            str(job["error_code"] or "") != "lease_lost"
+            or str(job["terminal_reason_code"] or "") != "lease_lost"
+        ):
             raise RuntimeError("lease-loss recovery terminal reason changed")
         if bool(job["cancel_requested"]):
             cleared = connection.execute(
@@ -611,9 +608,7 @@ def resume_index_build(
                 "reconcile the ordered prefix before resume"
             )
         if report.get("resumable") is not True:
-            raise RuntimeError(
-                "incomplete staging is not resumable from its exact checkpoint"
-            )
+            raise RuntimeError("incomplete staging is not resumable from its exact checkpoint")
     if (
         str(build["status"]) == "failed"
         and str(build["failure_reason_code"] or "") == "stage_timeout"

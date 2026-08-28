@@ -40,9 +40,7 @@ ADDITIONAL_RELATIONSHIPS = (
     / "LegalBot-Phase2AB-2026-08-25-r58-additional-treatment-advisory"
     / "ADDITIONAL-LATER-TREATMENT-RELATIONSHIPS-ADVISORY-5.json"
 )
-BOUNDED_SEARCH_LOG = (
-    PROJECT_ROOT / "config/phase2a_bounded_judgment_search_log.2026-08-25.v1.json"
-)
+BOUNDED_SEARCH_LOG = PROJECT_ROOT / "config/phase2a_bounded_judgment_search_log.2026-08-25.v1.json"
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
     / "data/evaluations/phase2a-owner-review"
@@ -67,15 +65,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -106,11 +101,7 @@ def _load_object(path: Path) -> dict[str, Any]:
 def _verify_seal(value: Mapping[str, Any], *, expected: str, code: str) -> str:
     material = dict(value)
     supplied = str(material.pop("artifact_content_sha256", ""))
-    if (
-        not _SHA256.fullmatch(supplied)
-        or supplied != _sealed(material)
-        or supplied != expected
-    ):
+    if not _SHA256.fullmatch(supplied) or supplied != _sealed(material) or supplied != expected:
         raise ValueError(code)
     return supplied
 
@@ -130,8 +121,7 @@ def _write_exclusive(path: Path, raw: bytes) -> None:
 def _validate_bounded_log(value: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
     records = value.get("records")
     if (
-        value.get("schema")
-        != "legalbot.v111.phase2a.bounded-judgment-search-log.v1"
+        value.get("schema") != "legalbot.v111.phase2a.bounded-judgment-search-log.v1"
         or value.get("as_of_date") != "2026-08-14"
         or value.get("record_count") != 5
         or value.get("search_is_exhaustive") is not False
@@ -149,8 +139,7 @@ def _validate_bounded_log(value: Mapping[str, Any]) -> dict[str, dict[str, Any]]
             not isinstance(record, dict)
             or record.get("neutral_citation") not in EXPECTED_NO_LEAD_CITATIONS
             or record.get("candidate_later_treatment_leads_identified") != []
-            or record.get("proposed_owner_outcome")
-            != "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED"
+            or record.get("proposed_owner_outcome") != "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED"
             or not isinstance(record.get("queries"), list)
             or len(record["queries"]) != 2
         ):
@@ -217,9 +206,7 @@ def _source_admission_proposals(
                     "target_neutral_citation": str(row["target_neutral_citation"]),
                     "advisory_relationship": str(row["advisory_relationship"]),
                     "recommended_owner_outcome": str(row["recommended_owner_outcome"]),
-                    "relationship_record_content_sha256": str(
-                        row["record_content_sha256"]
-                    ),
+                    "relationship_record_content_sha256": str(row["record_content_sha256"]),
                 }
                 for row in rows
             ],
@@ -266,9 +253,7 @@ def build_consolidated_judgment_advisory(
     original = _load_object(original_relationships_path)
     additional = _load_object(additional_relationships_path)
     source_digests = {
-        "base": _verify_seal(
-            base, expected=EXPECTED_DIGESTS["base"], code="base_seal_invalid"
-        ),
+        "base": _verify_seal(base, expected=EXPECTED_DIGESTS["base"], code="base_seal_invalid"),
         "no_reliance": _verify_seal(
             no_reliance,
             expected=EXPECTED_DIGESTS["no_reliance"],
@@ -325,9 +310,7 @@ def build_consolidated_judgment_advisory(
     consolidated: list[dict[str, Any]] = []
     category_counts: dict[str, int] = defaultdict(int)
     for base_row in base_records:
-        if not isinstance(base_row, dict) or not isinstance(
-            base_row.get("judgment_record"), dict
-        ):
+        if not isinstance(base_row, dict) or not isinstance(base_row.get("judgment_record"), dict):
             raise ValueError("phase2a_consolidated_judgment_base_record_invalid")
         judgment = base_row["judgment_record"]
         source_version_id = str(judgment.get("source_version_id") or "")
@@ -336,19 +319,14 @@ def build_consolidated_judgment_advisory(
         exclusion = excluded_by_id.get(source_version_id)
         search = search_by_id.get(source_version_id)
         categories_present = sum(
-            value is not None and value != []
-            for value in (exclusion, relation_rows, search)
+            value is not None and value != [] for value in (exclusion, relation_rows, search)
         )
         if categories_present != 1:
             raise ValueError("phase2a_consolidated_judgment_category_coverage_invalid")
         if exclusion is not None:
             category = "NO_585_PROPOSITION_RELIANCE"
             recommendation = "EXCLUDE_BECAUSE_NO_585_PROPOSITION_RELIANCE"
-            evidence = {
-                "no_reliance_record_content_sha256": exclusion[
-                    "record_content_sha256"
-                ]
-            }
+            evidence = {"no_reliance_record_content_sha256": exclusion["record_content_sha256"]}
         elif relation_rows:
             category = "EXACT_LATER_TREATMENT_RELATIONSHIP_IDENTIFIED"
             if citation == "[2021] UKSC 20":
@@ -357,9 +335,7 @@ def build_consolidated_judgment_advisory(
             else:
                 outcomes = {str(row["recommended_owner_outcome"]) for row in relation_rows}
                 if len(outcomes) != 1:
-                    raise ValueError(
-                        "phase2a_consolidated_judgment_relationship_outcome_conflict"
-                    )
+                    raise ValueError("phase2a_consolidated_judgment_relationship_outcome_conflict")
                 recommendation = outcomes.pop()
                 material_note = None
             evidence = {
@@ -405,9 +381,7 @@ def build_consolidated_judgment_advisory(
         consolidated.append({**material, "record_content_sha256": _sealed(material)})
         category_counts[category] += 1
 
-    if len(consolidated) != 20 or {row["ordinal"] for row in consolidated} != set(
-        range(1, 21)
-    ):
+    if len(consolidated) != 20 or {row["ordinal"] for row in consolidated} != set(range(1, 21)):
         raise ValueError("phase2a_consolidated_judgment_final_coverage_invalid")
     source_proposals = _source_admission_proposals(relationship_rows)
     material = {
@@ -447,8 +421,7 @@ def build_consolidated_judgment_advisory(
     )
     _write_exclusive(output_root / "OUTCOME.txt", outcome.encode())
     sums = "".join(
-        f"{_sha256_file(output_root / item)}  {item}\n"
-        for item in (name, "OUTCOME.txt")
+        f"{_sha256_file(output_root / item)}  {item}\n" for item in (name, "OUTCOME.txt")
     )
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode())
     return artifact
@@ -503,9 +476,7 @@ def main() -> int:
             {
                 "artifact_content_sha256": result["artifact_content_sha256"],
                 "record_count": result["record_count"],
-                "source_admission_proposal_count": result[
-                    "source_admission_proposal_count"
-                ],
+                "source_admission_proposal_count": result["source_admission_proposal_count"],
                 "owner_decisions_applied": result["owner_decisions_applied"],
                 "phase2b_authorized": result["phase2b_authorized"],
                 "development30_authorized": result["development30_authorized"],

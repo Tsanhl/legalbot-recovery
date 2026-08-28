@@ -164,9 +164,7 @@ class OwnerCanaryPolicyBindings(BaseModel):
     relevance_threshold_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     semantic_relevance_threshold: float = Field(ge=0.0, le=1.0)
     ai_reviewer_role: Literal["ai_evidence_reviewer"]
-    ai_reviewer_execution_mode: Literal[
-        "separate_verification_pass_same_model_adapter"
-    ]
+    ai_reviewer_execution_mode: Literal["separate_verification_pass_same_model_adapter"]
     ai_reviewer_model_independent: Literal[False]
     ai_reviewer_prompt_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     ai_reviewer_policy_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -227,9 +225,7 @@ def _relevance_policy_for_authorization(
     return policy
 
 
-def owner_canary_policy_bindings(
-    *, settings: Settings | None = None
-) -> OwnerCanaryPolicyBindings:
+def owner_canary_policy_bindings(*, settings: Settings | None = None) -> OwnerCanaryPolicyBindings:
     """Build policy bindings entirely from tracked local identities."""
 
     implementations = quality_implementation_identities()

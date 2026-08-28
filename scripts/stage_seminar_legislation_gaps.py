@@ -18,8 +18,7 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RESOLUTION = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
 )
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
@@ -123,9 +122,7 @@ def _write_exclusive(path: Path, raw: bytes) -> None:
         raise
 
 
-def _current_exact_title_rows(
-    connection: sqlite3.Connection, title: str
-) -> list[sqlite3.Row]:
+def _current_exact_title_rows(connection: sqlite3.Connection, title: str) -> list[sqlite3.Row]:
     return connection.execute(
         """
         SELECT sv.version_sha256, sv.review_status, d.status, d.lane, d.media_type
@@ -170,9 +167,7 @@ def stage(
             str(value) for value in record.get("presentation_subjects", [])
         )
 
-    connection = sqlite3.connect(
-        f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True
-    )
+    connection = sqlite3.connect(f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True)
     connection.row_factory = sqlite3.Row
     targets: list[dict[str, Any]] = []
     already_catalogued: list[dict[str, Any]] = []
@@ -296,8 +291,7 @@ def main() -> int:
     )
     _write_exclusive(
         args.manifest,
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
-        + b"\n",
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
     )
     print(
         json.dumps(

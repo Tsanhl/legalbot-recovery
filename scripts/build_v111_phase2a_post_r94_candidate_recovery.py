@@ -42,46 +42,27 @@ DEFAULT_REMAINING = (
     / "LegalBot-Phase2AB-2026-08-26-r96-approved-binding-reconciliation"
     / "REMAINING-PHASE2A-RESEARCH-ROWS-361.json"
 )
-DEFAULT_CASES = (
-    PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
-)
+DEFAULT_CASES = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
 DEFAULT_ISSUE_REGISTRY = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r71-gap-triage"
-    / "ISSUE-GAP-TRIAGE-448.json"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r71-gap-triage" / "ISSUE-GAP-TRIAGE-448.json"
 )
-DEFAULT_BUILD_ROOT = (
-    PROJECT_ROOT
-    / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
-)
+DEFAULT_BUILD_ROOT = PROJECT_ROOT / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
 DEFAULT_CANDIDATE_MANIFEST = DEFAULT_BUILD_ROOT / "approved-source-manifest.json"
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r98d-candidate-recovery"
-)
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r98d-candidate-recovery"
 DEFAULT_EMBEDDING_MODEL = PROJECT_ROOT / "models/retrieval/Qwen3-Embedding-0.6B"
 DEFAULT_RERANKER_MODEL = PROJECT_ROOT / "models/retrieval/Qwen3-Reranker-0.6B"
 
-EXPECTED_REMAINING_DIGEST = (
-    "213d809d3dd9ee26b2a7e516a856d86efbd28bd2b607ad1cee03046b6dfac63e"
-)
-EXPECTED_ISSUE_REGISTRY_DIGEST = (
-    "d813a1fdc1b9b6f2d6c67b0ac2c113af696343cc8c619355c74ee8654beca475"
-)
-EXPECTED_R96_PACKAGE_DIGEST = (
-    "967f8993e4f06f98f5099c8b0f360eeeef839716d7d7838d84348b472f84978b"
-)
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+EXPECTED_REMAINING_DIGEST = "213d809d3dd9ee26b2a7e516a856d86efbd28bd2b607ad1cee03046b6dfac63e"
+EXPECTED_ISSUE_REGISTRY_DIGEST = "d813a1fdc1b9b6f2d6c67b0ac2c113af696343cc8c619355c74ee8654beca475"
+EXPECTED_R96_PACKAGE_DIGEST = "967f8993e4f06f98f5099c8b0f360eeeef839716d7d7838d84348b472f84978b"
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 EXPECTED_CANDIDATE_MANIFEST_DIGEST = (
     "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0"
 )
 EXPECTED_BUILD_MANIFEST_FILE_SHA256 = (
     "e28a4138e87cfeb2502e746073208ab25a647de8082a3c7fe96a44ed7d5cc74a"
 )
-EXPECTED_LANCE_TREE_SHA256 = (
-    "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705"
-)
+EXPECTED_LANCE_TREE_SHA256 = "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705"
 EXPECTED_ROW_COUNT = 361
 EXPECTED_ISSUE_REGISTRY_ROW_COUNT = 448
 EXPECTED_SOURCE_COUNT = 85
@@ -122,8 +103,7 @@ class CandidateBindingError(ValueError):
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -280,9 +260,7 @@ def _enrich_remaining_rows(
         ):
             raise ValueError("phase2a_candidate_recovery_issue_registry_mapping_invalid")
         planned = issue.get("planned_authorities")
-        if not isinstance(planned, list) or any(
-            not isinstance(item, dict) for item in planned
-        ):
+        if not isinstance(planned, list) or any(not isinstance(item, dict) for item in planned):
             raise ValueError("phase2a_candidate_recovery_registry_plan_invalid")
         planned_authority_ids: list[str] = []
         for item in planned:
@@ -299,9 +277,7 @@ def _enrich_remaining_rows(
                 "legal_domain": issue["legal_domain"],
                 "triage_class": issue["triage_class"],
                 "registry_planned_authority_ids": planned_authority_ids,
-                "source_issue_registry_row_content_sha256": issue[
-                    "record_content_sha256"
-                ],
+                "source_issue_registry_row_content_sha256": issue["record_content_sha256"],
             }
         )
     if len(enriched) != EXPECTED_ROW_COUNT:
@@ -390,9 +366,7 @@ def _verify_build(build_root: Path, manifest_digest: str) -> dict[str, Any]:
     }
 
 
-def _build_query(
-    *, issue_label: str, legal_domain: str, subject: str
-) -> str:
+def _build_query(*, issue_label: str, legal_domain: str, subject: str) -> str:
     if not issue_label.strip() or not legal_domain.strip() or not subject.strip():
         raise ValueError("phase2a_candidate_recovery_query_fields_missing")
     query = " ".join(
@@ -486,10 +460,7 @@ def _select_route_diverse_candidates(
     if len(fused) != len(scores):
         raise ValueError("phase2a_candidate_recovery_reranker_result_invalid")
     ranked = sorted(
-        (
-            (dict(candidate), float(score))
-            for candidate, score in zip(fused, scores, strict=True)
-        ),
+        ((dict(candidate), float(score)) for candidate, score in zip(fused, scores, strict=True)),
         key=lambda item: (
             -item[1],
             -float(item[0]["rrf_score"]),
@@ -587,9 +558,7 @@ def _real_embedder(model_path: Path) -> tuple[EmbedQueries, dict[str, Any]]:
     identity = {
         "model_repo": retrieval_service.PINNED_EMBEDDING_REPO,
         "model_revision": retrieval_service.PINNED_EMBEDDING_REVISION,
-        "model_file_manifest_sha256": (
-            retrieval_service.PINNED_EMBEDDING_FILE_MANIFEST_SHA256
-        ),
+        "model_file_manifest_sha256": (retrieval_service.PINNED_EMBEDDING_FILE_MANIFEST_SHA256),
         "adapter": "QwenEmbeddingProvider",
         "runtime_class": type(runtime).__name__,
         "dimensions": provider.dimensions,
@@ -656,22 +625,15 @@ def _real_searcher(build_root: Path) -> tuple[SearchRows, dict[str, Any]]:
                     .limit(FTS_LIMIT)
                     .to_list()
                 )
-                routes.append(
-                    _route_ranked(fts_rows, route="FTS_GLOBAL", score_field="_score")
-                )
+                routes.append(_route_ranked(fts_rows, route="FTS_GLOBAL", score_field="_score"))
             except Exception:
                 fts_failed = True
         candidate_source_identities = []
         for source_identity in source_identities:
-            if (
-                not source_identity
-                or source_identity in candidate_source_identities
-            ):
+            if not source_identity or source_identity in candidate_source_identities:
                 continue
             candidate_source_identities.append(source_identity)
-            identity_where = (
-                f"{where} AND source_identity = '{_sql_literal(source_identity)}'"
-            )
+            identity_where = f"{where} AND source_identity = '{_sql_literal(source_identity)}'"
             identity_rows = (
                 table.search(list(vector))
                 .where(identity_where)
@@ -781,9 +743,7 @@ def _candidate_projection(
         "currentness_verified": raw.get("currentness_verified"),
         "legal_role": raw.get("legal_role"),
         "case_currentness_reviews_json": raw.get("case_currentness_reviews_json"),
-        "case_currentness_manifest_seals_json": raw.get(
-            "case_currentness_manifest_seals_json"
-        ),
+        "case_currentness_manifest_seals_json": raw.get("case_currentness_manifest_seals_json"),
         "rrf_score": round(float(raw["rrf_score"]), 12),
         "reranker_score": round(float(score), 12),
         "selection_basis": selection_basis,
@@ -813,10 +773,8 @@ def _validate_checkpoint(
     )
     if (
         value.get("row_id") != row_id
-        or value.get("deterministic_query_strategy_sha256")
-        != query_strategy_digest
-        or value.get("source_issue_registry_content_sha256")
-        != issue_registry_digest
+        or value.get("deterministic_query_strategy_sha256") != query_strategy_digest
+        or value.get("source_issue_registry_content_sha256") != issue_registry_digest
     ):
         raise ValueError("phase2a_candidate_recovery_checkpoint_identity_invalid")
     return value
@@ -850,9 +808,7 @@ def build_recovery(
     for source in manifest_sources.values():
         authority_id = str(source["authority_identity_id"])
         stable_identifier = str(source["stable_identifier"])
-        stable_identities_by_authority.setdefault(authority_id, []).append(
-            stable_identifier
-        )
+        stable_identities_by_authority.setdefault(authority_id, []).append(stable_identifier)
     for identities in stable_identities_by_authority.values():
         identities.sort()
     build_identity = _verify_build(build_root, manifest_digest)
@@ -1013,9 +969,7 @@ def build_recovery(
                 if len(scores) != len(fused) or any(
                     not math.isfinite(float(score)) for score in scores
                 ):
-                    raise ValueError(
-                        "phase2a_candidate_recovery_reranker_result_invalid"
-                    )
+                    raise ValueError("phase2a_candidate_recovery_reranker_result_invalid")
                 ordered = _select_route_diverse_candidates(
                     fused,
                     scores,
@@ -1029,9 +983,7 @@ def build_recovery(
                         selection_basis=selection_basis,
                         manifest_sources=manifest_sources,
                     )
-                    for rank, (candidate, score, selection_basis) in enumerate(
-                        ordered, start=1
-                    )
+                    for rank, (candidate, score, selection_basis) in enumerate(ordered, start=1)
                 ]
             else:
                 rerank_metrics = {"not_invoked_reason": "NO_EXACT_CANDIDATE_HITS"}
@@ -1042,9 +994,7 @@ def build_recovery(
                 if isinstance(exc, CandidateBindingError)
                 else str(exc) or type(exc).__name__
             )
-            error_context = (
-                exc.context if isinstance(exc, CandidateBindingError) else {}
-            )
+            error_context = exc.context if isinstance(exc, CandidateBindingError) else {}
             failure_identity = {
                 "stage": "PHASE2A_POST_R94_EXACT_CANDIDATE_RECOVERY",
                 "row_id": row_id,
@@ -1161,9 +1111,7 @@ def build_recovery(
         b"PHASE 2A EXACT CANDIDATE RECOVERY COMPLETE - OWNER REVIEW REQUIRED; NO PHASE 2B\n",
     )
     files = sorted(
-        path
-        for path in output_root.iterdir()
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.iterdir() if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",
@@ -1188,12 +1136,8 @@ def _arguments() -> argparse.Namespace:
 
 def main() -> None:
     args = _arguments()
-    embed, embedding_identity = _real_embedder(
-        args.embedding_model.resolve(strict=True)
-    )
-    score, reranker_identity = reranker._real_scorer(
-        args.reranker_model.resolve(strict=True)
-    )
+    embed, embedding_identity = _real_embedder(args.embedding_model.resolve(strict=True))
+    score, reranker_identity = reranker._real_scorer(args.reranker_model.resolve(strict=True))
     search, search_identity = _real_searcher(args.build_root.resolve(strict=True))
     result = build_recovery(
         remaining_path=args.remaining.resolve(strict=True),

@@ -232,9 +232,7 @@ def _eligible_catalogue_match(records: Iterable[dict[str, Any]]) -> bool:
     return False
 
 
-def _reference_status(
-    *, candidate_present: bool, catalogue_records: list[dict[str, Any]]
-) -> str:
+def _reference_status(*, candidate_present: bool, catalogue_records: list[dict[str, Any]]) -> str:
     if candidate_present:
         return "candidate_present"
     if _eligible_catalogue_match(catalogue_records):
@@ -244,9 +242,7 @@ def _reference_status(
     return "catalogue_missing"
 
 
-def audit(
-    *, source_root: Path, database_path: Path, candidate_manifest: Path
-) -> dict[str, Any]:
+def audit(*, source_root: Path, database_path: Path, candidate_manifest: Path) -> dict[str, Any]:
     connection = _connection(database_path)
     documents = _documents(connection)
     candidate_neutral, candidate_legislation, candidate_metadata = _candidate_sources(
@@ -292,9 +288,7 @@ def audit(
         scan_counts[f"status:{document.status}"] += 1
         if in_teaching_path and document.lane in AUTHORITY_LANES:
             attached_authorities[document.id] = document
-        if is_presentation or (
-            document.lane in TEACHING_LANES and in_teaching_path
-        ):
+        if is_presentation or (document.lane in TEACHING_LANES and in_teaching_path):
             matched_documents[document.id] = document
             if is_presentation:
                 presentation_documents[document.id] = document
@@ -413,12 +407,8 @@ def audit(
                 "teaching_document_count": len(record["teaching_document_ids"]),
                 "teaching_document_ids": sorted(record["teaching_document_ids"]),
                 "subjects": sorted(record["subjects"]),
-                "presentation_document_count": len(
-                    record["presentation_document_ids"]
-                ),
-                "presentation_document_ids": sorted(
-                    record["presentation_document_ids"]
-                ),
+                "presentation_document_count": len(record["presentation_document_ids"]),
+                "presentation_document_ids": sorted(record["presentation_document_ids"]),
                 "presentation_subjects": sorted(record["presentation_subjects"]),
                 "source_roles": sorted(record["source_roles"]),
                 "candidate_present": candidate_present,
@@ -457,14 +447,11 @@ def audit(
             "selected_files": selected_files,
             "selected_bytes": selected_bytes,
             "presentation_files": presentation_files,
-            "catalogue_matched_presentation_documents": len(
-                presentation_documents
-            ),
+            "catalogue_matched_presentation_documents": len(presentation_documents),
             "presentation_documents_by_subject": dict(
                 sorted(
                     Counter(
-                        document.subject
-                        for document in presentation_documents.values()
+                        document.subject for document in presentation_documents.values()
                     ).items()
                 )
             ),
@@ -477,8 +464,7 @@ def audit(
             "current_teaching_documents_attempted": len(matched_documents),
             "presentation_documents_attempted": len(presentation_documents),
             "presentation_document_failures": sum(
-                bool(failure["presentation_document"])
-                for failure in inspection_failures
+                bool(failure["presentation_document"]) for failure in inspection_failures
             ),
             "chunks_inspected": inspected_chunks,
             "characters_inspected": inspected_characters,
@@ -494,9 +480,7 @@ def audit(
             },
             "presentation_only": {
                 "total_unique_references": sum(presentation_status_counts.values()),
-                "coverage_status_counts": dict(
-                    sorted(presentation_status_counts.items())
-                ),
+                "coverage_status_counts": dict(sorted(presentation_status_counts.items())),
                 "by_subject": {
                     subject: dict(sorted(counts.items()))
                     for subject, counts in sorted(presentation_subject_gaps.items())

@@ -21,9 +21,7 @@ from app.ingestion.models import BlockKind, ParseStatus
 from app.ingestion.parsers import ParserRegistry
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PARENT = (
-    PROJECT_ROOT / "config/seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json"
-)
+DEFAULT_PARENT = PROJECT_ROOT / "config/seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json"
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_RELATIVE_DIRECTORY = Path(
@@ -183,9 +181,7 @@ def stage(
     output_directory.relative_to(source_root)
     output_directory.mkdir(parents=True, exist_ok=True)
     parser = ParserRegistry.default()
-    connection = sqlite3.connect(
-        f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True
-    )
+    connection = sqlite3.connect(f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True)
     connection.row_factory = sqlite3.Row
     targets: list[dict[str, Any]] = []
     already_catalogued: list[dict[str, Any]] = []
@@ -194,8 +190,11 @@ def stage(
         for item in misses:
             citation = str(item["authority_identity"])
             expected_path = _expected_path(citation)
-            query_url = "https://" + OFFICIAL_HOST + "/search?" + urllib.parse.urlencode(
-                {"query": citation}
+            query_url = (
+                "https://"
+                + OFFICIAL_HOST
+                + "/search?"
+                + urllib.parse.urlencode({"query": citation})
             )
             try:
                 search_html = html.unescape(
@@ -275,11 +274,12 @@ def stage(
                 "authority_identity": citation,
                 "content_sha256": content_hash,
                 "official_url": data_url,
-                "presentation_subjects": sorted(
-                    str(value) for value in item["subjects"]
-                ),
+                "presentation_subjects": sorted(str(value) for value in item["subjects"]),
             }
-            if any(row["status"] == "citable" and row["lane"] == "primary_authority" for row in existing):
+            if any(
+                row["status"] == "citable" and row["lane"] == "primary_authority"
+                for row in existing
+            ):
                 already_catalogued.append(record)
                 continue
             slug = expected_path.strip("/").replace("/", "-") + "-data.xml"
@@ -345,8 +345,7 @@ def main() -> int:
     )
     _write_exclusive(
         args.manifest,
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
-        + b"\n",
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
     )
     print(
         json.dumps(

@@ -20,17 +20,13 @@ from app.ingestion.models import BlockKind, ParseStatus
 from app.ingestion.parsers import ParserRegistry
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PARENT = (
-    PROJECT_ROOT / "config/seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json"
-)
+DEFAULT_PARENT = PROJECT_ROOT / "config/seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json"
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_RELATIVE_DIRECTORY = Path(
     "Official Legislation/seminar-gap-official-2026-08-26/uk-judgments-round3"
 )
-DEFAULT_MANIFEST = (
-    PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
-)
+DEFAULT_MANIFEST = PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
 PARENT_SCHEMA = "legalbot.seminar-gap-official-uk-judgment-plan.v1"
 MANIFEST_SCHEMA = "legalbot.seminar-gap-official-ewhc-division-plan.v1"
 OFFICIAL_HOST = "caselaw.nationalarchives.gov.uk"
@@ -149,9 +145,7 @@ def stage(
     output_directory.relative_to(source_root)
     output_directory.mkdir(parents=True, exist_ok=True)
     parser = ParserRegistry.default()
-    connection = sqlite3.connect(
-        f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True
-    )
+    connection = sqlite3.connect(f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True)
     connection.row_factory = sqlite3.Row
     targets: list[dict[str, Any]] = []
     already_catalogued: list[dict[str, Any]] = []
@@ -163,8 +157,8 @@ def stage(
             if match is None:
                 raise ValueError("ewhc_division_base_citation_invalid")
             year, number = match.groups()
-            query_url = "https://" + OFFICIAL_HOST + "/search?" + urllib.parse.urlencode(
-                {"query": base}
+            query_url = (
+                "https://" + OFFICIAL_HOST + "/search?" + urllib.parse.urlencode({"query": base})
             )
             search_html = html.unescape(
                 _get(
@@ -219,7 +213,10 @@ def stage(
                 """,
                 (content_hash,),
             ).fetchall()
-            if any(row["status"] == "citable" and row["lane"] == "primary_authority" for row in existing):
+            if any(
+                row["status"] == "citable" and row["lane"] == "primary_authority"
+                for row in existing
+            ):
                 already_catalogued.append(
                     {
                         "authority_identity": citation,
@@ -241,9 +238,7 @@ def stage(
                     "content_sha256": content_hash,
                     "byte_count": len(raw),
                     "identity_verified_from_official_xml": True,
-                    "presentation_subjects": sorted(
-                        str(value) for value in item["subjects"]
-                    ),
+                    "presentation_subjects": sorted(str(value) for value in item["subjects"]),
                     "currentness_status": "official_judgment_snapshot_unreviewed",
                 }
             )
@@ -298,8 +293,7 @@ def main() -> int:
     )
     _write_exclusive(
         args.manifest,
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
-        + b"\n",
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
     )
     print(
         json.dumps(

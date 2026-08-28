@@ -16,9 +16,7 @@ from app.db import Database
 from app.ingestion.service import ingest_explicit_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MANIFEST = (
-    PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
-)
+DEFAULT_MANIFEST = PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
@@ -61,9 +59,7 @@ def _write_exclusive(path: Path, report: dict[str, Any]) -> None:
         raise
 
 
-def ingest(
-    *, manifest_path: Path, source_root: Path, output_path: Path
-) -> dict[str, Any]:
+def ingest(*, manifest_path: Path, source_root: Path, output_path: Path) -> dict[str, Any]:
     manifest = _load(manifest_path)
     if manifest.get("schema") != EXPECTED_SCHEMA:
         raise ValueError("ewhc_ingestion_manifest_schema_invalid")
@@ -82,9 +78,7 @@ def ingest(
         paths.append(path)
 
     settings = Settings(project_root=PROJECT_ROOT)
-    if source_root not in {
-        root.expanduser().absolute() for root in settings.source_roots
-    }:
+    if source_root not in {root.expanduser().absolute() for root in settings.source_roots}:
         raise ValueError("ewhc_ingestion_source_root_not_configured")
     database = Database(settings.database_path)
     database.initialize()
@@ -136,9 +130,9 @@ def ingest(
         "active_pointer_written": False,
         "live_activation_authorized": False,
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     _write_exclusive(output_path, report)
     return report

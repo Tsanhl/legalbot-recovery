@@ -24,44 +24,28 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 DEFAULT_SOURCE_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r111-source-currentness-owner-batch"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r111-source-currentness-owner-batch"
 )
-DEFAULT_REVIEW_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r112b-post-r110-owner-review-docx"
-)
+DEFAULT_REVIEW_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r112b-post-r110-owner-review-docx"
 DEFAULT_PREDECESSOR_ROOT = (
     REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved"
 )
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved"
-)
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved"
 
-EXPECTED_BATCH_DIGEST = (
-    "6c9eda0de5c9c921b99127cac9c6e41bb3ae87151178e250b9f4abcf4a0d7fa1"
-)
-EXPECTED_R111_PACKAGE_DIGEST = (
-    "0027239a81e8823958296bf3e004a7c2dc0d0c8008d0b4afbfd64869f7fb1151"
-)
+EXPECTED_BATCH_DIGEST = "6c9eda0de5c9c921b99127cac9c6e41bb3ae87151178e250b9f4abcf4a0d7fa1"
+EXPECTED_R111_PACKAGE_DIGEST = "0027239a81e8823958296bf3e004a7c2dc0d0c8008d0b4afbfd64869f7fb1151"
 EXPECTED_R111_PACKAGE_FILE_SHA256 = (
     "3b96588ad1ee981f3b816baaedbbd25e81fc82daedda73609452423480fce0ae"
 )
-EXPECTED_R111_BATCH_FILE_SHA256 = (
-    "e657bffbf77e264fd658bb4c61bb3932f8e6e65fa10923b7eebcf20a8739cf20"
-)
+EXPECTED_R111_BATCH_FILE_SHA256 = "e657bffbf77e264fd658bb4c61bb3932f8e6e65fa10923b7eebcf20a8739cf20"
 EXPECTED_R111_PROMPT_FILE_SHA256 = (
     "46013e08350cc3a54d568cf3c7ab86a12ca3cfdde6b39320e48f009d71e21374"
 )
-EXPECTED_R112B_PACKAGE_DIGEST = (
-    "c76b6a72c151989b6948dce91b8e41a4378927242ddd1e7aada2ee0639ebcdc3"
-)
+EXPECTED_R112B_PACKAGE_DIGEST = "c76b6a72c151989b6948dce91b8e41a4378927242ddd1e7aada2ee0639ebcdc3"
 EXPECTED_R112B_PACKAGE_FILE_SHA256 = (
     "e4c1bd823236d82a4731d9b0de89e29cd31c427a3ded7722a9985d567d802871"
 )
-EXPECTED_R95_PACKAGE_DIGEST = (
-    "a2df2408785defdefa9622fb7e6df33be3306b2e8d4053b9015ef49a80091f53"
-)
+EXPECTED_R95_PACKAGE_DIGEST = "a2df2408785defdefa9622fb7e6df33be3306b2e8d4053b9015ef49a80091f53"
 EXPECTED_R95_PACKAGE_FILE_SHA256 = (
     "d6dad18bad7d1d4d33e613d38d1e2c10695bb6e02ea45a56618fd439e8734575"
 )
@@ -71,9 +55,7 @@ EXPECTED_R95_SOURCE_ADMISSIONS_DIGEST = (
 EXPECTED_R95_SOURCE_ADMISSIONS_FILE_SHA256 = (
     "f7d53afd7ec32dee9c8298d2ff4250ff16350f12f165ca74ec80fc1bec52a60a"
 )
-EXPECTED_REMAINING_GAPS_DIGEST = (
-    "513c58f6eac13d9c51c99efe657d7809158392687143edd67a6b9832e4ecbb34"
-)
+EXPECTED_REMAINING_GAPS_DIGEST = "513c58f6eac13d9c51c99efe657d7809158392687143edd67a6b9832e4ecbb34"
 EXPECTED_REMAINING_GAPS_FILE_SHA256 = (
     "202e054012f4565de7f648a7219bafa8530778f9f66c166ffc74101b04b2252b"
 )
@@ -95,15 +77,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -215,10 +194,8 @@ def _verify_source_package(
     prompt_path = source_root / "OWNER-APPROVAL-PROMPT.txt"
     if (
         package.get("owner_batch_content_sha256") != EXPECTED_BATCH_DIGEST
-        or package.get("owner_batch_file_sha256")
-        != EXPECTED_R111_BATCH_FILE_SHA256
-        or package.get("owner_approval_prompt_file_sha256")
-        != EXPECTED_R111_PROMPT_FILE_SHA256
+        or package.get("owner_batch_file_sha256") != EXPECTED_R111_BATCH_FILE_SHA256
+        or package.get("owner_approval_prompt_file_sha256") != EXPECTED_R111_PROMPT_FILE_SHA256
         or _sha256_file(batch_path) != EXPECTED_R111_BATCH_FILE_SHA256
         or _sha256_file(prompt_path) != EXPECTED_R111_PROMPT_FILE_SHA256
         or package.get("owner_approved") is not False
@@ -241,8 +218,7 @@ def _verify_source_package(
     sources = batch.get("source_admission_decisions")
     metadata = batch.get("currentness_metadata_only_decision")
     if (
-        batch.get("schema")
-        != "legalbot.v111.phase2a.post-r110-owner-decision-batch.v1"
+        batch.get("schema") != "legalbot.v111.phase2a.post-r110-owner-decision-batch.v1"
         or not isinstance(summary, Mapping)
         or summary.get("row_source_link_decision_count") != 26
         or summary.get("affected_unique_row_count") != 22
@@ -298,8 +274,7 @@ def _verify_source_package(
     )
     if (
         review.get("owner_batch_content_sha256") != EXPECTED_BATCH_DIGEST
-        or review.get("status")
-        != "VISUAL_AND_STRUCTURAL_QA_PASS_OWNER_DECISION_REQUIRED"
+        or review.get("status") != "VISUAL_AND_STRUCTURAL_QA_PASS_OWNER_DECISION_REQUIRED"
         or review.get("owner_approved") is not False
         or review.get("source_admission_authorized") is not False
         or review.get("candidate_mutated") is not False
@@ -434,8 +409,7 @@ def _approved_source(item: Mapping[str, Any]) -> dict[str, Any]:
         "proposed_candidate_use": item["proposed_candidate_use"],
         "currentness_status": item["currentness_status"],
         "proposition_level_uses": [
-            binding["binding_content_sha256"]
-            for binding in item["exact_proposition_bindings"]
+            binding["binding_content_sha256"] for binding in item["exact_proposition_bindings"]
         ],
         "source_decision_content_sha256s": [item["decision_content_sha256"]],
         "status": "OWNER_APPROVED_FOR_LATER_CONSOLIDATED_SUCCESSOR_SCOPE",
@@ -475,8 +449,7 @@ def _write_package(output_root: Path, files: Mapping[str, bytes]) -> str:
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
     entries = {
-        name: {"sha256": _sha256(raw), "bytes": len(raw)}
-        for name, raw in sorted(files.items())
+        name: {"sha256": _sha256(raw), "bytes": len(raw)} for name, raw in sorted(files.items())
     }
     material = {
         "schema": "legalbot.v111.phase2a.r111-owner-approved-package.v1",
@@ -539,15 +512,9 @@ def apply_approval(
     if len(affected_rows) != 22 or not affected_rows <= pending_rows:
         raise ValueError("phase2a_r113_affected_row_inventory_invalid")
 
-    approved_mappings = [
-        _approved_mapping(item) for item in batch["mapping_decisions"]
-    ]
-    approved_sources = [
-        _approved_source(item) for item in batch["source_admission_decisions"]
-    ]
-    approved_currentness = _approved_currentness(
-        batch["currentness_metadata_only_decision"]
-    )
+    approved_mappings = [_approved_mapping(item) for item in batch["mapping_decisions"]]
+    approved_sources = [_approved_source(item) for item in batch["source_admission_decisions"]]
+    approved_currentness = _approved_currentness(batch["currentness_metadata_only_decision"])
     old_records = old_sources["records"]
     cumulative = [*old_records, *approved_sources]
     source_keys = [str(record["source_key"]) for record in cumulative]
@@ -653,9 +620,7 @@ def apply_approval(
         {
             "status": "R111_RECORDED_364_MATERIAL_GAPS_REMAIN",
             "source_r111_batch_content_sha256": EXPECTED_BATCH_DIGEST,
-            "owner_approval_receipt_content_sha256": receipt[
-                "artifact_content_sha256"
-            ],
+            "owner_approval_receipt_content_sha256": receipt["artifact_content_sha256"],
             "total_issue_count": 585,
             "recorded_issue_count": 221,
             "pending_issue_count": 364,
@@ -694,26 +659,18 @@ def apply_approval(
         "OWNER-APPROVAL-RECEIPT-R111.json": _pretty_json(receipt),
         "APPROVED-MAPPING-DISPOSITIONS-26.json": _pretty_json(mapping_artifact),
         "APPROVED-SOURCE-ADMISSIONS-5.json": _pretty_json(source_artifact),
-        "CUMULATIVE-APPROVED-SOURCE-ADMISSIONS-25.json": _pretty_json(
-            cumulative_artifact
-        ),
-        "APPROVED-CURRENTNESS-METADATA-1.json": _pretty_json(
-            currentness_artifact
-        ),
+        "CUMULATIVE-APPROVED-SOURCE-ADMISSIONS-25.json": _pretty_json(cumulative_artifact),
+        "APPROVED-CURRENTNESS-METADATA-1.json": _pretty_json(currentness_artifact),
         "PHASE2B-ADVANCE-INTENT.json": _pretty_json(phase2b_intent),
         "REMAINING-MATERIAL-GAPS-364.json": remaining_raw,
         "POST-R111-PHASE2A-INVENTORY.json": _pretty_json(inventory),
-        "OUTCOME.txt": (str(inventory["terminal_verdict"]) + "\n").encode(
-            "utf-8"
-        ),
+        "OUTCOME.txt": (str(inventory["terminal_verdict"]) + "\n").encode("utf-8"),
     }
     package_digest = _write_package(output_root, files)
     return {
         "output_root": str(output_root),
         "source_r111_batch_content_sha256": EXPECTED_BATCH_DIGEST,
-        "owner_approval_receipt_content_sha256": receipt[
-            "artifact_content_sha256"
-        ],
+        "owner_approval_receipt_content_sha256": receipt["artifact_content_sha256"],
         "package_content_sha256": package_digest,
         "approved_mapping_disposition_count": 26,
         "approved_affected_row_count": 22,
@@ -769,9 +726,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path, default=DEFAULT_SOURCE_ROOT)
     parser.add_argument("--review-root", type=Path, default=DEFAULT_REVIEW_ROOT)
-    parser.add_argument(
-        "--predecessor-root", type=Path, default=DEFAULT_PREDECESSOR_ROOT
-    )
+    parser.add_argument("--predecessor-root", type=Path, default=DEFAULT_PREDECESSOR_ROOT)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     args = parser.parse_args(argv)
     output_root = args.output_root.resolve()

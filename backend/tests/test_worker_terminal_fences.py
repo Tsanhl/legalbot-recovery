@@ -360,9 +360,7 @@ def test_index_heartbeat_persistent_lock_and_nonlock_error_fail_closed(
     monkeypatch.setattr(
         database,
         "heartbeat_job",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            sqlite3.OperationalError("disk I/O error")
-        ),
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(sqlite3.OperationalError("disk I/O error")),
     )
     assert worker._renew_critical_job_lease("heartbeat-fail-job", NoWait()) == "failed"  # type: ignore[arg-type]
 

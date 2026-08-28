@@ -60,9 +60,10 @@ def test_exact_partition_and_fallback_boundary() -> None:
         "problem_row_count": 100,
         "essay_row_count": 46,
     }
-    assert set(
-        advisory["row_sets"]["legal_or_policy_evidence_only"]["row_ids"]
-    ) == LEGAL_OR_POLICY_EVIDENCE_ONLY_ROW_IDS
+    assert (
+        set(advisory["row_sets"]["legal_or_policy_evidence_only"]["row_ids"])
+        == LEGAL_OR_POLICY_EVIDENCE_ONLY_ROW_IDS
+    )
     assert advisory["decisive_fallback_boundary"]["existing_exact_fallback_row_ids"] == sorted(
         EXPECTED_FALLBACK_ROW_IDS
     )

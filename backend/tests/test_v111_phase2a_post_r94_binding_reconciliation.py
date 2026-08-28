@@ -39,18 +39,13 @@ def test_reconciliation_preserves_gate_and_distinguishes_incomplete_bindings(
     assert package["candidate_mutated"] is False
 
     ready = json.loads((output / "TARGET-DATE-EVIDENCE-READY-ROWS-3.json").read_bytes())
-    retained = json.loads(
-        (output / "RETAINED-DIRECT-OR-PARTIAL-GAPS-5.json").read_bytes()
-    )
-    remaining = json.loads(
-        (output / "REMAINING-PHASE2A-RESEARCH-ROWS-361.json").read_bytes()
-    )
+    retained = json.loads((output / "RETAINED-DIRECT-OR-PARTIAL-GAPS-5.json").read_bytes())
+    remaining = json.loads((output / "REMAINING-PHASE2A-RESEARCH-ROWS-361.json").read_bytes())
     assert {row["row_id"] for row in ready["records"]} == set(
         reconciliation.EXPECTED_TARGET_DATE_READY_ROWS
     )
     assert {row["row_id"] for row in retained["records"]} == set(
-        reconciliation.EXPECTED_UKSC_CURRENTNESS_PENDING_ROWS
-        | reconciliation.EXPECTED_PARTIAL_ROWS
+        reconciliation.EXPECTED_UKSC_CURRENTNESS_PENDING_ROWS | reconciliation.EXPECTED_PARTIAL_ROWS
     )
     assert len({row["row_id"] for row in remaining["records"]}) == 361
     assert not set(reconciliation.EXPECTED_TARGET_DATE_READY_ROWS) & {

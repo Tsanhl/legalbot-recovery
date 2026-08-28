@@ -106,9 +106,7 @@ class OwnerCanaryEvidenceIdentity(BaseModel):
             "retrieval_route": self.retrieval_route,
             "retrieval_relevance_score": self.retrieval_relevance_score,
             "retrieval_threshold": self.retrieval_threshold,
-            "retrieval_threshold_policy_sha256": (
-                self.retrieval_threshold_policy_sha256
-            ),
+            "retrieval_threshold_policy_sha256": (self.retrieval_threshold_policy_sha256),
             "retrieval_threshold_qualified": self.retrieval_threshold_qualified,
             "identity_verified": self.identity_verified,
             "currentness_verified": self.currentness_verified,
@@ -147,9 +145,7 @@ def _evidence_bundle_identity_sha256(
                 "schema": "legalbot.owner-canary-evidence-bundle-identity.v1",
                 "source_draft_sha256": source_draft_sha256,
                 "frozen_claim_bundle_sha256": frozen_claim_bundle_sha256,
-                "relevance_threshold_policy_sha256": (
-                    relevance_threshold_policy_sha256
-                ),
+                "relevance_threshold_policy_sha256": (relevance_threshold_policy_sha256),
                 "claim_evidence_bundle_sha256s": dict(claim_evidence_bundle_sha256s),
                 "evidence": [item.model_dump(mode="json") for item in evidence],
             }
@@ -207,8 +203,7 @@ class OwnerCanaryEvidenceBundle(BaseModel):
         ):
             raise ValueError("evidence bundle contains invalid claim identities")
         if any(
-            item.retrieval_threshold_policy_sha256
-            != self.relevance_threshold_policy_sha256
+            item.retrieval_threshold_policy_sha256 != self.relevance_threshold_policy_sha256
             or item.retrieval_threshold_qualified is not True
             or item.retrieval_relevance_score < item.retrieval_threshold
             for item in self.evidence
@@ -217,9 +212,7 @@ class OwnerCanaryEvidenceBundle(BaseModel):
         expected_identity = _evidence_bundle_identity_sha256(
             source_draft_sha256=self.source_draft_sha256,
             frozen_claim_bundle_sha256=self.frozen_claim_bundle_sha256,
-            relevance_threshold_policy_sha256=(
-                self.relevance_threshold_policy_sha256
-            ),
+            relevance_threshold_policy_sha256=(self.relevance_threshold_policy_sha256),
             claim_evidence_bundle_sha256s=self.claim_evidence_bundle_sha256s,
             evidence=self.evidence,
         )
@@ -288,8 +281,7 @@ def seal_owner_canary_evidence_bundle(
             or span.retrieval_threshold is None
             or span.retrieval_threshold_qualified is not True
             or span.retrieval_relevance_score < span.retrieval_threshold
-            or span.retrieval_threshold_policy_sha256
-            != relevance_threshold_policy_sha256
+            or span.retrieval_threshold_policy_sha256 != relevance_threshold_policy_sha256
             or any(
                 contains_absolute_private_path(value)
                 for value in (span.text, span.locator, span.jurisdiction, citation)
@@ -321,9 +313,7 @@ def seal_owner_canary_evidence_bundle(
                 ),
                 retrieval_relevance_score=span.retrieval_relevance_score,
                 retrieval_threshold=span.retrieval_threshold,
-                retrieval_threshold_policy_sha256=(
-                    relevance_threshold_policy_sha256
-                ),
+                retrieval_threshold_policy_sha256=(relevance_threshold_policy_sha256),
                 retrieval_threshold_qualified=True,
                 identity_verified=True,
                 currentness_verified=True,
@@ -459,9 +449,7 @@ def seal_owner_canary_deterministic_gate_report(
         "requested_word_target": requested_word_target,
         "word_count": word_count,
         "evidence_bundle_seal_sha256": evidence_bundle.seal_sha256,
-        "relevance_threshold_policy_sha256": (
-            evidence_bundle.relevance_threshold_policy_sha256
-        ),
+        "relevance_threshold_policy_sha256": (evidence_bundle.relevance_threshold_policy_sha256),
         "source_release_report_sha256": source_release_report_sha256,
         "gate_implementation_sha256": gate_implementation_sha256,
         "gates": gates,
@@ -549,9 +537,7 @@ def seal_owner_canary_release_attestation(
         "requested_word_target": deterministic_gate_report.requested_word_target,
         "word_count": deterministic_gate_report.word_count,
         "evidence_bundle_seal_sha256": evidence_bundle.seal_sha256,
-        "relevance_threshold_policy_sha256": (
-            evidence_bundle.relevance_threshold_policy_sha256
-        ),
+        "relevance_threshold_policy_sha256": (evidence_bundle.relevance_threshold_policy_sha256),
         "deterministic_gate_report_seal_sha256": deterministic_gate_report.seal_sha256,
         "source_release_report_sha256": deterministic_gate_report.source_release_report_sha256,
         "positive_release": True,

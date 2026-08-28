@@ -40,15 +40,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -100,9 +97,7 @@ def _write_exclusive(path: Path, raw: bytes) -> None:
         raise
 
 
-def _old_top_selection(
-    issue: Mapping[str, Any], record: Mapping[str, Any]
-) -> Mapping[str, Any]:
+def _old_top_selection(issue: Mapping[str, Any], record: Mapping[str, Any]) -> Mapping[str, Any]:
     issue_label = str(issue["issue_label"])
     choices: list[tuple[tuple[tuple[float, ...], str, str], Mapping[str, Any]]] = []
     for selection in record["resolved_selections"]:
@@ -110,9 +105,7 @@ def _old_top_selection(
         if not chunks:
             continue
         metadata = selection.get("candidate_source_metadata") or {}
-        label_linked = verifier.targeted_recovery._label_linked_direct_rule(
-            issue_label, chunks
-        )
+        label_linked = verifier.targeted_recovery._label_linked_direct_rule(issue_label, chunks)
         semantic_score = max(
             verifier._semantic_chunk_score(issue_label, chunk)[0]
             + verifier._semantic_chunk_score(issue_label, chunk)[1]
@@ -150,8 +143,8 @@ def main() -> None:
         "artifact_content_sha256",
         "phase2a_exact_membership_locator_invalid",
     )
-    candidate_sources, manifest_sha256, manifest_file_sha256 = (
-        verifier._load_candidate_manifest(verifier.DEFAULT_CANDIDATE_MANIFEST)
+    candidate_sources, manifest_sha256, manifest_file_sha256 = verifier._load_candidate_manifest(
+        verifier.DEFAULT_CANDIDATE_MANIFEST
     )
     candidate_by_authority: dict[str, list[str]] = defaultdict(list)
     for source_id, source in candidate_sources.items():
@@ -173,21 +166,13 @@ def main() -> None:
             "issue_label": str(issue["issue_label"]),
             "legal_domain": str(issue["legal_domain"]),
             "old_top_source_version_id": source_id,
-            "old_top_authority_identity_id": str(
-                selection.get("authority_identity_id") or ""
-            ),
-            "old_authority_level_candidate_boolean": metadata.get(
-                "already_in_sealed_candidate"
-            ),
+            "old_top_authority_identity_id": str(selection.get("authority_identity_id") or ""),
+            "old_authority_level_candidate_boolean": metadata.get("already_in_sealed_candidate"),
             "exact_source_version_in_candidate_manifest": False,
             "candidate_manifest_source_versions_for_same_authority": sorted(
-                candidate_by_authority.get(
-                    str(selection.get("authority_identity_id") or ""), []
-                )
+                candidate_by_authority.get(str(selection.get("authority_identity_id") or ""), [])
             ),
-            "known_private_secondary_content": (
-                source_id in KNOWN_PRIVATE_SECONDARY_SOURCE_IDS
-            ),
+            "known_private_secondary_content": (source_id in KNOWN_PRIVATE_SECONDARY_SOURCE_IDS),
             "selection_origin": selection.get("selection_origin"),
             "selection_content_sha256": selection.get("selection_content_sha256"),
         }
@@ -229,12 +214,10 @@ def main() -> None:
     artifact = {**material, "artifact_content_sha256": _sealed(material)}
     _write_exclusive(output_path, _pretty_json(artifact))
     names = ["DEBUG-STOP-REPORT.json", output_path.name]
-    sums = "".join(
-        f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names
-    ).encode("utf-8")
-    _write_exclusive(
-        OUTPUT_ROOT / "EXACT-CANDIDATE-MEMBERSHIP-SHA256SUMS.txt", sums
+    sums = "".join(f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names).encode(
+        "utf-8"
     )
+    _write_exclusive(OUTPUT_ROOT / "EXACT-CANDIDATE-MEMBERSHIP-SHA256SUMS.txt", sums)
     print(json.dumps(artifact, sort_keys=True))
 
 

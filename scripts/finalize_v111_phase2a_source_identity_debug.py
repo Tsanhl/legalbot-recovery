@@ -29,21 +29,16 @@ from scripts import verify_v111_phase2a_exact_semantic_spans_advisory as verifie
 
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 PARTIAL_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r65-span-id-exact-semantic-span-advisory"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r65-span-id-exact-semantic-span-advisory"
 )
 CANDIDATE_MANIFEST_PATH = (
     PROJECT_ROOT
     / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
     / "approved-source-manifest.json"
 )
-MISCLASSIFIED_SOURCE_VERSION_ID = (
-    "source-version-5e1963ec7ed2cb7e17094f9c447deaf9a3a21c5a"
-)
+MISCLASSIFIED_SOURCE_VERSION_ID = "source-version-5e1963ec7ed2cb7e17094f9c447deaf9a3a21c5a"
 MISCLASSIFIED_AUTHORITY_ID = "neutral-citation:[2007] EWCA Crim 125"
-MISCLASSIFIED_CHUNK_SHA256 = (
-    "02b7a776dffe260f51c4c68a0cee55918c3586ddf48248e4e381ea22d3d85a0c"
-)
+MISCLASSIFIED_CHUNK_SHA256 = "02b7a776dffe260f51c4c68a0cee55918c3586ddf48248e4e381ea22d3d85a0c"
 CONFIRMED_MISMATCH_ROWS = ("live30-q04:issue-02", "live60-q34:issue-04")
 EXPECTED_NONCANDIDATE_TOP_ROWS = (
     "live30-q04:issue-02",
@@ -65,15 +60,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -132,9 +124,7 @@ def _projected_noncandidate_rows() -> tuple[list[str], Counter[str]]:
         "artifact_content_sha256",
         "phase2a_source_identity_debug_locator_seal_invalid",
     )
-    records = {
-        str(record["row_id"]): record for record in locators.get("records", [])
-    }
+    records = {str(record["row_id"]): record for record in locators.get("records", [])}
     issues, _digest = planner._load_issue_rows(verifier.DEFAULT_REMAINING)
     noncandidate: list[str] = []
     source_counts: Counter[str] = Counter()
@@ -267,14 +257,10 @@ def main() -> None:
             "candidate_source_count": manifest["source_count"],
             "misclassified_source_absent_from_candidate_manifest": True,
             "misclassified_source_version_id": MISCLASSIFIED_SOURCE_VERSION_ID,
-            "misclassified_source_claimed_authority_identity_id": (
-                MISCLASSIFIED_AUTHORITY_ID
-            ),
+            "misclassified_source_claimed_authority_identity_id": (MISCLASSIFIED_AUTHORITY_ID),
             "misclassified_source_exact_chunk_sha256": MISCLASSIFIED_CHUNK_SHA256,
             "noncandidate_top_projection_count": len(noncandidate_rows),
-            "noncandidate_top_projection_source_counts": dict(
-                sorted(source_counts.items())
-            ),
+            "noncandidate_top_projection_source_counts": dict(sorted(source_counts.items())),
             "provision_series_input": "sections 15, 16, 20 and 21",
             "old_extracted_provision_ids": extracted_ids,
         },
@@ -309,9 +295,9 @@ def main() -> None:
         "DEBUG-STOP-REPORT.json",
         "DEBUG-STOP-OUTCOME.txt",
     ]
-    sums = "".join(
-        f"{_sha256_file(PARTIAL_ROOT / name)}  {name}\n" for name in names
-    ).encode("utf-8")
+    sums = "".join(f"{_sha256_file(PARTIAL_ROOT / name)}  {name}\n" for name in names).encode(
+        "utf-8"
+    )
     _write_exclusive(PARTIAL_ROOT / "DEBUG-STOP-SHA256SUMS.txt", sums)
     print(json.dumps(report, sort_keys=True))
 

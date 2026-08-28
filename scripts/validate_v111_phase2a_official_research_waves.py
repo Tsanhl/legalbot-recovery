@@ -24,9 +24,7 @@ WORKING_ROOT = (
 )
 DEFAULT_QUEUE = WORKING_ROOT / "OFFICIAL-SOURCE-RESEARCH-QUEUE-316.json"
 DEFAULT_WAVE_ROOT = WORKING_ROOT
-EXPECTED_QUEUE_CONTENT_SHA256 = (
-    "155af28ca81bb6848a875fab8173e0f646339282d695d2ae61edece143bda7a5"
-)
+EXPECTED_QUEUE_CONTENT_SHA256 = "155af28ca81bb6848a875fab8173e0f646339282d695d2ae61edece143bda7a5"
 ALLOWED_HOSTS = {
     "caselaw.nationalarchives.gov.uk",
     "www.legislation.gov.uk",
@@ -65,8 +63,7 @@ REQUIRED_FALSE_FLAGS = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -136,9 +133,7 @@ def _safety_flag(wave: Mapping[str, Any], name: str) -> Any:
     return wave.get(name) if direct_present else nested_value
 
 
-def validate_waves(
-    *, queue_path: Path, wave_paths: list[Path]
-) -> dict[str, Any]:
+def validate_waves(*, queue_path: Path, wave_paths: list[Path]) -> dict[str, Any]:
     queue = _load_queue(queue_path)
     queue_records = {
         str(record["row_id"]): record
@@ -175,9 +170,7 @@ def validate_waves(
                 raise ValueError("phase2a_research_wave_row_outside_queue")
             if row_id in seen:
                 raise ValueError("phase2a_research_wave_duplicate_row")
-            if record.get("queue_record_content_sha256") != expected.get(
-                "record_content_sha256"
-            ):
+            if record.get("queue_record_content_sha256") != expected.get("record_content_sha256"):
                 raise ValueError("phase2a_research_wave_row_identity_invalid")
             components = record.get("atomic_components")
             unresolved = record.get("unresolved_holds")

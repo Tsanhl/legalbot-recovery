@@ -46,7 +46,7 @@ def _consume_stream(stream: Generator[str, None, GenerateResponse]) -> GenerateR
         try:
             next(stream)
         except StopIteration as completed:
-            return completed.value
+            return cast(GenerateResponse, completed.value)
 
 
 def _earliest_stop(text: str, stop: tuple[str, ...]) -> tuple[str, bool]:

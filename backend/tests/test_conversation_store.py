@@ -116,12 +116,16 @@ def test_expired_session_is_rejected_and_purged(database, cipher) -> None:
     with pytest.raises(ConversationExpiredError):
         store.window(conversation_id, now=start + timedelta(days=31))
     assert store.purge_expired(now=start + timedelta(days=31)) == 1
-    assert database.fetchone(
-        "SELECT id FROM conversation_sessions WHERE id=?", (conversation_id,)
-    ) is None
-    assert database.fetchone(
-        "SELECT id FROM conversation_messages WHERE conversation_id=?", (conversation_id,)
-    ) is None
+    assert (
+        database.fetchone("SELECT id FROM conversation_sessions WHERE id=?", (conversation_id,))
+        is None
+    )
+    assert (
+        database.fetchone(
+            "SELECT id FROM conversation_messages WHERE conversation_id=?", (conversation_id,)
+        )
+        is None
+    )
 
 
 def test_released_answer_projection_is_idempotent(database, cipher) -> None:
@@ -169,9 +173,7 @@ def test_released_answer_projection_is_idempotent(database, cipher) -> None:
     assert window.messages[-1].content == "Verified owner-only answer."
 
 
-def test_job_deletion_clears_links_without_rewriting_durable_messages(
-    database, cipher
-) -> None:
+def test_job_deletion_clears_links_without_rewriting_durable_messages(database, cipher) -> None:
     store = _store(database, cipher)
     now = datetime(2026, 8, 24, tzinfo=UTC)
     conversation_id = store.create_session("conversation-owner-cleanup", now=now)
@@ -230,9 +232,7 @@ def test_job_deletion_clears_links_without_rewriting_durable_messages(
     assert [bytes(row["encrypted_content"]) for row in after] == [
         bytes(row["encrypted_content"]) for row in before
     ]
-    assert [row["content_sha256"] for row in after] == [
-        row["content_sha256"] for row in before
-    ]
+    assert [row["content_sha256"] for row in after] == [row["content_sha256"] for row in before]
     assert all(row["job_id"] is None for row in after)
     assert all(row["answer_id"] is None for row in after)
 

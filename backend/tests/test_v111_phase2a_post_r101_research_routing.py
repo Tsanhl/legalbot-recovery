@@ -32,9 +32,7 @@ def test_routing_reconciles_all_364_without_reopening_r94_rejections(
             "development30_authorized",
         )
     )
-    persisted = json.loads(
-        (output / "POST-R101-RESEARCH-ROUTING-364.json").read_bytes()
-    )
+    persisted = json.loads((output / "POST-R101-RESEARCH-ROUTING-364.json").read_bytes())
     assert persisted == artifact
 
 

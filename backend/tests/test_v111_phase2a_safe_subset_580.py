@@ -53,12 +53,12 @@ def test_exact_safe_subset_records_580_and_carries_478_forward(tmp_path: Path) -
     mismatch_rows = mismatches["records"]
     assert isinstance(effect_rows, list)
     assert isinstance(mismatch_rows, list)
-    assert {
-        row["owner_outcome"] for row in effect_rows if isinstance(row, dict)
-    } == {"APPROVE_METADATA_OR_CURRENTNESS_ONLY_DISPOSITION"}
-    assert {
-        row["owner_outcome"] for row in mismatch_rows if isinstance(row, dict)
-    } == {"APPROVE_NONMATERIAL_REPRESENTATION_BYTE_MISMATCH"}
+    assert {row["owner_outcome"] for row in effect_rows if isinstance(row, dict)} == {
+        "APPROVE_METADATA_OR_CURRENTNESS_ONLY_DISPOSITION"
+    }
+    assert {row["owner_outcome"] for row in mismatch_rows if isinstance(row, dict)} == {
+        "APPROVE_NONMATERIAL_REPRESENTATION_BYTE_MISMATCH"
+    }
     remaining_rows = remaining["items"]
     assert isinstance(remaining_rows, list)
     assert Counter(
@@ -73,9 +73,7 @@ def test_exact_safe_subset_records_580_and_carries_478_forward(tmp_path: Path) -
         "POST-580-PHASE2A-INVENTORY.json",
     ):
         value = _load(output / name)
-        assert safe_subset._verify_seal(
-            value, "artifact_content_sha256", "invalid"
-        )
+        assert safe_subset._verify_seal(value, "artifact_content_sha256", "invalid")
 
 
 def test_safe_subset_rejects_nonexact_owner_reply_without_output(tmp_path: Path) -> None:

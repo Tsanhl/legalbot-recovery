@@ -251,9 +251,7 @@ def compare_ordered_index_prefix(
                 "observed_chunk_id": observed[len(expected)].chunk_id,
             }
         )
-    for position, (wanted, actual) in enumerate(
-        zip(expected, observed, strict=False)
-    ):
+    for position, (wanted, actual) in enumerate(zip(expected, observed, strict=False)):
         fields: list[str] = []
         if actual.chunk_id != wanted.chunk_id:
             fields.append("chunk_id")
@@ -312,9 +310,10 @@ def compare_checkpoint_to_expected_prefix(
         expected_summary = None
     else:
         expected_summary = summarize_expected_prefix(expected, completed)
-        if checkpoint.last_deterministic_chunk_key != expected_summary[
-            "last_deterministic_chunk_key"
-        ]:
+        if (
+            checkpoint.last_deterministic_chunk_key
+            != expected_summary["last_deterministic_chunk_key"]
+        ):
             reasons.append("checkpoint_last_chunk_key_mismatch")
         if checkpoint.rolling_digest != expected_summary["rolling_digest"]:
             reasons.append("checkpoint_rolling_digest_mismatch")
@@ -417,8 +416,10 @@ def audit_incomplete_index(
     checkpoint_at_observed_tail = bool(checkpoint_prefix["checkpoint_prefix_match"]) and not bool(
         checkpoint_prefix["checkpoint_trails_observed_rows"]
     )
-    resumable = bool(source_manifest_match) and bool(ordered_prefix["exact_ordered_prefix"]) and (
-        exact_embedding_complete or checkpoint_at_observed_tail
+    resumable = (
+        bool(source_manifest_match)
+        and bool(ordered_prefix["exact_ordered_prefix"])
+        and (exact_embedding_complete or checkpoint_at_observed_tail)
     )
     bounded = {
         "duplicate_chunk_ids": _bounded_ids(comparison["duplicate_chunk_ids"]),
@@ -492,9 +493,7 @@ def audit_incomplete_index(
         ),
         "checkpoint_prefix_match": checkpoint_prefix["checkpoint_prefix_match"],
         "checkpoint_prefix_reasons": checkpoint_prefix["reasons"],
-        "checkpoint_trails_observed_rows": checkpoint_prefix[
-            "checkpoint_trails_observed_rows"
-        ],
+        "checkpoint_trails_observed_rows": checkpoint_prefix["checkpoint_trails_observed_rows"],
         "uncheckpointed_observed_rows": checkpoint_prefix["uncheckpointed_observed_rows"],
         **bounded,
     }

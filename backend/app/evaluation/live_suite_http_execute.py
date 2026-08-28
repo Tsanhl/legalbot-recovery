@@ -376,8 +376,7 @@ def _safe_advisory_ai_review(quality: Mapping[str, Any]) -> SafeAdvisoryAIReview
     if (
         adjudication.review_id != review.review_id
         or adjudication.review_seal_sha256 != review.seal_sha256
-        or review.reviewer_execution_mode
-        != "separate_verification_pass_same_model_adapter"
+        or review.reviewer_execution_mode != "separate_verification_pass_same_model_adapter"
         or review.model_independent is not False
         or review.advisory_recommendations_only is not True
         or review.can_decide_or_adopt is not False
@@ -388,9 +387,7 @@ def _safe_advisory_ai_review(quality: Mapping[str, Any]) -> SafeAdvisoryAIReview
     ):
         raise RuntimeError("released AI advisory review authority boundary is invalid")
     recommendation_codes = tuple(
-        dict.fromkeys(
-            code for claim in adjudication.claims for code in claim.blocking_reason_codes
-        )
+        dict.fromkeys(code for claim in adjudication.claims for code in claim.blocking_reason_codes)
     )
     flagged = sum(not claim.passed for claim in adjudication.claims)
     if not recommendation_codes:

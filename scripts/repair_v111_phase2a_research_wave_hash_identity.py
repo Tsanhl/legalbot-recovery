@@ -16,15 +16,12 @@ from scripts import validate_v111_phase2a_official_research_waves as validator
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sealed(value: Any) -> str:
@@ -66,8 +63,7 @@ def repair(*, queue_path: Path, input_path: Path, output_path: Path) -> dict[str
     if validator._contains_exact_text(wave):
         raise ValueError("phase2a_research_wave_repair_unbound_exact_text")
     if validator._safety_flag(wave, "advisory_only") is not True or any(
-        validator._safety_flag(wave, flag) is not False
-        for flag in validator.REQUIRED_FALSE_FLAGS
+        validator._safety_flag(wave, flag) is not False for flag in validator.REQUIRED_FALSE_FLAGS
     ):
         raise ValueError("phase2a_research_wave_repair_boundary_invalid")
     records = wave.get("records")
@@ -151,9 +147,7 @@ def main() -> int:
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    result = repair(
-        queue_path=args.queue, input_path=args.input, output_path=args.output
-    )
+    result = repair(queue_path=args.queue, input_path=args.input, output_path=args.output)
     print(
         json.dumps(
             {

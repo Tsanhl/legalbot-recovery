@@ -32,15 +32,11 @@ def test_plan_is_bounded_non_admitting_and_covers_eighteen_rows() -> None:
 def test_plan_rejects_duplicate_affected_row(tmp_path: Path) -> None:
     plan = collector._load_plan(collector.DEFAULT_PLAN)
     duplicate = json.loads(json.dumps(plan))
-    duplicate["items"][1]["affected_rows"].append(
-        duplicate["items"][0]["affected_rows"][0]
-    )
+    duplicate["items"][1]["affected_rows"].append(duplicate["items"][0]["affected_rows"][0])
     path = tmp_path / "plan.json"
     path.write_text(json.dumps(duplicate), encoding="utf-8")
 
-    with pytest.raises(
-        ValueError, match="phase2a_source_rehoming_plan_item_invalid"
-    ):
+    with pytest.raises(ValueError, match="phase2a_source_rehoming_plan_item_invalid"):
         collector._validate_plan(collector._load_plan(path))
 
 

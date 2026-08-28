@@ -8,7 +8,6 @@ from pathlib import Path
 
 import pytest
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = PROJECT_ROOT / "scripts/build_v111_phase2b_full_question_bank_draft.py"
 
@@ -33,13 +32,13 @@ def _assert_balanced_18(records: list[dict[str, object]]) -> None:
         "GENERAL_ENQUIRY": 6,
     }
     for kind in ("ESSAY", "PROBLEM_BASED"):
-        assert Counter(
-            row["difficulty"] for row in records if row["question_type"] == kind
-        ) == {"SCHOOL_COMPARABLE": 2, "HARDER": 2, "EVEN_HARDER": 2}
+        assert Counter(row["difficulty"] for row in records if row["question_type"] == kind) == {
+            "SCHOOL_COMPARABLE": 2,
+            "HARDER": 2,
+            "EVEN_HARDER": 2,
+        }
     assert Counter(
-        row["difficulty"]
-        for row in records
-        if row["question_type"] == "GENERAL_ENQUIRY"
+        row["difficulty"] for row in records if row["question_type"] == "GENERAL_ENQUIRY"
     ) == {"EVERYDAY": 4, "MULTI_ISSUE": 1, "BOUNDARY_OR_URGENT": 1}
 
 
@@ -48,9 +47,7 @@ def test_full_bank_question_sources_and_leakage_boundary() -> None:
     _, amendments, additions, _ = builder._load_patch()
     r2 = builder._load_python_module("phase2b_test_r2", builder.SOURCE_BUILDER)
     unseen = builder._load_python_module("phase2b_test_unseen", builder.UNSEEN_MODULE)
-    core, stress, custody = builder._build_question_sets(
-        r2, unseen, amendments, additions
-    )
+    core, stress, custody = builder._build_question_sets(r2, unseen, amendments, additions)
 
     assert len(core) == len(stress) == len(custody) == 15
     assert sum(map(len, core.values())) == 270
@@ -71,11 +68,14 @@ def test_full_bank_question_sources_and_leakage_boundary() -> None:
     )
     assert "UK rules governing significant automated decisions" in patched["prompt"]
     assert patched["amendment_record_sha256"] is not None
-    assert sum(
-        row["amendment_record_sha256"] is not None
-        for records in core.values()
-        for row in records
-    ) == 44
+    assert (
+        sum(
+            row["amendment_record_sha256"] is not None
+            for records in core.values()
+            for row in records
+        )
+        == 44
+    )
 
     visible = [row for records in core.values() for row in records] + [
         row for records in stress.values() for row in records
@@ -144,11 +144,11 @@ def test_builder_publishes_create_only_full_nonauthorizing_package(
         assert not list(custody.glob("*.md"))
         assert stat.S_IMODE((custody / "PRIVATE-UNSEEN-QUESTION-SET.jsonl").stat().st_mode) == 0o600
         assert all(row["visible_to_development_remediation"] is False for row in hidden)
-        assert all(row["unseen_freeze_status"] == "CUSTODY_DRAFT_NOT_OWNER_FROZEN" for row in hidden)
+        assert all(
+            row["unseen_freeze_status"] == "CUSTODY_DRAFT_NOT_OWNER_FROZEN" for row in hidden
+        )
 
-    joined = b"\n".join(
-        path.read_bytes() for path in output_root.rglob("*") if path.is_file()
-    )
+    joined = b"\n".join(path.read_bytes() for path in output_root.rglob("*") if path.is_file())
     assert b"/Users/" not in joined
     assert b"hltsang" not in joined.lower()
     assert b"Agnes" not in joined

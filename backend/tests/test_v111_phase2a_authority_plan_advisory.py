@@ -12,15 +12,13 @@ from scripts import build_v111_phase2a_authority_plan_advisory as planner
 def _response(envelope: dict[str, Any], *, invented: bool = False) -> dict[str, Any]:
     row_input = envelope["payload"]
     authorities = row_input["authorities"]
-    authority_id = "invented-authority" if invented else (
-        str(authorities[0]["id"]) if authorities else None
+    authority_id = (
+        "invented-authority" if invented else (str(authorities[0]["id"]) if authorities else None)
     )
     rows = []
     for row in row_input["rows"]:
         if authority_id is None:
-            rows.append(
-                {"row_id": row["row_id"], "assessment": "GAP", "selections": []}
-            )
+            rows.append({"row_id": row["row_id"], "assessment": "GAP", "selections": []})
         else:
             rows.append(
                 {

@@ -14,27 +14,21 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data" / "evaluations" / "phase2a-owner-review"
 PARTIAL_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r63-singleton-exact-semantic-span-advisory"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r63-singleton-exact-semantic-span-advisory"
 )
 HELD_ROWS = ("live30-q01:issue-04", "live30-q01:issue-05")
-EXPECTED_CHUNK_SHA256 = (
-    "fb6230dd1f7d08667b6ee4248e5c3724d2616258dfe1ae50892ba44e500998f9"
-)
+EXPECTED_CHUNK_SHA256 = "fb6230dd1f7d08667b6ee4248e5c3724d2616258dfe1ae50892ba44e500998f9"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -140,12 +134,10 @@ def main() -> None:
             len(rows) != 2
             or [row.get("attempt") for row in rows] != [1, 2]
             or any(
-                row.get("error_code")
-                != "structured_output_quote_not_exact_substring"
+                row.get("error_code") != "structured_output_quote_not_exact_substring"
                 for row in rows
             )
-            or rows[0].get("failure_fingerprint")
-            != rows[1].get("failure_fingerprint")
+            or rows[0].get("failure_fingerprint") != rows[1].get("failure_fingerprint")
             or rows[1].get("same_failure_fingerprint_as_prior_attempt") is not True
         ):
             raise ValueError(f"phase2a_quote_debug_fingerprint_changed_{row_id}")
@@ -154,9 +146,7 @@ def main() -> None:
         "schema": "legalbot.v111.phase2a.freeform-quote-copy-fingerprint.v1",
         "source_intent_content_sha256": intent_digest,
         "affected_row_ids": list(HELD_ROWS),
-        "failure_fingerprints": [
-            by_row[row_id][0]["failure_fingerprint"] for row_id in HELD_ROWS
-        ],
+        "failure_fingerprints": [by_row[row_id][0]["failure_fingerprint"] for row_id in HELD_ROWS],
         "shared_source_chunk_text_sha256": EXPECTED_CHUNK_SHA256,
         "error_code": "structured_output_quote_not_exact_substring",
     }
@@ -203,9 +193,9 @@ def main() -> None:
     _write_exclusive(
         PARTIAL_ROOT / "DEBUG-STOP-OUTCOME.txt",
         (
-            "r63 STOPPED: FREE-FORM QUOTE COPYING REPLACED BY DETERMINISTIC "
-            "EXACT-SPAN ID SELECTION IN A NEW REVISION.\n"
-        ).encode(),
+            b"r63 STOPPED: FREE-FORM QUOTE COPYING REPLACED BY DETERMINISTIC "
+            b"EXACT-SPAN ID SELECTION IN A NEW REVISION.\n"
+        ),
     )
     names = [
         "INTENT.json",
@@ -214,9 +204,7 @@ def main() -> None:
         "DEBUG-STOP-REPORT.json",
         "DEBUG-STOP-OUTCOME.txt",
     ]
-    sums = "".join(
-        f"{_sha256_file(PARTIAL_ROOT / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(PARTIAL_ROOT / name)}  {name}\n" for name in names).encode()
     _write_exclusive(PARTIAL_ROOT / "DEBUG-STOP-SHA256SUMS.txt", sums)
     print(json.dumps(report, sort_keys=True))
 

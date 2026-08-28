@@ -9,8 +9,7 @@ from scripts import build_v111_phase2a_remaining_remediation_intake as builder
 
 def _canonical_json(value: object) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 

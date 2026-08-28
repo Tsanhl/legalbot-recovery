@@ -20,9 +20,7 @@ from scripts.run_v111_phase2a_independent_reranker_advisory import (
 ROOT = Path(__file__).resolve().parents[2]
 OWNER_REVIEW = ROOT / "data" / "evaluations" / "phase2a-owner-review"
 REMAINDER = (
-    OWNER_REVIEW
-    / "LegalBot-Phase2AB-2026-08-24-r29"
-    / "REMAINING-448-RESEARCH-PACKETS.json"
+    OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r29" / "REMAINING-448-RESEARCH-PACKETS.json"
 )
 CASES = ROOT / "benchmarks" / "evaluation" / "live-evaluation-60-v1" / "cases.jsonl"
 IDENTITY = {
@@ -34,9 +32,7 @@ IDENTITY = {
 }
 
 
-def _scores(
-    _query: str, candidates: list[dict[str, Any]]
-) -> tuple[list[float], dict[str, Any]]:
+def _scores(_query: str, candidates: list[dict[str, Any]]) -> tuple[list[float], dict[str, Any]]:
     return [1.0 / (index + 1) for index in range(len(candidates))], {
         "device": "fixture",
         "observed_peak_memory_gb": 0.1,
@@ -167,9 +163,7 @@ def test_seals_interrupted_same_adapter_run_as_nonfinal_comparison(
         **diagnostic_material,
         "diagnostic_content_sha256": _sealed(diagnostic_material),
     }
-    (root / "diagnostics" / "0001-test-a1.json").write_bytes(
-        _pretty_json(diagnostic)
-    )
+    (root / "diagnostics" / "0001-test-a1.json").write_bytes(_pretty_json(diagnostic))
 
     result = seal_partial_same_adapter_run(root, successor_run="r36-independent")
 
@@ -178,6 +172,4 @@ def test_seals_interrupted_same_adapter_run_as_nonfinal_comparison(
     assert result["technical_qualification_assigned"] is False
     assert result["phase2b_authorized"] is False
     assert (root / PARTIAL_STOP_NAME).is_file()
-    assert seal_partial_same_adapter_run(
-        root, successor_run="r36-independent"
-    ) == result
+    assert seal_partial_same_adapter_run(root, successor_run="r36-independent") == result

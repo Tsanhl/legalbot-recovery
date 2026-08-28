@@ -19,10 +19,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts import verify_v111_phase2a_exact_semantic_spans_advisory as verifier  # noqa: E402
 
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
-CANARY_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r66b-context-bound-span-id-canary"
-)
+CANARY_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r66b-context-bound-span-id-canary"
 ARTIFACT_PATH = CANARY_ROOT / "CANARY-EXACT-SPANS-9.json"
 INTENT_PATH = CANARY_ROOT / "INTENT.json"
 OUTPUT_PATH = CANARY_ROOT / "DEBUG-ACCEPTANCE-CORRECTION.json"
@@ -59,23 +56,18 @@ REQUIRED_SUPPORTED_ROW_IDS = frozenset(
         "live30-q02:issue-08",
     }
 )
-ADVISORY_FLEX_ROW_IDS = (
-    CANARY_ROW_IDS - REQUIRED_GAP_ROW_IDS - REQUIRED_SUPPORTED_ROW_IDS
-)
+ADVISORY_FLEX_ROW_IDS = CANARY_ROW_IDS - REQUIRED_GAP_ROW_IDS - REQUIRED_SUPPORTED_ROW_IDS
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -144,10 +136,8 @@ def main() -> None:
     )
     if (
         artifact_digest != EXPECTED_ARTIFACT_CONTENT_SHA256
-        or intent.get("schema")
-        != "legalbot.v111.phase2a.exact-span-canary-intent.v4"
-        or artifact.get("schema")
-        != "legalbot.v111.phase2a.exact-span-canary-9.v4"
+        or intent.get("schema") != "legalbot.v111.phase2a.exact-span-canary-intent.v4"
+        or artifact.get("schema") != "legalbot.v111.phase2a.exact-span-canary-9.v4"
         or artifact.get("status") != "CANARY_STOPPED_FURTHER_DEBUG_REQUIRED"
         or artifact.get("held_batch_count") != 0
         or artifact.get("owner_decisions_applied") is not False
@@ -156,21 +146,18 @@ def main() -> None:
     ):
         raise ValueError("phase2a_r66b_acceptance_boundary_invalid")
 
-    candidate_sources, manifest_digest, manifest_file_sha256 = (
-        verifier._load_candidate_manifest(verifier.DEFAULT_CANDIDATE_MANIFEST)
+    candidate_sources, manifest_digest, manifest_file_sha256 = verifier._load_candidate_manifest(
+        verifier.DEFAULT_CANDIDATE_MANIFEST
     )
     findings = {
-        str(row["row_id"]): row
-        for row in artifact.get("findings", [])
-        if isinstance(row, dict)
+        str(row["row_id"]): row for row in artifact.get("findings", []) if isinstance(row, dict)
     }
     if set(findings) != CANARY_ROW_IDS:
         raise ValueError("phase2a_r66b_acceptance_row_coverage_invalid")
     supported = {
         row_id
         for row_id, row in findings.items()
-        if row.get("assessment")
-        in {"DIRECT_EXACT_SPAN_ADVISORY", "PARTIAL_EXACT_SPAN_ADVISORY"}
+        if row.get("assessment") in {"DIRECT_EXACT_SPAN_ADVISORY", "PARTIAL_EXACT_SPAN_ADVISORY"}
     }
     gaps = {
         row_id
@@ -204,8 +191,7 @@ def main() -> None:
         if (
             finding.get("atomic_proposition") is not None
             or finding.get("exact_span_binding") is not None
-            or finding.get("gap_reason")
-            != "NO_DIRECT_SUPPORT_IN_SUPPLIED_EXACT_CHUNKS"
+            or finding.get("gap_reason") != "NO_DIRECT_SUPPORT_IN_SUPPLIED_EXACT_CHUNKS"
         ):
             raise ValueError("phase2a_r66b_acceptance_gap_contract_invalid")
 
@@ -225,8 +211,7 @@ def main() -> None:
         "affected_stage": "PHASE2A_CONTEXT_BOUND_EXACT_SPAN_CANARY_ACCEPTANCE",
         "affected_rows": ["live30-q01:issue-04"],
         "root_cause_status": (
-            "OLD_CANARY_EXPECTATION_CONFUSED_A_SAFE_ADVISORY_GAP_WITH_A_"
-            "TECHNICAL_FAILURE"
+            "OLD_CANARY_EXPECTATION_CONFUSED_A_SAFE_ADVISORY_GAP_WITH_A_TECHNICAL_FAILURE"
         ),
         "root_cause_evidence": {
             "issue_label": "causation",
@@ -234,9 +219,7 @@ def main() -> None:
             "projected_span_domain": "professional_negligence_scope_of_duty",
             "projected_authority_identity_id": "neutral-citation:[2021] UKSC 20",
             "projected_locator": "p 65",
-            "safe_observed_assessment": findings["live30-q01:issue-04"][
-                "assessment"
-            ],
+            "safe_observed_assessment": findings["live30-q01:issue-04"]["assessment"],
         },
         "corrected_safety_contract": {
             "required_supported_row_ids": sorted(REQUIRED_SUPPORTED_ROW_IDS),

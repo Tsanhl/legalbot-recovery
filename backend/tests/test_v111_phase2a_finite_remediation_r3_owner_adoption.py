@@ -73,7 +73,13 @@ def test_private_create_only_checksums(recorded: Path) -> None:
     ("body_change", "signature", "name", "decision_date", "code"),
     [
         (b"x", adoption.EXPECTED_SIGNATURE_TEXT, "Agnes", "2026-08-29", "approval_body_not_exact"),
-        (b"", "Owner typed name: Agnes\nDecision date: 2026-08-28\n", "Agnes", "2026-08-29", "signature_followup_not_exact"),
+        (
+            b"",
+            "Owner typed name: Agnes\nDecision date: 2026-08-28\n",
+            "Agnes",
+            "2026-08-29",
+            "signature_followup_not_exact",
+        ),
         (b"", adoption.EXPECTED_SIGNATURE_TEXT, "Other", "2026-08-29", "owner_name_not_exact"),
         (b"", adoption.EXPECTED_SIGNATURE_TEXT, "Agnes", "2026-08-28", "owner_date_not_exact"),
     ],
@@ -84,8 +90,11 @@ def test_nonexact_decision_evidence_rejected(
     body = (adoption.PACKET_ROOT / adoption.PROMPT_NAME).read_bytes() + body_change
     with pytest.raises(ValueError, match=code):
         adoption.record_owner_adoption(
-            output_root=tmp_path / "rejected", approval_body=body, signature_followup=signature,
-            owner_typed_name=name, owner_decision_date=decision_date,
+            output_root=tmp_path / "rejected",
+            approval_body=body,
+            signature_followup=signature,
+            owner_typed_name=name,
+            owner_decision_date=decision_date,
             recorded_at=datetime(2026, 8, 29, 1, tzinfo=UTC),
         )
     assert not (tmp_path / "rejected").exists()
@@ -99,6 +108,7 @@ def test_existing_output_is_not_replaced(tmp_path: Path) -> None:
             output_root=output,
             approval_body=(adoption.PACKET_ROOT / adoption.PROMPT_NAME).read_bytes(),
             signature_followup=adoption.EXPECTED_SIGNATURE_TEXT,
-            owner_typed_name="Agnes", owner_decision_date="2026-08-29",
+            owner_typed_name="Agnes",
+            owner_decision_date="2026-08-29",
             recorded_at=datetime(2026, 8, 29, 1, tzinfo=UTC),
         )

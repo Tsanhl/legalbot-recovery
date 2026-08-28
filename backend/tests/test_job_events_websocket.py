@@ -54,9 +54,7 @@ def _services(database, cipher, tmp_path):
             app.state.services = previous
 
 
-def test_websocket_replays_safe_progress_then_terminal_event(
-    database, cipher, tmp_path
-) -> None:
+def test_websocket_replays_safe_progress_then_terminal_event(database, cipher, tmp_path) -> None:
     sequence = _terminal_job(database, cipher)
     with _services(database, cipher, tmp_path):
         client = TestClient(app)
@@ -87,9 +85,7 @@ def test_websocket_replays_safe_progress_then_terminal_event(
     assert "raw_text" not in json.dumps((progress, done)).casefold()
 
 
-def test_websocket_after_sequence_does_not_replay_old_progress(
-    database, cipher, tmp_path
-) -> None:
+def test_websocket_after_sequence_does_not_replay_old_progress(database, cipher, tmp_path) -> None:
     sequence = _terminal_job(database, cipher)
     with _services(database, cipher, tmp_path):
         client = TestClient(app)

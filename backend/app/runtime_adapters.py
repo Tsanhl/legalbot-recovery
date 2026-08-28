@@ -67,9 +67,7 @@ GENERATION_CONFIG = {
     "input_estimated_token_limit": MAX_INPUT_ESTIMATED_TOKENS,
 }
 GENERATION_CONFIG_SHA256 = hashlib.sha256(
-    (
-        json.dumps(GENERATION_CONFIG, sort_keys=True, separators=(",", ":")) + "\n"
-    ).encode("utf-8")
+    (json.dumps(GENERATION_CONFIG, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
 ).hexdigest()
 
 
@@ -398,9 +396,7 @@ class LoopbackModelGateway:
                 "provided_ids": [span.id for span in evidence],
                 "included_ids": [str(item["id"]) for item in bundle.payloads],
                 "omitted_budget_ids": list(bundle.omitted_budget_ids),
-                "excluded_document_safety_ids": list(
-                    bundle.excluded_document_safety_ids
-                ),
+                "excluded_document_safety_ids": list(bundle.excluded_document_safety_ids),
                 "text_truncated_ids": [
                     str(item["id"])
                     for item in bundle.payloads
@@ -544,9 +540,7 @@ class LoopbackModelGateway:
                 "provided_ids": list(evidence),
                 "included_ids": [str(item["id"]) for item in bundle.payloads],
                 "omitted_budget_ids": list(bundle.omitted_budget_ids),
-                "excluded_document_safety_ids": list(
-                    bundle.excluded_document_safety_ids
-                ),
+                "excluded_document_safety_ids": list(bundle.excluded_document_safety_ids),
                 "text_truncated_ids": [
                     str(item["id"])
                     for item in bundle.payloads
@@ -615,12 +609,10 @@ class LoopbackModelGateway:
             raise RuntimeError("deterministic stub output is forbidden outside explicit test mode")
         finish_reason = str(body.get("finish_reason") or "unknown").casefold()
         truncated_warning = isinstance(warnings, Sequence) and any(
-            str(value).casefold() in {"output_truncated", "context_truncated"}
-            for value in warnings
+            str(value).casefold() in {"output_truncated", "context_truncated"} for value in warnings
         )
         if not is_stub and (
-            finish_reason
-            in {"length", "max_tokens", "token_limit", "context_length", "truncated"}
+            finish_reason in {"length", "max_tokens", "token_limit", "context_length", "truncated"}
             or truncated_warning
         ):
             raise ValueError("model output was truncated and cannot enter validation")

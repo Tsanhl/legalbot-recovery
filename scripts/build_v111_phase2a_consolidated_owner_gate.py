@@ -35,8 +35,7 @@ from scripts.build_v111_phase2a_owner_review import (  # noqa: E402
 )
 
 DEFAULT_REMEDIATION_ROOT = (
-    PROJECT_ROOT
-    / "data/evaluations/phase2a-remediation/v111-phase2a-remediation-20260824-r1"
+    PROJECT_ROOT / "data/evaluations/phase2a-remediation/v111-phase2a-remediation-20260824-r1"
 )
 DEFAULT_EFFECTS_PATH = (
     PROJECT_ROOT
@@ -169,8 +168,7 @@ _OWNER_OPTIONS_SOURCE = [
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -203,9 +201,7 @@ def _load_object(path: Path) -> dict[str, Any]:
     return value
 
 
-def _verify_seal(
-    value: Mapping[str, Any], *, field: str, expected: str, code: str
-) -> str:
+def _verify_seal(value: Mapping[str, Any], *, field: str, expected: str, code: str) -> str:
     material = dict(value)
     supplied = str(material.pop(field, ""))
     if not _SHA256.fullmatch(supplied) or supplied != expected:
@@ -252,9 +248,7 @@ def _sealed_artifact(
     material = {
         "schema": schema,
         **metadata,
-        f"{records_key[:-1] if records_key.endswith('s') else records_key}_count": len(
-            records
-        ),
+        f"{records_key[:-1] if records_key.endswith('s') else records_key}_count": len(records),
         records_key: list(records),
         "source_admission_authorized": False,
         "automatic_indexing": False,
@@ -334,8 +328,7 @@ def _write_machine_files(
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
     entries = {
-        name: {"sha256": _sha256(raw), "bytes": len(raw)}
-        for name, raw in sorted(files.items())
+        name: {"sha256": _sha256(raw), "bytes": len(raw)} for name, raw in sorted(files.items())
     }
     material = {
         "schema": "legalbot.v111.phase2a.consolidated-owner-gate-index.v1",
@@ -515,12 +508,8 @@ def build_consolidated_owner_gate(
 
     approvals: dict[str, dict[str, Any]] = {}
     for package in (
-        _approval_rows(
-            approval_48, collection="decisions", expected_count=48, source="r9-48"
-        ),
-        _approval_rows(
-            approval_35, collection="decisions", expected_count=35, source="r16-35"
-        ),
+        _approval_rows(approval_48, collection="decisions", expected_count=48, source="r9-48"),
+        _approval_rows(approval_35, collection="decisions", expected_count=35, source="r16-35"),
         _approval_rows(approval_54, collection="rows", expected_count=54, source="r28-54"),
     ):
         if set(approvals) & set(package):
@@ -533,10 +522,7 @@ def build_consolidated_owner_gate(
         remainder.get("rows"), count=448, code="phase2a_consolidated_remainder_rows_invalid"
     )
     remainder_by_id = {str(row.get("row_id") or ""): row for row in remainder_rows}
-    if (
-        len(remainder_by_id) != 448
-        or set(remainder_by_id) != set(original_by_id) - set(approvals)
-    ):
+    if len(remainder_by_id) != 448 or set(remainder_by_id) != set(original_by_id) - set(approvals):
         raise ValueError("phase2a_consolidated_remainder_partition_invalid")
 
     reranker_rows = _require_list(
@@ -686,9 +672,7 @@ def build_consolidated_owner_gate(
 
     matrix_by_id = {row["row_id"]: row for row in matrix_rows}
 
-    def reconciliation(
-        source_name: str, output_schema: str, expected_count: int
-    ) -> dict[str, Any]:
+    def reconciliation(source_name: str, output_schema: str, expected_count: int) -> dict[str, Any]:
         source = source_artifacts[source_name]
         records = _require_list(
             source.get("records"),
@@ -740,12 +724,8 @@ def build_consolidated_owner_gate(
         76,
     )
     if (
-        gold["owner_decision_status_counts"].get("RECORDED_OWNER_PHASE2A_DECISION")
-        != 107
-        or candidate["owner_decision_status_counts"].get(
-            "RECORDED_OWNER_PHASE2A_DECISION"
-        )
-        != 30
+        gold["owner_decision_status_counts"].get("RECORDED_OWNER_PHASE2A_DECISION") != 107
+        or candidate["owner_decision_status_counts"].get("RECORDED_OWNER_PHASE2A_DECISION") != 30
     ):
         raise ValueError("phase2a_consolidated_reconciliation_approval_counts_invalid")
 
@@ -975,9 +955,7 @@ def build_consolidated_owner_gate(
             {
                 row_id
                 for locator in changed_locators
-                for row_id in source_exact_locator_refs.get(
-                    (source_version_id, locator), set()
-                )
+                for row_id in source_exact_locator_refs.get((source_version_id, locator), set())
             }
         )
         recommendation = str(comparison.get("advisory_recommendation") or "")
@@ -1057,9 +1035,7 @@ def build_consolidated_owner_gate(
     ]
     if len(unavailable) != 3:
         raise ValueError("phase2a_consolidated_unavailable_record_count_invalid")
-    judgment_by_source = {
-        str(row.get("source_version_id") or ""): row for row in judgment_rows
-    }
+    judgment_by_source = {str(row.get("source_version_id") or ""): row for row in judgment_rows}
     unavailable_records = [
         _sealed_record(
             "legalbot.v111.phase2a.consolidated-unavailable-official-record.v1",
@@ -1167,8 +1143,7 @@ def build_consolidated_owner_gate(
         if item["category"] == "legislative_effect"
         or (
             item["category"] == "legislation_byte_mismatch"
-            and item.get("classification")
-            == "SEMANTIC_PROVISION_TEXT_IDENTICAL_BYTE_MISMATCH_ONLY"
+            and item.get("classification") == "SEMANTIC_PROVISION_TEXT_IDENTICAL_BYTE_MISMATCH_ONLY"
         )
     ]
     if len(immediately_approvable) != 580:
@@ -1257,12 +1232,8 @@ def build_consolidated_owner_gate(
         "COMPLETE-GOLD-CASE-RECONCILIATION-509.json": _pretty_json(gold),
         "COMPLETE-CANDIDATE-IMPACT-RECONCILIATION-76.json": _pretty_json(candidate),
         "COMPLETE-LEGISLATIVE-EFFECT-REGISTER-1896.json": _pretty_json(effects),
-        "COMPLETE-JUDGMENT-LATER-TREATMENT-REGISTER-20.json": _pretty_json(
-            judgments_artifact
-        ),
-        "COMPLETE-LEGISLATION-BYTE-MISMATCH-REGISTER-65.json": _pretty_json(
-            mismatch_artifact
-        ),
+        "COMPLETE-JUDGMENT-LATER-TREATMENT-REGISTER-20.json": _pretty_json(judgments_artifact),
+        "COMPLETE-LEGISLATION-BYTE-MISMATCH-REGISTER-65.json": _pretty_json(mismatch_artifact),
         "UNAVAILABLE-OFFICIAL-RECORDS-3.json": _pretty_json(unavailable_artifact),
         "SOURCE-CUSTODY-AND-ADMISSION-REGISTER.json": _pretty_json(source_register),
         "OWNER-DECISION-BATCH-1058.json": _pretty_json(decision_batch),
@@ -1353,9 +1324,7 @@ def _persist_failure(output_root: Path, exc: BaseException) -> None:
             "schema": "legalbot.v111.phase2a.consolidated-owner-gate-failure.v1",
             "exception_type": type(exc).__name__,
             "error": str(exc),
-            "failure_fingerprint": _sha256(
-                f"{type(exc).__name__}:{exc}".encode()
-            ),
+            "failure_fingerprint": _sha256(f"{type(exc).__name__}:{exc}".encode()),
             "debug_required_before_any_third_attempt": True,
             "phase2b_authorized": False,
             "development30_authorized": False,
@@ -1411,9 +1380,7 @@ def main() -> int:
             judgment_path=args.judgments.resolve(strict=True),
             targeted_leads_path=args.targeted_leads.resolve(strict=True),
             byte_mismatch_path=args.byte_mismatch.resolve(strict=True),
-            fresh_quarantine_manifest_path=(
-                args.fresh_quarantine_manifest.resolve(strict=True)
-            ),
+            fresh_quarantine_manifest_path=(args.fresh_quarantine_manifest.resolve(strict=True)),
             output_root=args.output_root.resolve(),
         )
     except BaseException as exc:

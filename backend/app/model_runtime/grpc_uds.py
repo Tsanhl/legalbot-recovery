@@ -338,7 +338,9 @@ class GrpcUdsClient:
             payload_json=json.dumps(
                 dict(request.payload), ensure_ascii=False, sort_keys=True, separators=(",", ":")
             ).encode(),
-            messages=[pb2.ChatMessage(role=item.role, content=item.content) for item in request.messages],
+            messages=[
+                pb2.ChatMessage(role=item.role, content=item.content) for item in request.messages
+            ],
             max_tokens=request.max_tokens,
             temperature=request.temperature,
             top_p=request.top_p,

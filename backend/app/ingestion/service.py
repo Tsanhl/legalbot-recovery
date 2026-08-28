@@ -213,10 +213,7 @@ def scan_configured_sources(
                     resume_raw = _put_file(vault, path)
                 except OSError:
                     resume_raw = None
-                if (
-                    resume_raw is not None
-                    and resume_raw.sha256 == str(resumable["content_sha256"])
-                ):
+                if resume_raw is not None and resume_raw.sha256 == str(resumable["content_sha256"]):
                     database.record_source_scan_file(
                         safe_scan_id,
                         path_fingerprint=fingerprint,

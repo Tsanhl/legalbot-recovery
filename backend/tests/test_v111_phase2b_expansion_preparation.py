@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = PROJECT_ROOT / "scripts/build_v111_phase2b_expansion_preparation.py"
 
@@ -27,9 +26,7 @@ def _jsonl(path: Path) -> list[dict[str, object]]:
 def test_expansion_scope_and_combined_leakage_are_fail_closed() -> None:
     builder = _load_builder()
     r3 = builder._load_module("phase2b_expansion_test_r3", builder.SOURCE_BUILDER)
-    questions = builder._load_module(
-        "phase2b_expansion_test_questions", builder.QUESTION_MODULE
-    )
+    questions = builder._load_module("phase2b_expansion_test_questions", builder.QUESTION_MODULE)
     questions.validate_expansion_topics()
     scope = builder._source_scope_proposal(questions.EXPANSION_TOPICS)
     existing_visible, existing_unseen = builder._source_r3_questions()
@@ -137,9 +134,7 @@ def test_builder_creates_preparation_not_gold_or_phase2b(
         "PROPOSITION-EVIDENCE-WORK-LEDGER.jsonl"
     ):
         proposition_rows += _jsonl(path)
-    for path in (output_root / "pre-gold-ledgers/topics").rglob(
-        "GOLD-ANSWER-WORK-ITEMS.jsonl"
-    ):
+    for path in (output_root / "pre-gold-ledgers/topics").rglob("GOLD-ANSWER-WORK-ITEMS.jsonl"):
         answer_rows += _jsonl(path)
     assert len(proposition_rows) == 1678
     assert len(answer_rows) == 340
@@ -149,9 +144,7 @@ def test_builder_creates_preparation_not_gold_or_phase2b(
     assert all(row["gold_answer_text"] is None for row in answer_rows)
     assert all(row["gold_certified"] is False for row in answer_rows)
 
-    joined = b"\n".join(
-        path.read_bytes() for path in output_root.rglob("*") if path.is_file()
-    )
+    joined = b"\n".join(path.read_bytes() for path in output_root.rglob("*") if path.is_file())
     assert b"/Users/" not in joined
     assert b"hltsang" not in joined.lower()
     assert b"Agnes" not in joined

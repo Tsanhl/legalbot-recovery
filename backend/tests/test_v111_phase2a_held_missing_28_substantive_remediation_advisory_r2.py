@@ -16,8 +16,7 @@ def _content_sha(value: dict, field: str = "artifact_content_sha256") -> str:
     material = dict(value)
     material.pop(field)
     raw = (
-        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
     return hashlib.sha256(raw).hexdigest()
 
@@ -108,13 +107,12 @@ def test_exact_independent_audit_defects_are_applied(
 
     self_defence = by_key[builder._key("live30-q04:issue-07", 1)]
     assert self_defence["action"] == "REPLACE_WITH_EXACT_NARROW_SOURCE_BOUND_PROPOSITION"
-    assert {
-        span["authority_identity_id"] for span in self_defence["evidence_span_proposals"]
-    } == {"ukpga:1967:58", "ukpga:2008:4"}
+    assert {span["authority_identity_id"] for span in self_defence["evidence_span_proposals"]} == {
+        "ukpga:1967:58",
+        "ukpga:2008:4",
+    }
     assert "Criminal Law Act 1967" in self_defence["after_propositions"][0]["proposition"]
-    assert "Criminal Justice Act 1967" not in self_defence["after_propositions"][0][
-        "proposition"
-    ]
+    assert "Criminal Justice Act 1967" not in self_defence["after_propositions"][0]["proposition"]
 
     duress = by_key[builder._key("live30-q04:issue-07", 4)]
     assert duress["residual_qualification_blocker"] is True
@@ -131,9 +129,7 @@ def test_exact_independent_audit_defects_are_applied(
     assert "Parts 4-8" not in json.dumps(q37)
 
     q40 = by_key[builder._key("live60-q40:issue-09", 1)]
-    assert q40["evidence_span_proposals"][0]["exact_locators"] == [
-        "section 31(4)(a)-(b)"
-    ]
+    assert q40["evidence_span_proposals"][0]["exact_locators"] == ["section 31(4)(a)-(b)"]
     assert q40["residual_qualification_blocker"] is True
     assert "interim relief" in q40["residual_scope"].lower()
 
@@ -148,18 +144,14 @@ def test_exact_independent_audit_defects_are_applied(
         "RETAIN_OPERATIVE_LEGAL_ROUTE_BLOCKER"
     )
     axa = by_key[builder._key("live60-q59:issue-17", 3)]
-    assert "does not itself supply CAT aggregate-damages distribution rules" in json.dumps(
-        axa
-    )
+    assert "does not itself supply CAT aggregate-damages distribution rules" in json.dumps(axa)
 
 
 def test_every_proposed_full_or_partial_has_primary_bytes_and_frozen_exact_spans(
     built: tuple[dict, dict, dict],
 ) -> None:
     advisory, _, _ = built
-    binding_by_hash = {
-        item["record_content_sha256"]: item for item in advisory["source_bindings"]
-    }
+    binding_by_hash = {item["record_content_sha256"]: item for item in advisory["source_bindings"]}
     assert len(binding_by_hash) == advisory["counts"]["active_source_binding_count"] == 19
     used_hashes = set()
     for item in _recommendations(advisory):
@@ -194,9 +186,7 @@ def test_nine_representation_links_are_component_exact_and_loose_links_removed(
     built: tuple[dict, dict, dict],
 ) -> None:
     _, manifest, _ = built
-    records = {
-        item["authority_identity_id"]: item for item in manifest["representations"]
-    }
+    records = {item["authority_identity_id"]: item for item in manifest["representations"]}
     assert len(records) == manifest["representation_count"] == 9
     unused = {
         "neutral-citation:[2014] UKSC 58",
@@ -210,10 +200,9 @@ def test_nine_representation_links_are_component_exact_and_loose_links_removed(
     sra = records[
         "official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors"
     ]
-    assert [
-        (item["row_id"], item["component_ordinal"])
-        for item in sra["component_bindings"]
-    ] == [("live30-q05:issue-07", 1)]
+    assert [(item["row_id"], item["component_ordinal"]) for item in sra["component_bindings"]] == [
+        ("live30-q05:issue-07", 1)
+    ]
     for record in records.values():
         for link in record["component_bindings"]:
             assert len(link["baseline_proposition_text_sha256"]) == 64
@@ -236,9 +225,7 @@ def test_r1_is_explicitly_sealed_no_go(built: tuple[dict, dict, dict]) -> None:
     assert no_go["r1_advisory_content_sha256"] == builder.R1_ADVISORY_CONTENT_SHA256
     assert no_go["r1_package_content_sha256"] == builder.R1_PACKAGE_CONTENT_SHA256
     assert no_go["r2_advisory_content_sha256"] == advisory["artifact_content_sha256"]
-    assert no_go["r2_source_manifest_content_sha256"] == manifest[
-        "artifact_content_sha256"
-    ]
+    assert no_go["r2_source_manifest_content_sha256"] == manifest["artifact_content_sha256"]
     assert no_go["artifact_content_sha256"] == _content_sha(no_go)
 
 
@@ -256,9 +243,9 @@ def test_recursive_65_field_no_execution_control_is_exhaustive(
         for field in builder.NO_EXECUTION:
             assert artifact[field] is False
     for field in builder.NO_EXECUTION:
-        assert builder.r1_builder._recursive_no_execution_violations(
-            {"nested": {field: True}}
-        ) == [f"$.nested.{field}"]
+        assert builder.r1_builder._recursive_no_execution_violations({"nested": {field: True}}) == [
+            f"$.nested.{field}"
+        ]
 
 
 def test_publish_is_private_atomic_create_only_and_checksum_complete(
@@ -285,9 +272,7 @@ def test_publish_is_private_atomic_create_only_and_checksum_complete(
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == expected_sha
     package = json.loads((output / builder.PACKAGE_NAME).read_bytes())
     assert package["artifact_count"] == 3
-    assert package["package_content_sha256"] == _content_sha(
-        package, "package_content_sha256"
-    )
+    assert package["package_content_sha256"] == _content_sha(package, "package_content_sha256")
     assert builder.r1_builder._recursive_no_execution_violations(package) == []
     rendered = "\n".join(path.read_text() for path in output.iterdir())
     assert "/Users/" not in rendered

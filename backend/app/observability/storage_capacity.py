@@ -75,16 +75,20 @@ def build_storage_capacity_snapshot(
     disk_root = settings.data_dir if settings.data_dir.is_dir() else settings.project_root
     disk = shutil.disk_usage(disk_root)
     backup_root = settings.data_dir / "backups"
-    backup_files = tuple(
-        sorted(
-            (
-                member / "catalog.sqlite3"
-                for member in backup_root.iterdir()
-                if member.is_dir() and not member.is_symlink()
-            ),
-            key=lambda item: item.parent.name,
+    backup_files = (
+        tuple(
+            sorted(
+                (
+                    member / "catalog.sqlite3"
+                    for member in backup_root.iterdir()
+                    if member.is_dir() and not member.is_symlink()
+                ),
+                key=lambda item: item.parent.name,
+            )
         )
-    ) if backup_root.is_dir() else ()
+        if backup_root.is_dir()
+        else ()
+    )
     backup_files = tuple(path for path in backup_files if path.is_file() and not path.is_symlink())
     total_backup_bytes = sum(path.stat().st_size for path in backup_files)
     receipt_times: list[datetime] = []
@@ -100,12 +104,8 @@ def build_storage_capacity_snapshot(
                 if restore_passed:
                     restore_times.append(receipt_time)
             break
-    latest_age = (
-        max(0.0, (stamp - max(receipt_times)).total_seconds()) if receipt_times else None
-    )
-    restore_age = (
-        max(0.0, (stamp - max(restore_times)).total_seconds()) if restore_times else None
-    )
+    latest_age = max(0.0, (stamp - max(receipt_times)).total_seconds()) if receipt_times else None
+    restore_age = max(0.0, (stamp - max(restore_times)).total_seconds()) if restore_times else None
     disk_policy = policy["disk"]
     backup_policy = policy["backups"]
     warnings: list[str] = []

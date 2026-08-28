@@ -37,14 +37,9 @@ R102_PATH = (
     / "LegalBot-Phase2AB-2026-08-26-r102-post-r101-research-routing"
     / "POST-R101-RESEARCH-ROUTING-364.json"
 )
-R71_PATH = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r71-gap-triage"
-    / "ISSUE-GAP-TRIAGE-448.json"
-)
+R71_PATH = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r71-gap-triage" / "ISSUE-GAP-TRIAGE-448.json"
 DEFAULT_OUTPUT_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-26/phase2a-post-r101-official-source-research-r103"
+    PROJECT_ROOT / "data/quarantine/2026-08-26/phase2a-post-r101-official-source-research-r103"
 )
 TARGET_DATE = "2026-08-14"
 TARGET_CEILING = "2026-08-14T23:59:59+01:00 Europe/London"
@@ -62,9 +57,7 @@ EXPECTED_IDENTITIES = {
 }
 EXPECTED_AUTHORITY_COUNT = 16
 EXPECTED_ROW_LINK_COUNT = 26
-ALLOWED_HOSTS = frozenset(
-    {"caselaw.nationalarchives.gov.uk", "www.legislation.gov.uk"}
-)
+ALLOWED_HOSTS = frozenset({"caselaw.nationalarchives.gov.uk", "www.legislation.gov.uk"})
 USER_AGENT = "LegalBot-v1.11-Phase2A-post-r101-official-source-research/1.0"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _EWCA = re.compile(
@@ -90,15 +83,12 @@ _BOUNDARY_FIELDS = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -319,15 +309,11 @@ def _legislation_extraction(authority: str, raw: bytes) -> dict[str, Any]:
     }
 
 
-def _targets(
-    r102: Mapping[str, Any], r71: Mapping[str, Any]
-) -> tuple[dict[str, Any], ...]:
+def _targets(r102: Mapping[str, Any], r71: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     if (
         r102.get("row_count") != 364
-        or r102.get("outside_source_research_authority_count")
-        != EXPECTED_AUTHORITY_COUNT
-        or r102.get("outside_source_research_row_link_count")
-        != EXPECTED_ROW_LINK_COUNT
+        or r102.get("outside_source_research_authority_count") != EXPECTED_AUTHORITY_COUNT
+        or r102.get("outside_source_research_row_link_count") != EXPECTED_ROW_LINK_COUNT
         or any(r102.get(field) is not False for field in _BOUNDARY_FIELDS)
         or r71.get("row_count") != 448
         or any(
@@ -353,12 +339,8 @@ def _targets(
         or len(route_rows) != 364
     ):
         raise ValueError("phase2a_r103_input_records_invalid")
-    by_triage = {
-        str(row["row_id"]): row for row in triage_rows if isinstance(row, dict)
-    }
-    by_route = {
-        str(row["row_id"]): row for row in route_rows if isinstance(row, dict)
-    }
+    by_triage = {str(row["row_id"]): row for row in triage_rows if isinstance(row, dict)}
+    by_route = {str(row["row_id"]): row for row in route_rows if isinstance(row, dict)}
     if len(by_triage) != 448 or len(by_route) != 364:
         raise ValueError("phase2a_r103_input_row_identity_collision")
 
@@ -373,8 +355,7 @@ def _targets(
             not isinstance(affected, list)
             or not affected
             or raw_scope.get("affected_row_count") != len(affected)
-            or raw_scope.get("retrieval_status")
-            != "OFFICIAL_PRIMARY_SOURCE_QUARANTINE_REQUIRED"
+            or raw_scope.get("retrieval_status") != "OFFICIAL_PRIMARY_SOURCE_QUARANTINE_REQUIRED"
             or raw_scope.get("source_admission_authorized") is not False
         ):
             raise ValueError("phase2a_r103_scope_boundary_invalid")
@@ -388,8 +369,7 @@ def _targets(
             if (
                 triage is None
                 or route is None
-                or authority
-                not in route.get("effective_outside_candidate_authority_ids", [])
+                or authority not in route.get("effective_outside_candidate_authority_ids", [])
             ):
                 raise ValueError("phase2a_r103_scope_row_binding_invalid")
             planned = triage.get("planned_authorities")
@@ -398,8 +378,7 @@ def _targets(
             matches = [
                 item
                 for item in planned
-                if isinstance(item, Mapping)
-                and item.get("authority_identity_id") == authority
+                if isinstance(item, Mapping) and item.get("authority_identity_id") == authority
             ]
             if len(matches) != 1:
                 raise ValueError("phase2a_r103_locator_binding_missing")
@@ -427,8 +406,7 @@ def _targets(
         )
     if (
         row_link_count != EXPECTED_ROW_LINK_COUNT
-        or len({target["authority_identity_id"] for target in targets})
-        != EXPECTED_AUTHORITY_COUNT
+        or len({target["authority_identity_id"] for target in targets}) != EXPECTED_AUTHORITY_COUNT
     ):
         raise ValueError("phase2a_r103_target_inventory_invalid")
     return tuple(targets)
@@ -540,9 +518,7 @@ def collect(
             raw_member = f"{stem}.xml"
             extraction_member = f"{stem}.extraction.json"
             _write_exclusive(output_root / raw_member, raw)
-            _write_exclusive(
-                output_root / extraction_member, _pretty_json(extraction_artifact)
-            )
+            _write_exclusive(output_root / extraction_member, _pretty_json(extraction_artifact))
             record_material = {
                 "ordinal": target["ordinal"],
                 "authority_identity_id": authority,
@@ -562,16 +538,10 @@ def collect(
                 "raw_quarantine_member": raw_member,
                 "raw_bytes": len(raw),
                 "raw_sha256": _sha256(raw),
-                "canonical_xml_sha256": extraction_artifact[
-                    "source_canonical_xml_sha256"
-                ],
+                "canonical_xml_sha256": extraction_artifact["source_canonical_xml_sha256"],
                 "extraction_member": extraction_member,
-                "extraction_file_sha256": _sha256_file(
-                    output_root / extraction_member
-                ),
-                "extraction_content_sha256": extraction_artifact[
-                    "artifact_content_sha256"
-                ],
+                "extraction_file_sha256": _sha256_file(output_root / extraction_member),
+                "extraction_content_sha256": extraction_artifact["artifact_content_sha256"],
                 "extracted_block_count": extraction_artifact["block_count"],
                 "result": "OFFICIAL_SOURCE_QUARANTINED_NOT_ADMITTED",
                 "owner_source_admission_required": True,
@@ -579,9 +549,7 @@ def collect(
                 "automatically_indexed": False,
                 "automatically_embedded": False,
             }
-            records.append(
-                {**record_material, "record_content_sha256": _sealed(record_material)}
-            )
+            records.append({**record_material, "record_content_sha256": _sealed(record_material)})
 
     manifest_material = {
         "schema": "legalbot.v111.phase2a.post-r101-official-source-quarantine.v1",
@@ -594,9 +562,7 @@ def collect(
         "allowlisted_hosts": sorted(ALLOWED_HOSTS),
         "record_count": len(records),
         "row_link_count": sum(len(record["affected_row_ids"]) for record in records),
-        "result_counts": {
-            "OFFICIAL_SOURCE_QUARANTINED_NOT_ADMITTED": len(records)
-        },
+        "result_counts": {"OFFICIAL_SOURCE_QUARANTINED_NOT_ADMITTED": len(records)},
         "records": records,
         "bulk_search_performed": False,
         "owner_source_admission_required": True,
@@ -618,9 +584,7 @@ def collect(
         **manifest_material,
         "manifest_content_sha256": _sealed(manifest_material),
     }
-    _write_exclusive(
-        output_root / "QUARANTINE-MANIFEST.json", _pretty_json(manifest)
-    )
+    _write_exclusive(output_root / "QUARANTINE-MANIFEST.json", _pretty_json(manifest))
     _write_exclusive(
         output_root / "OUTCOME.txt",
         b"16 OFFICIAL SOURCES QUARANTINED. OWNER PROPOSITION-LEVEL REVIEW "
@@ -631,9 +595,7 @@ def collect(
         for path in output_root.iterdir()
         if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in names
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in names)
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return manifest
 

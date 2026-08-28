@@ -25,12 +25,15 @@ def test_consolidates_all_20_and_exactly_nine_non_admitted_sources(
         "NO_585_PROPOSITION_RELIANCE": 6,
     }
     assert result["source_admission_proposal_count"] == 9
-    assert len(
-        {
-            proposal["source_lead_content_sha256"]
-            for proposal in result["source_admission_proposals"]
-        }
-    ) == 9
+    assert (
+        len(
+            {
+                proposal["source_lead_content_sha256"]
+                for proposal in result["source_admission_proposals"]
+            }
+        )
+        == 9
+    )
     for row in result["records"]:
         assert row["owner_outcome"] is None
         assert row["owner_decision_required"] is True

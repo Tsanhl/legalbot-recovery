@@ -28,12 +28,8 @@ DEFAULT_OUTPUT = (
     / "data/evaluations/phase2a-owner-review/LegalBot-Phase2AB-2026-08-24-r48-owner-review-delivery"
     / "LegalBot-v111-Phase2A-Consolidated-Owner-Review-Agnes-2026-08-24-rev2.docx"
 )
-EXPECTED_DECISION_DIGEST = (
-    "7a471bed936bf901cca49413f1abb8e27db54157862a1f369136a0704e811414"
-)
-EXPECTED_MACHINE_DIGEST = (
-    "3ba8de75875cd2192a0707450c206fbb91220fbf3d3ac2704b1fd18046d1227c"
-)
+EXPECTED_DECISION_DIGEST = "7a471bed936bf901cca49413f1abb8e27db54157862a1f369136a0704e811414"
+EXPECTED_MACHINE_DIGEST = "3ba8de75875cd2192a0707450c206fbb91220fbf3d3ac2704b1fd18046d1227c"
 
 BLUE = RGBColor(46, 116, 181)
 DARK_BLUE = RGBColor(31, 77, 120)
@@ -380,18 +376,37 @@ def render(source_root: Path, output_path: Path, doc_skill_scripts: Path) -> dic
             ("585 issue rows", "137", "448"),
             ("1,896 legislative effects", "1,380", "516"),
             ("20 judgments", "20 historical snapshots verified", "20 later-treatment outcomes"),
-            ("65 legislation byte mismatches", "64 text-identical", "1 text delta + owner disposition"),
+            (
+                "65 legislation byte mismatches",
+                "64 text-identical",
+                "1 text delta + owner disposition",
+            ),
         ),
         (2520, 3240, 3600),
         apply_table_geometry,
     )
 
     _add_heading(document, "What is already complete", 1)
-    _add_bullet(document, "All 585 issue rows are present in one sealed matrix; none is silently dropped or averaged away.")
-    _add_bullet(document, "The independent advisory pass ranked all 448 pending rows using pinned Qwen/Qwen3-Reranker-0.6B at revision e61197ed45024b0ed8a2d74b80b4d909f1255473.")
-    _add_bullet(document, "All 516 held legislative effects were remapped against same-authority evidence; none had an exact affected-provision intersection, so all remain owner decisions.")
-    _add_bullet(document, "All 20 historical judgment snapshots passed byte-integrity checks; nine targeted official later-treatment leads were quarantined for review.")
-    _add_bullet(document, "The 65 legislation byte mismatches were compared at stable provision anchors: 64 are semantic-text identical and one is a real section 60(7) delta.")
+    _add_bullet(
+        document,
+        "All 585 issue rows are present in one sealed matrix; none is silently dropped or averaged away.",
+    )
+    _add_bullet(
+        document,
+        "The independent advisory pass ranked all 448 pending rows using pinned Qwen/Qwen3-Reranker-0.6B at revision e61197ed45024b0ed8a2d74b80b4d909f1255473.",
+    )
+    _add_bullet(
+        document,
+        "All 516 held legislative effects were remapped against same-authority evidence; none had an exact affected-provision intersection, so all remain owner decisions.",
+    )
+    _add_bullet(
+        document,
+        "All 20 historical judgment snapshots passed byte-integrity checks; nine targeted official later-treatment leads were quarantined for review.",
+    )
+    _add_bullet(
+        document,
+        "The 65 legislation byte mismatches were compared at stable provision anchors: 64 are semantic-text identical and one is a real section 60(7) delta.",
+    )
 
     document.add_page_break()
     _add_heading(document, "Immediate owner action", 1)
@@ -424,18 +439,38 @@ def render(source_root: Path, output_path: Path, doc_skill_scripts: Path) -> dic
     _set_font(digest_run, name="Courier New", size=8.5, color=INK, bold=True)
 
     _add_heading(document, "Why a blanket approval of all 1,058 items is not enough", 1)
-    _add_bullet(document, "The 448 unresolved issue records still identify topics and ranked spans, but do not yet contain owner-confirmed atomic proposition text for every row.")
-    _add_bullet(document, "A relevance score ranks evidence; it is not a legal-currentness or release threshold and cannot substitute for owner judgment.")
-    _add_bullet(document, "Twenty judgment records still require an explicit affirmed, limited, distinguished, displaced, no-material-treatment, exclusion, or more-evidence outcome.")
-    _add_bullet(document, "The nine new official cases remain quarantine evidence. They cannot be admitted, indexed, or embedded until their proposition-level role is expressly approved.")
+    _add_bullet(
+        document,
+        "The 448 unresolved issue records still identify topics and ranked spans, but do not yet contain owner-confirmed atomic proposition text for every row.",
+    )
+    _add_bullet(
+        document,
+        "A relevance score ranks evidence; it is not a legal-currentness or release threshold and cannot substitute for owner judgment.",
+    )
+    _add_bullet(
+        document,
+        "Twenty judgment records still require an explicit affirmed, limited, distinguished, displaced, no-material-treatment, exclusion, or more-evidence outcome.",
+    )
+    _add_bullet(
+        document,
+        "The nine new official cases remain quarantine evidence. They cannot be admitted, indexed, or embedded until their proposition-level role is expressly approved.",
+    )
 
     _add_heading(document, "Outstanding decision map", 1)
     _add_table(
         document,
         ("Count", "Decision class", "Current safe state"),
         (
-            ("448", "Issue proposition + exact span", "Evidence packet ready; owner selection required"),
-            ("20", "Judgment later treatment", "Historical bytes verified; substantive relationship unresolved"),
+            (
+                "448",
+                "Issue proposition + exact span",
+                "Evidence packet ready; owner selection required",
+            ),
+            (
+                "20",
+                "Judgment later treatment",
+                "Historical bytes verified; substantive relationship unresolved",
+            ),
             ("1", "Patents Act text delta", "Fresh bytes quarantined; materiality unresolved"),
             ("9", "New source admissions", "Quarantined; not indexed or embedded"),
         ),
@@ -497,32 +532,77 @@ def render(source_root: Path, output_path: Path, doc_skill_scripts: Path) -> dic
         document,
         ("Layer", "Implemented fail-closed control"),
         (
-            ("Prompt engineering", "Pinned prompt/model/configuration identities; atomic claims; explicit evidence IDs; no silent context truncation."),
-            ("Quality", "Material dates, amounts, percentages, durations and provision IDs must bind to exact evidence spans; unsupported facts and unrelated citations block release."),
-            ("Output validation", "Strict JSON/schema checks, clause atomicity, quotation/source/version/jurisdiction/currentness checks, and sealed retrieval metadata."),
-            ("Fallback", "No evidence, below-threshold evidence, index/reranker failure or unavailable index prevents model invocation; repeated fingerprints trigger debug before a third attempt."),
+            (
+                "Prompt engineering",
+                "Pinned prompt/model/configuration identities; atomic claims; explicit evidence IDs; no silent context truncation.",
+            ),
+            (
+                "Quality",
+                "Material dates, amounts, percentages, durations and provision IDs must bind to exact evidence spans; unsupported facts and unrelated citations block release.",
+            ),
+            (
+                "Output validation",
+                "Strict JSON/schema checks, clause atomicity, quotation/source/version/jurisdiction/currentness checks, and sealed retrieval metadata.",
+            ),
+            (
+                "Fallback",
+                "No evidence, below-threshold evidence, index/reranker failure or unavailable index prevents model invocation; repeated fingerprints trigger debug before a third attempt.",
+            ),
         ),
         (2100, 7260),
         apply_table_geometry,
     )
 
     _add_heading(document, "Local support-agent architecture choices", 2)
-    _add_bullet(document, "Conversation memory uses encrypted durable SQLite plus a bounded in-memory hot cache, rather than adding a Redis service to an owner-only local deployment. Retention is 30 days, the hot-cache window is seven days, and sliding-window quotas are enforced.")
-    _add_bullet(document, "Knowledge freshness is event driven: official material enters quarantine, then a durable update event can drive chunking, embedding and ingestion only after owner admission. Source date and last_updated are retained, and retrieval collapses to the latest approved version.")
-    _add_bullet(document, "WebSocket job events now require an exact subprotocol. A gRPC streaming contract records time-to-first-token and gap-free sentence diagnostics, but the real Unix-domain-socket transport remains a Phase-2B provisioning step.")
-    _add_bullet(document, "The code keeps a single local deployable system while defining service boundaries. A full microservice split, Redis deployment and network gRPC activation are deferred until actual load or operational evidence justifies them.")
+    _add_bullet(
+        document,
+        "Conversation memory uses encrypted durable SQLite plus a bounded in-memory hot cache, rather than adding a Redis service to an owner-only local deployment. Retention is 30 days, the hot-cache window is seven days, and sliding-window quotas are enforced.",
+    )
+    _add_bullet(
+        document,
+        "Knowledge freshness is event driven: official material enters quarantine, then a durable update event can drive chunking, embedding and ingestion only after owner admission. Source date and last_updated are retained, and retrieval collapses to the latest approved version.",
+    )
+    _add_bullet(
+        document,
+        "WebSocket job events now require an exact subprotocol. A gRPC streaming contract records time-to-first-token and gap-free sentence diagnostics, but the real Unix-domain-socket transport remains a Phase-2B provisioning step.",
+    )
+    _add_bullet(
+        document,
+        "The code keeps a single local deployable system while defining service boundaries. A full microservice split, Redis deployment and network gRPC activation are deferred until actual load or operational evidence justifies them.",
+    )
 
     _add_heading(document, "Controls designed but not activated", 2)
-    _add_bullet(document, "Pinned Ed25519 verification, three private roots, session/CSRF secrets, literal 127.0.0.1 access, UDS model transport, 12 GiB memory ceiling and 3 GiB free-memory admission remain Phase-2B work.")
-    _add_bullet(document, "No split secret, Development/Validation roots, 30/30 allocation, Development authorization payload, Stage A, answer generation, promotion, Validation or live activation exists yet.")
+    _add_bullet(
+        document,
+        "Pinned Ed25519 verification, three private roots, session/CSRF secrets, literal 127.0.0.1 access, UDS model transport, 12 GiB memory ceiling and 3 GiB free-memory admission remain Phase-2B work.",
+    )
+    _add_bullet(
+        document,
+        "No split secret, Development/Validation roots, 30/30 allocation, Development authorization payload, Stage A, answer generation, promotion, Validation or live activation exists yet.",
+    )
 
     document.add_page_break()
     _add_heading(document, "What happens next", 1)
-    _add_number(document, "Owner approves or rejects the exact 580-item deterministic subset using the digest-bound wording in this report.")
-    _add_number(document, "Phase 2A continues with explicit proposition/span decisions for 448 issues, later-treatment decisions for 20 judgments, the Patents Act section 60(7) disposition and source-admission decisions for nine leads.")
-    _add_number(document, "Only after all material dependencies close may one consolidated successor candidate be justified, built, sealed and retrieval re-attested. The existing sealed candidate is never patched.")
-    _add_number(document, "Codex returns the successful Phase-2A package and exact adoption digest. Owner adoption of that exact digest is required before Phase 2B begins.")
-    _add_number(document, "After Phase 2B passes, Codex returns the exact Development authorization payload. Development 30 remains unauthorized until the owner approves that payload.")
+    _add_number(
+        document,
+        "Owner approves or rejects the exact 580-item deterministic subset using the digest-bound wording in this report.",
+    )
+    _add_number(
+        document,
+        "Phase 2A continues with explicit proposition/span decisions for 448 issues, later-treatment decisions for 20 judgments, the Patents Act section 60(7) disposition and source-admission decisions for nine leads.",
+    )
+    _add_number(
+        document,
+        "Only after all material dependencies close may one consolidated successor candidate be justified, built, sealed and retrieval re-attested. The existing sealed candidate is never patched.",
+    )
+    _add_number(
+        document,
+        "Codex returns the successful Phase-2A package and exact adoption digest. Owner adoption of that exact digest is required before Phase 2B begins.",
+    )
+    _add_number(
+        document,
+        "After Phase 2B passes, Codex returns the exact Development authorization payload. Development 30 remains unauthorized until the owner approves that payload.",
+    )
 
     _add_heading(document, "Machine-readable companion", 1)
     _add_body(
@@ -533,9 +613,18 @@ def render(source_root: Path, output_path: Path, doc_skill_scripts: Path) -> dic
         document,
         ("Artifact", "Purpose"),
         (
-            ("COMPLETE-REMEDIATION-MATRIX-585.json", "Every issue, recorded decision, advisory ranking and deep-recovery comparison"),
-            ("COMPLETE-LEGISLATIVE-EFFECT-REGISTER-1896.json", "All recorded and pending effect dispositions"),
-            ("COMPLETE-JUDGMENT-LATER-TREATMENT-REGISTER-20.json", "Judgment custody and targeted leads"),
+            (
+                "COMPLETE-REMEDIATION-MATRIX-585.json",
+                "Every issue, recorded decision, advisory ranking and deep-recovery comparison",
+            ),
+            (
+                "COMPLETE-LEGISLATIVE-EFFECT-REGISTER-1896.json",
+                "All recorded and pending effect dispositions",
+            ),
+            (
+                "COMPLETE-JUDGMENT-LATER-TREATMENT-REGISTER-20.json",
+                "Judgment custody and targeted leads",
+            ),
             ("OWNER-DECISION-BATCH-1058.json", "Exact unresolved decision payload"),
             ("OWNER-REVIEW-*.csv", "Owner-editable outcomes and comments"),
             ("SHA256SUMS.txt", "File integrity verification"),

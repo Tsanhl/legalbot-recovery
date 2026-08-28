@@ -22,12 +22,8 @@ DEFAULT_LEDGER = PROJECT_ROOT / (
     "LegalBot-Phase2A-2026-08-27-remediation-working-r1/"
     "PROPOSITION-RECONCILIATION-WORKING-LEDGER-361.json"
 )
-EXPECTED_LEDGER_CONTENT_SHA256 = (
-    "62d56c8b34d1fc964dca1a5920ee49b87499471c187dbe82aa58ebee191737ce"
-)
-EXPECTED_LEDGER_FILE_SHA256 = (
-    "bdc091b1a3b8de2febcbc14d86d8c88113ed112ca2bc28908eeb3e6d95ccc297"
-)
+EXPECTED_LEDGER_CONTENT_SHA256 = "62d56c8b34d1fc964dca1a5920ee49b87499471c187dbe82aa58ebee191737ce"
+EXPECTED_LEDGER_FILE_SHA256 = "bdc091b1a3b8de2febcbc14d86d8c88113ed112ca2bc28908eeb3e6d95ccc297"
 EXPECTED_QUEUE_COUNT = 316
 
 FALSE_GATES = {
@@ -45,8 +41,7 @@ FALSE_GATES = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -73,15 +68,12 @@ def _load_ledger(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("proposition ledger must be a JSON object")
     if (
-        value.get("schema")
-        != "legalbot.v111.phase2a.proposition-reconciliation-working-ledger.v1"
+        value.get("schema") != "legalbot.v111.phase2a.proposition-reconciliation-working-ledger.v1"
         or value.get("status") != "COMPLETE_NON_AUTHORIZING_WORKING_LEDGER"
         or value.get("covered_row_count") != 361
         or value.get("missing_row_count") != 0
-        or value.get("artifact_content_sha256")
-        != EXPECTED_LEDGER_CONTENT_SHA256
-        or _content_sha256(value, "artifact_content_sha256")
-        != EXPECTED_LEDGER_CONTENT_SHA256
+        or value.get("artifact_content_sha256") != EXPECTED_LEDGER_CONTENT_SHA256
+        or _content_sha256(value, "artifact_content_sha256") != EXPECTED_LEDGER_CONTENT_SHA256
     ):
         raise ValueError("sealed proposition-ledger content identity changed")
     return value
@@ -121,9 +113,7 @@ def build_queue(ledger_path: Path = DEFAULT_LEDGER) -> dict[str, Any]:
             "qualification_status": source["qualification_status"],
             "proposition_record_content_sha256": source["record_content_sha256"],
             "proposition_status": source["proposition_status"],
-            "canonical_atomic_proposition": source.get(
-                "canonical_atomic_proposition"
-            ),
+            "canonical_atomic_proposition": source.get("canonical_atomic_proposition"),
             "local_evidence_fit": source["local_evidence_fit"],
             "selected_local_evidence": source["selected_local_evidence"],
             "rejected_candidate_reasons": source["rejected_candidate_reasons"],
@@ -134,9 +124,7 @@ def build_queue(ledger_path: Path = DEFAULT_LEDGER) -> dict[str, Any]:
             "source_ceiling_date": "2026-08-14",
             "owner_outcome": None,
         }
-        row["record_content_sha256"] = _content_sha256(
-            row, "record_content_sha256"
-        )
+        row["record_content_sha256"] = _content_sha256(row, "record_content_sha256")
         records.append(row)
         route_counts[route] += 1
         fit_counts[source["local_evidence_fit"]] += 1
@@ -148,9 +136,7 @@ def build_queue(ledger_path: Path = DEFAULT_LEDGER) -> dict[str, Any]:
     artifact: dict[str, Any] = {
         "schema": "legalbot.v111.phase2a.official-source-research-queue.v1",
         "status": "COMPLETE_NON_AUTHORIZING_OFFICIAL_SOURCE_RESEARCH_QUEUE",
-        "source_proposition_ledger_content_sha256": ledger[
-            "artifact_content_sha256"
-        ],
+        "source_proposition_ledger_content_sha256": ledger["artifact_content_sha256"],
         "source_proposition_ledger_file_sha256": _sha256_file(ledger_path),
         "row_count": len(records),
         "ready_full_rows_not_queued": 45,
@@ -160,9 +146,7 @@ def build_queue(ledger_path: Path = DEFAULT_LEDGER) -> dict[str, Any]:
         "records": records,
         **FALSE_GATES,
     }
-    artifact["artifact_content_sha256"] = _content_sha256(
-        artifact, "artifact_content_sha256"
-    )
+    artifact["artifact_content_sha256"] = _content_sha256(artifact, "artifact_content_sha256")
     return artifact
 
 
@@ -184,9 +168,7 @@ def main() -> None:
         json.dumps(
             {
                 "artifact_content_sha256": artifact["artifact_content_sha256"],
-                "ready_full_rows_not_queued": artifact[
-                    "ready_full_rows_not_queued"
-                ],
+                "ready_full_rows_not_queued": artifact["ready_full_rows_not_queued"],
                 "research_route_counts": artifact["research_route_counts"],
                 "row_count": artifact["row_count"],
                 "status": artifact["status"],

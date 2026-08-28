@@ -42,15 +42,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256_bytes(value: bytes) -> str:
@@ -163,10 +160,9 @@ def apply_owner_approval(
             raise ValueError("phase2a_owner_approval_proposal_item_invalid")
         seen.add(key)
         item = source_items[key]
-        if (
-            entry.get("item_sha256") != item.get("item_sha256")
-            or entry.get("source_record_sha256") != item.get("source_record_sha256")
-        ):
+        if entry.get("item_sha256") != item.get("item_sha256") or entry.get(
+            "source_record_sha256"
+        ) != item.get("source_record_sha256"):
             raise ValueError("phase2a_owner_approval_proposal_item_binding_invalid")
         advisory = owner_review.validate_advisory_ai_review(entry["advisory_ai_review"])
         decision = owner_review.validate_owner_decision(
@@ -187,9 +183,7 @@ def apply_owner_approval(
         )
     if seen != set(source_items) or len(approved_entries) != sum(EXPECTED_CATEGORY_COUNTS.values()):
         raise ValueError("phase2a_owner_approval_decision_inventory_invalid")
-    if outcomes != Counter(
-        {"APPROVE_EFFECT_DISPOSITION": 1380, "REQUEST_MORE_EVIDENCE": 1189}
-    ):
+    if outcomes != Counter({"APPROVE_EFFECT_DISPOSITION": 1380, "REQUEST_MORE_EVIDENCE": 1189}):
         raise ValueError("phase2a_owner_approval_outcome_inventory_invalid")
 
     receipt_material: dict[str, Any] = {
@@ -204,9 +198,7 @@ def apply_owner_approval(
         "proposal_content_sha256": proposal_seal,
         "proposal_file_sha256": proposal_file_sha256,
         "source_phase2a_package_digest": proposal["source_phase2a_package_digest"],
-        "source_owner_review_package_digest": proposal[
-            "source_owner_review_package_digest"
-        ],
+        "source_owner_review_package_digest": proposal["source_owner_review_package_digest"],
         "decision_count": len(approved_entries),
         "outcome_counts": dict(sorted(outcomes.items())),
         "authority": {
@@ -230,9 +222,7 @@ def apply_owner_approval(
         "owner_approval_receipt_content_sha256": receipt_seal,
         "source_proposal_content_sha256": proposal_seal,
         "source_phase2a_package_digest": proposal["source_phase2a_package_digest"],
-        "source_owner_review_package_digest": proposal[
-            "source_owner_review_package_digest"
-        ],
+        "source_owner_review_package_digest": proposal["source_owner_review_package_digest"],
         "item_count": len(approved_entries),
         "category_counts": EXPECTED_CATEGORY_COUNTS,
         "outcome_counts": dict(sorted(outcomes.items())),
@@ -259,15 +249,12 @@ def apply_owner_approval(
         ).encode(),
     )
     hashes = {
-        path.name: _sha256_file(path)
-        for path in (receipt_path, decisions_path, outcome_path)
+        path.name: _sha256_file(path) for path in (receipt_path, decisions_path, outcome_path)
     }
     sums_path = output_root / "SHA256SUMS.txt"
     _write_exclusive(
         sums_path,
-        "".join(f"{digest}  {name}\n" for name, digest in sorted(hashes.items())).encode(
-            "utf-8"
-        ),
+        "".join(f"{digest}  {name}\n" for name, digest in sorted(hashes.items())).encode("utf-8"),
     )
     return {
         "owner_approval_receipt": str(receipt_path),
@@ -296,7 +283,9 @@ def _persist_failure(output_root: Path, exc: BaseException) -> None:
         }
         _write_exclusive(
             failure_path,
-            _pretty_json({**material, "failure_content_sha256": _sha256_bytes(_canonical_json(material))}),
+            _pretty_json(
+                {**material, "failure_content_sha256": _sha256_bytes(_canonical_json(material))}
+            ),
         )
     except Exception:
         return

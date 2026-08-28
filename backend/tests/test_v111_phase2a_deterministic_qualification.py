@@ -27,8 +27,7 @@ def test_real_phase2a_partition_produces_truthful_all585_blocked_result() -> Non
     )
     source_manifest = json.loads(
         (
-            PROJECT_ROOT
-            / "data/review_queue/approved-source-manifest-current-law-ew-full-"
+            PROJECT_ROOT / "data/review_queue/approved-source-manifest-current-law-ew-full-"
             "phase2a-held-20260827-v1.json"
         ).read_text(encoding="utf-8")
     )

@@ -20,10 +20,7 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-QUARANTINE_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-24/phase2a-targeted-later-treatment-r42"
-)
+QUARANTINE_ROOT = PROJECT_ROOT / "data/quarantine/2026-08-24/phase2a-targeted-later-treatment-r42"
 DEFAULT_LEADS = QUARANTINE_ROOT / "TARGETED-LATER-TREATMENT-LEADS-9.json"
 DEFAULT_NO_RELIANCE = (
     PROJECT_ROOT
@@ -37,9 +34,7 @@ DEFAULT_OUTPUT = (
     / "LegalBot-Phase2AB-2026-08-25-r55-targeted-treatment-advisory"
 )
 
-EXPECTED_LEADS_CONTENT_SHA256 = (
-    "ad887ac1d18b06ed459b05471188cd6f999fa6b0580589edc4bbacc46cd902a9"
-)
+EXPECTED_LEADS_CONTENT_SHA256 = "ad887ac1d18b06ed459b05471188cd6f999fa6b0580589edc4bbacc46cd902a9"
 EXPECTED_NO_RELIANCE_CONTENT_SHA256 = (
     "b4092b9479f59b6b29c133f6b99e2526550957060ff8facf9ad4b92622c68026"
 )
@@ -95,15 +90,12 @@ _PARAGRAPH_MARKER = re.compile(r"(?<!\d)(?P<number>\d{1,3})\.\s")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -240,9 +232,7 @@ def build_treatment_relationships(
         derived = lead.get("derived_review_text")
         if not isinstance(derived, dict):
             raise ValueError("phase2a_treatment_derived_text_record_invalid")
-        path = (PROJECT_ROOT / str(derived.get("relative_path") or "")).resolve(
-            strict=True
-        )
+        path = (PROJECT_ROOT / str(derived.get("relative_path") or "")).resolve(strict=True)
         if (
             not path.is_relative_to(QUARANTINE_ROOT)
             or path.is_symlink()

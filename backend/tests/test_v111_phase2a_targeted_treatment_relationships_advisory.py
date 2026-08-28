@@ -16,9 +16,7 @@ def test_targeted_relationships_bind_exact_context_without_authorizing(
 
     assert result["record_count"] == 5
     assert result["classification_counts"] == {"AFFIRMED": 4, "LIMITED": 1}
-    assert {row["lead_id"] for row in result["records"]} == set(
-        advisory.EXPECTED_RELATIONSHIPS
-    )
+    assert {row["lead_id"] for row in result["records"]} == set(advisory.EXPECTED_RELATIONSHIPS)
     for row in result["records"]:
         context = row["exact_treatment_context"]
         assert row["target_neutral_citation"] in context["exact_text"]

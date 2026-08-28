@@ -7,7 +7,6 @@ import stat
 from collections import Counter
 from pathlib import Path
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RUN_ROOT = (
     PROJECT_ROOT
@@ -36,7 +35,9 @@ EXPECTED_TOPICS = {
 
 
 def _canonical_json(value: dict) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    return (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+    ).encode("utf-8")
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -140,7 +141,11 @@ def test_checksums_and_no_private_path_or_identity_leakage() -> None:
     for line in (RUN_ROOT / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines():
         expected, relative = line.split("  ", 1)
         assert hashlib.sha256((RUN_ROOT / relative).read_bytes()).hexdigest() == expected
-    forbidden = (re.compile(rb"/Users/", re.IGNORECASE), re.compile(rb"hltsang", re.IGNORECASE), re.compile(rb"\bAgnes\b", re.IGNORECASE))
+    forbidden = (
+        re.compile(rb"/Users/", re.IGNORECASE),
+        re.compile(rb"hltsang", re.IGNORECASE),
+        re.compile(rb"\bAgnes\b", re.IGNORECASE),
+    )
     for path in RUN_ROOT.rglob("*"):
         if path.is_file():
             for pattern in forbidden:

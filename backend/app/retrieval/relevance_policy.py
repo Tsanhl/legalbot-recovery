@@ -14,9 +14,7 @@ POLICY_SCHEMA = "legalbot.retrieval-relevance-policy.v1"
 PENDING_STATUS: Literal["PENDING_PHASE2B_CALIBRATION"] = "PENDING_PHASE2B_CALIBRATION"
 FROZEN_STATUS: Literal["FROZEN_CALIBRATED"] = "FROZEN_CALIBRATED"
 SEMANTIC_ROUTE = "hybrid_rrf"
-EXACT_ROUTES = frozenset(
-    {"exact_authority_identity", "exact_legislation_reference"}
-)
+EXACT_ROUTES = frozenset({"exact_authority_identity", "exact_legislation_reference"})
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -24,8 +22,7 @@ def canonical_policy_bytes(value: dict[str, Any]) -> bytes:
     material = dict(value)
     material.pop("policy_sha256", None)
     return (
-        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -83,9 +80,11 @@ def _validate_payload(value: Any, *, path: Path | None = None) -> RelevanceThres
         PENDING_STATUS if value["status"] == PENDING_STATUS else FROZEN_STATUS
     )
     calibration = value.get("calibration")
-    if not isinstance(calibration, dict) or calibration.get("training_query_count") != 20 or calibration.get(
-        "holdout_query_count"
-    ) != 10:
+    if (
+        not isinstance(calibration, dict)
+        or calibration.get("training_query_count") != 20
+        or calibration.get("holdout_query_count") != 10
+    ):
         raise ValueError("relevance threshold policy calibration split is invalid")
     return RelevanceThresholdPolicy(
         version=str(value.get("version") or ""),

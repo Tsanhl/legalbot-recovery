@@ -1940,9 +1940,7 @@ def _evidence_span_from_row(row: Any) -> EvidenceSpan:
         ),
         retrieval_route=str(row["retrieval_route"] or "") or None,
         retrieval_threshold=(
-            float(row["retrieval_threshold"])
-            if row["retrieval_threshold"] is not None
-            else None
+            float(row["retrieval_threshold"]) if row["retrieval_threshold"] is not None else None
         ),
         retrieval_threshold_policy_sha256=(
             str(row["retrieval_threshold_policy_sha256"] or "") or None
@@ -1952,9 +1950,7 @@ def _evidence_span_from_row(row: Any) -> EvidenceSpan:
             if row["retrieval_threshold_qualified"] is not None
             else None
         ),
-        retrieval_qualification_reason=(
-            str(row["retrieval_qualification_reason"] or "") or None
-        ),
+        retrieval_qualification_reason=(str(row["retrieval_qualification_reason"] or "") or None),
         legal_role=str(row["legal_role"] or "unclassified"),
         unapplied_effect_count=(
             int(row["unapplied_effect_count"])
@@ -2806,9 +2802,7 @@ def _replay_owner_canary_version_quality(
     ):
         raise ValueError("owner-canary version draft, answer or frozen claims differ")
 
-    deterministic = QualityEvaluator(
-        database, enforce_retrieval_threshold=True
-    ).evaluate(
+    deterministic = QualityEvaluator(database, enforce_retrieval_threshold=True).evaluate(
         answer_version_id=answer_id,
         draft=draft,
         rendered_text=rendered.markdown,
@@ -3389,9 +3383,7 @@ def _verify_owner_canary_runtime_semantic_core(
         evidence_by_id=evidence,
         supported_claim_ids=material_claim_ids,
     )
-    deterministic_quality = QualityEvaluator(
-        database, enforce_retrieval_threshold=True
-    ).evaluate(
+    deterministic_quality = QualityEvaluator(database, enforce_retrieval_threshold=True).evaluate(
         answer_version_id=answer_id,
         draft=source_draft,
         rendered_text=rendered.markdown,
@@ -3537,13 +3529,7 @@ def _verify_owner_canary_runtime_semantic_core(
             and item.retrieval_threshold_policy_sha256 is not None
             for item in evidence_values
         )
-        and len(
-            {
-                item.retrieval_threshold_policy_sha256
-                for item in evidence_values
-            }
-        )
-        == 1,
+        and len({item.retrieval_threshold_policy_sha256 for item in evidence_values}) == 1,
         "source_lane": bool(evidence_values)
         and all(
             str(item.lane) in {"primary_authority", "official_secondary", "scholarship"}

@@ -121,9 +121,7 @@ def test_full_derivation_is_create_only_sealed_and_no_replace(
         "raw_representation_count": 15,
         "derived_representation_count": 15,
         "total_raw_bytes": sum(record["raw_bytes"] for record in manifest["records"]),
-        "total_derived_bytes": sum(
-            record["derived_bytes"] for record in manifest["records"]
-        ),
+        "total_derived_bytes": sum(record["derived_bytes"] for record in manifest["records"]),
         "total_provision_count": 312,
         "semantic_equivalence_pass_count": 15,
         "structural_verification_pass_count": 15,
@@ -151,9 +149,10 @@ def test_full_derivation_is_create_only_sealed_and_no_replace(
     package = json.loads(package_path.read_text())
     assert package["file_count"] == 17
     assert package["package_content_sha256"] == result["package_content_sha256"]
-    expected_checksums = "".join(
-        f"{item['sha256']}  {item['path']}\n" for item in package["files"]
-    ) + f"{_sha256(package_path.read_bytes())}  PACKAGE-MANIFEST.json\n"
+    expected_checksums = (
+        "".join(f"{item['sha256']}  {item['path']}\n" for item in package["files"])
+        + f"{_sha256(package_path.read_bytes())}  PACKAGE-MANIFEST.json\n"
+    )
     assert (output_root / "SHA256SUMS.txt").read_text() == expected_checksums
     for record in manifest["records"]:
         member = output_root / record["derived_member"]
@@ -203,6 +202,4 @@ def test_false_execution_boundary_verifier_is_recursive() -> None:
         {"source_admitted": False, "nested": [{"embedding_run": False}]}
     )
     with pytest.raises(ValueError, match="phase2a_fca_markdown_boundary_violation"):
-        module._verify_false_boundaries_recursively(
-            {"nested": [{"embedding_run": True}]}
-        )
+        module._verify_false_boundaries_recursively({"nested": [{"embedding_run": True}]})

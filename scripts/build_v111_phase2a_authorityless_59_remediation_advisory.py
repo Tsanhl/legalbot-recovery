@@ -45,8 +45,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 
 R3_PATH = REVIEW_ROOT / (
-    "LegalBot-Phase2A-2026-08-28-prequalification-blockers-r3/"
-    "PREQUALIFICATION-BLOCKER-REPORT.json"
+    "LegalBot-Phase2A-2026-08-28-prequalification-blockers-r3/PREQUALIFICATION-BLOCKER-REPORT.json"
 )
 WORKING_LEDGER_PATH = REVIEW_ROOT / (
     "LegalBot-Phase2A-2026-08-27-remediation-working-r1/"
@@ -84,51 +83,31 @@ CHECKSUMS_NAME = "SHA256SUMS.txt"
 
 R3_CONTENT_SHA256 = "5efc17b16adcae1ceb2ea1bbd7efcaba469ab0340c24b65c1e994132cb337980"
 R3_FILE_SHA256 = "7cb044a4c9539162281e10ac41e5e0cb1f0cd846b0eb597a0443b0e67fb48899"
-WORKING_LEDGER_CONTENT_SHA256 = (
-    "62d56c8b34d1fc964dca1a5920ee49b87499471c187dbe82aa58ebee191737ce"
-)
-WORKING_LEDGER_FILE_SHA256 = (
-    "bdc091b1a3b8de2febcbc14d86d8c88113ed112ca2bc28908eeb3e6d95ccc297"
-)
-OWNER_PACKET_CONTENT_SHA256 = (
-    "93ad9113af76896f0570a3666c446472af7587b7e3ff32b7464e670777ec6b6c"
-)
-OWNER_PACKET_FILE_SHA256 = (
-    "992770c04cb3e08de64bb98e80aa9801171d3e66e4b573b85919091a78b1db3b"
-)
+WORKING_LEDGER_CONTENT_SHA256 = "62d56c8b34d1fc964dca1a5920ee49b87499471c187dbe82aa58ebee191737ce"
+WORKING_LEDGER_FILE_SHA256 = "bdc091b1a3b8de2febcbc14d86d8c88113ed112ca2bc28908eeb3e6d95ccc297"
+OWNER_PACKET_CONTENT_SHA256 = "93ad9113af76896f0570a3666c446472af7587b7e3ff32b7464e670777ec6b6c"
+OWNER_PACKET_FILE_SHA256 = "992770c04cb3e08de64bb98e80aa9801171d3e66e4b573b85919091a78b1db3b"
 QUARANTINE_MANIFEST_CONTENT_SHA256 = (
     "b6d900b23232379a4d6c19d313f35c47e0758ce5e0bb6eb04008f9eba07a3819"
 )
-QUARANTINE_MANIFEST_FILE_SHA256 = (
-    "f482366a2ba0d9f636c56104d632767a8eadd6e9a9625d50ef5391a5f62995eb"
-)
+QUARANTINE_MANIFEST_FILE_SHA256 = "f482366a2ba0d9f636c56104d632767a8eadd6e9a9625d50ef5391a5f62995eb"
 CANDIDATE_MANIFEST_CONTENT_SHA256 = (
     "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
 )
-CANDIDATE_MANIFEST_FILE_SHA256 = (
-    "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
-)
+CANDIDATE_MANIFEST_FILE_SHA256 = "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
 EXECUTION_AUTHORITY_CONTENT_SHA256 = (
     "eb0eda2f34c8b261ea38fc9d697257cdd3bd6253c18c2d91355328c8cb78ef7b"
 )
-EXECUTION_AUTHORITY_FILE_SHA256 = (
-    "5171ce79007c68484f9854b5188bf7e7af8f880407b6fbad6e3f808d0c7630ad"
-)
+EXECUTION_AUTHORITY_FILE_SHA256 = "5171ce79007c68484f9854b5188bf7e7af8f880407b6fbad6e3f808d0c7630ad"
 BASELINE_ADVISORY_CONTENT_SHA256 = (
     "6078e556e8ee3eb551bd48d310b2a89728e317dc8c240f22030799b54e595e1d"
 )
-BASELINE_ADVISORY_FILE_SHA256 = (
-    "81eebbe55d18d5257217d28760d136544523716adfb17746cd6cb34bceb27659"
-)
+BASELINE_ADVISORY_FILE_SHA256 = "81eebbe55d18d5257217d28760d136544523716adfb17746cd6cb34bceb27659"
 MATERIALIZATION_PLAN_CONTENT_SHA256 = (
     "de7b8e8c0d5d4a6e1f99f0f338d623bb7e371222b8c0341b35515fe1d1567c7b"
 )
-SUPERSEDED_R1_CONTENT_SHA256 = (
-    "a3950fca2a66e623d08379955acd84c2cc0c61e71ce2af3fa4568f2a51161768"
-)
-SUPERSEDED_R1_FILE_SHA256 = (
-    "4d90676eae6ed0f312e5f72f8a9468b14ee392dbe36e4eb57484ba9e0ef5494a"
-)
+SUPERSEDED_R1_CONTENT_SHA256 = "a3950fca2a66e623d08379955acd84c2cc0c61e71ce2af3fa4568f2a51161768"
+SUPERSEDED_R1_FILE_SHA256 = "4d90676eae6ed0f312e5f72f8a9468b14ee392dbe36e4eb57484ba9e0ef5494a"
 
 ROW_IDS = (
     "live30-q04:issue-01",
@@ -531,8 +510,7 @@ NO_EXECUTION_FLAGS = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -628,18 +606,14 @@ def _source_bindings(
                 )
                 existing["citations"].add(authority["citation"])
                 existing["official_urls"].add(authority["official_url"])
-                existing["original_exact_locators"].update(
-                    authority["exact_locators"]
-                )
+                existing["original_exact_locators"].update(authority["exact_locators"])
 
     quarantine_records = {
         record["authority_identity_id"]: record
         for record in quarantine["records"]
         if record.get("selected_for_proposed_admission") is True
     }
-    candidate_sources = {
-        source["authority_identity_id"]: source for source in candidate["sources"]
-    }
+    candidate_sources = {source["authority_identity_id"]: source for source in candidate["sources"]}
     plan_records = {
         record["authority_identity_id"]: record
         for record in plan["representations"]
@@ -668,20 +642,12 @@ def _source_bindings(
             _, mode = _representation_text(path)
             source = {
                 "source_origin": "EXACT_OWNER_ADOPTED_MATERIALIZATION_PLAN",
-                "proposed_source_version_id": quarantine_record[
-                    "proposed_source_version_id"
-                ],
+                "proposed_source_version_id": quarantine_record["proposed_source_version_id"],
                 "representation_member": member,
                 "representation_file_sha256": quarantine_record["raw_sha256"],
-                "canonical_content_sha256": quarantine_record.get(
-                    "canonical_content_sha256"
-                ),
-                "materialization_record_content_sha256": plan_record[
-                    "record_content_sha256"
-                ],
-                "materialization_target_relative_path": plan_record[
-                    "target_relative_path"
-                ],
+                "canonical_content_sha256": quarantine_record.get("canonical_content_sha256"),
+                "materialization_record_content_sha256": plan_record["record_content_sha256"],
+                "materialization_target_relative_path": plan_record["target_relative_path"],
             }
         elif identity in candidate_sources:
             candidate_source = candidate_sources[identity]
@@ -710,15 +676,12 @@ def _source_bindings(
             _seal(
                 {
                     "schema": (
-                        "legalbot.v111.phase2a.authorityless-cohort-"
-                        "inspected-source-binding.v1"
+                        "legalbot.v111.phase2a.authorityless-cohort-inspected-source-binding.v1"
                     ),
                     "authority_identity_id": identity,
                     "citations": sorted(metadata["citations"]),
                     "official_urls": sorted(metadata["official_urls"]),
-                    "original_exact_locators": sorted(
-                        metadata["original_exact_locators"]
-                    ),
+                    "original_exact_locators": sorted(metadata["original_exact_locators"]),
                     "representation_parse_mode": mode,
                     "representation_byte_hash_verified": True,
                     "inspection_only": True,
@@ -763,18 +726,14 @@ def build_advisory() -> dict[str, Any]:
     _verify_seal(r3, "artifact_content_sha256", R3_CONTENT_SHA256)
     _verify_seal(ledger, "artifact_content_sha256", WORKING_LEDGER_CONTENT_SHA256)
     _verify_seal(owner_packet, "artifact_content_sha256", OWNER_PACKET_CONTENT_SHA256)
-    _verify_seal(
-        quarantine, "manifest_content_sha256", QUARANTINE_MANIFEST_CONTENT_SHA256
-    )
+    _verify_seal(quarantine, "manifest_content_sha256", QUARANTINE_MANIFEST_CONTENT_SHA256)
     _verify_seal(
         execution_authority,
         "artifact_content_sha256",
         EXECUTION_AUTHORITY_CONTENT_SHA256,
     )
     _verify_seal(baseline, "artifact_content_sha256", BASELINE_ADVISORY_CONTENT_SHA256)
-    _verify_seal(
-        superseded_r1, "artifact_content_sha256", SUPERSEDED_R1_CONTENT_SHA256
-    )
+    _verify_seal(superseded_r1, "artifact_content_sha256", SUPERSEDED_R1_CONTENT_SHA256)
     if (
         candidate.get("manifest_sha256") != CANDIDATE_MANIFEST_CONTENT_SHA256
         or candidate.get("source_count") != 251
@@ -809,14 +768,16 @@ def build_advisory() -> dict[str, Any]:
     r3_rows = [r3_by_id[row_id] for row_id in ROW_IDS]
 
     blockers = [
-        (row["row_id"], component)
-        for row in r3_rows
-        for component in row["blocking_components"]
+        (row["row_id"], component) for row in r3_rows for component in row["blocking_components"]
     ]
     support_counts = Counter(component["support_fit"] for _, component in blockers)
     none_components = [component for _, component in blockers if component["support_fit"] == "NONE"]
-    none_authority_empty = [component for component in none_components if not component["authorities"]]
-    none_authority_present = [component for component in none_components if component["authorities"]]
+    none_authority_empty = [
+        component for component in none_components if not component["authorities"]
+    ]
+    none_authority_present = [
+        component for component in none_components if component["authorities"]
+    ]
     if (
         len(r3_rows) != 59
         or len(blockers) != 80
@@ -837,9 +798,7 @@ def build_advisory() -> dict[str, Any]:
     if authority_present_keys != expected_authority_present_keys:
         raise ValueError("source_backed_none_topology_invalid")
 
-    source_bindings, source_by_id = _source_bindings(
-        r3_rows, quarantine, candidate, plan
-    )
+    source_bindings, source_by_id = _source_bindings(r3_rows, quarantine, candidate, plan)
     source_origins = Counter(row["source_origin"] for row in source_bindings)
     if len(source_bindings) != 18 or source_origins != {
         "EXACT_OWNER_ADOPTED_MATERIALIZATION_PLAN": 14,
@@ -891,9 +850,7 @@ def build_advisory() -> dict[str, Any]:
                 "proposition": component["proposition"],
                 "proposition_text_sha256": component["proposition_text_sha256"],
                 "support_fit": component["support_fit"],
-                "deterministic_blocker_reason_code": component[
-                    "deterministic_blocker_reason_code"
-                ],
+                "deterministic_blocker_reason_code": component["deterministic_blocker_reason_code"],
                 "authority_list_empty": not component["authorities"],
             }
             inspections = []
@@ -903,9 +860,7 @@ def build_advisory() -> dict[str, Any]:
                     {
                         "authority_identity_id": identity,
                         "authority_content_sha256": authority["authority_content_sha256"],
-                        "assessment_content_sha256": authority[
-                            "assessment_content_sha256"
-                        ],
+                        "assessment_content_sha256": authority["assessment_content_sha256"],
                         "original_exact_locators": authority["exact_locators"],
                         "source_binding_content_sha256": source_by_id[identity][
                             "record_content_sha256"
@@ -970,28 +925,19 @@ def build_advisory() -> dict[str, Any]:
                     "owner_adoption_required": True,
                     "applied": False,
                 }
-            recommendations.append(
-                _seal(recommendation, "recommendation_content_sha256")
-            )
+            recommendations.append(_seal(recommendation, "recommendation_content_sha256"))
 
         row_advisories.append(
             _seal(
                 {
                     "schema": (
-                        "legalbot.v111.phase2a.authorityless-cohort-row-"
-                        "remediation-advisory.v1"
+                        "legalbot.v111.phase2a.authorityless-cohort-row-remediation-advisory.v1"
                     ),
                     "row_id": row_id,
                     "r3_row_record_content_sha256": r3_row["record_content_sha256"],
-                    "working_ledger_record_content_sha256": ledger_row[
-                        "record_content_sha256"
-                    ],
-                    "owner_decision_content_sha256": packet_row[
-                        "decision_content_sha256"
-                    ],
-                    "original_blocking_component_count": len(
-                        r3_row["blocking_components"]
-                    ),
+                    "working_ledger_record_content_sha256": ledger_row["record_content_sha256"],
+                    "owner_decision_content_sha256": packet_row["decision_content_sha256"],
+                    "original_blocking_component_count": len(r3_row["blocking_components"]),
                     "component_recommendations": recommendations,
                     "preexisting_full_components_retained": retained_full,
                     "all_unclassified_holds_retained": [
@@ -1013,8 +959,7 @@ def build_advisory() -> dict[str, Any]:
         )
 
     expected_keys = sorted(
-        _component_key(row_id, component["component_ordinal"])
-        for row_id, component in blockers
+        _component_key(row_id, component["component_ordinal"]) for row_id, component in blockers
     )
     if sorted(disposed_keys) != expected_keys or len(set(disposed_keys)) != 80:
         raise ValueError("blocker_disposition_not_exactly_once")
@@ -1048,9 +993,7 @@ def build_advisory() -> dict[str, Any]:
             "observed_total_blocking_component_count": 80,
             "authority_list_empty_none_component_count": 61,
             "authority_present_but_relevance_insufficient_none_component_count": 2,
-            "authority_present_but_relevance_insufficient_component_keys": (
-                authority_present_keys
-            ),
+            "authority_present_but_relevance_insufficient_component_keys": (authority_present_keys),
             "root_cause": (
                 "The cohort name counted only NONE components with an empty authority "
                 "list. Two additional NONE components cite real statutes, but those "
@@ -1221,8 +1164,7 @@ def publish(output_root: Path = OUTPUT_ROOT) -> dict[str, str]:
     package = _seal(
         {
             "schema": (
-                "legalbot.v111.phase2a.authorityless-cohort-59-remediation-"
-                "advisory-package.v1"
+                "legalbot.v111.phase2a.authorityless-cohort-59-remediation-advisory-package.v1"
             ),
             "status": advisory["status"],
             "supersedes_advisory_content_sha256": SUPERSEDED_R1_CONTENT_SHA256,
@@ -1245,15 +1187,10 @@ def publish(output_root: Path = OUTPUT_ROOT) -> dict[str, str]:
     )
     package_bytes = _pretty_json(package)
     checksums = (
-        f"{_sha256(advisory_bytes)}  {ADVISORY_NAME}\n"
-        f"{_sha256(package_bytes)}  {PACKAGE_NAME}\n"
+        f"{_sha256(advisory_bytes)}  {ADVISORY_NAME}\n{_sha256(package_bytes)}  {PACKAGE_NAME}\n"
     ).encode()
 
-    staging = Path(
-        tempfile.mkdtemp(
-            prefix=f".{output_root.name}.staging-", dir=output_root.parent
-        )
-    )
+    staging = Path(tempfile.mkdtemp(prefix=f".{output_root.name}.staging-", dir=output_root.parent))
     os.chmod(staging, 0o700)
     try:
         for name, raw in (

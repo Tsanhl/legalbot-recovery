@@ -20,9 +20,7 @@ Do not answer the question. Do not add law, citations, cases, statutes, dates, a
 people, places, facts or assumptions. Return compact JSON with exactly:
 {"standalone_query":"...","used_message_ids":["..."]}
 Only list supplied message IDs whose content was needed."""
-_FACT_ATOM = re.compile(
-    r"(?<!\w)(?:£|\$|€)?\d[\d,]*(?:\.\d+)?%?|\b[A-Z][A-Z0-9&.-]{2,}\b"
-)
+_FACT_ATOM = re.compile(r"(?<!\w)(?:£|\$|€)?\d[\d,]*(?:\.\d+)?%?|\b[A-Z][A-Z0-9&.-]{2,}\b")
 
 
 class JsonRewriteModel(Protocol):
@@ -145,7 +143,9 @@ class ConversationQueryRewriter:
             used_ids = value["used_message_ids"]
             if not isinstance(query, str) or not query.strip() or not 3 <= len(query) <= 30_000:
                 raise ValueError("query rewrite text is invalid")
-            if not isinstance(used_ids, list) or not all(isinstance(item, str) for item in used_ids):
+            if not isinstance(used_ids, list) or not all(
+                isinstance(item, str) for item in used_ids
+            ):
                 raise ValueError("query rewrite message IDs are invalid")
             allowed_ids = {item.id for item in history}
             if len(used_ids) != len(set(used_ids)) or not set(used_ids) <= allowed_ids:

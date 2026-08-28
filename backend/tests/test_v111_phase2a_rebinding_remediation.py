@@ -24,15 +24,14 @@ from scripts.verify_v111_phase2a_rebinding_sources import (
 
 def test_official_target_derivation_handles_regnal_acts_and_moved_cpr() -> None:
     target_date = date(2026, 8, 14)
-    assert _target_url(
-        "https://www.legislation.gov.uk/ukpga/2015/15/section/47", target_date
-    )[0] == "https://www.legislation.gov.uk/ukpga/2015/15/2026-08-14/data.xml"
+    assert (
+        _target_url("https://www.legislation.gov.uk/ukpga/2015/15/section/47", target_date)[0]
+        == "https://www.legislation.gov.uk/ukpga/2015/15/2026-08-14/data.xml"
+    )
     assert _target_url(
         "https://www.legislation.gov.uk/ukpga/Geo5/15-16/19/section/61",
         target_date,
-    )[0] == (
-        "https://www.legislation.gov.uk/ukpga/Geo5/15-16/19/2026-08-14/data.xml"
-    )
+    )[0] == ("https://www.legislation.gov.uk/ukpga/Geo5/15-16/19/2026-08-14/data.xml")
     assert _target_url(
         "https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part44",
         target_date,
@@ -50,9 +49,7 @@ def test_exact_matching_preserves_material_numbers_and_provisions() -> None:
     official = _normalise_text(
         "1 If the test applies— (a) within 14 days; and (b) at section 50(ii)."
     )
-    exact = _normalise_text(
-        "If the test applies— (a) within 14 days; and (b) at section 50(ii)."
-    )
+    exact = _normalise_text("If the test applies— (a) within 14 days; and (b) at section 50(ii).")
     altered_days = _normalise_text(
         "If the test applies— (a) within 21 days; and (b) at section 50(ii)."
     )

@@ -17,9 +17,7 @@ IDENTITY = {
 }
 
 
-def _scores(
-    _query: str, candidates: list[dict[str, Any]]
-) -> tuple[list[float], dict[str, Any]]:
+def _scores(_query: str, candidates: list[dict[str, Any]]) -> tuple[list[float], dict[str, Any]]:
     return [candidate["rank"] / 100 for candidate in candidates], {
         "device": "fixture",
         "observed_peak_memory_gb": 0.1,
@@ -47,9 +45,7 @@ def test_fake_review_reranks_all_26_links_without_gate_change(tmp_path: Path) ->
     assert final["automatic_indexing"] is False
     assert final["phase2b_authorized"] is False
     assert all(len(row["top_candidates"]) == 8 for row in final["rows"])
-    assert all(
-        len(row["all_ranked_candidates"]) <= 40 for row in final["rows"]
-    )
+    assert all(len(row["all_ranked_candidates"]) <= 40 for row in final["rows"])
     assert (output / reranker.OUTPUT_NAME).is_file()
     assert (output / "SHA256SUMS.txt").is_file()
 

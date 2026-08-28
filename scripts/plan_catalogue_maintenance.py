@@ -24,11 +24,12 @@ from app.observability.storage_capacity import build_storage_capacity_snapshot  
 
 def _load_policy() -> dict[str, object]:
     value = json.loads(
-        (PROJECT_ROOT / "config/catalogue_maintenance_policy.v1.json").read_text(
-            encoding="utf-8"
-        )
+        (PROJECT_ROOT / "config/catalogue_maintenance_policy.v1.json").read_text(encoding="utf-8")
     )
-    if not isinstance(value, dict) or value.get("schema") != "legalbot.catalogue-maintenance-policy.v1":
+    if (
+        not isinstance(value, dict)
+        or value.get("schema") != "legalbot.catalogue-maintenance-policy.v1"
+    ):
         raise ValueError("catalogue maintenance policy is invalid")
     return value
 

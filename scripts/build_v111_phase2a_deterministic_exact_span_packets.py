@@ -58,9 +58,7 @@ DEFAULT_RETAINED = (
     / "LegalBot-Phase2AB-2026-08-26-r96-approved-binding-reconciliation"
     / "RETAINED-DIRECT-OR-PARTIAL-GAPS-5.json"
 )
-DEFAULT_SOURCE_PACKET_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
-)
+DEFAULT_SOURCE_PACKET_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
 DEFAULT_SOURCE_RECEIPT = (
     REVIEW_ROOT
     / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-approved"
@@ -71,34 +69,19 @@ DEFAULT_PRIOR_ADMISSIONS = (
     / "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved"
     / "CUMULATIVE-APPROVED-SOURCE-ADMISSIONS-25.json"
 )
-DEFAULT_BUILD_ROOT = (
-    PROJECT_ROOT / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
-)
+DEFAULT_BUILD_ROOT = PROJECT_ROOT / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
 DEFAULT_CANDIDATE_MANIFEST = DEFAULT_BUILD_ROOT / "approved-source-manifest.json"
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2A-2026-08-27-deterministic-exact-span-crosswalk-r2"
+    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-deterministic-exact-span-crosswalk-r2"
 )
 
-EXPECTED_LEDGER_DIGEST = (
-    "17f240a5d415d731cff6c147a560d6ad224cecb811b56f1db4aad340fe93739d"
-)
-EXPECTED_RECOVERY_DIGEST = (
-    "ad1d23ce7feabbd8936eb083fe678be2028f4723b60ffb8b42228a220de02ebf"
-)
-EXPECTED_READY_DIGEST = (
-    "8c7bcebacb7a1c06cdcc9408a85fb97f48c0415f1c05265a97d49396f58b87f9"
-)
-EXPECTED_RETAINED_DIGEST = (
-    "5fa395cc3a9f52463eaec682dc3f61592fe8d00d23fd008022527eb957004fa3"
-)
-EXPECTED_SOURCE_BATCH_DIGEST = (
-    "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
-)
-EXPECTED_SOURCE_RECEIPT_DIGEST = (
-    "878a1d2582a07c40dda7b5311aa22970885f78437e5f3d39109e667b9a6be7f9"
-)
+EXPECTED_LEDGER_DIGEST = "17f240a5d415d731cff6c147a560d6ad224cecb811b56f1db4aad340fe93739d"
+EXPECTED_RECOVERY_DIGEST = "ad1d23ce7feabbd8936eb083fe678be2028f4723b60ffb8b42228a220de02ebf"
+EXPECTED_READY_DIGEST = "8c7bcebacb7a1c06cdcc9408a85fb97f48c0415f1c05265a97d49396f58b87f9"
+EXPECTED_RETAINED_DIGEST = "5fa395cc3a9f52463eaec682dc3f61592fe8d00d23fd008022527eb957004fa3"
+EXPECTED_SOURCE_BATCH_DIGEST = "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
+EXPECTED_SOURCE_RECEIPT_DIGEST = "878a1d2582a07c40dda7b5311aa22970885f78437e5f3d39109e667b9a6be7f9"
 EXPECTED_SOURCE_EXCLUSIONS_DIGEST = (
     "ef886654959ba6bcb3154f396ae76cd2f6c52a776afa289ffaa34233bcf1fb27"
 )
@@ -108,9 +91,7 @@ EXPECTED_PRIOR_ADMISSIONS_DIGEST = (
 EXPECTED_CANDIDATE_MANIFEST_DIGEST = (
     "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0"
 )
-EXPECTED_LANCE_TREE_DIGEST = (
-    "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705"
-)
+EXPECTED_LANCE_TREE_DIGEST = "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705"
 EXPECTED_BUILD_MANIFEST_FILE_DIGEST = (
     "e28a4138e87cfeb2502e746073208ab25a647de8082a3c7fe96a44ed7d5cc74a"
 )
@@ -161,9 +142,7 @@ def _canonical_json(value: Any, *, newline: bool = True) -> bytes:
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -321,9 +300,7 @@ def _locator_match(candidate: str, hints: Sequence[str]) -> str:
     return "NO_EXACT_LOCATOR_MATCH"
 
 
-def _partition_exact_text(
-    *, chunk_id: str, text: str, text_sha256: str
-) -> dict[str, Any]:
+def _partition_exact_text(*, chunk_id: str, text: str, text_sha256: str) -> dict[str, Any]:
     if not chunk_id or not text or _sha256(text.encode("utf-8")) != text_sha256:
         raise ValueError("phase2a_deterministic_span_source_text_invalid")
     offsets: list[tuple[int, int]] = []
@@ -342,9 +319,7 @@ def _partition_exact_text(
             if sentence_boundaries:
                 end = sentence_boundaries[-1]
             else:
-                whitespace = max(
-                    window.rfind(" "), window.rfind("\n"), window.rfind("\t")
-                )
+                whitespace = max(window.rfind(" "), window.rfind("\n"), window.rfind("\t"))
                 end = start + whitespace + 1 if whitespace >= 80 else hard_end
         if end <= start or end - start > MAX_SPAN_CHARACTERS:
             raise ValueError("phase2a_deterministic_span_partition_boundary_invalid")
@@ -399,8 +374,7 @@ def _load_ledger(path: Path) -> tuple[dict[str, dict[str, Any]], str]:
     )
     rows = value.get("rows")
     if (
-        value.get("schema")
-        != "legalbot.v111.phase2a.deterministic-only-work-ledger-364.v1"
+        value.get("schema") != "legalbot.v111.phase2a.deterministic-only-work-ledger-364.v1"
         or value.get("row_count") != EXPECTED_LEDGER_ROWS
         or value.get("planner_output_consumed_row_count") != 0
         or value.get("source_scan_started") is not False
@@ -438,8 +412,7 @@ def _load_recovery(path: Path) -> tuple[dict[str, dict[str, Any]], str]:
     rows = value.get("rows")
     if (
         value.get("row_count") != EXPECTED_RECOVERY_ROWS
-        or value.get("candidate_manifest_sha256")
-        != EXPECTED_CANDIDATE_MANIFEST_DIGEST
+        or value.get("candidate_manifest_sha256") != EXPECTED_CANDIDATE_MANIFEST_DIGEST
         or value.get("advisory_planner_required") is not False
         or value.get("answer_model_invoked") is not False
         or value.get("owner_decisions_applied") is not False
@@ -464,8 +437,7 @@ def _load_recovery(path: Path) -> tuple[dict[str, dict[str, Any]], str]:
         if (
             not row_id
             or row_id in by_id
-            or row.get("status")
-            != "EXACT_CANDIDATE_CHUNKS_READY_FOR_SPAN_VERIFICATION"
+            or row.get("status") != "EXACT_CANDIDATE_CHUNKS_READY_FOR_SPAN_VERIFICATION"
             or not isinstance(candidates, list)
             or not candidates
             or row.get("owner_decision_required") is not True
@@ -485,8 +457,7 @@ def _load_recovery(path: Path) -> tuple[dict[str, dict[str, Any]], str]:
                 candidate.get("rank") != expected_rank
                 or candidate.get("already_in_exact_sealed_candidate") is not True
                 or candidate.get("candidate_manifest_source_bound") is not True
-                or candidate.get("content_sha256")
-                != _sha256(text.encode("utf-8"))
+                or candidate.get("content_sha256") != _sha256(text.encode("utf-8"))
             ):
                 raise ValueError("phase2a_deterministic_span_candidate_invalid")
         by_id[row_id] = dict(row)
@@ -529,8 +500,7 @@ def _load_retained(path: Path) -> tuple[dict[str, dict[str, Any]], str]:
     )
     records = value.get("records")
     if (
-        value.get("schema")
-        != "legalbot.v111.phase2a.post-r94-retained-binding-gaps.v1"
+        value.get("schema") != "legalbot.v111.phase2a.post-r94-retained-binding-gaps.v1"
         or value.get("record_count") != 5
         or value.get("owner_decisions_applied") is not True
         or value.get("technical_qualification_assigned") is not False
@@ -594,8 +564,7 @@ def _verify_build(build_root: Path) -> dict[str, Any]:
         _sha256_file(manifest_path) != EXPECTED_BUILD_MANIFEST_FILE_DIGEST
         or manifest.get("sealed") is not True
         or manifest.get("chunk_count") != EXPECTED_CANDIDATE_CHUNKS
-        or manifest.get("source_manifest_sha256")
-        != EXPECTED_CANDIDATE_MANIFEST_DIGEST
+        or manifest.get("source_manifest_sha256") != EXPECTED_CANDIDATE_MANIFEST_DIGEST
         or seal.get("manifest_sha256") != EXPECTED_BUILD_MANIFEST_FILE_DIGEST
         or seal.get("lance_tree_sha256") != EXPECTED_LANCE_TREE_DIGEST
         or tree_digest != EXPECTED_LANCE_TREE_DIGEST
@@ -673,9 +642,7 @@ def _load_catalogue_chunks(
     return by_id, _sha256_file(catalogue_path)
 
 
-def _load_lance_chunks(
-    build_root: Path, chunk_ids: Sequence[str]
-) -> dict[str, dict[str, Any]]:
+def _load_lance_chunks(build_root: Path, chunk_ids: Sequence[str]) -> dict[str, dict[str, Any]]:
     import lancedb
 
     database = lancedb.connect(str(build_root / "lance/authority"))
@@ -694,16 +661,12 @@ def _load_lance_chunks(
     ]
     by_id: dict[str, dict[str, Any]] = {}
     for batch in _chunks(list(chunk_ids), LANCE_QUERY_BATCH):
-        expression = "chunk_id IN (" + ",".join(
-            f"'{value.replace(chr(39), chr(39) * 2)}'" for value in batch
-        ) + ")"
-        rows = (
-            table.search()
-            .where(expression)
-            .select(columns)
-            .limit(len(batch) + 1)
-            .to_list()
+        expression = (
+            "chunk_id IN ("
+            + ",".join(f"'{value.replace(chr(39), chr(39) * 2)}'" for value in batch)
+            + ")"
         )
+        rows = table.search().where(expression).select(columns).limit(len(batch) + 1).to_list()
         for row in rows:
             chunk_id = str(row.get("chunk_id") or "")
             if not chunk_id or chunk_id in by_id:
@@ -781,13 +744,11 @@ def _build_source_corpus(
             or lance.get("text") != candidate_text
             or lance.get("content_sha256") != candidate.get("content_sha256")
             or lance.get("locator") != candidate.get("locator")
-            or _sha256(candidate_text.encode("utf-8"))
-            != candidate.get("content_sha256")
+            or _sha256(candidate_text.encode("utf-8")) != candidate.get("content_sha256")
             or catalogue.get("source_version_id") != source_version_id
             or catalogue.get("locator") != candidate.get("locator")
             or catalogue.get("version_sha256") != source.get("version_sha256")
-            or catalogue.get("authority_identity_id")
-            != source.get("authority_identity_id")
+            or catalogue.get("authority_identity_id") != source.get("authority_identity_id")
             or catalogue.get("review_status") != "approved"
             or catalogue.get("document_status") != "citable"
             or catalogue.get("lane") != "primary_authority"
@@ -807,9 +768,7 @@ def _build_source_corpus(
             _legacy_phone_projection(catalogue_text) == candidate_text
             and scrub_pii(catalogue_text) == catalogue_text
         ):
-            projection_status = (
-                "LEGACY_FALSE_PHONE_REDACTION_FIXED_FOR_SUCCESSOR_REBUILD"
-            )
+            projection_status = "LEGACY_FALSE_PHONE_REDACTION_FIXED_FOR_SUCCESSOR_REBUILD"
             review_text = catalogue_text
             exact_source_evidence_eligible = True
             successor_rebuild_required = True
@@ -858,9 +817,7 @@ def _build_source_corpus(
             "chunk_count": len(records),
             "candidate_reference_count": sum(reference_counts.values()),
             "projection_status_counts": dict(sorted(projection_counts.items())),
-            "projection_reference_status_counts": dict(
-                sorted(projection_reference_counts.items())
-            ),
+            "projection_reference_status_counts": dict(sorted(projection_reference_counts.items())),
             "records": records,
             "planner_or_answer_model_invoked": False,
             "source_scan_started": False,
@@ -883,8 +840,7 @@ def _row_packet(
 ) -> dict[str, Any]:
     issue_terms = _meaningful_tokens(str(ledger["issue_label"]))
     planned_keys = {
-        _authority_key(value)
-        for value in ledger.get("effective_planned_authority_ids") or []
+        _authority_key(value) for value in ledger.get("effective_planned_authority_ids") or []
     }
     hints_by_authority: dict[str, list[str]] = defaultdict(list)
     for hint in ledger.get("deterministic_locator_hints") or []:
@@ -900,9 +856,11 @@ def _row_packet(
         planned = authority_key in planned_keys
         hints = sorted(set(hints_by_authority.get(authority_key, [])))
         locator_match = _locator_match(str(candidate.get("locator") or ""), hints)
-        source_tokens = set(_meaningful_tokens(" ".join(
-            span["exact_text"] for span in source["exact_span_options"]
-        )))
+        source_tokens = set(
+            _meaningful_tokens(
+                " ".join(span["exact_text"] for span in source["exact_span_options"])
+            )
+        )
         issue_term_hits = sorted(set(issue_terms) & source_tokens)
         candidates.append(
             {
@@ -918,9 +876,7 @@ def _row_packet(
                 "issue_term_hits": issue_term_hits,
                 "currentness_verified": candidate.get("currentness_verified") is True,
                 "privacy_projection_status": source["projection_status"],
-                "exact_source_evidence_eligible": source[
-                    "exact_source_evidence_eligible"
-                ],
+                "exact_source_evidence_eligible": source["exact_source_evidence_eligible"],
                 "retrieval_scores_advisory_only": {
                     "rrf_score": candidate.get("rrf_score"),
                     "reranker_score": candidate.get("reranker_score"),
@@ -946,13 +902,11 @@ def _row_packet(
         candidate["deterministic_owner_review_order"] = order[candidate["chunk_id"]]
 
     exact_locator = any(
-        item["planned_authority_match"]
-        and item["locator_match"] != "NO_EXACT_LOCATOR_MATCH"
+        item["planned_authority_match"] and item["locator_match"] != "NO_EXACT_LOCATOR_MATCH"
         for item in candidates
     )
     planned_and_terms = any(
-        item["planned_authority_match"] and item["issue_term_hits"]
-        for item in candidates
+        item["planned_authority_match"] and item["issue_term_hits"] for item in candidates
     )
     planned = any(item["planned_authority_match"] for item in candidates)
     terms = any(item["issue_term_hits"] for item in candidates)
@@ -975,9 +929,7 @@ def _row_packet(
         "status": status,
         "issue_terms": list(issue_terms),
         "deterministic_work_class": ledger["deterministic_work_class"],
-        "effective_planned_authority_ids": ledger[
-            "effective_planned_authority_ids"
-        ],
+        "effective_planned_authority_ids": ledger["effective_planned_authority_ids"],
         "effective_outside_candidate_authority_ids": ledger[
             "effective_outside_candidate_authority_ids"
         ],
@@ -1089,8 +1041,7 @@ def _load_source_approval(
     if (
         receipt.get("source_admission_authorized") is not True
         or receipt.get("source_authority_count") != EXPECTED_APPROVED_SOURCES
-        or receipt.get("owner_decision_batch_content_sha256")
-        != EXPECTED_SOURCE_BATCH_DIGEST
+        or receipt.get("owner_decision_batch_content_sha256") != EXPECTED_SOURCE_BATCH_DIGEST
         or receipt.get("currentness_and_later_treatment_holds_retained") is not True
         or receipt.get("exclusions_retained") is not True
         or receipt.get("source_scan_started") is not False
@@ -1238,9 +1189,7 @@ def _load_catalogue_authority_inventory(
                 and int(row["chunk_count"] or 0) > 0
             ]
             if not usable:
-                raise ValueError(
-                    "phase2a_deterministic_span_outside_authority_catalogue_missing"
-                )
+                raise ValueError("phase2a_deterministic_span_outside_authority_catalogue_missing")
             inventory[key] = usable
     finally:
         connection.close()
@@ -1276,9 +1225,10 @@ def _retained_hold_codes(record: Mapping[str, Any]) -> list[str]:
     jurisdiction = record.get("jurisdiction_binding") or {}
     if currentness.get("currentness_verified") is not True:
         holds.append("CURRENTNESS_NOT_VERIFIED")
-    if record.get("source_family") == "legislation" and currentness.get(
-        "extent_effects_verified"
-    ) is not True:
+    if (
+        record.get("source_family") == "legislation"
+        and currentness.get("extent_effects_verified") is not True
+    ):
         holds.append("EXTENT_EFFECTS_NOT_VERIFIED")
     if later.get("applicable") is True and later.get("verified") is not True:
         holds.append("LATER_TREATMENT_NOT_VERIFIED")
@@ -1336,9 +1286,9 @@ def _build_source_crosswalk(
             "selected_source_version_id": selected["source_version_id"],
             "selected_content_sha256": selected["content_sha256"],
             "selected_version_sha256": selected["version_sha256"],
-            "catalogue_chunk_count": approved_catalogue_sources[
-                str(selected["source_version_id"])
-            ]["chunk_count"],
+            "catalogue_chunk_count": approved_catalogue_sources[str(selected["source_version_id"])][
+                "chunk_count"
+            ],
             "crosswalk_classification": classification,
             "candidate_source_versions": [
                 {
@@ -1351,8 +1301,7 @@ def _build_source_crosswalk(
                 )
             ],
             "affected_remaining_row_ids": affected_rows,
-            "overlaps_prior_25_approval_by_authority_identity": key
-            in prior_admission_keys,
+            "overlaps_prior_25_approval_by_authority_identity": key in prior_admission_keys,
             "owner_source_admission_authorized": True,
             "retained_hold_codes": holds,
             "holds_retained": bool(holds),
@@ -1372,13 +1321,9 @@ def _build_source_crosswalk(
             "source_owner_approval_receipt_content_sha256": receipt[
                 "approval_receipt_content_sha256"
             ],
-            "source_owner_decision_batch_content_sha256": (
-                EXPECTED_SOURCE_BATCH_DIGEST
-            ),
+            "source_owner_decision_batch_content_sha256": (EXPECTED_SOURCE_BATCH_DIGEST),
             "source_exclusions_content_sha256": EXPECTED_SOURCE_EXCLUSIONS_DIGEST,
-            "source_prior_25_admissions_content_sha256": (
-                EXPECTED_PRIOR_ADMISSIONS_DIGEST
-            ),
+            "source_prior_25_admissions_content_sha256": (EXPECTED_PRIOR_ADMISSIONS_DIGEST),
             "source_count": len(rows),
             "classification_counts": dict(sorted(class_counts.items())),
             "retained_exclusion_counts": exclusion_counts,
@@ -1415,8 +1360,7 @@ def _build_source_crosswalk(
             matching = [
                 item
                 for item in (row.get("owner_approved_mapping_dispositions") or [])
-                if _authority_key(str(item.get("mapped_authority_identity_id") or ""))
-                == key
+                if _authority_key(str(item.get("mapped_authority_identity_id") or "")) == key
             ]
             if len(matching) > 1:
                 raise ValueError("phase2a_deterministic_span_mapping_disposition_duplicate")
@@ -1431,9 +1375,7 @@ def _build_source_crosswalk(
                 elif owner_outcome == "RECOMMEND_PARTIAL_BINDING_AND_SOURCE_ADMISSION":
                     disposition = "OWNER_APPROVED_PARTIAL_BINDING_WITH_SEPARATE_ADMISSION"
                 else:
-                    raise ValueError(
-                        "phase2a_deterministic_span_mapping_disposition_unknown"
-                    )
+                    raise ValueError("phase2a_deterministic_span_mapping_disposition_unknown")
             else:
                 retained = retained_bindings.get(row_id)
                 direct_bindings = [
@@ -1446,8 +1388,7 @@ def _build_source_crosswalk(
                     "JUDGMENT_LATER_TREATMENT_CURRENTNESS_REVIEW"
                 ):
                     disposition = (
-                        "OWNER_APPROVED_DIRECT_BINDING_RETAINED_"
-                        "ALTERNATIVE_SOURCE_NOT_REQUIRED"
+                        "OWNER_APPROVED_DIRECT_BINDING_RETAINED_ALTERNATIVE_SOURCE_NOT_REQUIRED"
                     )
                 else:
                     disposition = "UNRESOLVED_SOURCE_MATERIALITY"
@@ -1469,12 +1410,8 @@ def _build_source_crosswalk(
             {str(item["version_sha256"]) for item in catalogue_versions}
         )
         if len(unique_version_sha256s) != 1:
-            raise ValueError(
-                "phase2a_deterministic_span_outside_authority_version_ambiguous"
-            )
-        selected_reuse = min(
-            catalogue_versions, key=lambda item: str(item["source_version_id"])
-        )
+            raise ValueError("phase2a_deterministic_span_outside_authority_version_ambiguous")
+        selected_reuse = min(catalogue_versions, key=lambda item: str(item["source_version_id"]))
         disposition_values = {item["disposition"] for item in row_dispositions}
         if unresolved_rows:
             classification = "OWNER_SOURCE_MATERIALITY_DECISION_REQUIRED"
@@ -1523,9 +1460,7 @@ def _build_source_crosswalk(
                 }
             )
 
-    disposition_counts = Counter(
-        record["classification"] for record in disposition_records
-    )
+    disposition_counts = Counter(record["classification"] for record in disposition_records)
     outside_crosswalk = _sealed_artifact(
         "legalbot.v111.phase2a.outside-authority-local-crosswalk.v2",
         {
@@ -1586,8 +1521,8 @@ def build_packets(
     recovery, recovery_digest = _load_recovery(recovery_path)
     ready, ready_digest = _load_ready(ready_path)
     retained, retained_digest = _load_retained(retained_path)
-    candidate_sources, candidate_by_authority, manifest_digest = (
-        _load_candidate_manifest(candidate_manifest_path)
+    candidate_sources, candidate_by_authority, manifest_digest = _load_candidate_manifest(
+        candidate_manifest_path
     )
     build_identity = _verify_build(build_root)
     if (
@@ -1600,11 +1535,7 @@ def build_packets(
         raise ValueError("phase2a_deterministic_span_input_identity_invalid")
 
     unique_chunk_ids = sorted(
-        {
-            str(candidate["chunk_id"])
-            for row in recovery.values()
-            for candidate in row["candidates"]
-        }
+        {str(candidate["chunk_id"]) for row in recovery.values() for candidate in row["candidates"]}
     )
     catalogue_chunks, catalogue_file_sha256 = _load_catalogue_chunks(
         catalogue_path, unique_chunk_ids
@@ -1630,12 +1561,9 @@ def build_packets(
         receipt_path=source_receipt_path,
     )
     prior_admission_keys, _ = _load_prior_admissions(prior_admissions_path)
-    approved_catalogue_sources = _verify_approved_source_versions(
-        catalogue_path, approved_records
-    )
+    approved_catalogue_sources = _verify_approved_source_versions(catalogue_path, approved_records)
     approved_source_keys = {
-        _authority_key(str(record["proposed_stable_identifier"]))
-        for record in approved_records
+        _authority_key(str(record["proposed_stable_identifier"])) for record in approved_records
     }
     outside_authority_ids = sorted(
         {
@@ -1703,19 +1631,13 @@ def build_packets(
             "status": "DETERMINISTIC_EVIDENCE_PACKET_COMPLETE_OWNER_REVIEW_REMAINS",
             "files": files,
             "file_count": len(files),
-            "source_corpus_content_sha256": source_corpus[
-                "artifact_content_sha256"
-            ],
+            "source_corpus_content_sha256": source_corpus["artifact_content_sha256"],
             "row_packets_content_sha256": row_packets["artifact_content_sha256"],
-            "source_crosswalk_content_sha256": crosswalk[
-                "artifact_content_sha256"
-            ],
+            "source_crosswalk_content_sha256": crosswalk["artifact_content_sha256"],
             "outside_authority_crosswalk_content_sha256": outside_crosswalk[
                 "artifact_content_sha256"
             ],
-            "pending_authority_scope_content_sha256": pending[
-                "artifact_content_sha256"
-            ],
+            "pending_authority_scope_content_sha256": pending["artifact_content_sha256"],
             "planner_or_answer_model_invoked": False,
             "source_scan_started": False,
             "candidate_build_started": False,
@@ -1727,9 +1649,7 @@ def build_packets(
     )
     _write_exclusive(output_root / "PACKAGE-INDEX.json", _pretty_json(package))
     checksum_names = (*indexed_names, "PACKAGE-INDEX.json")
-    checksums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in checksum_names
-    )
+    checksums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in checksum_names)
     _write_exclusive(output_root / "SHA256SUMS.txt", checksums.encode("utf-8"))
     return {**artifacts, "PACKAGE-INDEX.json": package}
 

@@ -31,9 +31,7 @@ def _build(tmp_path: Path) -> tuple[dict[str, object], Path]:
 
 def test_consolidated_gate_accounts_for_every_required_record(tmp_path: Path) -> None:
     result, output = _build(tmp_path)
-    overview = json.loads(
-        (output / "PHASE2A-CONSOLIDATED-OWNER-GATE.json").read_bytes()
-    )
+    overview = json.loads((output / "PHASE2A-CONSOLIDATED-OWNER-GATE.json").read_bytes())
     decisions = json.loads((output / "OWNER-DECISION-BATCH-1058.json").read_bytes())
 
     assert result["issue_counts"] == {"total": 585, "recorded": 137, "pending": 448}
@@ -62,9 +60,7 @@ def test_consolidated_gate_accounts_for_every_required_record(tmp_path: Path) ->
 
 def test_consolidated_gate_remains_fail_closed(tmp_path: Path) -> None:
     result, output = _build(tmp_path)
-    overview = json.loads(
-        (output / "PHASE2A-CONSOLIDATED-OWNER-GATE.json").read_bytes()
-    )
+    overview = json.loads((output / "PHASE2A-CONSOLIDATED-OWNER-GATE.json").read_bytes())
     source_register = json.loads(
         (output / "SOURCE-CUSTODY-AND-ADMISSION-REGISTER.json").read_bytes()
     )

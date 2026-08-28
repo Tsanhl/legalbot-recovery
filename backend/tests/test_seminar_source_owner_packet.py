@@ -28,8 +28,7 @@ def test_seminar_source_owner_packet_is_exact_and_non_authorizing(tmp_path: Path
     # The package is historical and immutable; its admitted source rows no
     # longer have their pre-adoption catalogue state.
     output = (
-        PROJECT_ROOT
-        / "data/evaluations/phase2a-owner-review/"
+        PROJECT_ROOT / "data/evaluations/phase2a-owner-review/"
         "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
     )
     package_index = json.loads((output / "PACKAGE-INDEX.json").read_bytes())

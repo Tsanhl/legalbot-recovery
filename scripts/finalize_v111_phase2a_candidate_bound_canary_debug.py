@@ -17,40 +17,28 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
-CANARY_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r66-candidate-bound-span-id-canary"
-)
-CASES_PATH = (
-    PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
-)
+CANARY_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r66-candidate-bound-span-id-canary"
+CASES_PATH = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
 ARTIFACT_PATH = CANARY_ROOT / "CANARY-EXACT-SPANS-9.json"
 INTENT_PATH = CANARY_ROOT / "INTENT.json"
 OUTPUT_PATH = CANARY_ROOT / "DEBUG-CORRECTION.json"
 CHECKSUM_PATH = CANARY_ROOT / "DEBUG-SHA256SUMS.txt"
 AFFECTED_ROW_ID = "live30-q01:issue-01"
 EXPECTED_CONTAMINATION_GAP_ROW_ID = "live30-q04:issue-02"
-EXPECTED_OLD_SOURCE_VERSION_ID = (
-    "source-version-0aedf4e4df18f61476e593b497c940151fc56324"
-)
+EXPECTED_OLD_SOURCE_VERSION_ID = "source-version-0aedf4e4df18f61476e593b497c940151fc56324"
 EXPECTED_OLD_AUTHORITY_ID = "ukpga:1977:50"
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -128,15 +116,12 @@ def main() -> None:
         "phase2a_r66_debug_artifact_invalid",
     )
     findings = {
-        str(row["row_id"]): row
-        for row in artifact.get("findings", [])
-        if isinstance(row, dict)
+        str(row["row_id"]): row for row in artifact.get("findings", []) if isinstance(row, dict)
     }
     affected = findings.get(AFFECTED_ROW_ID) or {}
     contamination = findings.get(EXPECTED_CONTAMINATION_GAP_ROW_ID) or {}
     if (
-        intent.get("schema")
-        != "legalbot.v111.phase2a.exact-span-canary-intent.v3"
+        intent.get("schema") != "legalbot.v111.phase2a.exact-span-canary-intent.v3"
         or artifact.get("status") != "CANARY_STOPPED_FURTHER_DEBUG_REQUIRED"
         or artifact.get("replacement_all_448_advisory_may_start") is not False
         or affected.get("assessment") != "MATERIAL_GAP_ADVISORY"

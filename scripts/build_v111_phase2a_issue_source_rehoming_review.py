@@ -18,22 +18,16 @@ else:
     import collect_v111_phase2a_issue_source_rehoming as rehoming
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PLAN = (
-    PROJECT_ROOT
-    / "config/phase2a_issue_source_rehoming_review.2026-08-25.v1.json"
-)
+DEFAULT_PLAN = PROJECT_ROOT / "config/phase2a_issue_source_rehoming_review.2026-08-25.v1.json"
 DEFAULT_QUARANTINE_ROOT = (
     PROJECT_ROOT / "data/quarantine/2026-08-25/phase2a-issue-source-rehoming-r77"
 )
 DEFAULT_OUTPUT_ROOT = (
-    PROJECT_ROOT
-    / "data/evaluations/phase2a-owner-review/"
+    PROJECT_ROOT / "data/evaluations/phase2a-owner-review/"
     "LegalBot-Phase2AB-2026-08-25-r86-issue-source-rehoming-review"
 )
 PLAN_SCHEMA = "legalbot.v111.phase2a.issue-source-rehoming-review-plan.v1"
-EXPECTED_QUARANTINE_DIGEST = (
-    "83f9e4489d21e4a2dd58295e8b8365f892a1b7772d8d7e3a7582e765515187dd"
-)
+EXPECTED_QUARANTINE_DIGEST = "83f9e4489d21e4a2dd58295e8b8365f892a1b7772d8d7e3a7582e765515187dd"
 EXPECTED_PROPOSAL_COUNT = 5
 EXPECTED_ORIGINAL_MAPPING_COUNT = 18
 EXPECTED_SUPPORTED_CLAIM_COUNT = 6
@@ -82,12 +76,7 @@ def _verify_checksums(root: Path) -> str:
     listed: dict[str, str] = {}
     for line in checksum_path.read_text(encoding="utf-8").splitlines():
         digest, separator, relative = line.partition("  ")
-        if (
-            separator != "  "
-            or not _SHA256.fullmatch(digest)
-            or not relative
-            or relative in listed
-        ):
+        if separator != "  " or not _SHA256.fullmatch(digest) or not relative or relative in listed:
             raise ValueError("phase2a_rehoming_review_checksums_invalid")
         listed[relative] = digest
     actual_paths = {
@@ -108,8 +97,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     if (
         plan.get("schema") != PLAN_SCHEMA
         or plan.get("as_of_date") != "2026-08-14"
-        or plan.get("source_quarantine_artifact_content_sha256")
-        != EXPECTED_QUARANTINE_DIGEST
+        or plan.get("source_quarantine_artifact_content_sha256") != EXPECTED_QUARANTINE_DIGEST
         or plan.get("owner_proposition_level_admission_required") is not True
         or plan.get("automatic_source_admission") is not False
         or plan.get("automatic_gold_change") is not False
@@ -137,9 +125,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
         if (
             not proposal_id.startswith("issue-source-rehome-")
             or proposal_id in seen_reviews
-            or not _SHA256.fullmatch(
-                str(review.get("expected_record_content_sha256") or "")
-            )
+            or not _SHA256.fullmatch(str(review.get("expected_record_content_sha256") or ""))
             or recommendation
             not in {
                 "PROPOSE_PROPOSITION_LEVEL_ADMISSION_OWNER_DECISION_REQUIRED",
@@ -250,11 +236,9 @@ def _load_verified_records(
         ):
             raise ValueError("phase2a_rehoming_review_derived_pages_invalid")
         for page in page_values:
-            if (
-                not isinstance(page, Mapping)
-                or rehoming._sha256(str(page.get("text") or "").encode())
-                != page.get("text_sha256")
-            ):
+            if not isinstance(page, Mapping) or rehoming._sha256(
+                str(page.get("text") or "").encode()
+            ) != page.get("text_sha256"):
                 raise ValueError("phase2a_rehoming_review_derived_page_hash_invalid")
         by_id[proposal_id] = {
             "record": record,
@@ -264,9 +248,7 @@ def _load_verified_records(
     return manifest, by_id, checksum_sha256
 
 
-def build(
-    *, plan_path: Path, quarantine_root: Path, output_root: Path
-) -> dict[str, Any]:
+def build(*, plan_path: Path, quarantine_root: Path, output_root: Path) -> dict[str, Any]:
     """Create an immutable owner-review batch without admitting any source."""
 
     if output_root.exists() or output_root.is_symlink():
@@ -280,9 +262,7 @@ def build(
     if set(records) != {str(review["proposal_id"]) for review in reviews}:
         raise ValueError("phase2a_rehoming_review_inventory_mismatch")
     global_original_rows = {
-        str(row)
-        for value in records.values()
-        for row in value["record"]["affected_rows"]
+        str(row) for value in records.values() for row in value["record"]["affected_rows"]
     }
 
     source_reviews: list[dict[str, Any]] = []
@@ -335,9 +315,7 @@ def build(
                 "span_truncated": False,
                 "owner_materiality_decision": None,
             }
-            claim_bindings.append(
-                {**material, "binding_content_sha256": _sealed(material)}
-            )
+            claim_bindings.append({**material, "binding_content_sha256": _sealed(material)})
             exact_claim_count += 1
             supported_rows.update(row_ids)
             locally_supported.update(row_ids)
@@ -354,13 +332,9 @@ def build(
                 "neutral_citation": record["neutral_citation"],
                 "owner_mapping_decision": None,
             }
-            rejection_values.append(
-                {**material, "rejection_content_sha256": _sealed(material)}
-            )
+            rejection_values.append({**material, "rejection_content_sha256": _sealed(material)})
             rejected_pairs.add((proposal_id, row_id))
-        if {
-            (proposal_id, row) for row in original_rows
-        } != original_supported_pairs.intersection(
+        if {(proposal_id, row) for row in original_rows} != original_supported_pairs.intersection(
             {(proposal_id, row) for row in original_rows}
         ).union(rejected_pairs.intersection({(proposal_id, row) for row in original_rows})):
             raise ValueError("phase2a_rehoming_review_original_mapping_coverage_invalid")
@@ -514,9 +488,7 @@ def _persist_failure(output_root: Path, exc: BaseException) -> None:
             "phase2b_authorized": False,
             "development30_authorized": False,
         }
-        _write_json_exclusive(
-            path, {**material, "failure_content_sha256": _sealed(material)}
-        )
+        _write_json_exclusive(path, {**material, "failure_content_sha256": _sealed(material)})
     except Exception:
         return
 

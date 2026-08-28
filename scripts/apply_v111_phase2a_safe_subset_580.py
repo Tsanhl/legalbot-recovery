@@ -34,12 +34,8 @@ DEFAULT_OUTPUT_ROOT = (
     / "data/evaluations/phase2a-owner-review"
     / "LegalBot-Phase2AB-2026-08-25-r49-safe-subset-approved"
 )
-EXPECTED_DECISION_BATCH_DIGEST = (
-    "7a471bed936bf901cca49413f1abb8e27db54157862a1f369136a0704e811414"
-)
-EXPECTED_MACHINE_PACKAGE_DIGEST = (
-    "3ba8de75875cd2192a0707450c206fbb91220fbf3d3ac2704b1fd18046d1227c"
-)
+EXPECTED_DECISION_BATCH_DIGEST = "7a471bed936bf901cca49413f1abb8e27db54157862a1f369136a0704e811414"
+EXPECTED_MACHINE_PACKAGE_DIGEST = "3ba8de75875cd2192a0707450c206fbb91220fbf3d3ac2704b1fd18046d1227c"
 EXPECTED_OWNER_REPLY = (
     "I, Agnes, approve the exact 516 legislative-effect metadata/currentness-only "
     "recommendations and the exact 64 semantic-text-identical byte-mismatch "
@@ -68,8 +64,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -171,12 +166,10 @@ def _verify_source_package(source_root: Path) -> tuple[dict[str, Any], list[dict
     items = decision.get("items")
     if (
         decision_digest != EXPECTED_DECISION_BATCH_DIGEST
-        or decision.get("schema")
-        != "legalbot.v111.phase2a.consolidated-owner-decision-batch.v1"
+        or decision.get("schema") != "legalbot.v111.phase2a.consolidated-owner-decision-batch.v1"
         or decision.get("item_count") != 1058
         or decision.get("category_counts") != EXPECTED_SOURCE_COUNTS
-        or decision.get("immediately_approvable_deterministic_recommendation_count")
-        != 580
+        or decision.get("immediately_approvable_deterministic_recommendation_count") != 580
         or decision.get("owner_decisions_applied") is not False
         or decision.get("source_admission_authorized") is not False
         or decision.get("candidate_mutated") is not False
@@ -220,12 +213,10 @@ def _classify_items(
             derived_approvable.append(item_digest)
         elif (
             category == "legislation_byte_mismatch"
-            and item.get("classification")
-            == "SEMANTIC_PROVISION_TEXT_IDENTICAL_BYTE_MISMATCH_ONLY"
+            and item.get("classification") == "SEMANTIC_PROVISION_TEXT_IDENTICAL_BYTE_MISMATCH_ONLY"
         ):
             if (
-                item.get("recommendation")
-                != "APPROVE_NONMATERIAL_REPRESENTATION_BYTE_MISMATCH"
+                item.get("recommendation") != "APPROVE_NONMATERIAL_REPRESENTATION_BYTE_MISMATCH"
                 or item.get("changed_locators") != []
                 or item.get("owner_outcome") is not None
             ):
@@ -278,8 +269,7 @@ def _write_package(output_root: Path, files: Mapping[str, bytes]) -> str:
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
     entries = {
-        name: {"sha256": _sha256(raw), "bytes": len(raw)}
-        for name, raw in sorted(files.items())
+        name: {"sha256": _sha256(raw), "bytes": len(raw)} for name, raw in sorted(files.items())
     }
     material = {
         "schema": "legalbot.v111.phase2a.safe-subset-owner-approved-index.v1",
@@ -448,9 +438,7 @@ def apply_safe_subset(
         "OWNER-APPROVAL-RECEIPT-580.json": _pretty_json(receipt),
         "APPROVED-LEGISLATIVE-EFFECT-DECISIONS-516.json": _pretty_json(effect_artifact),
         "APPROVED-BYTE-MISMATCH-DECISIONS-64.json": _pretty_json(mismatch_artifact),
-        "REMAINING-SUBSTANTIVE-OWNER-DECISIONS-478.json": _pretty_json(
-            remaining_artifact
-        ),
+        "REMAINING-SUBSTANTIVE-OWNER-DECISIONS-478.json": _pretty_json(remaining_artifact),
         "POST-580-PHASE2A-INVENTORY.json": _pretty_json(inventory),
         "OUTCOME.txt": (str(inventory["terminal_verdict"]) + "\n").encode(),
     }

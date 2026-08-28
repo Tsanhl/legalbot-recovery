@@ -17,13 +17,8 @@ def _load(path: Path) -> dict[str, object]:
 def test_exact_r111_approval_records_scope_and_keeps_later_gates_closed(
     tmp_path: Path,
 ) -> None:
-    source_batch = (
-        approval.DEFAULT_SOURCE_ROOT
-        / "OWNER-SOURCE-CURRENTNESS-DECISION-BATCH.json"
-    )
-    remaining_source = (
-        approval.DEFAULT_PREDECESSOR_ROOT / "REMAINING-MATERIAL-GAPS-364.json"
-    )
+    source_batch = approval.DEFAULT_SOURCE_ROOT / "OWNER-SOURCE-CURRENTNESS-DECISION-BATCH.json"
+    remaining_source = approval.DEFAULT_PREDECESSOR_ROOT / "REMAINING-MATERIAL-GAPS-364.json"
     source_before = approval._sha256_file(source_batch)
     remaining_before = remaining_source.read_bytes()
     output = tmp_path / "approved"
@@ -38,9 +33,7 @@ def test_exact_r111_approval_records_scope_and_keeps_later_gates_closed(
         recorded_at=datetime(2026, 8, 26, 12, 0, tzinfo=UTC),
     )
 
-    assert result["source_r111_batch_content_sha256"] == (
-        approval.EXPECTED_BATCH_DIGEST
-    )
+    assert result["source_r111_batch_content_sha256"] == (approval.EXPECTED_BATCH_DIGEST)
     assert result["approved_mapping_disposition_count"] == 26
     assert result["approved_affected_row_count"] == 22
     assert result["approved_new_source_admission_count"] == 5
@@ -54,9 +47,7 @@ def test_exact_r111_approval_records_scope_and_keeps_later_gates_closed(
     assert result["development30_authorized"] is False
     assert approval._sha256_file(source_batch) == source_before
     assert remaining_source.read_bytes() == remaining_before
-    assert (output / "REMAINING-MATERIAL-GAPS-364.json").read_bytes() == (
-        remaining_before
-    )
+    assert (output / "REMAINING-MATERIAL-GAPS-364.json").read_bytes() == (remaining_before)
 
     sources = _load(output / "APPROVED-SOURCE-ADMISSIONS-5.json")
     assert sources["record_count"] == 5
@@ -82,9 +73,7 @@ def test_exact_r111_approval_records_scope_and_keeps_later_gates_closed(
     assert inventory["phase2b_authorized"] is False
 
     intent = _load(output / "PHASE2B-ADVANCE-INTENT.json")
-    assert intent["status"] == (
-        "ADVANCE_CONDITIONAL_INTENT_RECORDED_NOT_GATE_ACTIVATION"
-    )
+    assert intent["status"] == ("ADVANCE_CONDITIONAL_INTENT_RECORDED_NOT_GATE_ACTIVATION")
     assert intent["final_phase2a_digest_exists"] is False
     assert intent["final_phase2a_digest_owner_adopted"] is False
     assert intent["phase2b_authorized"] is False

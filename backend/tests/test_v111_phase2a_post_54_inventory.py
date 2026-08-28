@@ -18,11 +18,7 @@ UNRESOLVED = (
     / "LegalBot-Phase2AB-2026-08-24-r17"
     / "UNRESOLVED-502-LEXICAL-RESEARCH-PACKETS.json"
 )
-APPROVED = (
-    OWNER_REVIEW
-    / "LegalBot-Phase2AB-2026-08-24-r28"
-    / "OWNER-DECISIONS-APPROVED-54.json"
-)
+APPROVED = OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r28" / "OWNER-DECISIONS-APPROVED-54.json"
 SOURCE_SCOPE = (
     OWNER_REVIEW
     / "LegalBot-Phase2AB-2026-08-24-r28"
@@ -66,9 +62,7 @@ def test_builds_exact_448_remainder_and_verified_16_source_custody(
     assert all(record["indexed"] is False for record in custody["records"])
     assert all(record["embedded"] is False for record in custody["records"])
     crime_act = next(
-        record
-        for record in custody["records"]
-        if record["authority_identity"] == "ukpga:2026:20"
+        record for record in custody["records"] if record["authority_identity"] == "ukpga:2026:20"
     )
     assert crime_act["official_file_sha256"].startswith("f286b09e")
     assert crime_act["quarantine_root"].endswith("r21-quarantine")

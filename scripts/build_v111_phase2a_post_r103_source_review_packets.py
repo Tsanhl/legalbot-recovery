@@ -30,8 +30,7 @@ R102_PATH = (
     / "POST-R101-RESEARCH-ROUTING-364.json"
 )
 R103_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-26/phase2a-post-r101-official-source-research-r103"
+    PROJECT_ROOT / "data/quarantine/2026-08-26/phase2a-post-r101-official-source-research-r103"
 )
 R103_MANIFEST_PATH = R103_ROOT / "QUARANTINE-MANIFEST.json"
 CASES_PATH = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
@@ -50,9 +49,7 @@ EXPECTED_INPUTS = {
         "af1b9ef8b9060497d4e4420edb313e6b7ce173aad817a515bdef1dfc4a892e53",
     ),
 }
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 EXPECTED_SOURCE_COUNT = 16
 EXPECTED_LINK_COUNT = 26
 EXPECTED_UNIQUE_ROW_COUNT = 22
@@ -98,15 +95,12 @@ _BOUNDARY_FIELDS = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -266,8 +260,7 @@ def _question_segment_candidates(
         document_frequency.update(terms)
 
     raw_segments = [
-        segment.strip(" \t\r\n-\u2022")
-        for segment in _QUESTION_SEGMENT_SPLIT.split(question)
+        segment.strip(" \t\r\n-\u2022") for segment in _QUESTION_SEGMENT_SPLIT.split(question)
     ]
     segments = [
         (index, segment, set(_normalised_meaningful_terms(segment)))
@@ -288,20 +281,12 @@ def _question_segment_candidates(
             weighted_overlap = sum(
                 max(
                     1,
-                    round(
-                        8
-                        * math.log(
-                            (len(blocks) + 1)
-                            / (document_frequency[term] + 1)
-                        )
-                    ),
+                    round(8 * math.log((len(blocks) + 1) / (document_frequency[term] + 1))),
                 )
                 for term in overlap
             )
             union_size = len(segment_terms | block_terms[locator])
-            jaccard_basis_points = (
-                round(10_000 * len(overlap) / union_size) if union_size else 0
-            )
+            jaccard_basis_points = round(10_000 * len(overlap) / union_size) if union_size else 0
             score = weighted_overlap * 10_000 + len(overlap) * 100 + jaccard_basis_points
             ranked.append((score, len(overlap), block_ordinal, block, overlap))
         ranked.sort(key=lambda item: (-item[0], -item[1], item[2]))
@@ -360,12 +345,7 @@ def _context_query_terms(
     weights = {
         token: max(
             1,
-            round(
-                4
-                * math.log(
-                    (block_count + 1) / (document_frequency[token] + 1)
-                )
-            ),
+            round(4 * math.log((block_count + 1) / (document_frequency[token] + 1))),
         )
         for token in terms
     }
@@ -496,8 +476,7 @@ def _candidate_blocks(
         reasons[locator].add("QUESTION_SEGMENT_OVERLAP")
     if len(selected) > MAX_CANDIDATE_BLOCKS:
         ranked_locators = {
-            str(block["locator"]): (score, ordinal)
-            for score, ordinal, block in scored
+            str(block["locator"]): (score, ordinal) for score, ordinal, block in scored
         }
         selected_order = sorted(
             selected,
@@ -522,9 +501,7 @@ def _candidate_blocks(
             "SUPPLIED_LOCATOR_EXACT" not in reasons[str(block["locator"])],
             "EXACT_ISSUE_PHRASE" not in reasons[str(block["locator"])],
             "QUESTION_SEGMENT_OVERLAP" not in reasons[str(block["locator"])],
-            -segment_candidates.get(str(block["locator"]), {}).get(
-                "question_segment_score", 0
-            ),
+            -segment_candidates.get(str(block["locator"]), {}).get("question_segment_score", 0),
             -scored_by_locator[str(block["locator"])][0],
             scored_by_locator[str(block["locator"])][1],
         ),
@@ -554,9 +531,7 @@ def _candidate_blocks(
         "source_block_count": len(blocks),
         "exact_issue_phrase_occurrence_count": exact_phrase_count,
         "supplied_locator_resolutions": resolved_hints,
-        "all_supplied_locators_resolved": all(
-            item["resolved"] for item in resolved_hints
-        ),
+        "all_supplied_locators_resolved": all(item["resolved"] for item in resolved_hints),
         "selected_candidate_count": len(candidates),
         **segment_diagnostics,
     }
@@ -611,8 +586,7 @@ def build_packets(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
                 case is None
                 or route is None
                 or (
-                    case.get("question_sha256")
-                    != route.get("case_question_sha256")
+                    case.get("question_sha256") != route.get("case_question_sha256")
                     and route.get("case_question_sha256") is not None
                 )
                 or source_record.get("authority_identity_id")
@@ -633,9 +607,7 @@ def build_packets(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
                 if diagnostics["all_supplied_locators_resolved"]
                 else "ONE_OR_MORE_UNRESOLVED"
             ] += 1
-            phrase_positive_count += (
-                diagnostics["exact_issue_phrase_occurrence_count"] > 0
-            )
+            phrase_positive_count += diagnostics["exact_issue_phrase_occurrence_count"] > 0
             material = {
                 "schema": "legalbot.v111.phase2a.source-review-packet-row.v2",
                 "row_source_link_id": _sha256(
@@ -651,17 +623,13 @@ def build_packets(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
                 "legal_domain": context.get("legal_domain"),
                 "research_route": context.get("research_route"),
                 "authority_identity_id": source_record["authority_identity_id"],
-                "canonical_authority_identity_id": source_record[
-                    "canonical_authority_identity_id"
-                ],
+                "canonical_authority_identity_id": source_record["canonical_authority_identity_id"],
                 "source_title": source_record["source_title"],
                 "source_date": source_record["source_date"],
                 "source_class": source_record["source_class"],
                 "official_url": source_record["final_url"],
                 "source_representation_sha256": source_record["raw_sha256"],
-                "source_extraction_content_sha256": source_record[
-                    "extraction_content_sha256"
-                ],
+                "source_extraction_content_sha256": source_record["extraction_content_sha256"],
                 "deterministic_diagnostics": diagnostics,
                 "candidate_blocks": candidates,
                 "semantic_assessment": None,
@@ -719,9 +687,7 @@ def build_packets(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
     }
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in sorted(files)
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in sorted(files))
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return artifact
 
@@ -737,9 +703,7 @@ def main() -> None:
                 "artifact_content_sha256": artifact["artifact_content_sha256"],
                 "row_source_link_count": artifact["row_source_link_count"],
                 "unique_row_count": artifact["unique_row_count"],
-                "locator_resolution_counts": artifact[
-                    "locator_resolution_counts"
-                ],
+                "locator_resolution_counts": artifact["locator_resolution_counts"],
                 "exact_issue_phrase_positive_link_count": artifact[
                     "exact_issue_phrase_positive_link_count"
                 ],

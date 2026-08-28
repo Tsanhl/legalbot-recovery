@@ -30,8 +30,7 @@ def test_all_direct_ready_rows_have_exact_owner_advisory_basis(tmp_path: Path) -
     held = [
         row
         for row in result["records"]
-        if row["original_currentness_hold_present"]
-        or row["original_later_treatment_hold_present"]
+        if row["original_currentness_hold_present"] or row["original_later_treatment_hold_present"]
     ]
     assert len(held) == 11
     assert all(row["supporting_advisory_dependencies"] for row in held)

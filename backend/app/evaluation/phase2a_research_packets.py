@@ -35,8 +35,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -180,7 +179,9 @@ def _open_catalogue(path: Path) -> sqlite3.Connection:
     return connection
 
 
-def _select_sources(connection: sqlite3.Connection, target_date: date) -> tuple[ResearchSource, ...]:
+def _select_sources(
+    connection: sqlite3.Connection, target_date: date
+) -> tuple[ResearchSource, ...]:
     rows = connection.execute(
         """
         WITH eligible AS (
@@ -470,18 +471,12 @@ def _rank_rows(
             "ai_recommendation_may_not_admit_or_qualify": True,
             "technical_qualification_assigned": False,
         }
-        packets.append(
-            {**row_material, "row_packet_content_sha256": sealed_sha256(row_material)}
-        )
+        packets.append({**row_material, "row_packet_content_sha256": sealed_sha256(row_material)})
     metrics = {
         "candidate_record_count": candidate_count,
         "rows_with_no_lexical_candidate": sum(not packet["candidates"] for packet in packets),
-        "minimum_candidate_score": (
-            round(min(score_values), 8) if score_values else None
-        ),
-        "maximum_candidate_score": (
-            round(max(score_values), 8) if score_values else None
-        ),
+        "minimum_candidate_score": (round(min(score_values), 8) if score_values else None),
+        "maximum_candidate_score": (round(max(score_values), 8) if score_values else None),
     }
     return packets, metrics
 
@@ -532,7 +527,10 @@ def build_research_packets(
         raise ValueError("phase2a_research_input_count_invalid")
     approved_ids = {str(item.get("row_id") or "") for item in approved_rows}
     unresolved = [row for row in remaining_rows if str(row.get("row_id") or "") not in approved_ids]
-    if len(approved_ids) != EXPECTED_PRIOR_APPROVAL_COUNT or len(unresolved) != EXPECTED_OUTPUT_COUNT:
+    if (
+        len(approved_ids) != EXPECTED_PRIOR_APPROVAL_COUNT
+        or len(unresolved) != EXPECTED_OUTPUT_COUNT
+    ):
         raise ValueError("phase2a_research_unresolved_set_invalid")
     unresolved.sort(key=lambda item: int(item.get("ordinal") or 0))
 
@@ -593,8 +591,7 @@ def build_research_packets(
     artifact = {**material, "artifact_content_sha256": sealed_sha256(material)}
     _write_exclusive(
         output_root / "UNRESOLVED-502-LEXICAL-RESEARCH-PACKETS.json",
-        json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
-        + b"\n",
+        json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
     )
     _write_exclusive(
         output_root / "OUTCOME.txt",

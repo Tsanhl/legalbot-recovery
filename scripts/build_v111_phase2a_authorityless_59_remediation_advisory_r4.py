@@ -175,10 +175,7 @@ SPAN_SPECS = {
                 "scheme only—"
             ),
             "after that decision has been made",
-            (
-                "in the case of a decision of the CMA, at the same time as that decision "
-                "is made."
-            ),
+            ("in the case of a decision of the CMA, at the same time as that decision is made."),
         ],
     },
 }
@@ -202,8 +199,7 @@ RELEASE_HOLD_CODES = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -229,9 +225,7 @@ def _seal(value: dict[str, Any], field: str = "artifact_content_sha256") -> dict
     return {**material, field: _sha(_canonical_json(material))}
 
 
-def _recursive_no_execution_violations(
-    value: Any, path: str = "$"
-) -> list[str]:
+def _recursive_no_execution_violations(value: Any, path: str = "$") -> list[str]:
     violations: list[str] = []
     if isinstance(value, dict):
         for key, child in value.items():
@@ -241,9 +235,7 @@ def _recursive_no_execution_violations(
             violations.extend(_recursive_no_execution_violations(child, child_path))
     elif isinstance(value, list):
         for ordinal, child in enumerate(value):
-            violations.extend(
-                _recursive_no_execution_violations(child, f"{path}[{ordinal}]")
-            )
+            violations.extend(_recursive_no_execution_violations(child, f"{path}[{ordinal}]"))
     return violations
 
 
@@ -284,7 +276,11 @@ def _span(
     spec = SPAN_SPECS[spec_name]
     binding = source_by_id[spec["authority_identity_id"]]
     path = _binding_path(binding)
-    if path.is_symlink() or not path.is_file() or _file_sha(path) != _representation_file_sha(binding):
+    if (
+        path.is_symlink()
+        or not path.is_file()
+        or _file_sha(path) != _representation_file_sha(binding)
+    ):
         raise ValueError(f"r4_span_source_byte_mismatch:{spec_name}")
     text, parse_mode = r2._representation_text(path)
     normalized_source = r2._normalise_text(text)
@@ -309,9 +305,7 @@ def _span(
             "supporting_excerpts": verified,
             "source_binding_content_sha256": binding["record_content_sha256"],
             "representation_file_sha256": _representation_file_sha(binding),
-            "derived_normalized_representation_text_sha256": _sha(
-                normalized_source.encode()
-            ),
+            "derived_normalized_representation_text_sha256": _sha(normalized_source.encode()),
             "representation_parse_mode": parse_mode,
             "normalization": "UNICODE_NFKC_AND_COLLAPSE_WHITESPACE",
             "proposal_payload_immutable": True,
@@ -388,9 +382,7 @@ def _new_source_bindings(
 def _merge_bindings(
     r3_advisory: dict[str, Any], new_bindings: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
-    new_ready_coverage_ids = {
-        item["authority_identity_id"] for item in new_bindings
-    }
+    new_ready_coverage_ids = {item["authority_identity_id"] for item in new_bindings}
     raw_by_id = {
         item["authority_identity_id"]: item
         for item in [*r3_advisory["source_byte_bindings"], *new_bindings]
@@ -398,9 +390,7 @@ def _merge_bindings(
     role_map: dict[str, set[str]] = defaultdict(set)
     for item in r3_advisory["source_byte_bindings"]:
         role_map[item["authority_identity_id"]].update(item["source_roles"])
-    for identity in {
-        spec["authority_identity_id"] for spec in SPAN_SPECS.values()
-    }:
+    for identity in {spec["authority_identity_id"] for spec in SPAN_SPECS.values()}:
         role_map[identity].add("R4_EXACT_FROZEN_SPAN_SUPPORT")
     for identity in new_ready_coverage_ids:
         role_map[identity].add("R4_NEW_READY_ROW_FULL_ISSUE_COVERAGE")
@@ -625,9 +615,7 @@ def build_advisory() -> dict[str, Any]:
                 raw = dict(old_rec)
                 raw.pop("recommendation_content_sha256", None)
                 raw["schema"] = "legalbot.v111.phase2a.authorityless-component-remediation-r4.v1"
-                raw["r3_recommendation_content_sha256"] = old_rec[
-                    "recommendation_content_sha256"
-                ]
+                raw["r3_recommendation_content_sha256"] = old_rec["recommendation_content_sha256"]
                 recommendation = _seal(raw, "recommendation_content_sha256")
             recommendations.append(recommendation)
             if recommendation["component_material_blocker_after_owner_adoption"]:
@@ -635,9 +623,7 @@ def build_advisory() -> dict[str, Any]:
                     {
                         "row_id": row_id,
                         "component_ordinal": ordinal,
-                        "proposition_text_sha256": old_rec["before"][
-                            "proposition_text_sha256"
-                        ],
+                        "proposition_text_sha256": old_rec["before"]["proposition_text_sha256"],
                         "upstream_support_fit": old_rec["before"]["support_fit"],
                     }
                 )
@@ -676,8 +662,7 @@ def build_advisory() -> dict[str, Any]:
         if material_gap:
             residual_rows.add(row_id)
         if coverage_ready and any(
-            item["component_material_blocker_after_owner_adoption"]
-            for item in recommendations
+            item["component_material_blocker_after_owner_adoption"] for item in recommendations
         ):
             raise ValueError(f"ready_row_retains_component_blocker:{row_id}")
         if coverage_ready and (issue_holds or source_holds):
@@ -723,9 +708,7 @@ def build_advisory() -> dict[str, Any]:
     ):
         raise ValueError("r4_topology_or_residual_arithmetic_invalid")
     expected_residual = {
-        row["row_id"]
-        for row in sealed_r3["row_advisories"]
-        if row["material_legal_support_gap"]
+        row["row_id"] for row in sealed_r3["row_advisories"] if row["material_legal_support_gap"]
     } - RESOLVED_R3_RESIDUAL_ROWS
     if residual_rows != expected_residual:
         raise ValueError("r4_residual_row_set_invalid")
@@ -768,31 +751,23 @@ def build_advisory() -> dict[str, Any]:
             "r4_exact_source_rewrite_count": exact_rewrite_count,
             "r4_exact_false_overbroad_exclusion_repair_count": exact_exclusion_repair_count,
             "r4_full_component_source_narrowing_repair_count": 1,
-            "independent_audit_mandatory_full_component_repair_count": len(
-                mandatory_repairs
-            ),
+            "independent_audit_mandatory_full_component_repair_count": len(mandatory_repairs),
             "retained_original_component_blocker_count": len(residual_components),
             "retained_partial_component_blocker_count": sum(
-                item["upstream_support_fit"] == "PARTIAL"
-                for item in residual_components
+                item["upstream_support_fit"] == "PARTIAL" for item in residual_components
             ),
             "retained_none_component_blocker_count": sum(
-                item["upstream_support_fit"] == "NONE"
-                for item in residual_components
+                item["upstream_support_fit"] == "NONE" for item in residual_components
             ),
             "residual_material_gap_row_count": len(residual_rows),
-            "future_owner_consideration_support_ready_row_count": len(
-                FUTURE_SUPPORT_READY_ROWS
-            ),
+            "future_owner_consideration_support_ready_row_count": len(FUTURE_SUPPORT_READY_ROWS),
             "retained_full_component_inventory_count": full_inventory_total,
             "source_byte_binding_count": len(source_bindings),
             "relied_source_byte_binding_count": len(relied),
             "materialization_plan_source_binding_count": source_origins[
                 "EXACT_OWNER_ADOPTED_MATERIALIZATION_PLAN"
             ],
-            "sealed_candidate_source_binding_count": source_origins[
-                "SEALED_251_SOURCE_CANDIDATE"
-            ],
+            "sealed_candidate_source_binding_count": source_origins["SEALED_251_SOURCE_CANDIDATE"],
             "frozen_evidence_span_proposal_count": len(spans),
             "new_source_admission_count": 0,
             "qualification_run_count": 0,
@@ -868,12 +843,9 @@ def publish(output_root: Path = OUTPUT_ROOT) -> dict[str, str]:
     )
     package_bytes = _pretty_json(package)
     checksums = (
-        f"{_sha(advisory_bytes)}  {ADVISORY_NAME}\n"
-        f"{_sha(package_bytes)}  {PACKAGE_NAME}\n"
+        f"{_sha(advisory_bytes)}  {ADVISORY_NAME}\n{_sha(package_bytes)}  {PACKAGE_NAME}\n"
     ).encode()
-    staging = Path(
-        tempfile.mkdtemp(prefix=f".{output_root.name}.staging-", dir=output_root.parent)
-    )
+    staging = Path(tempfile.mkdtemp(prefix=f".{output_root.name}.staging-", dir=output_root.parent))
     os.chmod(staging, 0o700)
     try:
         for name, raw in (

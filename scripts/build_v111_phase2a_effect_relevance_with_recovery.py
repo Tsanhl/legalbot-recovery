@@ -29,9 +29,7 @@ from scripts.build_v111_phase2a_effect_relevance_packets import (  # noqa: E402
     _write_exclusive,
 )
 
-EXPECTED_RECOVERY_DIGEST = (
-    "a79b09a0a19b1f674ec6b600f98cfb9b3decbcc22907ca9356b804c3e47c5559"
-)
+EXPECTED_RECOVERY_DIGEST = "a79b09a0a19b1f674ec6b600f98cfb9b3decbcc22907ca9356b804c3e47c5559"
 EXPECTED_RECOVERY_ROWS = 37
 OUTPUT_NAME = "LEGISLATIVE-EFFECT-RELEVANCE-WITH-RECOVERY-516.json"
 PROGRESS_NAME = "PHASE2A-EFFECT-RECOVERY-PROGRESS.json"
@@ -80,9 +78,7 @@ def _validate_recovery(
             if not isinstance(candidate, dict):
                 raise ValueError("phase2a_effect_recovery_candidate_invalid")
             candidate_material = dict(candidate)
-            candidate_seal = str(
-                candidate_material.pop("candidate_record_content_sha256", "")
-            )
+            candidate_seal = str(candidate_material.pop("candidate_record_content_sha256", ""))
             authority = str(candidate.get("authority_identity_id") or "")
             if (
                 not authority
@@ -109,9 +105,7 @@ def _validate_recovery(
     return digest, dict(by_authority)
 
 
-def _packet(
-    effect: dict[str, Any], candidates: list[dict[str, Any]]
-) -> dict[str, Any]:
+def _packet(effect: dict[str, Any], candidates: list[dict[str, Any]]) -> dict[str, Any]:
     affected = _most_specific_provision_facts(effect.get("affected_provisions"))
     identities = {fact.identity for fact in affected}
     exact = []
@@ -122,12 +116,9 @@ def _packet(
             exact.append(
                 {
                     **candidate,
-                    "locator_provision_facts": [
-                        _fact_record(fact) for fact in locator_facts
-                    ],
+                    "locator_provision_facts": [_fact_record(fact) for fact in locator_facts],
                     "exact_intersections": [
-                        {"kind": kind, "normalized_value": value}
-                        for kind, value in intersection
+                        {"kind": kind, "normalized_value": value} for kind, value in intersection
                     ],
                 }
             )
@@ -135,22 +126,17 @@ def _packet(
     recovered = [
         candidate
         for candidate in candidates
-        if candidate.get("mapping_source")
-        == "CROSS_SUBJECT_CURRENT_NONCASE_RECOVERY_37"
+        if candidate.get("mapping_source") == "CROSS_SUBJECT_CURRENT_NONCASE_RECOVERY_37"
     ]
     if not candidates:
         status = "NO_SAME_AUTHORITY_CANDIDATE_IN_COMBINED_SCOPE"
         recommendation = "RECOMMEND_NONMATERIAL_TO_COMBINED_EVIDENCE_SCOPE"
     elif exact:
         status = "EXACT_AFFECTED_PROVISION_INTERSECTION_FOUND"
-        recommendation = (
-            "RECOMMEND_PROPOSITION_LEVEL_OWNER_REVIEW_OF_EXACT_PROVISION_INTERSECTIONS"
-        )
+        recommendation = "RECOMMEND_PROPOSITION_LEVEL_OWNER_REVIEW_OF_EXACT_PROVISION_INTERSECTIONS"
     else:
         status = "SAME_AUTHORITY_ONLY_NO_EXACT_AFFECTED_PROVISION_INTERSECTION"
-        recommendation = (
-            "RECOMMEND_METADATA_ONLY_PENDING_FINAL_PROPOSITION_BINDING_CONFIRMATION"
-        )
+        recommendation = "RECOMMEND_METADATA_ONLY_PENDING_FINAL_PROPOSITION_BINDING_CONFIRMATION"
     material = {
         "schema": "legalbot.v111.phase2a.effect-relevance-with-recovery-row.v1",
         "ordinal": effect.get("ordinal"),
@@ -162,15 +148,11 @@ def _packet(
         "source_version_id": effect.get("source_version_id"),
         "source_effect_ordinal": effect.get("source_effect_ordinal"),
         "source_record_sha256": effect.get("record_sha256"),
-        "source_owner_decision_sha256": effect["owner_review"].get(
-            "owner_decision_sha256"
-        ),
+        "source_owner_decision_sha256": effect["owner_review"].get("owner_decision_sha256"),
         "source_title": effect.get("source_title"),
         "authority_identity": effect.get("authority_identity"),
         "official_source_url": effect.get("official_source_url"),
-        "official_source_version_sha256": effect.get(
-            "official_source_version_sha256"
-        ),
+        "official_source_version_sha256": effect.get("official_source_version_sha256"),
         "effect_type": effect.get("type"),
         "affected_provisions": effect.get("affected_provisions"),
         "affecting_provisions": effect.get("affecting_provisions"),
@@ -217,8 +199,7 @@ def build_effect_relevance_with_recovery(
     combined: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for authority, candidates in baseline.items():
         combined[authority].extend(
-            {**candidate, "mapping_source": "UNRESOLVED_502_BASELINE"}
-            for candidate in candidates
+            {**candidate, "mapping_source": "UNRESOLVED_502_BASELINE"} for candidate in candidates
         )
     for authority, candidates in recovery.items():
         combined[authority].extend(candidates)
@@ -272,9 +253,7 @@ def build_effect_relevance_with_recovery(
     progress_material = {
         "schema": "legalbot.v111.phase2a.effect-relevance-with-recovery-progress.v1",
         "status": "PHASE2A_REMEDIATION_CONTINUES_OWNER_EFFECT_DECISIONS_REQUIRED",
-        "effect_relevance_artifact_content_sha256": artifact[
-            "artifact_content_sha256"
-        ],
+        "effect_relevance_artifact_content_sha256": artifact["artifact_content_sha256"],
         "effect_relevance_artifact_file_sha256": _sha256(raw),
         "summary": summary,
         "source_admission_authorized": False,
@@ -294,10 +273,7 @@ def build_effect_relevance_with_recovery(
     _write_exclusive(output_root / PROGRESS_NAME, progress_raw)
     _write_exclusive(
         output_root / "SHA256SUMS",
-        (
-            f"{_sha256(raw)}  {OUTPUT_NAME}\n"
-            f"{_sha256(progress_raw)}  {PROGRESS_NAME}\n"
-        ).encode(),
+        (f"{_sha256(raw)}  {OUTPUT_NAME}\n{_sha256(progress_raw)}  {PROGRESS_NAME}\n").encode(),
     )
     return progress
 

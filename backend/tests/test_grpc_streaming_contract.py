@@ -284,8 +284,7 @@ def test_stream_rejects_diagnostic_digest_for_different_text() -> None:
 def test_proto_and_transport_intent_are_uds_only_and_non_authorizing() -> None:
     project_root = Path(__file__).resolve().parents[2]
     proto = (
-        project_root
-        / "backend/app/model_runtime/proto/legalbot_model_runtime.proto"
+        project_root / "backend/app/model_runtime/proto/legalbot_model_runtime.proto"
     ).read_text(encoding="utf-8")
 
     assert "rpc GenerateStream" in proto

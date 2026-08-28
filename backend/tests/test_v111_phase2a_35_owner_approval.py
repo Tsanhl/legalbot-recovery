@@ -35,9 +35,7 @@ def _decision(row_number: int) -> dict[str, object]:
         "row_id": f"row-{row_number:02d}",
         "owner_typed_name": "Agnes",
         "owner_decision_date": "2026-08-24",
-        "proposed_owner_outcome": (
-            "APPROVE_INTERNAL_PROPOSITION_MATERIALITY_AND_REBINDING_SCOPE"
-        ),
+        "proposed_owner_outcome": ("APPROVE_INTERNAL_PROPOSITION_MATERIALITY_AND_REBINDING_SCOPE"),
         "internal_research_tool_only": True,
         "professional_legal_certification": False,
         "legal_advice": False,

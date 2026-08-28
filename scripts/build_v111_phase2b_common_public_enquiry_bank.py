@@ -17,9 +17,9 @@ import re
 import shutil
 import tempfile
 from collections import Counter
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PARENT = PROJECT_ROOT / "data/evaluations/phase2b-question-drafts"
@@ -81,23 +81,108 @@ DEFAULT_JURISDICTIONS = {
 }
 
 TOPIC_DOCUMENTS = {
-    "administrative-law": ["DECISION_LETTER", "PUBLISHED_POLICY", "STATUTORY_APPEAL_INFORMATION", "RELEVANT_CORRESPONDENCE"],
-    "ai-and-data-protection": ["PRIVACY_NOTICE", "ACCESS_OR_CORRECTION_REQUEST", "AUTOMATED_DECISION_NOTICE", "RELEVANT_SCREENSHOTS"],
-    "business-and-company-law": ["COMPANY_REGISTER", "ARTICLES_OR_AGREEMENT", "BOARD_AND_SHARE_RECORDS", "RELEVANT_CONTRACT"],
-    "commercial-law": ["SALE_CONTRACT", "INVOICE_AND_PAYMENT_RECORD", "DELIVERY_OR_TITLE_DOCUMENT", "RELEVANT_CORRESPONDENCE"],
-    "competition-law": ["AGREEMENT_OR_TERMS", "PRICING_OR_ACCESS_RECORD", "MARKET_AND_COMPETITOR_FACTS", "RELEVANT_COMMUNICATIONS"],
-    "contemporary-biolaw-and-regulation": ["CONSENT_FORM", "DEVICE_OR_STUDY_INFORMATION", "DATA_NOTICE", "CLINICAL_OR_INCIDENT_RECORD"],
-    "contract-law": ["CONTRACT_AND_TERMS", "ORDER_OR_PAYMENT_RECORD", "NOTICE_OR_CANCELLATION", "RELEVANT_CORRESPONDENCE"],
-    "criminal-law": ["POLICE_OR_COURT_DOCUMENT", "TIMELINE", "WITNESS_OR_DEVICE_EVIDENCE", "BAIL_OR_DEADLINE_INFORMATION"],
-    "eu-internal-market-law": ["NATIONAL_DECISION", "RESIDENCE_OR_WORK_RECORD", "PRODUCT_OR_SERVICE_REQUIREMENT", "APPEAL_INFORMATION"],
-    "international-commercial-mediation": ["DISPUTE_CLAUSE", "MEDIATION_RULES_OR_ORDER", "AUTHORITY_TO_SETTLE", "SETTLEMENT_DRAFT"],
-    "land-law": ["OFFICIAL_TITLE_AND_PLAN", "TRANSFER_OR_LEASE", "MORTGAGE_OR_TRUST_DOCUMENT", "OCCUPATION_AND_PAYMENT_RECORD"],
-    "law-and-medicine": ["CLINICAL_RECORD", "CONSENT_OR_CAPACITY_RECORD", "DECISION_OR TREATMENT_PLAN", "RELEVANT_CORRESPONDENCE"],
-    "pensions-law": ["SCHEME_RULE_OR BOOKLET", "BENEFIT_STATEMENT", "CONTRIBUTION_OR_TRANSFER_RECORD", "DECISION_AND_COMPLAINT_CORRESPONDENCE"],
-    "private-international-law": ["CONTRACT_AND_FORUM_CLAUSE", "FOREIGN_PROCEEDING_OR_JUDGMENT", "SERVICE_RECORD", "ASSET_AND_PARTY_LOCATION"],
-    "tort-law": ["INCIDENT_TIMELINE", "MEDICAL_OR_REPAIR_RECORD", "PHOTO_VIDEO_OR_WITNESS_EVIDENCE", "LOSS_AND_INSURANCE_RECORD"],
-    "trusts-law": ["TRUST_INSTRUMENT", "TRUSTEE_ACCOUNTS_AND_MINUTES", "ASSET_TRANSFER_RECORD", "BENEFICIARY_CORRESPONDENCE"],
-    "wills-and-estates": ["WILL_AND_CODICIL", "DEATH_AND_GRANT_RECORD", "ESTATE_ASSET_SCHEDULE", "EXECUTOR_OR_FAMILY_CORRESPONDENCE"],
+    "administrative-law": [
+        "DECISION_LETTER",
+        "PUBLISHED_POLICY",
+        "STATUTORY_APPEAL_INFORMATION",
+        "RELEVANT_CORRESPONDENCE",
+    ],
+    "ai-and-data-protection": [
+        "PRIVACY_NOTICE",
+        "ACCESS_OR_CORRECTION_REQUEST",
+        "AUTOMATED_DECISION_NOTICE",
+        "RELEVANT_SCREENSHOTS",
+    ],
+    "business-and-company-law": [
+        "COMPANY_REGISTER",
+        "ARTICLES_OR_AGREEMENT",
+        "BOARD_AND_SHARE_RECORDS",
+        "RELEVANT_CONTRACT",
+    ],
+    "commercial-law": [
+        "SALE_CONTRACT",
+        "INVOICE_AND_PAYMENT_RECORD",
+        "DELIVERY_OR_TITLE_DOCUMENT",
+        "RELEVANT_CORRESPONDENCE",
+    ],
+    "competition-law": [
+        "AGREEMENT_OR_TERMS",
+        "PRICING_OR_ACCESS_RECORD",
+        "MARKET_AND_COMPETITOR_FACTS",
+        "RELEVANT_COMMUNICATIONS",
+    ],
+    "contemporary-biolaw-and-regulation": [
+        "CONSENT_FORM",
+        "DEVICE_OR_STUDY_INFORMATION",
+        "DATA_NOTICE",
+        "CLINICAL_OR_INCIDENT_RECORD",
+    ],
+    "contract-law": [
+        "CONTRACT_AND_TERMS",
+        "ORDER_OR_PAYMENT_RECORD",
+        "NOTICE_OR_CANCELLATION",
+        "RELEVANT_CORRESPONDENCE",
+    ],
+    "criminal-law": [
+        "POLICE_OR_COURT_DOCUMENT",
+        "TIMELINE",
+        "WITNESS_OR_DEVICE_EVIDENCE",
+        "BAIL_OR_DEADLINE_INFORMATION",
+    ],
+    "eu-internal-market-law": [
+        "NATIONAL_DECISION",
+        "RESIDENCE_OR_WORK_RECORD",
+        "PRODUCT_OR_SERVICE_REQUIREMENT",
+        "APPEAL_INFORMATION",
+    ],
+    "international-commercial-mediation": [
+        "DISPUTE_CLAUSE",
+        "MEDIATION_RULES_OR_ORDER",
+        "AUTHORITY_TO_SETTLE",
+        "SETTLEMENT_DRAFT",
+    ],
+    "land-law": [
+        "OFFICIAL_TITLE_AND_PLAN",
+        "TRANSFER_OR_LEASE",
+        "MORTGAGE_OR_TRUST_DOCUMENT",
+        "OCCUPATION_AND_PAYMENT_RECORD",
+    ],
+    "law-and-medicine": [
+        "CLINICAL_RECORD",
+        "CONSENT_OR_CAPACITY_RECORD",
+        "DECISION_OR TREATMENT_PLAN",
+        "RELEVANT_CORRESPONDENCE",
+    ],
+    "pensions-law": [
+        "SCHEME_RULE_OR BOOKLET",
+        "BENEFIT_STATEMENT",
+        "CONTRIBUTION_OR_TRANSFER_RECORD",
+        "DECISION_AND_COMPLAINT_CORRESPONDENCE",
+    ],
+    "private-international-law": [
+        "CONTRACT_AND_FORUM_CLAUSE",
+        "FOREIGN_PROCEEDING_OR_JUDGMENT",
+        "SERVICE_RECORD",
+        "ASSET_AND_PARTY_LOCATION",
+    ],
+    "tort-law": [
+        "INCIDENT_TIMELINE",
+        "MEDICAL_OR_REPAIR_RECORD",
+        "PHOTO_VIDEO_OR_WITNESS_EVIDENCE",
+        "LOSS_AND_INSURANCE_RECORD",
+    ],
+    "trusts-law": [
+        "TRUST_INSTRUMENT",
+        "TRUSTEE_ACCOUNTS_AND_MINUTES",
+        "ASSET_TRANSFER_RECORD",
+        "BENEFICIARY_CORRESPONDENCE",
+    ],
+    "wills-and-estates": [
+        "WILL_AND_CODICIL",
+        "DEATH_AND_GRANT_RECORD",
+        "ESTATE_ASSET_SCHEDULE",
+        "EXECUTOR_OR_FAMILY_CORRESPONDENCE",
+    ],
 }
 
 FUNCTION_CHECKS = [
@@ -114,7 +199,9 @@ FUNCTION_CHECKS = [
 
 
 def _canonical_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    return (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+    ).encode("utf-8")
 
 
 def _sha256_bytes(raw: bytes) -> str:
@@ -136,7 +223,9 @@ def _sealed(payload: dict[str, Any], *, field: str) -> dict[str, Any]:
 
 
 def _load_module():
-    spec = importlib.util.spec_from_file_location("phase2b_common_public_questions", QUESTION_MODULE)
+    spec = importlib.util.spec_from_file_location(
+        "phase2b_common_public_questions", QUESTION_MODULE
+    )
     if spec is None or spec.loader is None:
         raise RuntimeError("cannot load common-public question module")
     module = importlib.util.module_from_spec(spec)
@@ -144,9 +233,14 @@ def _load_module():
     return module
 
 
-def _verify_source_package(root: Path, expected_run: str, expected_content_sha256: str) -> dict[str, Any]:
+def _verify_source_package(
+    root: Path, expected_run: str, expected_content_sha256: str
+) -> dict[str, Any]:
     manifest = json.loads((root / "PACKAGE-MANIFEST.json").read_text(encoding="utf-8"))
-    if manifest["run_name"] != expected_run or manifest["package_content_sha256"] != expected_content_sha256:
+    if (
+        manifest["run_name"] != expected_run
+        or manifest["package_content_sha256"] != expected_content_sha256
+    ):
         raise ValueError(f"source package identity changed: {expected_run}")
     checksum_count = 0
     for line in (root / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines():
@@ -185,7 +279,9 @@ def _source_scope_status(topic_id: str) -> str:
     return "R3_TOPIC_SCOPE_REFERENCE_ONLY_NOT_RESEARCHED_FOR_THIS_BANK"
 
 
-def _question_record(topic_id: str, lane: str, ordinal: int, seed: dict[str, Any]) -> dict[str, Any]:
+def _question_record(
+    topic_id: str, lane: str, ordinal: int, seed: dict[str, Any]
+) -> dict[str, Any]:
     visible = lane == "COMMON_PUBLIC_DEVELOPMENT_EVALUATION_DRAFT"
     prefix = "cp-d" if visible else "cp-u"
     scenario_class = _scenario_class(ordinal)
@@ -212,14 +308,25 @@ def _question_record(topic_id: str, lane: str, ordinal: int, seed: dict[str, Any
         "response_mode": "LAWYER_STYLE_ISSUE_SPOTTING_WITHOUT_CLAIMING_REPRESENTATION",
         "expected_function_checks": FUNCTION_CHECKS,
         "must_ask_clarifying_questions": True,
-        "clarification_targets": ["LOCATION_AND_GOVERNING_JURISDICTION", "EVENT_TIMELINE_AND_DEADLINES", "PARTIES_AND_RELATIONSHIPS", "MATERIAL_DOCUMENTS_AND_EVIDENCE"],
+        "clarification_targets": [
+            "LOCATION_AND_GOVERNING_JURISDICTION",
+            "EVENT_TIMELINE_AND_DEADLINES",
+            "PARTIES_AND_RELATIONSHIPS",
+            "MATERIAL_DOCUMENTS_AND_EVIDENCE",
+        ],
         "jurisdiction_targets": DEFAULT_JURISDICTIONS[topic_id],
         "required_document_categories": TOPIC_DOCUMENTS[topic_id],
         "must_correct_false_premise": false_premise,
         "safe_routing_required": urgent or topic_id in {"criminal-law", "law-and-medicine"},
-        "urgency": "URGENT" if urgent else ("ELEVATED" if topic_id in {"criminal-law", "law-and-medicine"} else "ROUTINE"),
+        "urgency": "URGENT"
+        if urgent
+        else ("ELEVATED" if topic_id in {"criminal-law", "law-and-medicine"} else "ROUTINE"),
         "legal_currentness_cutoff": LEGAL_CURRENTNESS_CUTOFF,
-        "required_authority_types": ["PRIMARY_LEGISLATION_IF_APPLICABLE", "OFFICIAL_JUDGMENTS", "OFFICIAL_RULES_OR_REGULATOR_MATERIAL_IF_APPLICABLE"],
+        "required_authority_types": [
+            "PRIMARY_LEGISLATION_IF_APPLICABLE",
+            "OFFICIAL_JUDGMENTS",
+            "OFFICIAL_RULES_OR_REGULATOR_MATERIAL_IF_APPLICABLE",
+        ],
         "topic_source_scope_status": _source_scope_status(topic_id),
         "requires_issue_decomposition_before_execution": True,
         "requires_official_source_research": True,
@@ -241,13 +348,57 @@ def _question_record(topic_id: str, lane: str, ordinal: int, seed: dict[str, Any
 
 
 TOKEN_RE = re.compile(r"[a-z0-9]+(?:['’-][a-z0-9]+)?")
-STOPWORDS = {"the", "and", "for", "that", "this", "with", "from", "what", "when", "where", "which", "who", "why", "how", "can", "does", "did", "are", "was", "were", "have", "has", "had", "may", "might", "should", "would", "could", "must", "into", "after", "before", "about", "their", "they", "them", "your", "ours", "mine"}
+STOPWORDS = {
+    "the",
+    "and",
+    "for",
+    "that",
+    "this",
+    "with",
+    "from",
+    "what",
+    "when",
+    "where",
+    "which",
+    "who",
+    "why",
+    "how",
+    "can",
+    "does",
+    "did",
+    "are",
+    "was",
+    "were",
+    "have",
+    "has",
+    "had",
+    "may",
+    "might",
+    "should",
+    "would",
+    "could",
+    "must",
+    "into",
+    "after",
+    "before",
+    "about",
+    "their",
+    "they",
+    "them",
+    "your",
+    "ours",
+    "mine",
+}
 
 
 def _features(prompt: str) -> Counter[str]:
-    tokens = [token for token in TOKEN_RE.findall(prompt.casefold()) if len(token) > 2 and token not in STOPWORDS]
+    tokens = [
+        token
+        for token in TOKEN_RE.findall(prompt.casefold())
+        if len(token) > 2 and token not in STOPWORDS
+    ]
     values = Counter(tokens)
-    values.update(f"{left}__{right}" for left, right in zip(tokens, tokens[1:]))
+    values.update(f"{left}__{right}" for left, right in pairwise(tokens))
     return values
 
 
@@ -261,7 +412,10 @@ def _leakage_audit(visible: list[dict[str, Any]], unseen: list[dict[str, Any]]) 
     for doc in docs:
         document_frequency.update(doc.keys())
     total = len(docs)
-    idf = {key: math.log((1 + total) / (1 + frequency)) + 1 for key, frequency in document_frequency.items()}
+    idf = {
+        key: math.log((1 + total) / (1 + frequency)) + 1
+        for key, frequency in document_frequency.items()
+    }
 
     def weighted(doc: Counter[str]) -> tuple[dict[str, float], float]:
         vector = {key: count * idf[key] for key, count in doc.items()}
@@ -279,8 +433,14 @@ def _leakage_audit(visible: list[dict[str, Any]], unseen: list[dict[str, Any]]) 
             if not visible_norm or not unseen_norm:
                 score = 0.0
             else:
-                small, large = (visible_vector, unseen_vector) if len(visible_vector) <= len(unseen_vector) else (unseen_vector, visible_vector)
-                score = sum(value * large.get(key, 0.0) for key, value in small.items()) / (visible_norm * unseen_norm)
+                small, large = (
+                    (visible_vector, unseen_vector)
+                    if len(visible_vector) <= len(unseen_vector)
+                    else (unseen_vector, visible_vector)
+                )
+                score = sum(value * large.get(key, 0.0) for key, value in small.items()) / (
+                    visible_norm * unseen_norm
+                )
             if score > maximum:
                 maximum = score
                 pair = (visible_row["question_id"], unseen_row["question_id"])
@@ -317,9 +477,21 @@ def _write_jsonl(path: Path, records: list[dict[str, Any]], *, private: bool = F
 
 
 def _topic_markdown(display_name: str, records: list[dict[str, Any]]) -> str:
-    lines = [f"# {display_name} — Common-public Development/Evaluation questions", "", "> Review draft only. It is not legal advice, a gold answer, authority, or permission to run Phase 2B.", ""]
+    lines = [
+        f"# {display_name} — Common-public Development/Evaluation questions",
+        "",
+        "> Review draft only. It is not legal advice, a gold answer, authority, or permission to run Phase 2B.",
+        "",
+    ]
     for record in records:
-        lines += [f"## {record['question_id']} — {record['scenario_class']}", "", record["prompt"], "", "Issue tags: " + ", ".join(record["issue_tags"]), ""]
+        lines += [
+            f"## {record['question_id']} — {record['scenario_class']}",
+            "",
+            record["prompt"],
+            "",
+            "Issue tags: " + ", ".join(record["issue_tags"]),
+            "",
+        ]
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -340,12 +512,19 @@ def _owner_review_guide(visible_by_topic: dict[str, list[dict[str, Any]]]) -> st
         records = visible_by_topic[topic_id]
         lines += [f"# {DISPLAY_NAMES[topic_id]}", ""]
         for record in records:
-            lines += [f"- **{record['question_id']}** [{record['scenario_class']}]: {record['prompt']}", ""]
+            lines += [
+                f"- **{record['question_id']}** [{record['scenario_class']}]: {record['prompt']}",
+                "",
+            ]
     return "\n".join(lines).rstrip() + "\n"
 
 
 def _assert_generated_safety(root: Path) -> None:
-    forbidden = (re.compile(rb"/Users/", re.IGNORECASE), re.compile(rb"hltsang", re.IGNORECASE), re.compile(rb"\bAgnes\b", re.IGNORECASE))
+    forbidden = (
+        re.compile(rb"/Users/", re.IGNORECASE),
+        re.compile(rb"hltsang", re.IGNORECASE),
+        re.compile(rb"\bAgnes\b", re.IGNORECASE),
+    )
     question_ids: set[str] = set()
     prompts: set[str] = set()
     record_count = 0
@@ -394,8 +573,16 @@ def build() -> Path:
         topic_rows: list[dict[str, Any]] = []
         for topic_id in sorted(DISPLAY_NAMES):
             seeds = question_module.COMMON_PUBLIC_BANK[topic_id]
-            visible = [_question_record(topic_id, "COMMON_PUBLIC_DEVELOPMENT_EVALUATION_DRAFT", index, seed) for index, seed in enumerate(seeds["visible"], start=1)]
-            unseen = [_question_record(topic_id, "COMMON_PUBLIC_UNSEEN_CUSTODY_DRAFT", index, seed) for index, seed in enumerate(seeds["unseen"], start=1)]
+            visible = [
+                _question_record(
+                    topic_id, "COMMON_PUBLIC_DEVELOPMENT_EVALUATION_DRAFT", index, seed
+                )
+                for index, seed in enumerate(seeds["visible"], start=1)
+            ]
+            unseen = [
+                _question_record(topic_id, "COMMON_PUBLIC_UNSEEN_CUSTODY_DRAFT", index, seed)
+                for index, seed in enumerate(seeds["unseen"], start=1)
+            ]
             visible_by_topic[topic_id] = visible
             all_visible += visible
             all_unseen += unseen
@@ -403,9 +590,15 @@ def build() -> Path:
             custody_dir = staging / "topics" / topic_id / "unseen-custody"
             development_dir.mkdir(parents=True)
             custody_dir.mkdir(parents=True)
-            visible_raw = _write_jsonl(development_dir / "COMMON-PUBLIC-QUESTION-SET.jsonl", visible)
-            (development_dir / "COMMON-PUBLIC-QUESTION-SET.md").write_text(_topic_markdown(DISPLAY_NAMES[topic_id], visible), encoding="utf-8")
-            unseen_raw = _write_jsonl(custody_dir / "PRIVATE-COMMON-PUBLIC-UNSEEN.jsonl", unseen, private=True)
+            visible_raw = _write_jsonl(
+                development_dir / "COMMON-PUBLIC-QUESTION-SET.jsonl", visible
+            )
+            (development_dir / "COMMON-PUBLIC-QUESTION-SET.md").write_text(
+                _topic_markdown(DISPLAY_NAMES[topic_id], visible), encoding="utf-8"
+            )
+            unseen_raw = _write_jsonl(
+                custody_dir / "PRIVATE-COMMON-PUBLIC-UNSEEN.jsonl", unseen, private=True
+            )
             manifest = _sealed(
                 {
                     "schema": TOPIC_SCHEMA,
@@ -414,7 +607,12 @@ def build() -> Path:
                     "display_name": DISPLAY_NAMES[topic_id],
                     "visible_question_count": 18,
                     "unseen_custody_draft_question_count": 18,
-                    "scenario_distribution_per_lane": {"EVERYDAY_SINGLE_ISSUE": 8, "MULTI_ISSUE_FACT_PATTERN": 5, "FALSE_PREMISE_CORRECTION": 3, "URGENT_OR_SAFETY_BOUNDARY": 2},
+                    "scenario_distribution_per_lane": {
+                        "EVERYDAY_SINGLE_ISSUE": 8,
+                        "MULTI_ISSUE_FACT_PATTERN": 5,
+                        "FALSE_PREMISE_CORRECTION": 3,
+                        "URGENT_OR_SAFETY_BOUNDARY": 2,
+                    },
                     "visible_jsonl_sha256": _sha256_bytes(visible_raw),
                     "unseen_jsonl_sha256": _sha256_bytes(unseen_raw),
                     "unseen_file_mode": "0600",
@@ -428,7 +626,15 @@ def build() -> Path:
                 field="topic_content_sha256",
             )
             _write_json(staging / "topics" / topic_id / "TOPIC-MANIFEST.json", manifest)
-            topic_rows.append({"topic_id": topic_id, "display_name": DISPLAY_NAMES[topic_id], "visible_question_count": 18, "unseen_question_count": 18, "topic_content_sha256": manifest["topic_content_sha256"]})
+            topic_rows.append(
+                {
+                    "topic_id": topic_id,
+                    "display_name": DISPLAY_NAMES[topic_id],
+                    "visible_question_count": 18,
+                    "unseen_question_count": 18,
+                    "topic_content_sha256": manifest["topic_content_sha256"],
+                }
+            )
 
         leakage = _leakage_audit(all_visible, all_unseen)
         _write_json(staging / "UNSEEN-LEAKAGE-AUDIT.json", leakage)
@@ -467,7 +673,9 @@ def build() -> Path:
             field="registry_content_sha256",
         )
         _write_json(staging / "QUESTION-BANK-REGISTRY.json", registry)
-        (staging / "OWNER-REVIEW-GUIDE.md").write_text(_owner_review_guide(visible_by_topic), encoding="utf-8")
+        (staging / "OWNER-REVIEW-GUIDE.md").write_text(
+            _owner_review_guide(visible_by_topic), encoding="utf-8"
+        )
         (staging / "README.md").write_text(
             f"# {RUN_NAME}\n\nThis immutable package contains synthetic common-public legal-enquiry questions for owner review only. It contains 17 topics, 306 visible Development/evaluation drafts and 306 separate unseen-custody drafts. It does not contain answers, legal authority, EvidenceSpans or an execution authorization.\n\nNothing in this package starts Phase 2B, reads or consumes the separately running Phase 2A chain, admits sources, scans, builds or embeds an index, runs retrieval, calls an answer model, trains a model, freezes unseen validation, promotes a candidate or activates live.\n\nThe visible set is readable in `OWNER-REVIEW-GUIDE.md` and each topic's Development folder. Unseen prompts have no Markdown projection and remain only private custody drafts until an exact owner freeze gate.\n",
             encoding="utf-8",
@@ -480,7 +688,9 @@ def build() -> Path:
                 "legal_currentness_cutoff": LEGAL_CURRENTNESS_CUTOFF,
                 "source_package_receipts": source_receipts,
                 "question_registry_content_sha256": registry["registry_content_sha256"],
-                "function_test_contract_content_sha256": function_contract["contract_content_sha256"],
+                "function_test_contract_content_sha256": function_contract[
+                    "contract_content_sha256"
+                ],
                 "leakage_audit_content_sha256": leakage["audit_content_sha256"],
                 "topic_count": 17,
                 "visible_question_count": 306,
@@ -518,7 +728,10 @@ def build() -> Path:
         )
         _write_json(staging / "PACKAGE-MANIFEST.json", package)
         _assert_generated_safety(staging)
-        checksum_lines = [f"{_sha256_file(path)}  {path.relative_to(staging).as_posix()}" for path in sorted(item for item in staging.rglob("*") if item.is_file())]
+        checksum_lines = [
+            f"{_sha256_file(path)}  {path.relative_to(staging).as_posix()}"
+            for path in sorted(item for item in staging.rglob("*") if item.is_file())
+        ]
         (staging / "SHA256SUMS.txt").write_text("\n".join(checksum_lines) + "\n", encoding="utf-8")
         os.replace(staging, OUTPUT_ROOT)
     except Exception:

@@ -17,28 +17,20 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data" / "evaluations" / "phase2a-owner-review"
-PARTIAL_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r62-exact-semantic-span-advisory"
-)
-CANARY_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61f-exact-span-canary"
-)
+PARTIAL_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r62-exact-semantic-span-advisory"
+CANARY_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61f-exact-span-canary"
 CONTRADICTION_ROW_ID = "live30-q01:issue-03"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -141,8 +133,7 @@ def main() -> None:
         or canary_row.get("assessment")
         not in {"DIRECT_EXACT_SPAN_ADVISORY", "PARTIAL_EXACT_SPAN_ADVISORY"}
         or canary_intent.get("prompt_sha256") != intent.get("prompt_sha256")
-        or canary_intent.get("runtime_identity_sha256")
-        != intent.get("runtime_identity_sha256")
+        or canary_intent.get("runtime_identity_sha256") != intent.get("runtime_identity_sha256")
     ):
         raise ValueError("phase2a_multirow_debug_canary_contradiction_changed")
 
@@ -173,9 +164,7 @@ def main() -> None:
             ),
             "second_batch_interrupted_before_checkpoint": True,
         },
-        "root_cause_status": (
-            "CONFIRMED_MULTIROW_LONG_CONTEXT_ADVISORY_FALSE_NEGATIVE"
-        ),
+        "root_cause_status": ("CONFIRMED_MULTIROW_LONG_CONTEXT_ADVISORY_FALSE_NEGATIVE"),
         "root_cause_evidence": {
             "contradiction_row_id": CONTRADICTION_ROW_ID,
             "singleton_canary_assessment": canary_row["assessment"],
@@ -207,10 +196,7 @@ def main() -> None:
     _write_exclusive(report_path, _pretty_json(report))
     _write_exclusive(
         PARTIAL_ROOT / "DEBUG-STOP-OUTCOME.txt",
-        (
-            "r62 STOPPED: MULTIROW FALSE GAP CONFIRMED; SINGLETON SUCCESSOR "
-            "REVISION REQUIRED.\n"
-        ).encode(),
+        (b"r62 STOPPED: MULTIROW FALSE GAP CONFIRMED; SINGLETON SUCCESSOR REVISION REQUIRED.\n"),
     )
     names = (
         "INTENT.json",
@@ -218,9 +204,7 @@ def main() -> None:
         "DEBUG-STOP-REPORT.json",
         "DEBUG-STOP-OUTCOME.txt",
     )
-    sums = "".join(
-        f"{_sha256_file(PARTIAL_ROOT / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(PARTIAL_ROOT / name)}  {name}\n" for name in names).encode()
     _write_exclusive(PARTIAL_ROOT / "DEBUG-STOP-SHA256SUMS.txt", sums)
     print(json.dumps(report, sort_keys=True))
 

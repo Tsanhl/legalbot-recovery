@@ -44,8 +44,7 @@ _BLOCK_MARKER = re.compile(r"<!-- legalbot-block (?P<json>\{.*?\}) -->\n", re.DO
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -288,10 +287,9 @@ def build_reconciliation(
         source = source_by_version.get(source_version_id)
         if source is None:
             raise ValueError("phase2a_byte_mismatch_candidate_source_missing")
-        if (
-            source.get("authority_identity_id") != record.get("authority_identity")
-            or source.get("version_sha256") != record.get("expected_version_sha256")
-        ):
+        if source.get("authority_identity_id") != record.get("authority_identity") or source.get(
+            "version_sha256"
+        ) != record.get("expected_version_sha256"):
             raise ValueError("phase2a_byte_mismatch_candidate_source_binding_invalid")
         canonical_path = _safe_project_file(str(source["canonical_markdown_path"]))
         member_name = str(record.get("quarantine_member") or "")
@@ -379,8 +377,7 @@ def build_reconciliation(
     _write_exclusive(
         output_root / "SHA256SUMS.txt",
         "".join(
-            f"{_sha256_file(path)}  {path.name}\n"
-            for path in sorted((artifact_path, outcome_path))
+            f"{_sha256_file(path)}  {path.name}\n" for path in sorted((artifact_path, outcome_path))
         ).encode(),
     )
     return {
@@ -394,9 +391,7 @@ def build_reconciliation(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST
-    )
+    parser.add_argument("--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST)
     parser.add_argument("--quarantine-root", type=Path, default=DEFAULT_QUARANTINE_ROOT)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     args = parser.parse_args()

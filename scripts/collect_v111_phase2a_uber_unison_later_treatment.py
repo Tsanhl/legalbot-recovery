@@ -21,12 +21,9 @@ from scripts import (  # noqa: E402
     collect_v111_phase2a_direct_hold_later_treatment as base,
 )
 
-DEFAULT_PLAN = (
-    PROJECT_ROOT / "config/phase2a_uber_unison_later_treatment.2026-08-27.v1.json"
-)
+DEFAULT_PLAN = PROJECT_ROOT / "config/phase2a_uber_unison_later_treatment.2026-08-27.v1.json"
 DEFAULT_QUARANTINE = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-27/phase2a-uber-unison-later-treatment-r2"
+    PROJECT_ROOT / "data/quarantine/2026-08-27/phase2a-uber-unison-later-treatment-r2"
 )
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
@@ -34,9 +31,7 @@ DEFAULT_OUTPUT = (
     / "LegalBot-Phase2A-2026-08-27-remediation-working-r1"
     / "UBER-UNISON-LATER-TREATMENT-ADVISORY-4-ROWS-r2.json"
 )
-EXPECTED_PLAN_FILE_SHA256 = (
-    "9c220c0482db6826dc95dd165381364c2020416ea35f3dbb757738a5610160bf"
-)
+EXPECTED_PLAN_FILE_SHA256 = "9c220c0482db6826dc95dd165381364c2020416ea35f3dbb757738a5610160bf"
 
 
 def _load_plan(path: Path) -> dict[str, Any]:
@@ -53,8 +48,7 @@ def _load_plan(path: Path) -> dict[str, Any]:
 def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     targets = plan.get("targets")
     if (
-        plan.get("schema")
-        != "legalbot.v111.phase2a.uber-unison-later-treatment-plan.v1"
+        plan.get("schema") != "legalbot.v111.phase2a.uber-unison-later-treatment-plan.v1"
         or plan.get("purpose")
         != "TARGETED_NON_BULK_EXACT_CITATION_LATER_TREATMENT_FOR_UBER_AND_UNISON_DIRECT_ROWS"
         or plan.get("source_ceiling_date") != "2026-08-14"
@@ -116,8 +110,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
                 or not isinstance(paragraph_ids, list)
                 or not paragraph_ids
                 or any(
-                    not isinstance(value, str)
-                    or base._PARAGRAPH_ID.fullmatch(value) is None
+                    not isinstance(value, str) or base._PARAGRAPH_ID.fullmatch(value) is None
                     for value in paragraph_ids
                 )
             ):
@@ -143,9 +136,7 @@ def _paragraph_spans(
     namespace = {"akn": base.AKN_NS}
     spans: list[dict[str, Any]] = []
     for paragraph_id in paragraph_ids:
-        matches = root.xpath(
-            f'.//akn:paragraph[@eId="{paragraph_id}"]', namespaces=namespace
-        )
+        matches = root.xpath(f'.//akn:paragraph[@eId="{paragraph_id}"]', namespaces=namespace)
         locator_method = "AKN_EID"
         if not matches:
             number = paragraph_id.removeprefix("para_")
@@ -174,9 +165,7 @@ def _paragraph_spans(
     return spans
 
 
-def collect(
-    *, plan_path: Path, quarantine_root: Path, output_path: Path
-) -> dict[str, Any]:
+def collect(*, plan_path: Path, quarantine_root: Path, output_path: Path) -> dict[str, Any]:
     if quarantine_root.exists() or quarantine_root.is_symlink():
         raise ValueError("phase2a_uber_unison_quarantine_already_exists")
     if output_path.exists() or output_path.is_symlink():
@@ -229,9 +218,7 @@ def collect(
                     ),
                     "owner_outcome": None,
                 }
-                candidates.append(
-                    {**material, "record_content_sha256": base._sealed(material)}
-                )
+                candidates.append({**material, "record_content_sha256": base._sealed(material)})
             material = {
                 "schema": "legalbot.v111.phase2a.uber-unison-target-review.v1",
                 "target_neutral_citation": citation,
@@ -247,9 +234,7 @@ def collect(
                 "recommended_owner_outcome": target["recommended_owner_outcome"],
                 "owner_outcome": None,
             }
-            records.append(
-                {**material, "record_content_sha256": base._sealed(material)}
-            )
+            records.append({**material, "record_content_sha256": base._sealed(material)})
     finally:
         client.close()
     material = {
@@ -259,9 +244,7 @@ def collect(
         "source_ceiling_date": "2026-08-14",
         "plan_file_sha256": EXPECTED_PLAN_FILE_SHA256,
         "record_count": len(records),
-        "candidate_review_count": sum(
-            len(record["candidate_reviews"]) for record in records
-        ),
+        "candidate_review_count": sum(len(record["candidate_reviews"]) for record in records),
         "records": records,
         "targeted_search_is_exhaustive": False,
         "absence_of_other_hits_proves_no_later_treatment": False,

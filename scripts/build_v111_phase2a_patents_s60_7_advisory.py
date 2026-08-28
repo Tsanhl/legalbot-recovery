@@ -43,13 +43,8 @@ DEFAULT_CANDIDATE_MANIFEST = (
     / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
     / "approved-source-manifest.json"
 )
-DEFAULT_QUARANTINE_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-24-r34-quarantine"
-)
-DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r53-patents-s60-7-advisory"
-)
+DEFAULT_QUARANTINE_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-24-r34-quarantine"
+DEFAULT_OUTPUT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r53-patents-s60-7-advisory"
 
 EXPECTED_REGISTER_CONTENT_SHA256 = (
     "f0a2f9e85789aaf3bcbe9a2b90cbc404d334530f1df367e2c77a32e84b175da0"
@@ -70,15 +65,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -200,7 +192,9 @@ def _single_changed_provision(
 ) -> tuple[dict[str, str], dict[str, str], list[dict[str, Any]]]:
     old = mismatch._canonical_provisions(canonical_path)
     fresh = mismatch._fresh_provisions(fresh_path.read_bytes(), fresh_path.name)
-    changed = [key for key in sorted(set(old) & set(fresh)) if old[key]["text"] != fresh[key]["text"]]
+    changed = [
+        key for key in sorted(set(old) & set(fresh)) if old[key]["text"] != fresh[key]["text"]
+    ]
     if changed != [f"{SOURCE_ANCHOR}#occurrence=1"]:
         raise ValueError("phase2a_patents_changed_anchor_fingerprint_invalid")
     old_row = old[changed[0]]

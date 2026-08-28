@@ -19,18 +19,11 @@ from scripts.run_v111_phase2a_owner_advisory_review import (
 ROOT = Path(__file__).resolve().parents[2]
 OWNER_REVIEW = ROOT / "data" / "evaluations" / "phase2a-owner-review"
 REMAINDER = (
-    OWNER_REVIEW
-    / "LegalBot-Phase2AB-2026-08-24-r29"
-    / "REMAINING-448-RESEARCH-PACKETS.json"
+    OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r29" / "REMAINING-448-RESEARCH-PACKETS.json"
 )
 CASES = ROOT / "benchmarks" / "evaluation" / "live-evaluation-60-v1" / "cases.jsonl"
 PROMPT = (
-    ROOT
-    / "backend"
-    / "app"
-    / "evaluation"
-    / "prompts"
-    / "phase2a_owner_advisory_reviewer.v3.txt"
+    ROOT / "backend" / "app" / "evaluation" / "prompts" / "phase2a_owner_advisory_reviewer.v3.txt"
 )
 
 
@@ -84,9 +77,7 @@ def test_full_fake_review_keeps_all_448_rows_advisory(tmp_path: Path) -> None:
     assert result["owner_decisions_applied"] is False
     assert result["phase2b_authorized"] is False
     assert result["development30_authorized"] is False
-    artifact = json.loads(
-        (tmp_path / "output" / "OWNER-ADVISORY-REVIEW-448.json").read_bytes()
-    )
+    artifact = json.loads((tmp_path / "output" / "OWNER-ADVISORY-REVIEW-448.json").read_bytes())
     assert artifact["model_independent_reviewer"] is False
     assert artifact["technical_qualification_assigned"] is False
     assert all(row["owner_decision_required"] is True for row in artifact["rows"])

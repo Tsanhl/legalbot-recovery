@@ -192,8 +192,7 @@ RELEASE_HOLD_CODES = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -348,7 +347,9 @@ def _build_full_source_bindings(
 
 
 def _merge_source_bindings(
-    r2_advisory: dict[str, Any], full_bindings: list[dict[str, Any]], packet_rows: dict[str, dict[str, Any]]
+    r2_advisory: dict[str, Any],
+    full_bindings: list[dict[str, Any]],
+    packet_rows: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
     blocker_usage: dict[str, set[str]] = defaultdict(set)
     for row in r2_advisory["row_advisories"]:
@@ -467,8 +468,7 @@ def build_advisory() -> dict[str, Any]:
     ):
         raise ValueError("r3_semantic_action_partition_invalid")
     if Counter(
-        base_recommendations[key]["before"]["support_fit"]
-        for key in retained_exclusion_keys
+        base_recommendations[key]["before"]["support_fit"] for key in retained_exclusion_keys
     ) != {"PARTIAL": 17, "NONE": 8}:
         raise ValueError("retained_exclusion_support_topology_invalid")
 
@@ -639,8 +639,7 @@ def build_advisory() -> dict[str, Any]:
         "row_ids": list(derived_row_ids),
         "topology_derivation": {
             "method": (
-                "SEALED_R2_EXACT_59_ROW_MEMBERSHIP_REVALIDATED_AGAINST_R3_"
-                "BLOCKER_COMPONENTS"
+                "SEALED_R2_EXACT_59_ROW_MEMBERSHIP_REVALIDATED_AGAINST_R3_BLOCKER_COMPONENTS"
             ),
             "derived_row_count": len(derived_row_ids),
             "original_none_component_count": 63,
@@ -665,9 +664,7 @@ def build_advisory() -> dict[str, Any]:
             "row_issue_dimension_coverage_hold_count": len(ISSUE_COVERAGE_GAPS),
             "source_binding_material_hold_row_count": len(SOURCE_BINDING_HOLDS),
             "residual_material_blocker_row_count": len(material_blocker_rows),
-            "future_owner_consideration_support_ready_row_count": len(
-                FUTURE_SUPPORT_READY_ROWS
-            ),
+            "future_owner_consideration_support_ready_row_count": len(FUTURE_SUPPORT_READY_ROWS),
             "retained_full_component_inventory_count": full_count,
             "source_byte_binding_count": len(source_bindings),
             "relied_source_byte_binding_count": len(relied_sources),
@@ -676,12 +673,8 @@ def build_advisory() -> dict[str, Any]:
             "materialization_plan_source_binding_count": source_origins[
                 "EXACT_OWNER_ADOPTED_MATERIALIZATION_PLAN"
             ],
-            "sealed_candidate_source_binding_count": source_origins[
-                "SEALED_251_SOURCE_CANDIDATE"
-            ],
-            "unresolved_full_authority_identity_inventory_count": len(
-                unresolved_full_identities
-            ),
+            "sealed_candidate_source_binding_count": source_origins["SEALED_251_SOURCE_CANDIDATE"],
+            "unresolved_full_authority_identity_inventory_count": len(unresolved_full_identities),
             "new_source_admission_count": 0,
             "qualification_run_count": 0,
             "answer_release_count": 0,
@@ -716,9 +709,7 @@ def build_advisory() -> dict[str, Any]:
             "owner_adoption_cannot_clear_residual_material_gap": True,
         },
         "source_byte_bindings": source_bindings,
-        "unresolved_full_authority_identity_inventory": sorted(
-            unresolved_full_identities
-        ),
+        "unresolved_full_authority_identity_inventory": sorted(unresolved_full_identities),
         "row_advisories": row_advisories,
         "decision_boundary": {
             "recommendations_are_not_owner_decisions": True,
@@ -760,12 +751,9 @@ def publish(output_root: Path = OUTPUT_ROOT) -> dict[str, str]:
     )
     package_bytes = _pretty_json(package)
     checksums = (
-        f"{_sha(advisory_bytes)}  {ADVISORY_NAME}\n"
-        f"{_sha(package_bytes)}  {PACKAGE_NAME}\n"
+        f"{_sha(advisory_bytes)}  {ADVISORY_NAME}\n{_sha(package_bytes)}  {PACKAGE_NAME}\n"
     ).encode()
-    staging = Path(
-        tempfile.mkdtemp(prefix=f".{output_root.name}.staging-", dir=output_root.parent)
-    )
+    staging = Path(tempfile.mkdtemp(prefix=f".{output_root.name}.staging-", dir=output_root.parent))
     os.chmod(staging, 0o700)
     try:
         for name, raw in (

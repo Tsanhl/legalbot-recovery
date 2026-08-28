@@ -27,12 +27,8 @@ DEFAULT_DOCX = (
     / "LegalBot-v111-Phase2A-Consolidated-Owner-Review-Agnes-2026-08-24-rev2.docx"
 )
 ZIP_NAME = "EXTERNAL-AUDIT-PHASE2A-CONSOLIDATED-OWNER-GATE-20260824.zip"
-EXPECTED_DECISION_DIGEST = (
-    "7a471bed936bf901cca49413f1abb8e27db54157862a1f369136a0704e811414"
-)
-EXPECTED_MACHINE_DIGEST = (
-    "3ba8de75875cd2192a0707450c206fbb91220fbf3d3ac2704b1fd18046d1227c"
-)
+EXPECTED_DECISION_DIGEST = "7a471bed936bf901cca49413f1abb8e27db54157862a1f369136a0704e811414"
+EXPECTED_MACHINE_DIGEST = "3ba8de75875cd2192a0707450c206fbb91220fbf3d3ac2704b1fd18046d1227c"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _FORBIDDEN = (
     b"/Users/",
@@ -46,8 +42,7 @@ _FORBIDDEN = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -136,9 +131,7 @@ def finalize(machine_root: Path, delivery_root: Path, docx_path: Path) -> dict[s
 
     index = _load(machine_root / "MACHINE-PACKAGE-INDEX.json")
     index_material = dict(index)
-    supplied_machine_digest = str(
-        index_material.pop("machine_package_content_sha256", "")
-    )
+    supplied_machine_digest = str(index_material.pop("machine_package_content_sha256", ""))
     if (
         supplied_machine_digest != EXPECTED_MACHINE_DIGEST
         or supplied_machine_digest != _sealed(index_material)
@@ -168,9 +161,7 @@ def finalize(machine_root: Path, delivery_root: Path, docx_path: Path) -> dict[s
 
     decision = _load(machine_root / "OWNER-DECISION-BATCH-1058.json")
     decision_material = dict(decision)
-    supplied_decision_digest = str(
-        decision_material.pop("owner_decision_batch_content_sha256", "")
-    )
+    supplied_decision_digest = str(decision_material.pop("owner_decision_batch_content_sha256", ""))
     if (
         supplied_decision_digest != EXPECTED_DECISION_DIGEST
         or supplied_decision_digest != _sealed(decision_material)
@@ -265,9 +256,7 @@ def finalize(machine_root: Path, delivery_root: Path, docx_path: Path) -> dict[s
         "status": "DELIVERY_VERIFIED_OWNER_DECISIONS_REQUIRED_PHASE2A_ONLY",
         "owner_decision_batch_content_sha256": EXPECTED_DECISION_DIGEST,
         "machine_package_content_sha256": EXPECTED_MACHINE_DIGEST,
-        "external_audit_manifest_content_sha256": external_manifest[
-            "manifest_content_sha256"
-        ],
+        "external_audit_manifest_content_sha256": external_manifest["manifest_content_sha256"],
         "docx": {
             "file_name": docx_path.name,
             "sha256": _sha256(docx_raw),

@@ -56,8 +56,7 @@ _RULE = re.compile(
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -83,9 +82,7 @@ def _sealed(value: Any) -> str:
 
 def _source_manifest_identity_sha256(value: Mapping[str, Any]) -> str:
     identity = {
-        key: item
-        for key, item in value.items()
-        if key not in {"created_at", "manifest_sha256"}
+        key: item for key, item in value.items() if key not in {"created_at", "manifest_sha256"}
     }
     return _sha256(_pretty_json(identity))
 
@@ -141,7 +138,9 @@ def _base_official_url(value: str) -> str:
     if host == "caselaw.nationalarchives.gov.uk" and len(parts) >= 3:
         path = "/" + "/".join(parts[:3])
         return urlunsplit(("https", host, path, "", ""))
-    return urlunsplit((parsed.scheme.casefold(), parsed.netloc.casefold(), parsed.path.rstrip("/"), "", ""))
+    return urlunsplit(
+        (parsed.scheme.casefold(), parsed.netloc.casefold(), parsed.path.rstrip("/"), "", "")
+    )
 
 
 def _expected_locators(value: str) -> set[str]:
@@ -214,7 +213,9 @@ def _fresh_official_status(
     source_version_ids: Sequence[str],
     provenance: Mapping[str, Sequence[Mapping[str, Any]]],
 ) -> dict[str, Any]:
-    records = [record for source_id in source_version_ids for record in provenance.get(source_id, ())]
+    records = [
+        record for source_id in source_version_ids for record in provenance.get(source_id, ())
+    ]
     if not records:
         return {
             "status": "NO_FRESH_OFFICIAL_RECORD_IN_PHASE2A_PROVENANCE",
@@ -281,8 +282,10 @@ def _match_record(
         status = "NO_MATCHING_SOURCE_IN_SEALED_CANDIDATE"
     elif not deduplicated:
         status = "NO_EXACT_CANDIDATE_TEXT_COMPONENT"
-    elif coverage_ratio >= 0.75 and exact_candidate_controls and (
-        locator_constraint_applied or not expected_locators
+    elif (
+        coverage_ratio >= 0.75
+        and exact_candidate_controls
+        and (locator_constraint_applied or not expected_locators)
     ):
         status = "DETERMINISTIC_CANDIDATE_COMPONENTS_LOCATED_OWNER_REVIEW_REQUIRED"
     else:

@@ -21,8 +21,7 @@ DEFAULT_MANIFESTS = (
     PROJECT_ROOT / "config/seminar_gap_official_legislation_round2.2026-08-26.v1.json",
     PROJECT_ROOT
     / "config/seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json",
-    PROJECT_ROOT
-    / "config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json",
+    PROJECT_ROOT / "config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json",
 )
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
@@ -68,9 +67,7 @@ def _xml_identity(raw: bytes) -> tuple[str, str]:
     )
 
 
-def _catalogue_row(
-    connection: sqlite3.Connection, content_hash: str
-) -> sqlite3.Row | None:
+def _catalogue_row(connection: sqlite3.Connection, content_hash: str) -> sqlite3.Row | None:
     rows = connection.execute(
         """
         SELECT d.id AS document_id, d.status, d.lane, d.subject_primary,
@@ -103,15 +100,11 @@ def verify(
     manifests = [_load(path) for path in manifest_paths]
     source_root = source_root.resolve(strict=True)
     parser = ParserRegistry.default()
-    v3_identities = {
-        str(target["authority_identity"]) for target in manifests[2]["targets"]
-    }
+    v3_identities = {str(target["authority_identity"]) for target in manifests[2]["targets"]}
     representations: list[dict[str, Any]] = []
     authority_representations: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
-    connection = sqlite3.connect(
-        f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True
-    )
+    connection = sqlite3.connect(f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True)
     connection.row_factory = sqlite3.Row
     try:
         active_scans = int(
@@ -142,24 +135,19 @@ def verify(
                     "catalogue_primary_authority_lane": row is not None
                     and row["lane"] == "primary_authority",
                     "file_byte_count_exact": len(raw) == int(target["byte_count"]),
-                    "file_hash_exact": hashlib.sha256(raw).hexdigest()
-                    == target["content_sha256"],
+                    "file_hash_exact": hashlib.sha256(raw).hexdigest() == target["content_sha256"],
                     "file_regular_non_symlink": source_path.is_file()
                     and not source_path.is_symlink(),
                 }
                 if source_path.suffix.casefold() == ".xml":
                     actual_title, actual_identifier = _xml_identity(raw)
                     expected_identifier = str(
-                        target.get("representation_identity")
-                        or target["authority_identity"]
+                        target.get("representation_identity") or target["authority_identity"]
                     )
                     checks.update(
                         {
-                            "official_xml_title_exact": actual_title
-                            == target["source_title"],
-                            "official_xml_identifier_exact": _normalise_identity(
-                                actual_identifier
-                            )
+                            "official_xml_title_exact": actual_title == target["source_title"],
+                            "official_xml_identifier_exact": _normalise_identity(actual_identifier)
                             == _normalise_identity(expected_identifier),
                         }
                     )
@@ -170,8 +158,7 @@ def verify(
                             "runtime_parser_status_expected": parsed.status.value
                             == target["runtime_parser_status"],
                             "runtime_parser_ready_has_blocks": (
-                                parsed.status is not ParseStatus.READY
-                                or bool(parsed.body_blocks)
+                                parsed.status is not ParseStatus.READY or bool(parsed.body_blocks)
                             ),
                         }
                     )
@@ -192,9 +179,9 @@ def verify(
                         }
                     )
                 else:
-                    checks["nonready_representation_has_no_chunks"] = row is not None and int(
-                        row["chunk_count"] or 0
-                    ) == 0
+                    checks["nonready_representation_has_no_chunks"] = (
+                        row is not None and int(row["chunk_count"] or 0) == 0
+                    )
                 record = {
                     "authority_identity": identity,
                     "representation_identity": str(
@@ -237,15 +224,11 @@ def verify(
             }
         )
 
-    integrity_failures = sum(
-        not record["technical_integrity_passed"] for record in representations
-    )
+    integrity_failures = sum(not record["technical_integrity_passed"] for record in representations)
     report: dict[str, Any] = {
         "schema": REPORT_SCHEMA,
         "as_of_date": "2026-08-26",
-        "manifest_sha256": {
-            path.name: _sha256_file(path) for path in manifest_paths
-        },
+        "manifest_sha256": {path.name: _sha256_file(path) for path in manifest_paths},
         "summary": {
             "authority_count": len(authorities),
             "retrieval_ready_authority_count": sum(
@@ -256,12 +239,8 @@ def verify(
             ),
             "representation_count": len(representations),
             "technical_integrity_failure_count": integrity_failures,
-            "chunk_count": sum(
-                record["catalogue"]["chunk_count"] for record in representations
-            ),
-            "token_count": sum(
-                record["catalogue"]["token_count"] for record in representations
-            ),
+            "chunk_count": sum(record["catalogue"]["chunk_count"] for record in representations),
+            "token_count": sum(record["catalogue"]["token_count"] for record in representations),
         },
         "authorities": authorities,
         "representations": representations,
@@ -277,9 +256,9 @@ def verify(
         "active_pointer_written": False,
         "live_activation_authorized": False,
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     return report
 

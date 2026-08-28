@@ -14,9 +14,7 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PARENT = (
-    PROJECT_ROOT / "config/seminar_gap_official_legislation_round2.2026-08-26.v1.json"
-)
+DEFAULT_PARENT = PROJECT_ROOT / "config/seminar_gap_official_legislation_round2.2026-08-26.v1.json"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_MANIFEST = (
     PROJECT_ROOT
@@ -112,9 +110,7 @@ def _write_exclusive(path: Path, raw: bytes) -> None:
         raise
 
 
-def repair(
-    *, parent_path: Path, source_root: Path, timeout_seconds: float
-) -> dict[str, Any]:
+def repair(*, parent_path: Path, source_root: Path, timeout_seconds: float) -> dict[str, Any]:
     parent = _load(parent_path)
     if parent.get("schema") != EXPECTED_PARENT_SCHEMA:
         raise ValueError("enacted_repair_parent_schema_invalid")
@@ -202,8 +198,7 @@ def main() -> int:
     )
     _write_exclusive(
         args.manifest,
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8")
-        + b"\n",
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
     )
     print(json.dumps({"repaired_target_count": len(manifest["targets"])}, sort_keys=True))
     return 0

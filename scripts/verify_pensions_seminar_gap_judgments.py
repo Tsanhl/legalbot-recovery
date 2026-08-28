@@ -18,18 +18,15 @@ from app.ingestion.parsers import ParserRegistry
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = (
-    PROJECT_ROOT
-    / "config/pensions_seminar_gap_official_judgments.2026-08-26.v2.json"
+    PROJECT_ROOT / "config/pensions_seminar_gap_official_judgments.2026-08-26.v2.json"
 )
 DEFAULT_PARENT_PLAN = (
-    PROJECT_ROOT
-    / "config/pensions_seminar_gap_official_sources.2026-08-26.v1.json"
+    PROJECT_ROOT / "config/pensions_seminar_gap_official_sources.2026-08-26.v1.json"
 )
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_OUTPUT = (
-    PROJECT_ROOT
-    / "data/review_queue/pensions-seminar-gap-judgments-2026-08-26-verification.json"
+    PROJECT_ROOT / "data/review_queue/pensions-seminar-gap-judgments-2026-08-26-verification.json"
 )
 EXPECTED_SCHEMA = "legalbot.pensions-seminar-gap-official-judgment-plan.v1"
 REPORT_SCHEMA = "legalbot.pensions-seminar-gap-judgment-verification.v1"
@@ -249,8 +246,7 @@ def verify(
             expected_uri = target["official_url"].removesuffix("/data.xml")
 
             checks = {
-                "catalogue_citable": row is not None
-                and row["document_status"] == "citable",
+                "catalogue_citable": row is not None and row["document_status"] == "citable",
                 "catalogue_exact_single_current_source_version": row is not None,
                 "catalogue_primary_authority_lane": row is not None
                 and row["lane"] == "primary_authority",
@@ -264,8 +260,7 @@ def verify(
                 and int(row["path_leak_chunk_count"] or 0) == 0,
                 "file_byte_count_exact": len(raw) == int(target["byte_count"]),
                 "file_hash_exact": _sha256(raw) == expected_hash,
-                "file_regular_non_symlink": source_path.is_file()
-                and not source_path.is_symlink(),
+                "file_regular_non_symlink": source_path.is_file() and not source_path.is_symlink(),
                 "latest_scan_exact_hash_accounted_citable": scan_row is not None
                 and scan_row["status"] == "citable",
                 "latest_scan_document_link_exact": scan_row is not None
@@ -282,9 +277,7 @@ def verify(
                     for block in parsed_paragraphs
                 ),
             }
-            technical_holds = sorted(
-                name for name, passed in checks.items() if passed is not True
-            )
+            technical_holds = sorted(name for name, passed in checks.items() if passed is not True)
             actual_jurisdiction = str(row["jurisdiction"] or "") if row else ""
             expected_jurisdiction = _expected_jurisdiction(citation)
             metadata_holds: list[str] = []
@@ -307,9 +300,7 @@ def verify(
                     "catalogue": {
                         "chunk_count": int(row["chunk_count"] or 0) if row else 0,
                         "currentness_status": row["currentness_status"] if row else None,
-                        "currentness_verified": bool(row["currentness_verified"])
-                        if row
-                        else False,
+                        "currentness_verified": bool(row["currentness_verified"]) if row else False,
                         "jurisdiction": actual_jurisdiction or None,
                         "review_status": row["review_status"] if row else None,
                         "subject_primary": row["subject_primary"] if row else None,
@@ -324,9 +315,7 @@ def verify(
                 }
             )
 
-        technical_failures = sum(
-            not record["technical_verification_passed"] for record in records
-        )
+        technical_failures = sum(not record["technical_verification_passed"] for record in records)
         report: dict[str, Any] = {
             "schema": REPORT_SCHEMA,
             "source_plan_version": manifest["version"],
@@ -349,8 +338,7 @@ def verify(
                 "source_admission_hold_count": len(records),
                 "metadata_hold_count": sum(bool(record["metadata_holds"]) for record in records),
                 "jurisdiction_correction_hold_count": sum(
-                    "catalogue_jurisdiction_owner_correction_required"
-                    in record["metadata_holds"]
+                    "catalogue_jurisdiction_owner_correction_required" in record["metadata_holds"]
                     for record in records
                 ),
                 "chunk_count": sum(record["catalogue"]["chunk_count"] for record in records),
@@ -358,12 +346,9 @@ def verify(
                 "active_scan_count": active_scan_count,
             },
             "records": records,
-            "technical_verification_passed": technical_failures == 0
-            and active_scan_count == 0,
+            "technical_verification_passed": technical_failures == 0 and active_scan_count == 0,
             "release_state": "STAGED_TECHNICALLY_VERIFIED_OWNER_REVIEW_REQUIRED",
-            "unresolved_official_source_gaps": manifest[
-                "unresolved_official_source_gaps"
-            ],
+            "unresolved_official_source_gaps": manifest["unresolved_official_source_gaps"],
             "already_catalogued_approved_not_candidate": manifest[
                 "already_catalogued_approved_not_candidate"
             ],

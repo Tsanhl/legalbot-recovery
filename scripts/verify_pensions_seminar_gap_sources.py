@@ -20,15 +20,11 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MANIFEST = (
-    PROJECT_ROOT
-    / "config/pensions_seminar_gap_official_sources.2026-08-26.v1.json"
-)
+DEFAULT_MANIFEST = PROJECT_ROOT / "config/pensions_seminar_gap_official_sources.2026-08-26.v1.json"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_OUTPUT = (
-    PROJECT_ROOT
-    / "data/review_queue/pensions-seminar-gap-2026-08-26-verification.json"
+    PROJECT_ROOT / "data/review_queue/pensions-seminar-gap-2026-08-26-verification.json"
 )
 EXPECTED_MANIFEST_SCHEMA = "legalbot.pensions-seminar-gap-official-source-plan.v1"
 REPORT_SCHEMA = "legalbot.pensions-seminar-gap-source-verification.v1"
@@ -243,9 +239,7 @@ def verify(
                 "latest_scan_document_link_exact": scan_row is not None
                 and row is not None
                 and scan_row["document_id"] == row["document_id"],
-                "official_xml_identifier_exact": _normalise_official_identity(
-                    actual_identifier
-                )
+                "official_xml_identifier_exact": _normalise_official_identity(actual_identifier)
                 == _normalise_official_identity(expected_identifier),
                 "official_xml_title_exact": actual_title == raw["source_title"],
             }
@@ -303,8 +297,7 @@ def verify(
                 "active_scan_count": active_scan_count,
             },
             "records": records,
-            "technical_verification_passed": technical_failures == 0
-            and active_scan_count == 0,
+            "technical_verification_passed": technical_failures == 0 and active_scan_count == 0,
             "release_state": "STAGED_TECHNICALLY_VERIFIED_OWNER_CURRENTNESS_REQUIRED",
             "owner_actions_required": [
                 "verify_exact_official_identity_and_legal_currentness",

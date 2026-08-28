@@ -43,13 +43,10 @@ from scripts import verify_v111_phase2a_exact_semantic_spans_advisory as base  #
 
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 R104_PATH = r105.SOURCE_PATH
-R105_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r105-independent-source-reranker"
-)
+R105_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r105-independent-source-reranker"
 R105_PATH = R105_ROOT / r105.OUTPUT_NAME
 DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r107-debugged-source-link-exact-span-advisory"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r107-debugged-source-link-exact-span-advisory"
 )
 PRIOR_DEBUG_STOP_PATH = (
     REVIEW_ROOT
@@ -62,12 +59,8 @@ EXPECTED_PRIOR_DEBUG_STOP_CONTENT_SHA256 = (
 EXPECTED_PRIOR_FAILURE_FINGERPRINT = (
     "e846bdf51b25a9948494b8e2e0f9884e384d018f6a5a4c9999292fdc2902c283"
 )
-EXPECTED_R105_CONTENT_SHA256 = (
-    "984d16ad59325466340ab98e20c606712abf757f665d28692fe0b92f648186ce"
-)
-EXPECTED_R105_FILE_SHA256 = (
-    "ad55174d421419981c332b0584d64b9eb17ebfa5fc1d1ab257b1106dbe039902"
-)
+EXPECTED_R105_CONTENT_SHA256 = "984d16ad59325466340ab98e20c606712abf757f665d28692fe0b92f648186ce"
+EXPECTED_R105_FILE_SHA256 = "ad55174d421419981c332b0584d64b9eb17ebfa5fc1d1ab257b1106dbe039902"
 EXPECTED_LINK_COUNT = 26
 TOP_RERANKED_COUNT = 8
 MAX_REVIEW_CANDIDATES = 20
@@ -111,15 +104,12 @@ class ReviewValidationError(ValueError):
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -180,13 +170,10 @@ def _load_prior_debug_stop() -> dict[str, Any]:
     )
     if (
         digest != EXPECTED_PRIOR_DEBUG_STOP_CONTENT_SHA256
-        or value.get("status")
-        != "STOPPED_AFTER_TWO_IDENTICAL_FAILURES_BEFORE_ANY_THIRD_ATTEMPT"
+        or value.get("status") != "STOPPED_AFTER_TWO_IDENTICAL_FAILURES_BEFORE_ANY_THIRD_ATTEMPT"
         or value.get("failure_fingerprint") != EXPECTED_PRIOR_FAILURE_FINGERPRINT
         or value.get("attempt_count") != 2
-        or value.get("required_execution_plan_change", {}).get(
-            "remove_model_authored_reason_codes"
-        )
+        or value.get("required_execution_plan_change", {}).get("remove_model_authored_reason_codes")
         is not True
         or value.get("required_execution_plan_change", {}).get(
             "derive_reason_codes_deterministically"
@@ -251,10 +238,8 @@ def _load_sources() -> SourceBundle:
     rows = ranking.get("rows")
     if (
         digest != EXPECTED_R105_CONTENT_SHA256
-        or ranking.get("schema")
-        != "legalbot.v111.phase2a.independent-source-reranker-26.v1"
-        or ranking.get("source_content_sha256")
-        != packets["artifact_content_sha256"]
+        or ranking.get("schema") != "legalbot.v111.phase2a.independent-source-reranker-26.v1"
+        or ranking.get("source_content_sha256") != packets["artifact_content_sha256"]
         or ranking.get("row_source_link_count") != EXPECTED_LINK_COUNT
         or ranking.get("advisory_ranking_count") != EXPECTED_LINK_COUNT
         or ranking.get("held_for_debug_count") != 0
@@ -271,9 +256,7 @@ def _load_sources() -> SourceBundle:
     ):
         raise ValueError("phase2a_r107_r105_boundary_invalid")
     _verify_r105_custody(ranking)
-    packet_by_link = {
-        str(row["row_source_link_id"]): row for row in packets["rows"]
-    }
+    packet_by_link = {str(row["row_source_link_id"]): row for row in packets["rows"]}
     if len(packet_by_link) != EXPECTED_LINK_COUNT:
         raise ValueError("phase2a_r107_packet_link_collision")
     ranking_rows: list[dict[str, Any]] = []
@@ -292,8 +275,7 @@ def _load_sources() -> SourceBundle:
         if (
             packet is None
             or link_id in observed
-            or raw.get("source_row_record_content_sha256")
-            != packet.get("record_content_sha256")
+            or raw.get("source_row_record_content_sha256") != packet.get("record_content_sha256")
             or not isinstance(ranked_candidates, list)
             or not ranked_candidates
             or len(ranked_candidates) != len(packet["candidate_blocks"])
@@ -303,15 +285,12 @@ def _load_sources() -> SourceBundle:
         ):
             raise ValueError("phase2a_r107_ranking_row_boundary_invalid")
         observed.add(link_id)
-        packet_blocks = {
-            str(item["block_id"]): item for item in packet["candidate_blocks"]
-        }
+        packet_blocks = {str(item["block_id"]): item for item in packet["candidate_blocks"]}
         for candidate in ranked_candidates:
             block = packet_blocks.get(str(candidate.get("candidate_block_id") or ""))
             if (
                 block is None
-                or candidate.get("exact_text_sha256")
-                != block.get("exact_text_sha256")
+                or candidate.get("exact_text_sha256") != block.get("exact_text_sha256")
                 or candidate.get("locator") != block.get("locator")
             ):
                 raise ValueError("phase2a_r107_ranked_candidate_binding_invalid")
@@ -324,9 +303,7 @@ def _load_sources() -> SourceBundle:
     )
 
 
-def _exact_review_window(
-    text: str, *, needles: Sequence[str]
-) -> tuple[str, int, int, bool]:
+def _exact_review_window(text: str, *, needles: Sequence[str]) -> tuple[str, int, int, bool]:
     if len(text) <= MAX_REVIEW_TEXT_CHARS:
         return text, 0, len(text), False
     lowered = text.casefold()
@@ -338,9 +315,7 @@ def _exact_review_window(
         )
     )
     positions = [
-        position
-        for needle in normalized_needles
-        if (position := lowered.find(needle)) >= 0
+        position for needle in normalized_needles if (position := lowered.find(needle)) >= 0
     ]
     candidate_starts = {0, max(0, len(text) - MAX_REVIEW_TEXT_CHARS)}
     candidate_starts.update(
@@ -372,9 +347,7 @@ def _protected_priority(candidate: Mapping[str, Any]) -> tuple[int, int, int, in
     reasons = set(candidate.get("deterministic_selection_reasons") or [])
     segment = candidate.get("question_segment_match")
     segment_score = (
-        int(segment.get("question_segment_score") or 0)
-        if isinstance(segment, Mapping)
-        else 0
+        int(segment.get("question_segment_score") or 0) if isinstance(segment, Mapping) else 0
     )
     return (
         int("SUPPLIED_LOCATOR_EXACT" in reasons),
@@ -387,9 +360,7 @@ def _protected_priority(candidate: Mapping[str, Any]) -> tuple[int, int, int, in
 def _review_pool(
     *, ranking_row: Mapping[str, Any], packet_row: Mapping[str, Any]
 ) -> list[dict[str, Any]]:
-    packet_blocks = {
-        str(block["block_id"]): block for block in packet_row["candidate_blocks"]
-    }
+    packet_blocks = {str(block["block_id"]): block for block in packet_row["candidate_blocks"]}
     ranked = list(ranking_row["all_ranked_candidates"])
     selected: list[Mapping[str, Any]] = list(ranked[:TOP_RERANKED_COUNT])
     observed = {str(candidate["candidate_block_id"]) for candidate in selected}
@@ -419,9 +390,7 @@ def _review_pool(
         block = packet_blocks[block_id]
         segment = candidate.get("question_segment_match")
         segment_needles = (
-            list(segment.get("overlap_terms") or [])
-            if isinstance(segment, Mapping)
-            else []
+            list(segment.get("overlap_terms") or []) if isinstance(segment, Mapping) else []
         )
         exact_text = str(block["exact_text"])
         review_text, start, end, truncated = _exact_review_window(
@@ -441,18 +410,14 @@ def _review_pool(
                 "full_text_character_count": block["character_count"],
                 "independent_reranker_score": candidate["reranker_score"],
                 "independent_reranker_rank": candidate["model_rank"],
-                "deterministic_selection_reasons": candidate[
-                    "deterministic_selection_reasons"
-                ],
+                "deterministic_selection_reasons": candidate["deterministic_selection_reasons"],
                 "question_segment_match": segment,
             }
         )
     return output
 
 
-def _row_input(
-    *, ranking_row: Mapping[str, Any], packet_row: Mapping[str, Any]
-) -> dict[str, Any]:
+def _row_input(*, ranking_row: Mapping[str, Any], packet_row: Mapping[str, Any]) -> dict[str, Any]:
     candidates = _review_pool(ranking_row=ranking_row, packet_row=packet_row)
     return {
         "schema": "legalbot.v111.phase2a.source-link-review-input.v1",
@@ -463,14 +428,10 @@ def _row_input(
         "scenario": packet_row["case_question"],
         "scenario_sha256": packet_row["case_question_sha256"],
         "authority_identity_id": packet_row["authority_identity_id"],
-        "canonical_authority_identity_id": packet_row[
-            "canonical_authority_identity_id"
-        ],
+        "canonical_authority_identity_id": packet_row["canonical_authority_identity_id"],
         "source_title": packet_row["source_title"],
         "source_date": packet_row["source_date"],
-        "source_representation_sha256": packet_row[
-            "source_representation_sha256"
-        ],
+        "source_representation_sha256": packet_row["source_representation_sha256"],
         "candidates": candidates,
         "candidate_count": len(candidates),
         "top_reranked_candidate_count": TOP_RERANKED_COUNT,
@@ -496,15 +457,9 @@ def _model_input(row_input: Mapping[str, Any]) -> dict[str, Any]:
                 "locator": candidate["locator"],
                 "text": candidate["text"],
                 "text_is_excerpt": candidate["review_text_truncated"],
-                "independent_reranker_score": candidate[
-                    "independent_reranker_score"
-                ],
-                "independent_reranker_rank": candidate[
-                    "independent_reranker_rank"
-                ],
-                "deterministic_selection_reasons": candidate[
-                    "deterministic_selection_reasons"
-                ],
+                "independent_reranker_score": candidate["independent_reranker_score"],
+                "independent_reranker_rank": candidate["independent_reranker_rank"],
+                "deterministic_selection_reasons": candidate["deterministic_selection_reasons"],
             }
             for candidate in row_input["candidates"]
         ],
@@ -528,9 +483,7 @@ def _token_budget_evidence(source: SourceBundle) -> dict[str, Any]:
             separators=(",", ":"),
         )
         content_tokens = len(tokenizer.encode(f"{SYSTEM_PROMPT}\n{user}").ids)
-        conservative_total = (
-            content_tokens + MAX_OUTPUT_TOKENS + CHAT_TEMPLATE_TOKEN_ALLOWANCE
-        )
+        conservative_total = content_tokens + MAX_OUTPUT_TOKENS + CHAT_TEMPLATE_TOKEN_ALLOWANCE
         rows.append(
             {
                 "row_source_link_id": row_input["row_source_link_id"],
@@ -598,7 +551,9 @@ def _validate_supported(
     block_id = output.get("selected_block_id")
     quote = output.get("exact_quote")
     proposition = output.get("atomic_proposition")
-    if not all(isinstance(value, str) and value.strip() for value in (block_id, quote, proposition)):
+    if not all(
+        isinstance(value, str) and value.strip() for value in (block_id, quote, proposition)
+    ):
         raise ReviewValidationError("positive_review_fields_invalid")
     proposition = " ".join(str(proposition).split())
     if len(proposition) > MAX_PROPOSITION_CHARS:
@@ -620,12 +575,9 @@ def _validate_supported(
         raise ReviewValidationError("exact_quote_not_contiguous_in_bound_block")
     quote_start = int(candidate["review_text_start"]) + quote_start_in_review_text
     quote_end = quote_start + len(str(quote))
-    proposition_facts = {
-        fact.identity for fact in extract_material_facts(proposition)
-    }
+    proposition_facts = {fact.identity for fact in extract_material_facts(proposition)}
     span_facts = {
-        fact.identity
-        for fact in extract_material_facts(f"{quote}\n{candidate['locator']}")
+        fact.identity for fact in extract_material_facts(f"{quote}\n{candidate['locator']}")
     }
     unsupported = sorted(proposition_facts - span_facts)
     if unsupported:
@@ -648,9 +600,7 @@ def _validate_supported(
         if isinstance(segment, Mapping)
         else ""
     )
-    issue_anchor_tokens = set(
-        substantive_tokens(f"{row_input['issue_label']} {segment_terms}")
-    )
+    issue_anchor_tokens = set(substantive_tokens(f"{row_input['issue_label']} {segment_terms}"))
     if issue_anchor_tokens and not proposition_tokens & issue_anchor_tokens:
         raise ReviewValidationError(
             "unrelated_evidence",
@@ -671,9 +621,7 @@ def _validate_supported(
             "quote_start": quote_start,
             "quote_end": quote_end,
             "proposition_material_facts": _material_fact_records(proposition),
-            "span_material_facts": _material_fact_records(
-                f"{quote}\n{candidate['locator']}"
-            ),
+            "span_material_facts": _material_fact_records(f"{quote}\n{candidate['locator']}"),
         },
     }
 
@@ -687,8 +635,7 @@ def _safe_structured_diagnostics(
     raw_assessment = structured.get("assessment")
     assessment = (
         raw_assessment.upper()
-        if isinstance(raw_assessment, str)
-        and re.fullmatch(r"[A-Za-z_]{1,32}", raw_assessment)
+        if isinstance(raw_assessment, str) and re.fullmatch(r"[A-Za-z_]{1,32}", raw_assessment)
         else None
     )
     return {
@@ -698,8 +645,7 @@ def _safe_structured_diagnostics(
         },
         "schema_matches": structured.get("schema") == OUTPUT_SCHEMA,
         "row_source_link_id_matches": (
-            structured.get("row_source_link_id")
-            == row_input["row_source_link_id"]
+            structured.get("row_source_link_id") == row_input["row_source_link_id"]
         ),
         "normalized_assessment_if_safe": assessment,
         "assessment_allowed": assessment in _ASSESSMENTS,
@@ -771,9 +717,7 @@ def _validate_response(
             ),
         )
     raw_assessment = structured.get("assessment")
-    assessment = (
-        raw_assessment.upper() if isinstance(raw_assessment, str) else None
-    )
+    assessment = raw_assessment.upper() if isinstance(raw_assessment, str) else None
     if (
         structured.get("schema") != OUTPUT_SCHEMA
         or structured.get("row_source_link_id") != row_input["row_source_link_id"]
@@ -855,9 +799,7 @@ def _review_one(
     row_input = _row_input(ranking_row=ranking_row, packet_row=packet_row)
     input_sha256 = _sealed(row_input)
     model_input_sha256 = _sealed(_model_input(row_input))
-    prior_attempt_count = _prior_attempt_count(
-        str(packet_row["row_source_link_id"])
-    )
+    prior_attempt_count = _prior_attempt_count(str(packet_row["row_source_link_id"]))
     fingerprints: list[str] = []
     for attempt in (1, 2):
         envelope, request_id = _envelope(row_input)
@@ -896,9 +838,7 @@ def _review_one(
                 "request_id": request_id,
                 "error_code": code,
                 "validation_diagnostics": (
-                    dict(exc.diagnostics)
-                    if isinstance(exc, ReviewValidationError)
-                    else {}
+                    dict(exc.diagnostics) if isinstance(exc, ReviewValidationError) else {}
                 ),
                 "failure_fingerprint": fingerprint,
                 "same_failure_fingerprint_as_prior_attempt": (
@@ -907,9 +847,7 @@ def _review_one(
                 "elapsed_ms": round((time.perf_counter() - started) * 1000, 3),
                 "response_received": body is not None,
                 "raw_output_sha256": (
-                    _sha256(str(body.get("raw_text") or "").encode("utf-8"))
-                    if body
-                    else None
+                    _sha256(str(body.get("raw_text") or "").encode("utf-8")) if body else None
                 ),
                 "raw_output_persisted": False,
                 "hidden_reasoning_persisted": False,
@@ -958,9 +896,7 @@ def _review_one(
         "authority_identity_id": packet_row["authority_identity_id"],
         "runtime_epoch_id": epoch_id,
         "source_packet_record_content_sha256": packet_row["record_content_sha256"],
-        "source_ranking_checkpoint_content_sha256": ranking_row[
-            "checkpoint_content_sha256"
-        ],
+        "source_ranking_checkpoint_content_sha256": ranking_row["checkpoint_content_sha256"],
         "input_content_sha256": input_sha256,
         "model_input_content_sha256": model_input_sha256,
         "candidate_count": row_input["candidate_count"],
@@ -970,13 +906,10 @@ def _review_one(
         "attempt_count": len(fingerprints) if held else len(fingerprints) + 1,
         "prior_attempt_count_under_superseded_plan": prior_attempt_count,
         "total_attempt_count_for_link": (
-            prior_attempt_count
-            + (len(fingerprints) if held else len(fingerprints) + 1)
+            prior_attempt_count + (len(fingerprints) if held else len(fingerprints) + 1)
         ),
         "prior_debug_stop_content_sha256": (
-            EXPECTED_PRIOR_DEBUG_STOP_CONTENT_SHA256
-            if prior_attempt_count
-            else None
+            EXPECTED_PRIOR_DEBUG_STOP_CONTENT_SHA256 if prior_attempt_count else None
         ),
         "execution_plan_materially_changed": True,
         "failure_fingerprints": fingerprints,
@@ -1064,31 +997,22 @@ def _intent_material(
     return {
         "schema": "legalbot.v111.phase2a.r107-source-link-review-intent.v1",
         "status": (
-            "DEBUGGED_CHANGED_PLAN_ADVISORY_EXACT_SPAN_REVIEW_ONLY_"
-            "OWNER_DECISIONS_REQUIRED"
+            "DEBUGGED_CHANGED_PLAN_ADVISORY_EXACT_SPAN_REVIEW_ONLY_OWNER_DECISIONS_REQUIRED"
         ),
         "source_r104_content_sha256": source.packets["artifact_content_sha256"],
         "source_r104_file_sha256": _sha256_file(R104_PATH),
         "source_r105_content_sha256": source.ranking["artifact_content_sha256"],
         "source_r105_file_sha256": _sha256_file(R105_PATH),
-        "prior_r106_debug_stop_content_sha256": prior_debug_stop[
-            "debug_stop_content_sha256"
-        ],
-        "prior_repeated_failure_fingerprint": prior_debug_stop[
-            "failure_fingerprint"
-        ],
-        "prior_affected_row_source_link_id": prior_debug_stop[
-            "affected_row_source_link_id"
-        ],
+        "prior_r106_debug_stop_content_sha256": prior_debug_stop["debug_stop_content_sha256"],
+        "prior_repeated_failure_fingerprint": prior_debug_stop["failure_fingerprint"],
+        "prior_affected_row_source_link_id": prior_debug_stop["affected_row_source_link_id"],
         "prior_attempt_count": prior_debug_stop["attempt_count"],
         "execution_plan_change": {
             "model_authored_reason_codes_removed": True,
             "reason_codes_derived_deterministically": True,
             "safe_structural_validation_diagnostics_persisted": True,
             "new_output_schema": OUTPUT_SCHEMA,
-            "new_prompt_sha256": _sha256(
-                (SYSTEM_PROMPT + "\n").encode("utf-8")
-            ),
+            "new_prompt_sha256": _sha256((SYSTEM_PROMPT + "\n").encode("utf-8")),
             "historical_r106_preserved": True,
         },
         "row_source_link_count": EXPECTED_LINK_COUNT,
@@ -1100,9 +1024,7 @@ def _intent_material(
         "runtime_identity": dict(runtime_identity),
         "runtime_identity_sha256": runtime_identity["runtime_identity_sha256"],
         "token_budget_preflight": token_budget,
-        "token_budget_preflight_content_sha256": token_budget[
-            "preflight_content_sha256"
-        ],
+        "token_budget_preflight_content_sha256": token_budget["preflight_content_sha256"],
         "silent_truncation_permitted": False,
         "maximum_attempts_per_link": 2,
         "debug_required_before_any_third_attempt": True,
@@ -1150,9 +1072,7 @@ def _initialize_or_verify_intent(
     return value
 
 
-def _load_checkpoints(
-    *, output_root: Path, source: SourceBundle
-) -> dict[str, dict[str, Any]]:
+def _load_checkpoints(*, output_root: Path, source: SourceBundle) -> dict[str, dict[str, Any]]:
     completed: dict[str, dict[str, Any]] = {}
     expected_links = [str(row["row_source_link_id"]) for row in source.ranking_rows]
     for path in sorted((output_root / "checkpoints").glob("*.json")):
@@ -1164,8 +1084,7 @@ def _load_checkpoints(
         )
         link_id = str(value.get("row_source_link_id") or "")
         if (
-            value.get("schema")
-            != "legalbot.v111.phase2a.r107-source-link-review-checkpoint.v1"
+            value.get("schema") != "legalbot.v111.phase2a.r107-source-link-review-checkpoint.v1"
             or link_id not in expected_links
             or link_id in completed
         ):
@@ -1200,9 +1119,7 @@ def _write_epoch_receipt(
         "processed_count": len(processed),
         "maximum_rows_per_epoch": MAX_ROWS_PER_EPOCH,
         "aborted_after_infrastructure_failure": aborted,
-        "runtime_identity_sha256": (
-            identity.get("runtime_identity_sha256") if identity else None
-        ),
+        "runtime_identity_sha256": (identity.get("runtime_identity_sha256") if identity else None),
         "runtime_log_file_sha256": _sha256_file(log_path),
         "runtime_log_raw_model_output_persisted": False,
         "stop_mode": stop_mode,
@@ -1298,9 +1215,7 @@ def _finalize(*, output_root: Path, source: SourceBundle) -> dict[str, Any]:
                 "row_source_link_id": checkpoint["row_source_link_id"],
                 "authority_identity_id": checkpoint["authority_identity_id"],
                 **checkpoint["finding"],
-                "checkpoint_content_sha256": checkpoint[
-                    "checkpoint_content_sha256"
-                ],
+                "checkpoint_content_sha256": checkpoint["checkpoint_content_sha256"],
             }
             for checkpoint in checkpoints.values()
         ],
@@ -1309,9 +1224,7 @@ def _finalize(*, output_root: Path, source: SourceBundle) -> dict[str, Any]:
         "diagnostic_custody": diagnostic_custody,
         "diagnostic_custody_sha256": _sealed(diagnostic_custody),
         "runtime_epoch_count": len(epochs),
-        "runtime_epoch_content_sha256s": [
-            epoch["epoch_content_sha256"] for epoch in epochs
-        ],
+        "runtime_epoch_content_sha256s": [epoch["epoch_content_sha256"] for epoch in epochs],
         "reviewer_execution_mode": "separate_verification_pass_same_model_adapter",
         "model_independent_reviewer": False,
         "same_model_adapter_family_as_drafting": True,
@@ -1335,13 +1248,9 @@ def _finalize(*, output_root: Path, source: SourceBundle) -> dict[str, Any]:
     )
     _write_exclusive(output_root / "OUTCOME.txt", outcome.encode("utf-8"))
     paths = sorted(
-        path
-        for path in output_root.rglob("*")
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in paths
-    )
+    sums = "".join(f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in paths)
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return final
 
@@ -1405,25 +1314,20 @@ def run_managed_review(
                 )
                 completed = _load_checkpoints(output_root=output_root, source=source)
                 pending = [
-                    row
-                    for row in source.ranking_rows
-                    if row["row_source_link_id"] not in completed
+                    row for row in source.ranking_rows if row["row_source_link_id"] not in completed
                 ][:rows_per_epoch]
                 for ranking_row in pending:
                     link_id = str(ranking_row["row_source_link_id"])
                     packet_row = source.packet_by_link[link_id]
-                    ordinal = [
-                        str(row["row_source_link_id"])
-                        for row in source.ranking_rows
-                    ].index(link_id) + 1
+                    ordinal = [str(row["row_source_link_id"]) for row in source.ranking_rows].index(
+                        link_id
+                    ) + 1
                     checkpoint, abort = _review_one(
                         ordinal=ordinal,
                         ranking_row=ranking_row,
                         packet_row=packet_row,
                         invoke=invoke,
-                        runtime_identity_sha256=identity[
-                            "runtime_identity_sha256"
-                        ],
+                        runtime_identity_sha256=identity["runtime_identity_sha256"],
                         output_root=output_root,
                         epoch_id=epoch_id,
                     )

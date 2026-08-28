@@ -127,9 +127,7 @@ def ingest(
     report: dict[str, Any] = {
         "schema": REPORT_SCHEMA,
         "as_of_date": "2026-08-26",
-        "manifest_sha256": {
-            path.name: _sha256_file(path) for path in manifest_paths
-        },
+        "manifest_sha256": {path.name: _sha256_file(path) for path in manifest_paths},
         "summary": {
             "target_count": len(records),
             "citable_count": sum(record["status"] == "citable" for record in records),
@@ -152,9 +150,9 @@ def ingest(
         "active_pointer_written": False,
         "live_activation_authorized": False,
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     _write_exclusive(output_path, report)
     return report

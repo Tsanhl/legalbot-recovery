@@ -12,9 +12,9 @@ instructions.
 
 ## CURRENT 29 AUGUST 2026 — RECOVERED WORKSPACE; PHASE 1 REBASELINE REQUIRED
 
-The only writable workspace is
-`/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829`. The latest provable
-working tree was recovered with its catalogue and 316 exact source files. It
+The only writable workspace is the repository root named
+`LegalBot-v111-Recovery-20260829`. The latest provable working tree was
+recovered with its catalogue and 316 exact source files. It
 has no `ACTIVE.json`, `PREVIOUS.json` or runnable Lance candidate. Historical
 Git refs are preserved only in `recovery/2026-08-29/` and the owner will create
 the new Git repository separately.

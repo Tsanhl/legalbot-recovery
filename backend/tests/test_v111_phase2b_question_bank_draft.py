@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = PROJECT_ROOT / "scripts/build_v111_phase2b_question_bank_draft.py"
 
@@ -81,11 +80,7 @@ def test_builder_publishes_create_only_nonauthorizing_package(
     assert all((path / "TOPIC-MANIFEST.json").is_file() for path in topic_dirs)
     assert all((path / "FUTURE-RUN-CHECKLIST.md").is_file() for path in topic_dirs)
 
-    joined = b"\n".join(
-        path.read_bytes()
-        for path in output_root.rglob("*")
-        if path.is_file()
-    )
+    joined = b"\n".join(path.read_bytes() for path in output_root.rglob("*") if path.is_file())
     assert b"/Users/" not in joined
     assert b"hltsang" not in joined.lower()
 

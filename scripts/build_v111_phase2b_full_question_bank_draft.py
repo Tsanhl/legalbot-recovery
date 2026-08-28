@@ -19,9 +19,10 @@ import shutil
 import tempfile
 import zipfile
 from collections import Counter
+from collections.abc import Iterable
+from itertools import pairwise
 from pathlib import Path
-from typing import Any, Iterable
-
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PARENT = PROJECT_ROOT / "data/evaluations/phase2b-question-drafts"
@@ -47,8 +48,7 @@ PACKAGE_SCHEMA = "legalbot.v111.phase2b.full-question-bank-package.v2"
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -91,7 +91,9 @@ def _verify_checksum_file(root: Path) -> int:
     return count
 
 
-def _load_patch() -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+def _load_patch() -> tuple[
+    dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]
+]:
     if _sha256_file(PATCH_ZIP) != EXPECTED_PATCH_SHA256:
         raise ValueError("audit patch ZIP digest mismatch")
     with zipfile.ZipFile(PATCH_ZIP) as archive:
@@ -204,18 +206,42 @@ def _jurisdictions(topic_id: str, prompt: str) -> list[str]:
 
 def _fact_status(question_type: str, prompt: str) -> str:
     lower = prompt.casefold()
-    if any(cue in lower for cue in ("assume solely", "future artificial", "not specifically regulated", "proposed reform")):
+    if any(
+        cue in lower
+        for cue in (
+            "assume solely",
+            "future artificial",
+            "not specifically regulated",
+            "proposed reform",
+        )
+    ):
         return "UNSETTLED"
     if question_type == "ESSAY":
-        return "MIXED" if any(cue in lower for cue in ("at 28 august 2026", "compare", "future")) else "REAL"
+        return (
+            "MIXED"
+            if any(cue in lower for cue in ("at 28 august 2026", "compare", "future"))
+            else "REAL"
+        )
     return "HYPOTHETICAL"
 
 
 def _temporal_status(prompt: str) -> str:
     lower = prompt.casefold()
-    if any(cue in lower for cue in ("not specifically regulated", "future artificial", "assume solely")):
+    if any(
+        cue in lower for cue in ("not specifically regulated", "future artificial", "assume solely")
+    ):
         return "PROPOSED"
-    if any(cue in lower for cue in ("commencement", "not in force", "enacted", "transition", "after 1 september 2025", "at 28 august 2026")):
+    if any(
+        cue in lower
+        for cue in (
+            "commencement",
+            "not in force",
+            "enacted",
+            "transition",
+            "after 1 september 2025",
+            "at 28 august 2026",
+        )
+    ):
         return "TRANSITIONAL"
     return "IN_FORCE"
 
@@ -246,9 +272,21 @@ def _false_premise(question_type: str, prompt: str) -> bool:
 
 def _safe_routing(topic_id: str, difficulty: str, prompt: str) -> bool:
     lower = prompt.casefold()
-    return difficulty == "BOUNDARY_OR_URGENT" or topic_id in {"criminal-law", "law-and-medicine"} or any(
-        cue in lower
-        for cue in ("police", "removal", "hospital", "injured", "fire", "insolvency today", "expires tomorrow")
+    return (
+        difficulty == "BOUNDARY_OR_URGENT"
+        or topic_id in {"criminal-law", "law-and-medicine"}
+        or any(
+            cue in lower
+            for cue in (
+                "police",
+                "removal",
+                "hospital",
+                "injured",
+                "fire",
+                "insolvency today",
+                "expires tomorrow",
+            )
+        )
     )
 
 
@@ -266,7 +304,9 @@ def _difficulty_features(question_type: str, difficulty: str, prompt: str) -> li
             features += ["COMPETING_DOCUMENTS_OR_EVIDENCE", "INCONSISTENT_ACTOR_KNOWLEDGE"]
         if difficulty == "EVEN_HARDER":
             features += ["MULTIPLE_PROCEDURAL_ROUTES", "JURISDICTION_OR_TEMPORAL_CONTROL"]
-        if any(cue in prompt.casefold() for cue in ("deadline", "limitation", "tomorrow", "five days")):
+        if any(
+            cue in prompt.casefold() for cue in ("deadline", "limitation", "tomorrow", "five days")
+        ):
             features.append("DEADLINE_CONTROL")
         return features
     features = ["PLAIN_LANGUAGE_TRIAGE", "CLARIFICATION_REQUIRED"]
@@ -282,11 +322,18 @@ def _metadata(topic_id: str, question_type: str, difficulty: str, prompt: str) -
     posture = {
         "ESSAY": "ACADEMIC_ANALYSIS",
         "PROBLEM_BASED": "PRE_ACTION_ADVICE_WITH_PROCEDURAL_ROUTE_CHECK",
-        "GENERAL_ENQUIRY": "URGENT_TRIAGE" if difficulty == "BOUNDARY_OR_URGENT" else "PRE_ACTION_OR_INFORMATION_TRIAGE",
+        "GENERAL_ENQUIRY": "URGENT_TRIAGE"
+        if difficulty == "BOUNDARY_OR_URGENT"
+        else "PRE_ACTION_OR_INFORMATION_TRIAGE",
     }[question_type]
     remedy_targets = {
         "ESSAY": ["DOCTRINAL_CONCLUSION", "REMEDY_AND_ENFORCEMENT_WHERE_RELEVANT"],
-        "PROBLEM_BASED": ["PRIMARY_REMEDIES", "DEFENCES", "PROCEDURE", "LIMITATION_OR_DEADLINE_CHECK"],
+        "PROBLEM_BASED": [
+            "PRIMARY_REMEDIES",
+            "DEFENCES",
+            "PROCEDURE",
+            "LIMITATION_OR_DEADLINE_CHECK",
+        ],
         "GENERAL_ENQUIRY": ["PRACTICAL_NEXT_STEPS", "REMEDIES", "DEADLINE_AND_URGENCY_CHECK"],
     }[question_type]
     return {
@@ -304,9 +351,14 @@ def _metadata(topic_id: str, question_type: str, difficulty: str, prompt: str) -
             "OFFICIAL_RULES_OR_REGULATOR_MATERIAL_IF_APPLICABLE",
         ],
         "difficulty_features": _difficulty_features(question_type, difficulty, prompt),
-        "gold_answer_requires_negative_proposition": false_premise or any(
+        "gold_answer_requires_negative_proposition": false_premise
+        or any(
             cue in prompt.casefold()
-            for cue in ("not in force", "distinguish rules actually in force", "alternative statutory or common-law routes")
+            for cue in (
+                "not in force",
+                "distinguish rules actually in force",
+                "alternative statutory or common-law routes",
+            )
         ),
     }
 
@@ -360,7 +412,9 @@ def _final_question(
     return _sealed(payload)
 
 
-def _build_question_sets(r2, unseen, amendments: list[dict[str, Any]], additions: list[dict[str, Any]]):
+def _build_question_sets(
+    r2, unseen, amendments: list[dict[str, Any]], additions: list[dict[str, Any]]
+):
     unseen.validate_unseen_bank(set(r2.TOPICS))
     source_by_id: dict[str, dict[str, Any]] = {}
     for topic_id, topic in r2.TOPICS.items():
@@ -455,16 +509,44 @@ def _build_question_sets(r2, unseen, amendments: list[dict[str, Any]], additions
 
 TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'][a-z0-9]+)?")
 STOPWORDS = {
-    "the", "and", "that", "with", "from", "this", "under", "where", "when", "what",
-    "which", "their", "into", "after", "before", "while", "have", "does", "should",
-    "would", "could", "whether", "advise", "critically", "evaluate", "assess", "discuss",
+    "the",
+    "and",
+    "that",
+    "with",
+    "from",
+    "this",
+    "under",
+    "where",
+    "when",
+    "what",
+    "which",
+    "their",
+    "into",
+    "after",
+    "before",
+    "while",
+    "have",
+    "does",
+    "should",
+    "would",
+    "could",
+    "whether",
+    "advise",
+    "critically",
+    "evaluate",
+    "assess",
+    "discuss",
 }
 
 
 def _features(prompt: str) -> Counter[str]:
-    tokens = [token for token in TOKEN_RE.findall(prompt.casefold()) if len(token) > 2 and token not in STOPWORDS]
+    tokens = [
+        token
+        for token in TOKEN_RE.findall(prompt.casefold())
+        if len(token) > 2 and token not in STOPWORDS
+    ]
     values = Counter(tokens)
-    values.update(f"{a}__{b}" for a, b in zip(tokens, tokens[1:]))
+    values.update(f"{a}__{b}" for a, b in pairwise(tokens))
     return values
 
 
@@ -479,7 +561,10 @@ def _leakage_audit(visible: list[dict[str, Any]], unseen: list[dict[str, Any]]) 
     for doc in docs:
         document_frequency.update(doc.keys())
     total = len(docs)
-    idf = {key: math.log((1 + total) / (1 + frequency)) + 1 for key, frequency in document_frequency.items()}
+    idf = {
+        key: math.log((1 + total) / (1 + frequency)) + 1
+        for key, frequency in document_frequency.items()
+    }
 
     def weighted(doc: Counter[str]) -> tuple[dict[str, float], float]:
         vector = {key: count * idf[key] for key, count in doc.items()}
@@ -497,8 +582,12 @@ def _leakage_audit(visible: list[dict[str, Any]], unseen: list[dict[str, Any]]) 
             if not v_norm or not u_norm:
                 score = 0.0
             else:
-                small, large = (v_vector, u_vector) if len(v_vector) <= len(u_vector) else (u_vector, v_vector)
-                score = sum(value * large.get(key, 0.0) for key, value in small.items()) / (v_norm * u_norm)
+                small, large = (
+                    (v_vector, u_vector) if len(v_vector) <= len(u_vector) else (u_vector, v_vector)
+                )
+                score = sum(value * large.get(key, 0.0) for key, value in small.items()) / (
+                    v_norm * u_norm
+                )
             if score > maximum:
                 maximum = score
                 pair = (v_row["question_id"], u_row["question_id"])
@@ -587,14 +676,38 @@ def _currentness_checkpoints() -> dict[str, Any]:
                 "corrected_control": "Not in force at the cutoff; the official government response anticipated commencement in spring 2027. Execution must verify the actual commencement instrument.",
             },
             "official_source_endpoints": [
-                {"checkpoint_id": "data-use-and-access-act-2025", "url": "https://www.legislation.gov.uk/ukpga/2025/18/pdfs/ukpga_20250018_en.pdf"},
-                {"checkpoint_id": "dmcc-subscriptions-government-response", "url": "https://assets.publishing.service.gov.uk/media/69cce372a2e82c1bd822d7de/government-response-to-consultation-on-the-implementation-of-the-new-subscription-contracts-regime.pdf"},
-                {"checkpoint_id": "property-digital-assets-act-2025", "url": "https://www.legislation.gov.uk/ukpga/2025/29/pdfs/ukpga_20250029_en.pdf"},
-                {"checkpoint_id": "digital-assets-scotland-act-2026", "url": "https://www.legislation.gov.uk/asp/2026/12/pdfs/asp_20260012_en.pdf"},
-                {"checkpoint_id": "renters-rights-commencement-no-2", "url": "https://www.legislation.gov.uk/uksi/2026/421/pdfs/uksi_20260421_en.pdf"},
-                {"checkpoint_id": "pension-schemes-act-2026", "url": "https://www.legislation.gov.uk/ukpga/2026/22/pdfs/ukpga_20260022_en.pdf"},
-                {"checkpoint_id": "hague-2019-judgments-status-table", "url": "https://www.hcch.net/en/instruments/conventions/status-table/?cid=137"},
-                {"checkpoint_id": "failure-to-prevent-fraud-guidance", "url": "https://www.gov.uk/government/publications/failure-to-prevent-fraud-offence-guidance"},
+                {
+                    "checkpoint_id": "data-use-and-access-act-2025",
+                    "url": "https://www.legislation.gov.uk/ukpga/2025/18/pdfs/ukpga_20250018_en.pdf",
+                },
+                {
+                    "checkpoint_id": "dmcc-subscriptions-government-response",
+                    "url": "https://assets.publishing.service.gov.uk/media/69cce372a2e82c1bd822d7de/government-response-to-consultation-on-the-implementation-of-the-new-subscription-contracts-regime.pdf",
+                },
+                {
+                    "checkpoint_id": "property-digital-assets-act-2025",
+                    "url": "https://www.legislation.gov.uk/ukpga/2025/29/pdfs/ukpga_20250029_en.pdf",
+                },
+                {
+                    "checkpoint_id": "digital-assets-scotland-act-2026",
+                    "url": "https://www.legislation.gov.uk/asp/2026/12/pdfs/asp_20260012_en.pdf",
+                },
+                {
+                    "checkpoint_id": "renters-rights-commencement-no-2",
+                    "url": "https://www.legislation.gov.uk/uksi/2026/421/pdfs/uksi_20260421_en.pdf",
+                },
+                {
+                    "checkpoint_id": "pension-schemes-act-2026",
+                    "url": "https://www.legislation.gov.uk/ukpga/2026/22/pdfs/ukpga_20260022_en.pdf",
+                },
+                {
+                    "checkpoint_id": "hague-2019-judgments-status-table",
+                    "url": "https://www.hcch.net/en/instruments/conventions/status-table/?cid=137",
+                },
+                {
+                    "checkpoint_id": "failure-to-prevent-fraud-guidance",
+                    "url": "https://www.gov.uk/government/publications/failure-to-prevent-fraud-offence-guidance",
+                },
             ],
             "official_endpoint_count": 8,
             "legal_reviewer_completed": False,
@@ -653,7 +766,9 @@ def _assert_distribution(records: list[dict[str, Any]], *, unseen: bool = False)
             "EVEN_HARDER": 2,
         }:
             raise ValueError("academic difficulty distribution changed")
-    if Counter(row["difficulty"] for row in records if row["question_type"] == "GENERAL_ENQUIRY") != {
+    if Counter(
+        row["difficulty"] for row in records if row["question_type"] == "GENERAL_ENQUIRY"
+    ) != {
         "EVERYDAY": 4,
         "MULTI_ISSUE": 1,
         "BOUNDARY_OR_URGENT": 1,
@@ -715,7 +830,10 @@ def _assert_generated_safety(root: Path) -> None:
     if count != 570:
         raise ValueError(f"full question count changed: {count}")
     for path in root.rglob("*.md"):
-        if "unseen" in path.read_text(encoding="utf-8").casefold() and "PRIVATE-UNSEEN" in path.name:
+        if (
+            "unseen" in path.read_text(encoding="utf-8").casefold()
+            and "PRIVATE-UNSEEN" in path.name
+        ):
             raise ValueError("unseen markdown projection created")
 
 
@@ -725,13 +843,17 @@ def build() -> Path:
     if not SOURCE_PACKAGE_ROOT.is_dir():
         raise FileNotFoundError(f"source package missing: {SOURCE_RUN_NAME}")
     source_checksum_count = _verify_checksum_file(SOURCE_PACKAGE_ROOT)
-    source_manifest = json.loads((SOURCE_PACKAGE_ROOT / "PACKAGE-MANIFEST.json").read_text(encoding="utf-8"))
+    source_manifest = json.loads(
+        (SOURCE_PACKAGE_ROOT / "PACKAGE-MANIFEST.json").read_text(encoding="utf-8")
+    )
     if source_manifest["run_name"] != SOURCE_RUN_NAME or source_manifest["question_count"] != 270:
         raise ValueError("source package identity changed")
     patch_manifest, amendments, additions, patch_receipt = _load_patch()
     r2 = _load_python_module("phase2b_r2_source", SOURCE_BUILDER)
     unseen = _load_python_module("phase2b_unseen_source", UNSEEN_MODULE)
-    core_by_topic, stress_by_topic, unseen_by_topic = _build_question_sets(r2, unseen, amendments, additions)
+    core_by_topic, stress_by_topic, unseen_by_topic = _build_question_sets(
+        r2, unseen, amendments, additions
+    )
 
     OUTPUT_PARENT.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=f".{RUN_NAME}.staging-", dir=OUTPUT_PARENT))
@@ -740,7 +862,9 @@ def build() -> Path:
             {
                 "schema": "legalbot.v111.phase2b.full-bank-source-receipt.v1",
                 "source_run_name": SOURCE_RUN_NAME,
-                "source_package_manifest_file_sha256": _sha256_file(SOURCE_PACKAGE_ROOT / "PACKAGE-MANIFEST.json"),
+                "source_package_manifest_file_sha256": _sha256_file(
+                    SOURCE_PACKAGE_ROOT / "PACKAGE-MANIFEST.json"
+                ),
                 "source_package_content_sha256": source_manifest["package_content_sha256"],
                 "source_checksum_entry_count": source_checksum_count,
                 "patch_manifest": patch_manifest,
@@ -767,7 +891,10 @@ def build() -> Path:
             custody = unseen_by_topic[topic_id]
             _assert_distribution(core)
             _assert_distribution(custody, unseen=True)
-            if len(stress) != 2 or Counter(row["question_type"] for row in stress) != {"PROBLEM_BASED": 1, "GENERAL_ENQUIRY": 1}:
+            if len(stress) != 2 or Counter(row["question_type"] for row in stress) != {
+                "PROBLEM_BASED": 1,
+                "GENERAL_ENQUIRY": 1,
+            }:
                 raise ValueError(f"stress distribution changed: {topic_id}")
 
             development_dir = staging / "development" / "topics" / topic_id
@@ -776,10 +903,20 @@ def build() -> Path:
             custody_dir.mkdir(parents=True)
             core_raw = _write_jsonl(development_dir / "CORE-QUESTION-SET.jsonl", core)
             stress_raw = _write_jsonl(development_dir / "STRESS-QUESTION-SET.jsonl", stress)
-            (development_dir / "CORE-QUESTION-SET.md").write_text(_markdown(topic["display_name"], "Development/remediation core", core), encoding="utf-8")
-            (development_dir / "STRESS-QUESTION-SET.md").write_text(_markdown(topic["display_name"], "Development stress supplement", stress), encoding="utf-8")
-            (development_dir / "FUTURE-RUN-CHECKLIST.md").write_text(_future_checklist(topic["display_name"]), encoding="utf-8")
-            custody_raw = _write_jsonl(custody_dir / "PRIVATE-UNSEEN-QUESTION-SET.jsonl", custody, private=True)
+            (development_dir / "CORE-QUESTION-SET.md").write_text(
+                _markdown(topic["display_name"], "Development/remediation core", core),
+                encoding="utf-8",
+            )
+            (development_dir / "STRESS-QUESTION-SET.md").write_text(
+                _markdown(topic["display_name"], "Development stress supplement", stress),
+                encoding="utf-8",
+            )
+            (development_dir / "FUTURE-RUN-CHECKLIST.md").write_text(
+                _future_checklist(topic["display_name"]), encoding="utf-8"
+            )
+            custody_raw = _write_jsonl(
+                custody_dir / "PRIVATE-UNSEEN-QUESTION-SET.jsonl", custody, private=True
+            )
 
             topic_manifest = _sealed(
                 {
@@ -922,7 +1059,9 @@ After Phase 2A, the future workflow is: owner topic/wave gate → exact unseen h
                 "revision_reason": "APPLIED_SUBSTANTIVE_AUDIT_PATCH_ADDED_STRESS_LANE_AND_PREPARED_18_UNSEEN_DRAFTS_PER_TOPIC",
                 "source_input_receipt_sha256": source_receipt["record_content_sha256"],
                 "topic_registry_content_sha256": registry["registry_content_sha256"],
-                "unseen_custody_registry_content_sha256": unseen_custody_manifest["custody_registry_content_sha256"],
+                "unseen_custody_registry_content_sha256": unseen_custody_manifest[
+                    "custody_registry_content_sha256"
+                ],
                 "leakage_audit_content_sha256": leakage["audit_content_sha256"],
                 "currentness_checkpoint_content_sha256": checkpoint["checkpoint_content_sha256"],
                 "future_execution_plan_content_sha256": plan["plan_content_sha256"],

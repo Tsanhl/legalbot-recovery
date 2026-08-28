@@ -28,9 +28,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-validator = importlib.import_module(
-    "scripts.validate_v111_phase2a_proposition_working_drafts"
-)
+validator = importlib.import_module("scripts.validate_v111_phase2a_proposition_working_drafts")
 
 DEFAULT_SPAN_CORPUS = PROJECT_ROOT / (
     "data/evaluations/phase2a-owner-review/"
@@ -52,8 +50,7 @@ FALSE_GATE_FIELDS = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -206,9 +203,7 @@ def _audit_evidence_item(
 
     declared_hashes = evidence.get("chunk_content_sha256s")
     if declared_hashes is not None:
-        if not isinstance(declared_hashes, list) or len(declared_hashes) != len(
-            chunk_ids
-        ):
+        if not isinstance(declared_hashes, list) or len(declared_hashes) != len(chunk_ids):
             raise ValueError(f"chunk hash list mismatch: {row_id}")
         for chunk_id, digest in zip(chunk_ids, declared_hashes, strict=True):
             _require_sha256(digest, f"{row_id}.{chunk_id}.chunk_content_sha256")
@@ -234,9 +229,7 @@ def _audit_evidence_item(
     if exact_digest is not None:
         _require_sha256(exact_digest, f"{row_id}.exact_text_sha256")
         whole_chunk_matches = [
-            chunk_id
-            for chunk_id, digest in chunk_hashes.items()
-            if digest == exact_digest
+            chunk_id for chunk_id, digest in chunk_hashes.items() if digest == exact_digest
         ]
         if whole_chunk_matches:
             match_type = "WHOLE_LANCE_CHUNK"
@@ -255,14 +248,11 @@ def _audit_evidence_item(
                     break
             if verified_span is None:
                 raise ValueError(
-                    f"exact text digest is neither a sealed chunk nor corpus span: "
-                    f"{row_id}"
+                    f"exact text digest is neither a sealed chunk nor corpus span: {row_id}"
                 )
             match_type = "BYTE_REPRODUCED_CORPUS_SPAN"
             canonical_span_ids = verified_span["canonical_span_ids"]
-            span_identity_matches = verified_span[
-                "declared_span_identity_matches_corpus"
-            ]
+            span_identity_matches = verified_span["declared_span_identity_matches_corpus"]
 
     return {
         "row_id": row_id,
@@ -367,9 +357,7 @@ def audit(
         "records": records,
         **FALSE_GATE_FIELDS,
     }
-    artifact["artifact_content_sha256"] = _content_sha256(
-        artifact, "artifact_content_sha256"
-    )
+    artifact["artifact_content_sha256"] = _content_sha256(artifact, "artifact_content_sha256")
     return artifact
 
 

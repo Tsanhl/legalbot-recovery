@@ -29,9 +29,7 @@ IDENTITY = {
 }
 
 
-def _scores(
-    _query: str, candidates: list[dict[str, Any]]
-) -> tuple[list[float], dict[str, Any]]:
+def _scores(_query: str, candidates: list[dict[str, Any]]) -> tuple[list[float], dict[str, Any]]:
     return [1.0 / (index + 1) for index in range(len(candidates))], {
         "device": "fixture",
         "observed_peak_memory_gb": 0.1,

@@ -24,19 +24,13 @@ from docx.shared import Inches, Pt, RGBColor, Twips
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
-R111_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r111-source-currentness-owner-batch"
-)
+R111_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r111-source-currentness-owner-batch"
 BATCH_PATH = R111_ROOT / "OWNER-SOURCE-CURRENTNESS-DECISION-BATCH.json"
 PROMPT_PATH = R111_ROOT / "OWNER-APPROVAL-PROMPT.txt"
 BATCH_CONTENT_SHA256 = "6c9eda0de5c9c921b99127cac9c6e41bb3ae87151178e250b9f4abcf4a0d7fa1"
 BATCH_FILE_SHA256 = "e657bffbf77e264fd658bb4c61bb3932f8e6e65fa10923b7eebcf20a8739cf20"
 PROMPT_FILE_SHA256 = "46013e08350cc3a54d568cf3c7ab86a12ca3cfdde6b39320e48f009d71e21374"
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r112b-post-r110-owner-review-docx"
-)
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r112b-post-r110-owner-review-docx"
 DOCX_NAME = "LegalBot-Phase2A-Post-r110-Owner-Decision-Agnes-2026-08-26.docx"
 BUILD_MANIFEST_NAME = "DOCX-BUILD-MANIFEST.json"
 CONTENT_WIDTH_DXA = 9360
@@ -55,15 +49,12 @@ PALE_BLUE = "E8EEF5"
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -455,9 +446,7 @@ def _add_summary_table(doc: Document, batch: Mapping[str, Any]) -> None:
     for label, value in rows:
         row = table.add_row()
         _set_cell_text(row.cells[0], label)
-        _set_cell_text(
-            row.cells[1], value, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER
-        )
+        _set_cell_text(row.cells[1], value, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER)
         _keep_row(row)
     _apply_table_geometry(table, (7440, 1920))
 
@@ -495,7 +484,7 @@ def _add_evidence_binding(doc: Document, binding: Mapping[str, Any]) -> None:
     _add_key_value(doc, "Exact locator", binding["locator"], after=2)
     paragraph = doc.add_paragraph(style="Evidence Quote")
     _shade_paragraph(paragraph, "F8FAFC", left_border="7A8CA5")
-    run = paragraph.add_run(f'“{binding["quote"]}”')
+    run = paragraph.add_run(f"“{binding['quote']}”")
     _set_run_font(run, size=9.5, color=INK, italic=True)
     digest = doc.add_paragraph(style="Digest")
     digest.add_run(
@@ -570,9 +559,7 @@ def _add_source_admissions(doc: Document, batch: Mapping[str, Any]) -> None:
     )
     _add_source_table(doc, batch)
     for index, source in enumerate(batch["source_admission_decisions"], start=1):
-        heading = doc.add_heading(
-            f"Source {index}: {source['authority_identity_id']}", level=2
-        )
+        heading = doc.add_heading(f"Source {index}: {source['authority_identity_id']}", level=2)
         _keep_with_next(heading)
         _add_key_value(doc, "Title", source["source_title"])
         _add_key_value(doc, "Source date", str(source["source_date"]))
@@ -594,15 +581,9 @@ def _add_source_admissions(doc: Document, batch: Mapping[str, Any]) -> None:
 
 def _mapping_label(outcome: str) -> str:
     return {
-        "RECOMMEND_SUPERSEDE_WITH_CURRENT_AUTHORITY": (
-            "Supersede with current authority"
-        ),
-        "RECOMMEND_PARTIAL_BINDING_AND_SOURCE_ADMISSION": (
-            "Partial binding and source admission"
-        ),
-        "RECOMMEND_PARTIAL_EXISTING_SOURCE_BINDING": (
-            "Partial existing-source binding"
-        ),
+        "RECOMMEND_SUPERSEDE_WITH_CURRENT_AUTHORITY": ("Supersede with current authority"),
+        "RECOMMEND_PARTIAL_BINDING_AND_SOURCE_ADMISSION": ("Partial binding and source admission"),
+        "RECOMMEND_PARTIAL_EXISTING_SOURCE_BINDING": ("Partial existing-source binding"),
         "RECOMMEND_REJECT_MAPPING": "Reject unrelated mapping",
     }[outcome]
 
@@ -676,7 +657,7 @@ def _add_currentness_metadata(doc: Document, batch: Mapping[str, Any]) -> None:
     _add_key_value(doc, "Exact locator", exact_span["locator"])
     paragraph = doc.add_paragraph(style="Evidence Quote")
     _shade_paragraph(paragraph, "F8FAFC", left_border="7A8CA5")
-    paragraph.add_run(f'“{exact_span["quote"]}”')
+    paragraph.add_run(f"“{exact_span['quote']}”")
     digest = doc.add_paragraph(style="Digest")
     digest.add_run("Decision SHA-256: " + currentness["decision_content_sha256"])
 
@@ -736,9 +717,7 @@ def _add_exact_prompt(doc: Document, prompt: str, digest: str) -> None:
     first_run = paragraph.runs[0]
     first_run.bold = False
     footer = doc.add_paragraph(style="Table Citation")
-    footer.add_run(
-        "This text is copied from the sealed r111 OWNER-APPROVAL-PROMPT.txt."
-    )
+    footer.add_run("This text is copied from the sealed r111 OWNER-APPROVAL-PROMPT.txt.")
 
 
 def _save_exclusive(doc: Document, path: Path) -> None:

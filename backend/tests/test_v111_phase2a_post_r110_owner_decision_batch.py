@@ -23,10 +23,10 @@ def test_batch_is_exact_complete_and_non_authorizing(tmp_path: Path) -> None:
     assert summary["proposition_level_source_admission_count"] == 5
     assert summary["currentness_metadata_only_decision_count"] == 1
     assert summary["same_adapter_false_negative_count"] == 4
-    assert tuple(
-        row["authority_identity_id"]
-        for row in batch["source_admission_decisions"]
-    ) == builder.SOURCE_IDS
+    assert (
+        tuple(row["authority_identity_id"] for row in batch["source_admission_decisions"])
+        == builder.SOURCE_IDS
+    )
     assert all(
         batch[field] is False
         for field in (
@@ -46,9 +46,7 @@ def test_batch_is_exact_complete_and_non_authorizing(tmp_path: Path) -> None:
 def test_batch_binds_exact_r110_and_seals_all_decisions(tmp_path: Path) -> None:
     batch = builder.build(tmp_path / "r111")
 
-    assert batch["source_r110_artifact_content_sha256"] == (
-        builder.R110_CONTENT_SHA256
-    )
+    assert batch["source_r110_artifact_content_sha256"] == (builder.R110_CONTENT_SHA256)
     assert batch["source_r110_file_sha256"] == builder.R110_FILE_SHA256
     for row in batch["mapping_decisions"]:
         material = dict(row)

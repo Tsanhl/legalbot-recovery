@@ -30,8 +30,7 @@ from pypdf import PdfReader
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PLAN = PROJECT_ROOT / "config/phase2a_targeted_later_treatment_sources.v1.json"
 DEFAULT_OUTPUT_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-24/phase2a-targeted-later-treatment-r42"
+    PROJECT_ROOT / "data/quarantine/2026-08-24/phase2a-targeted-later-treatment-r42"
 )
 ALLOWED_HOSTS = frozenset(
     {
@@ -47,7 +46,9 @@ USER_AGENT = "LegalBot-v1.11-Phase2A-targeted-official-review/1.0"
 EXPECTED_ITEM_COUNT = 9
 EXPECTED_AS_OF_DATE = date(2026, 8, 14)
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
-_NEUTRAL_CITATION = re.compile(r"^\[(?P<year>\d{4})\]\s+(?P<court>UKSC|UKPC|UKHL)\s+(?P<number>\d+)$")
+_NEUTRAL_CITATION = re.compile(
+    r"^\[(?P<year>\d{4})\]\s+(?P<court>UKSC|UKPC|UKHL)\s+(?P<number>\d+)$"
+)
 _JUDGMENT_DATE = re.compile(
     r"Judgment date\s+(?P<date>\d{1,2}\s+[A-Z][a-z]+\s+\d{4})",
     re.IGNORECASE,
@@ -56,15 +57,12 @@ _JUDGMENT_DATE = re.compile(
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -104,11 +102,9 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     items = plan.get("items")
     expected_item_count = plan.get("expected_item_count", EXPECTED_ITEM_COUNT)
     if (
-        plan.get("schema")
-        != "legalbot.v111.phase2a.targeted-later-treatment-plan.v1"
+        plan.get("schema") != "legalbot.v111.phase2a.targeted-later-treatment-plan.v1"
         or plan.get("as_of_date") != EXPECTED_AS_OF_DATE.isoformat()
-        or plan.get("purpose")
-        != "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEADS_ONLY"
+        or plan.get("purpose") != "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEADS_ONLY"
         or plan.get("bulk_search") is not False
         or plan.get("owner_later_treatment_decision_required") is not True
         or plan.get("owner_source_admission_required") is not True
@@ -143,9 +139,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
         if pinned_pdf_url_raw is not None:
             pinned_pdf_url = _safe_url(str(pinned_pdf_url_raw))
             if not urlsplit(pinned_pdf_url).path.casefold().endswith(".pdf"):
-                raise ValueError(
-                    "phase2a_targeted_later_treatment_pinned_judgment_not_pdf"
-                )
+                raise ValueError("phase2a_targeted_later_treatment_pinned_judgment_not_pdf")
         if (
             not lead_id.startswith("later-treatment-lead-")
             or lead_id in seen_ids
@@ -155,15 +149,12 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
             or not isinstance(targets, list)
             or not targets
             or any(
-                not isinstance(target, str)
-                or _NEUTRAL_CITATION.fullmatch(target) is None
+                not isinstance(target, str) or _NEUTRAL_CITATION.fullmatch(target) is None
                 for target in targets
             )
             or item.get("court_weight") not in {"UKSC_BINDING", "JCPC_PERSUASIVE"}
             or not str(item.get("candidate_case_name") or "").strip()
-            or not str(item.get("provisional_relationship") or "").startswith(
-                "POTENTIAL_"
-            )
+            or not str(item.get("provisional_relationship") or "").startswith("POTENTIAL_")
             or item.get("owner_decision_required") is not True
         ):
             raise ValueError("phase2a_targeted_later_treatment_plan_item_invalid")
@@ -295,9 +286,7 @@ def _citation_presence(
     missing = [citation for citation in [expected, *targets] if citation not in combined]
     return {
         "candidate_neutral_citation_found": expected in combined,
-        "target_neutral_citations_found": {
-            citation: citation in combined for citation in targets
-        },
+        "target_neutral_citations_found": {citation: citation in combined for citation in targets},
         "all_required_citations_found": not missing,
         "missing_citations": missing,
     }
@@ -370,9 +359,7 @@ def collect(
         for ordinal, item in enumerate(items, start=1):
             member_root = output_root / f"{ordinal:02d}-{item['lead_id']}"
             member_root.mkdir(mode=0o700)
-            page = _get_bounded(
-                client, str(item["official_case_url"]), maximum=MAX_HTML_BYTES
-            )
+            page = _get_bounded(client, str(item["official_case_url"]), maximum=MAX_HTML_BYTES)
             if "html" not in page.headers.get("content-type", "").casefold():
                 raise ValueError("phase2a_targeted_later_treatment_case_page_not_html")
             page_raw = page.content
@@ -416,9 +403,7 @@ def collect(
             )
             if presence["all_required_citations_found"] is not True:
                 raise ValueError("phase2a_targeted_later_treatment_citation_binding_missing")
-            target_citations = [
-                str(value) for value in item["target_neutral_citations"]
-            ]
+            target_citations = [str(value) for value in item["target_neutral_citations"]]
             exact_citation_spans = _exact_citation_spans(
                 page_html=page_raw,
                 pdf_raw=pdf_raw,
@@ -430,9 +415,7 @@ def collect(
                 for citation in span["matched_target_citations"]
             }
             if span_bound_targets != set(target_citations):
-                raise ValueError(
-                    "phase2a_targeted_later_treatment_exact_citation_span_missing"
-                )
+                raise ValueError("phase2a_targeted_later_treatment_exact_citation_span_missing")
             extracted_path = member_root / "derived-review-text.txt"
             extracted_raw = (
                 f"OFFICIAL CASE PAGE\n{page_text}\n\nOFFICIAL PDF EXTRACTION\n{extracted_pdf_text}\n"
@@ -510,15 +493,12 @@ def collect(
     manifest_path = output_root / f"TARGETED-LATER-TREATMENT-LEADS-{len(results)}.json"
     _write_exclusive(manifest_path, _pretty_json(manifest))
     checksum_paths = sorted(
-        path
-        for path in output_root.rglob("*")
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",
         "".join(
-            f"{_sha256_file(path)}  {path.relative_to(output_root)}\n"
-            for path in checksum_paths
+            f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in checksum_paths
         ).encode("utf-8"),
     )
     return {

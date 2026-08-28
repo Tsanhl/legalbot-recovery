@@ -33,9 +33,7 @@ class _ReadOnlyCatalogue:
     def fetchone(self, query: str, parameters: tuple[Any, ...] = ()) -> sqlite3.Row | None:
         return self.connection.execute(query, parameters).fetchone()
 
-    def fetchall(
-        self, query: str, parameters: tuple[Any, ...] = ()
-    ) -> list[sqlite3.Row]:
+    def fetchall(self, query: str, parameters: tuple[Any, ...] = ()) -> list[sqlite3.Row]:
         return self.connection.execute(query, parameters).fetchall()
 
     def close(self) -> None:
@@ -117,9 +115,7 @@ def test_successor_manifest_is_exact_and_non_active(
     )
     assert manifest["source_count"] == EXPECTED_SOURCE_COUNT
     assert manifest["chunk_count"] == EXPECTED_CHUNK_COUNT
-    assert manifest["selection_policy"] == (
-        "exact-owner-approved-held-phase2a-successor-scope"
-    )
+    assert manifest["selection_policy"] == ("exact-owner-approved-held-phase2a-successor-scope")
     assert manifest["frozen_scope_content_sha256"] == EXPECTED_SCOPE_CONTENT_SHA256
     assert manifest["answer_release_eligible"] is False
     assert manifest["successor_must_remain_non_active"] is True

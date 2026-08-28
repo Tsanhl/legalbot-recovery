@@ -18,9 +18,7 @@ def test_backup_retention_is_recoverable_and_keeps_two() -> None:
 
 
 def test_retention_script_never_permanently_deletes() -> None:
-    source = (ROOT / "scripts/apply_catalogue_backup_retention.py").read_text(
-        encoding="utf-8"
-    )
+    source = (ROOT / "scripts/apply_catalogue_backup_retention.py").read_text(encoding="utf-8")
     assert "shutil.rmtree" not in source
     assert "unlink(" not in source
     assert '"permanent_deletion_performed": False' in source

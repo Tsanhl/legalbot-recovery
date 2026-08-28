@@ -40,9 +40,7 @@ DEFAULT_TREATMENT = (
 )
 DEFAULT_OUTPUT = WORKING_ROOT / "DIRECT-READY-OWNER-ADVISORY-45.json"
 
-EXPECTED_LEDGER_CONTENT_SHA256 = (
-    "62d56c8b34d1fc964dca1a5920ee49b87499471c187dbe82aa58ebee191737ce"
-)
+EXPECTED_LEDGER_CONTENT_SHA256 = "62d56c8b34d1fc964dca1a5920ee49b87499471c187dbe82aa58ebee191737ce"
 EXPECTED_EVIDENCE_AUDIT_CONTENT_SHA256 = (
     "b0f87b5d4026ee371e1402e73ea3c9bfd5cc25ea8204770559f4864f7c6efd4c"
 )
@@ -60,15 +58,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sealed(value: Any) -> str:
@@ -84,11 +79,7 @@ def _load_sealed(path: Path, *, expected: str, code: str) -> dict[str, Any]:
     supplied = str(value.get("artifact_content_sha256") or "")
     material = dict(value)
     material.pop("artifact_content_sha256", None)
-    if (
-        not _SHA256.fullmatch(supplied)
-        or supplied != _sealed(material)
-        or supplied != expected
-    ):
+    if not _SHA256.fullmatch(supplied) or supplied != _sealed(material) or supplied != expected:
         raise ValueError(f"{code}_seal_invalid")
     return value
 
@@ -130,7 +121,8 @@ def _procurement_dependency(target_date: Mapping[str, Any]) -> dict[str, Any]:
     material = [
         span
         for span in binding.get("material_claim_spans", [])
-        if isinstance(span, Mapping) and span.get("claim_id") == "procurement-s104-2-set-aside-and-damages"
+        if isinstance(span, Mapping)
+        and span.get("claim_id") == "procurement-s104-2-set-aside-and-damages"
     ]
     if len(currentness) != 1 or len(material) != 1:
         raise ValueError("phase2a_direct_ready_procurement_spans_missing")
@@ -153,8 +145,7 @@ def _manchester_dependencies(treatment: Mapping[str, Any]) -> list[dict[str, Any
     matches = [
         record
         for record in treatment.get("records", [])
-        if isinstance(record, Mapping)
-        and record.get("target_neutral_citation") == "[2021] UKSC 20"
+        if isinstance(record, Mapping) and record.get("target_neutral_citation") == "[2021] UKSC 20"
     ]
     relationships = {str(record.get("advisory_relationship")) for record in matches}
     expected = {
@@ -268,7 +259,10 @@ def build_direct_ready_advisory(
         for row in records
         if row["currentness_hold_present"] or row["later_treatment_hold_present"]
     ]
-    if len(hold_rows) != EXPECTED_HOLD_ROWS or len(records) - len(hold_rows) != EXPECTED_NO_HOLD_ROWS:
+    if (
+        len(hold_rows) != EXPECTED_HOLD_ROWS
+        or len(records) - len(hold_rows) != EXPECTED_NO_HOLD_ROWS
+    ):
         raise ValueError("phase2a_direct_ready_hold_count_invalid")
 
     material = {
@@ -316,7 +310,16 @@ def main() -> int:
         treatment_path=args.treatment,
         output_path=args.output,
     )
-    print(json.dumps({"status": result["status"], "artifact_content_sha256": result["artifact_content_sha256"], "record_count": result["record_count"]}, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": result["status"],
+                "artifact_content_sha256": result["artifact_content_sha256"],
+                "record_count": result["record_count"],
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 

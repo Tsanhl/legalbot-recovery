@@ -16,23 +16,21 @@ def test_hash_identity_repair_preserves_both_distinct_hashes(tmp_path: Path) -> 
         "records": [
             {
                 "row_id": source["row_id"],
-                "queue_record_content_sha256": source[
-                    "proposition_record_content_sha256"
-                ],
+                "queue_record_content_sha256": source["proposition_record_content_sha256"],
                 "atomic_components": [
+                    {
+                        "proposition": "Bound test proposition.",
+                        "support_fit": "NONE",
+                        "authorities": [
                             {
-                                "proposition": "Bound test proposition.",
-                                "support_fit": "NONE",
-                                "authorities": [
-                                    {
-                                        "citation": "Test source",
-                                        "title": "Test source",
-                                        "official_url": "https://www.legislation.gov.uk/ukpga/2015/15/section/49",
-                                        "exact_locators": ["section 49"],
-                                        "candidate_existing": "no",
-                                        "source_admission_required": True,
-                                    }
-                                ],
+                                "citation": "Test source",
+                                "title": "Test source",
+                                "official_url": "https://www.legislation.gov.uk/ukpga/2015/15/section/49",
+                                "exact_locators": ["section 49"],
+                                "candidate_existing": "no",
+                                "source_admission_required": True,
+                            }
+                        ],
                     }
                 ],
                 "unresolved_holds": ["Official source remains unresolved."],
@@ -59,13 +57,9 @@ def test_hash_identity_repair_preserves_both_distinct_hashes(tmp_path: Path) -> 
 
     record = result["records"][0]
     assert record["queue_record_content_sha256"] == source["record_content_sha256"]
-    assert record["proposition_record_content_sha256"] == source[
-        "proposition_record_content_sha256"
-    ]
-    assert record["atomic_components"][0]["authorities"][0][
-        "candidate_existing"
-    ] is False
-    assert result["provenance_repair"][
-        "candidate_membership_normalization_count"
-    ] == 1
+    assert (
+        record["proposition_record_content_sha256"] == source["proposition_record_content_sha256"]
+    )
+    assert record["atomic_components"][0]["authorities"][0]["candidate_existing"] is False
+    assert result["provenance_repair"]["candidate_membership_normalization_count"] == 1
     assert result["provenance_repair"]["substantive_research_changed"] is False

@@ -23,9 +23,7 @@ BLOCKED_MACHINE_ROOT = PROJECT_ROOT / (
 DEFAULT_QUALIFICATION = BLOCKED_MACHINE_ROOT / (
     "qualification/DETERMINISTIC-ALL585-QUALIFICATION.json"
 )
-DEFAULT_SOURCE_MANIFEST = BLOCKED_MACHINE_ROOT / (
-    "candidate/approved-source-manifest.json"
-)
+DEFAULT_SOURCE_MANIFEST = BLOCKED_MACHINE_ROOT / ("candidate/approved-source-manifest.json")
 
 EXPECTED_SCHEMA = "legalbot.v111.phase2a.proposition-reconciliation-working.v1"
 PENDING_STATUSES = {"OWNER_DECISION_REQUIRED", "BLOCKED_MATERIAL_GAP"}
@@ -48,8 +46,7 @@ FALSE_GATE_FIELDS = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -126,8 +123,7 @@ def _validate_evidence(
         )
         if source_version_id not in candidate_sources:
             raise ValueError(
-                f"claimed local evidence is outside sealed candidate: {row_id} "
-                f"{source_version_id}"
+                f"claimed local evidence is outside sealed candidate: {row_id} {source_version_id}"
             )
         authority_identity_id = _require_text(
             item.get("authority_identity_id"),
@@ -137,9 +133,7 @@ def _validate_evidence(
             candidate_sources[source_version_id].get("authority_identity_id") or ""
         )
         if authority_identity_id != expected_authority:
-            raise ValueError(
-                f"authority/source mismatch: {row_id} {source_version_id}"
-            )
+            raise ValueError(f"authority/source mismatch: {row_id} {source_version_id}")
         span_identity = item.get("span_id") or item.get("chunk_id")
         _require_text(span_identity, f"{row_id}.evidence span identity")
         digest = item.get("exact_text_sha256") or item.get("chunk_text_sha256")
@@ -175,8 +169,7 @@ def validate_draft(
     expected_ids = {
         row_id
         for row_id, row in qualification_rows.items()
-        if row.get("case_id") in scope
-        and row.get("qualification_status") in PENDING_STATUSES
+        if row.get("case_id") in scope and row.get("qualification_status") in PENDING_STATUSES
     }
 
     records = draft.get("records")

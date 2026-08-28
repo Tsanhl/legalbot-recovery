@@ -17,12 +17,8 @@ from backend.app.retrieval.phase2a_held_reattest import (
 )
 
 RUN_NAME = "LegalBot-Phase2A-2026-08-27-held-retrieval-reattestation-r2"
-REPAIRED_FAILURE_FINGERPRINT = (
-    "4c32a571c5c2d8770676b48ffb8b0566fb024d70ba0a240b8253fa678fd7692f"
-)
-EXPECTED_QUALIFICATION_SHA256 = (
-    "7248e70bb68548b96c12d5dddd1ea18b01fd481a1c7d86c33c834ae7274e2349"
-)
+REPAIRED_FAILURE_FINGERPRINT = "4c32a571c5c2d8770676b48ffb8b0566fb024d70ba0a240b8253fa678fd7692f"
+EXPECTED_QUALIFICATION_SHA256 = "7248e70bb68548b96c12d5dddd1ea18b01fd481a1c7d86c33c834ae7274e2349"
 EXPECTED_ROLL_FORWARD_PACKAGE_SHA256 = (
     "d565c4b09eaca7180addd257e80089d91d85d73b241abd4d52aacaa3db252545"
 )
@@ -30,8 +26,7 @@ EXPECTED_ROLL_FORWARD_PACKAGE_SHA256 = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 

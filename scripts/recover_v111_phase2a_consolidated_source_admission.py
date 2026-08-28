@@ -33,16 +33,10 @@ DEBUG_ROOT = (
 FAILURE_REPORT_PATH = DEBUG_ROOT / "FAILURE-REPORT.json"
 OUTPUT_ROOT = admissions.OUTPUT_ROOT
 
-EXPECTED_FAILURE_REPORT_SHA256 = (
-    "8905d6e8e9a9ba6b8b04051bffca7548f77b3a95a4530b92b0d2a703a87b8677"
-)
-EXPECTED_ORIGINAL_PLAN_SHA256 = (
-    "ce8f9a6272d0522ae6e87366f6cc4123f097c647a3a170e59e5d7fe10be01755"
-)
+EXPECTED_FAILURE_REPORT_SHA256 = "8905d6e8e9a9ba6b8b04051bffca7548f77b3a95a4530b92b0d2a703a87b8677"
+EXPECTED_ORIGINAL_PLAN_SHA256 = "ce8f9a6272d0522ae6e87366f6cc4123f097c647a3a170e59e5d7fe10be01755"
 TARGET_AUTHORITY = "neutral-citation:[2024] UKSC 30"
-TARGET_CONTENT_SHA256 = (
-    "0263cac5554811683262d7c388cc08deaa5c3cd9acd7db0a58a510840137381b"
-)
+TARGET_CONTENT_SHA256 = "0263cac5554811683262d7c388cc08deaa5c3cd9acd7db0a58a510840137381b"
 TARGET_DOCUMENT_ID = "document-f67a0b2122bad710a41b861b71e37af2e9339046"
 TARGET_SOURCE_VERSION_ID = "source-version-84b3799159ad7e00b3259d7af5cd18b3cb5393bb"
 COMPETING_AUTHORITY = "neutral-citation:[2025] EWCA Civ 99"
@@ -54,15 +48,12 @@ SHARED_REPRESENTATION_GROUP = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256_bytes(raw: bytes) -> str:
@@ -209,20 +200,15 @@ def build_recovery_plan() -> dict[str, Any]:
     failure = _verify_failure_report()
     staging = admissions._load_staging()
     predecessor = admissions._load_predecessor()
-    connection = sqlite3.connect(
-        f"file:{admissions.CATALOGUE_PATH}?mode=ro", uri=True
-    )
+    connection = sqlite3.connect(f"file:{admissions.CATALOGUE_PATH}?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     try:
         scan = admissions._verify_final_scan(connection)
         records = _committed_records(connection, staging)
         predecessor_records = admissions._predecessor_records(connection, predecessor)
-        noncanonical = [
-            item for item in records if item["retrieval_canonical"] is not True
-        ]
+        noncanonical = [item for item in records if item["retrieval_canonical"] is not True]
         if noncanonical and {
-            (item["authority_identity_id"], item["document_id"])
-            for item in noncanonical
+            (item["authority_identity_id"], item["document_id"]) for item in noncanonical
         } != {(TARGET_AUTHORITY, TARGET_DOCUMENT_ID)}:
             raise ValueError("unexpected committed canonical state")
         target = next(
@@ -249,8 +235,7 @@ def build_recovery_plan() -> dict[str, Any]:
         ):
             raise ValueError("unrelated canonical competitor state changed")
         successor_chunk_count = sum(
-            int(item["body_chunk_count"])
-            for item in [*predecessor_records, *records]
+            int(item["body_chunk_count"]) for item in [*predecessor_records, *records]
         )
         if successor_chunk_count != 222_200:
             raise ValueError("recovered successor chunk scope changed")
@@ -266,9 +251,7 @@ def build_recovery_plan() -> dict[str, Any]:
             "original_admission_plan_content_sha256": EXPECTED_ORIGINAL_PLAN_SHA256,
             "source_scan_id": scan["id"],
             "source_scan_manifest_sha256": scan["manifest_sha256"],
-            "staging_artifact_content_sha256": (
-                admissions.EXPECTED_STAGING_ARTIFACT_SHA256
-            ),
+            "staging_artifact_content_sha256": (admissions.EXPECTED_STAGING_ARTIFACT_SHA256),
             "committed_source_count": len(records),
             "committed_review_count": len(records),
             "predecessor_source_count": len(predecessor_records),
@@ -344,13 +327,9 @@ def apply_recovery(plan: Mapping[str, Any]) -> dict[str, Any]:
         if any(item["retrieval_canonical"] is not True for item in committed):
             raise ValueError("targeted canonical repair did not verify all admissions")
         predecessor = admissions._load_predecessor()
-        scope = admissions._scope(
-            connection, {"admitted_sources": committed}, predecessor
-        )
+        scope = admissions._scope(connection, {"admitted_sources": committed}, predecessor)
         scope.pop("scope_content_sha256", None)
-        scope["admission_recovery_failure_report_sha256"] = (
-            EXPECTED_FAILURE_REPORT_SHA256
-        )
+        scope["admission_recovery_failure_report_sha256"] = EXPECTED_FAILURE_REPORT_SHA256
         scope["original_admission_plan_content_sha256"] = EXPECTED_ORIGINAL_PLAN_SHA256
         scope["admission_transaction_replayed"] = False
         scope["targeted_metadata_repair_count"] = 1

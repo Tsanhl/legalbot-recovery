@@ -20,33 +20,22 @@ WORKING_ROOT = (
 )
 DEFAULT_DIRECT = WORKING_ROOT / "DIRECT-READY-OWNER-ADVISORY-45.json"
 DEFAULT_FOUR = WORKING_ROOT / "DIRECT-HOLD-LATER-TREATMENT-ADVISORY-4.json"
-DEFAULT_UBER_UNISON = (
-    WORKING_ROOT / "UBER-UNISON-LATER-TREATMENT-ADVISORY-4-ROWS-r2.json"
-)
+DEFAULT_UBER_UNISON = WORKING_ROOT / "UBER-UNISON-LATER-TREATMENT-ADVISORY-4-ROWS-r2.json"
 DEFAULT_OUTPUT = WORKING_ROOT / "DIRECT-READY-HOLD-RESOLUTION-ADVISORY-45.json"
-EXPECTED_DIRECT_SHA256 = (
-    "e4e953696db26f7a3175501a0c37a6ec12d8f6f815a53e0caeaeff02ecaf049c"
-)
-EXPECTED_FOUR_SHA256 = (
-    "aa16cd9a6dab3f593aa973bb36c895956cd9eeb30d87077c1f139cc10ba833ca"
-)
-EXPECTED_UBER_UNISON_SHA256 = (
-    "ebbf44e7f7ac8a340f5f60d07b7676ce0f980326e4fddebe5a2e94ca59a50175"
-)
+EXPECTED_DIRECT_SHA256 = "e4e953696db26f7a3175501a0c37a6ec12d8f6f815a53e0caeaeff02ecaf049c"
+EXPECTED_FOUR_SHA256 = "aa16cd9a6dab3f593aa973bb36c895956cd9eeb30d87077c1f139cc10ba833ca"
+EXPECTED_UBER_UNISON_SHA256 = "ebbf44e7f7ac8a340f5f60d07b7676ce0f980326e4fddebe5a2e94ca59a50175"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sealed(value: Any) -> str:
@@ -62,11 +51,7 @@ def _load_sealed(path: Path, *, expected: str, code: str) -> dict[str, Any]:
     supplied = str(value.get("artifact_content_sha256") or "")
     material = dict(value)
     material.pop("artifact_content_sha256", None)
-    if (
-        not _SHA256.fullmatch(supplied)
-        or supplied != expected
-        or supplied != _sealed(material)
-    ):
+    if not _SHA256.fullmatch(supplied) or supplied != expected or supplied != _sealed(material):
         raise ValueError(f"{code}_seal_invalid")
     return value
 
@@ -101,9 +86,9 @@ def _target_by_row(artifact: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
                 "record_content_sha256": target.get("record_content_sha256"),
                 "candidate_reviews": target.get("candidate_reviews"),
                 "search_sha256": target.get("search_sha256"),
-                "targeted_search_is_exhaustive": target.get(
-                    "search_evidence", {}
-                ).get("targeted_search_is_exhaustive"),
+                "targeted_search_is_exhaustive": target.get("search_evidence", {}).get(
+                    "targeted_search_is_exhaustive"
+                ),
                 "absence_of_other_hits_proves_no_later_treatment": target.get(
                     "search_evidence", {}
                 ).get("absence_of_other_hits_proves_no_later_treatment"),
@@ -151,10 +136,7 @@ def build_resolution(
         if not isinstance(row, Mapping):
             raise ValueError("phase2a_direct_resolution_row_invalid")
         row_id = str(row.get("row_id") or "")
-        held = bool(
-            row.get("currentness_hold_present")
-            or row.get("later_treatment_hold_present")
-        )
+        held = bool(row.get("currentness_hold_present") or row.get("later_treatment_hold_present"))
         dependencies = list(row.get("supporting_advisory_dependencies") or [])
         if held:
             held_count += 1
@@ -169,14 +151,10 @@ def build_resolution(
             "schema": "legalbot.v111.phase2a.direct-ready-hold-resolution-row.v1",
             "row_id": row_id,
             "canonical_atomic_proposition": row.get("canonical_atomic_proposition"),
-            "source_direct_advisory_record_content_sha256": row.get(
-                "record_content_sha256"
-            ),
+            "source_direct_advisory_record_content_sha256": row.get("record_content_sha256"),
             "selected_local_evidence": row.get("selected_local_evidence"),
             "original_currentness_hold_present": row.get("currentness_hold_present"),
-            "original_later_treatment_hold_present": row.get(
-                "later_treatment_hold_present"
-            ),
+            "original_later_treatment_hold_present": row.get("later_treatment_hold_present"),
             "supporting_advisory_dependencies": dependencies,
             "advisory_resolution_status": status,
             "recommended_owner_outcome": row.get("recommended_owner_outcome")
@@ -192,7 +170,11 @@ def build_resolution(
         records.append({**material, "record_content_sha256": _sealed(material)})
     if len(records) != 45 or held_count != 11:
         raise ValueError("phase2a_direct_resolution_count_invalid")
-    if any(not row["supporting_advisory_dependencies"] for row in records if row["original_currentness_hold_present"] or row["original_later_treatment_hold_present"]):
+    if any(
+        not row["supporting_advisory_dependencies"]
+        for row in records
+        if row["original_currentness_hold_present"] or row["original_later_treatment_hold_present"]
+    ):
         raise ValueError("phase2a_direct_resolution_dependency_incomplete")
     material = {
         "schema": "legalbot.v111.phase2a.direct-ready-hold-resolution-advisory.v1",
@@ -243,9 +225,7 @@ def main() -> int:
             {
                 "status": result["status"],
                 "record_count": result["record_count"],
-                "held_row_with_exact_advisory_count": result[
-                    "held_row_with_exact_advisory_count"
-                ],
+                "held_row_with_exact_advisory_count": result["held_row_with_exact_advisory_count"],
                 "artifact_content_sha256": result["artifact_content_sha256"],
             },
             sort_keys=True,

@@ -34,10 +34,7 @@ R67_ROOT = (
     / "LegalBot-Phase2AB-2026-08-25-r67-candidate-bound-exact-semantic-span-advisory"
 )
 R67_ARTIFACT_PATH = R67_ROOT / "ADVISORY-EXACT-SEMANTIC-SPANS-448.json"
-DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r68-debugged-held-row-repair"
-)
+DEFAULT_OUTPUT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r68-debugged-held-row-repair"
 EXPECTED_R67_ARTIFACT_CONTENT_SHA256 = (
     "b2f300a89895faa46a91c393a9171202b056ef4ae52942083bfb00f42f0ad732"
 )
@@ -79,15 +76,12 @@ Debugged advisory exact-span repair only. This is one new-plan attempt for a row
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -157,8 +151,7 @@ def _diagnostic_history() -> tuple[dict[str, list[dict[str, Any]]], list[str]]:
         records.sort(key=lambda row: int(row["attempt"]))
         if (
             len(records) != 2
-            or tuple(str(row["error_code"]) for row in records)
-            != EXPECTED_ERROR_HISTORY[row_id]
+            or tuple(str(row["error_code"]) for row in records) != EXPECTED_ERROR_HISTORY[row_id]
             or [int(row["attempt"]) for row in records] != [1, 2]
         ):
             raise ValueError("phase2a_held_repair_prior_history_changed")
@@ -191,9 +184,7 @@ def _allowed_facts(row: Mapping[str, Any]) -> list[str]:
         for chunk in source["chunks"]:
             locator = str(chunk.get("locator") or "")
             for span in chunk["exact_span_options"]:
-                for fact in extract_material_facts(
-                    f"{span['exact_text']}\n{locator}"
-                ):
+                for fact in extract_material_facts(f"{span['exact_text']}\n{locator}"):
                     identities.add(fact.identity)
     return sorted(identities)
 
@@ -213,9 +204,7 @@ def _repair_input(
             "debugged_third_attempt_under_new_execution_plan": True,
             "prior_attempt_count": 2,
             "prior_error_codes": [str(item["error_code"]) for item in history],
-            "prior_failure_fingerprints": [
-                str(item["failure_fingerprint"]) for item in history
-            ],
+            "prior_failure_fingerprints": [str(item["failure_fingerprint"]) for item in history],
             "strict_proposition_character_limit": STRICT_PROPOSITION_CHARACTERS,
             "allowed_material_fact_identities": _allowed_facts(row),
             "return_gap_when_direct_atomic_support_is_unavailable": True,
@@ -231,9 +220,7 @@ def _envelope(row_input: Mapping[str, Any]) -> tuple[dict[str, Any], str]:
         {"role": "system", "content": SYSTEM_PROMPT},
         {
             "role": "user",
-            "content": json.dumps(
-                row_input, ensure_ascii=False, separators=(",", ":")
-            ),
+            "content": json.dumps(row_input, ensure_ascii=False, separators=(",", ":")),
         },
     ]
     return (
@@ -294,9 +281,7 @@ def repair_held_rows(
     issues = {str(item["item_id"]): item for item in rows}
     projected: dict[str, dict[str, Any]] = {}
     for row_id in HELD_ROW_IDS:
-        value = verifier._review_row(
-            issues[row_id], records[row_id], candidate_sources
-        )
+        value = verifier._review_row(issues[row_id], records[row_id], candidate_sources)
         if value is None:
             raise ValueError("phase2a_held_repair_projection_missing")
         projected[row_id] = value
@@ -322,16 +307,13 @@ def repair_held_rows(
         "source_r67_artifact_content_sha256": r67_digest,
         "source_r67_artifact_file_sha256": _sha256_file(R67_ARTIFACT_PATH),
         "source_r67_held_content_sha256s": [
-            str(prior_held[row_id]["held_content_sha256"])
-            for row_id in HELD_ROW_IDS
+            str(prior_held[row_id]["held_content_sha256"]) for row_id in HELD_ROW_IDS
         ],
         "source_r67_diagnostic_file_sha256s": diagnostic_file_sha256s,
         "source_locator_content_sha256": hashes["locators"],
         "source_remaining_content_sha256": hashes["remaining"],
         "source_candidate_manifest_sha256": hashes["candidate_manifest"],
-        "source_candidate_manifest_file_sha256": hashes[
-            "candidate_manifest_file"
-        ],
+        "source_candidate_manifest_file_sha256": hashes["candidate_manifest_file"],
         "held_row_ids": list(HELD_ROW_IDS),
         "prior_error_history": {
             row_id: list(EXPECTED_ERROR_HISTORY[row_id]) for row_id in HELD_ROW_IDS
@@ -358,9 +340,7 @@ def repair_held_rows(
         "prompt_sha256": _sha256((SYSTEM_PROMPT + "\n").encode()),
         "repair_code_file_sha256": _sha256_file(Path(__file__).resolve()),
         "verifier_code_file_sha256": _sha256_file(verifier.VERIFIER_CODE_PATH),
-        "evidence_validator_code_file_sha256": _sha256_file(
-            verifier.EVIDENCE_VALIDATOR_CODE_PATH
-        ),
+        "evidence_validator_code_file_sha256": _sha256_file(verifier.EVIDENCE_VALIDATOR_CODE_PATH),
         "runtime_identity": runtime_identity,
         "runtime_identity_sha256": runtime_sha256,
         "model_independent_reviewer": False,
@@ -398,18 +378,14 @@ def repair_held_rows(
                 request_id=request_id,
             )
             if len(normalized) != 1:
-                raise verifier.SemanticValidationError(
-                    "held_repair_finding_count_invalid"
-                )
+                raise verifier.SemanticValidationError("held_repair_finding_count_invalid")
             proposition = normalized[0].get("atomic_proposition")
             if isinstance(proposition, str) and len(proposition) > STRICT_PROPOSITION_CHARACTERS:
                 raise verifier.SemanticValidationError(
                     "held_repair_proposition_over_180",
                     diagnostics={
                         "proposition_character_count": len(proposition),
-                        "maximum_proposition_characters": (
-                            STRICT_PROPOSITION_CHARACTERS
-                        ),
+                        "maximum_proposition_characters": (STRICT_PROPOSITION_CHARACTERS),
                     },
                 )
         except Exception as exc:
@@ -431,8 +407,7 @@ def repair_held_rows(
                 "failure_fingerprint": _sealed(
                     {
                         "schema": (
-                            "legalbot.v111.phase2a.debugged-held-repair-"
-                            "failure-fingerprint.v1"
+                            "legalbot.v111.phase2a.debugged-held-repair-failure-fingerprint.v1"
                         ),
                         "row_id": row_id,
                         "prompt_sha256": intent_material["prompt_sha256"],
@@ -443,9 +418,7 @@ def repair_held_rows(
                 "elapsed_ms": round((time.perf_counter() - started) * 1000, 3),
                 "response_received": body is not None,
                 "raw_output_sha256": (
-                    _sha256(str(body.get("raw_text") or "").encode())
-                    if body
-                    else None
+                    _sha256(str(body.get("raw_text") or "").encode()) if body else None
                 ),
                 "raw_output_persisted": False,
                 "hidden_reasoning_persisted": False,
@@ -540,14 +513,10 @@ def repair_held_rows(
     _write_exclusive(output_root / "DEBUGGED-HELD-REPAIRS-5.json", _pretty_json(artifact))
     _write_exclusive(
         output_root / "OUTCOME.txt",
-        (
-            f"{artifact['status']}. ALL OWNER DECISIONS REMAIN REQUIRED.\n"
-        ).encode(),
+        (f"{artifact['status']}. ALL OWNER DECISIONS REMAIN REQUIRED.\n").encode(),
     )
     names = ["INTENT.json", "DEBUGGED-HELD-REPAIRS-5.json", "OUTCOME.txt"]
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in names).encode()
     _write_exclusive(output_root / "SHA256SUMS.txt", sums)
     return artifact
 

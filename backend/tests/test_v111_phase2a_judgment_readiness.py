@@ -14,11 +14,7 @@ from scripts.build_v111_phase2a_judgment_readiness import (
 
 ROOT = Path(__file__).resolve().parents[2]
 OWNER_REVIEW = ROOT / "data" / "evaluations" / "phase2a-owner-review"
-JUDGMENTS = (
-    OWNER_REVIEW
-    / "LegalBot-Phase2AB-2026-08-24-r4"
-    / "owner-reviewed-judgments-20.json"
-)
+JUDGMENTS = OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r4" / "owner-reviewed-judgments-20.json"
 CANDIDATE_MANIFEST = (
     ROOT
     / "data"
@@ -36,12 +32,8 @@ FRESH = OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r34-quarantine"
 QUISTCLOSE_DOWNLOAD = ROOT / "data" / "review_queue" / "quistclose-authority-download.json"
 QUISTCLOSE_APPROVAL = ROOT / "data" / "review_queue" / "quistclose-authority-approval.json"
 PRIOR = [
-    OWNER_REVIEW
-    / "LegalBot-Phase2AB-2026-08-24-r9"
-    / "GOLD-SUCCESSOR-BINDINGS-48.json",
-    OWNER_REVIEW
-    / "LegalBot-Phase2AB-2026-08-24-r16"
-    / "CANDIDATE-REBINDING-SCOPE-35.json",
+    OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r9" / "GOLD-SUCCESSOR-BINDINGS-48.json",
+    OWNER_REVIEW / "LegalBot-Phase2AB-2026-08-24-r16" / "CANDIDATE-REBINDING-SCOPE-35.json",
     OWNER_REVIEW
     / "LegalBot-Phase2AB-2026-08-24-r28"
     / "OWNER-APPROVED-CANDIDATE-REBINDING-SCOPE-54.json",
@@ -94,9 +86,7 @@ def test_verifies_source_custody_but_keeps_all_later_treatment_held(
         for record in artifact["records"]
     )
     twinsectra = [
-        record
-        for record in artifact["records"]
-        if record["neutral_citation"] == "[2002] UKHL 12"
+        record for record in artifact["records"] if record["neutral_citation"] == "[2002] UKHL 12"
     ]
     assert len(twinsectra) == 3
     assert all(record["historical_local_recovery_provenance"] for record in twinsectra)
@@ -111,9 +101,9 @@ def test_rejects_resealed_fresh_manifest_that_claims_unlicensed_bulk_authority(
     copied.mkdir()
     manifest = json.loads((FRESH / "QUARANTINE-MANIFEST.json").read_bytes())
     assert manifest.pop("manifest_sha256") == EXPECTED_FRESH_MANIFEST_DIGEST
-    manifest["find_case_law_computational_analysis"][
-        "bulk_later_treatment_search_authorized"
-    ] = True
+    manifest["find_case_law_computational_analysis"]["bulk_later_treatment_search_authorized"] = (
+        True
+    )
     manifest["manifest_sha256"] = _sealed(manifest)
     (copied / "QUARANTINE-MANIFEST.json").write_bytes(_pretty_json(manifest))
 

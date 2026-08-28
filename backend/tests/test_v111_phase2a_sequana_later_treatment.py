@@ -7,10 +7,7 @@ import pytest
 from scripts import collect_v111_phase2a_sequana_later_treatment as collector
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PLAN = (
-    PROJECT_ROOT
-    / "config/phase2a_targeted_later_treatment_sources.2026-08-25.v1.json"
-)
+PLAN = PROJECT_ROOT / "config/phase2a_targeted_later_treatment_sources.2026-08-25.v1.json"
 
 
 def test_plan_is_exact_one_source_non_admitting_scope() -> None:
@@ -31,19 +28,13 @@ def test_plan_is_exact_one_source_non_admitting_scope() -> None:
 
 
 def test_allowlist_is_exact_and_fail_closed() -> None:
-    assert collector._safe_url(
-        "https://jcpc.uk/cases/judgments/jcpc-2024-0077"
-    )
+    assert collector._safe_url("https://jcpc.uk/cases/judgments/jcpc-2024-0077")
     with pytest.raises(ValueError, match="outside_allowlist"):
-        collector._safe_url(
-            "https://jcpc.uk.evil.example/cases/judgments/jcpc-2024-0077"
-        )
+        collector._safe_url("https://jcpc.uk.evil.example/cases/judgments/jcpc-2024-0077")
     with pytest.raises(ValueError, match="outside_allowlist"):
         collector._safe_url("http://jcpc.uk/cases/judgments/jcpc-2024-0077")
     with pytest.raises(ValueError, match="forbidden_component"):
-        collector._safe_url(
-            "https://jcpc.uk/cases/judgments/jcpc-2024-0077#paragraph-31"
-        )
+        collector._safe_url("https://jcpc.uk/cases/judgments/jcpc-2024-0077#paragraph-31")
     with pytest.raises(ValueError, match="path_invalid"):
         collector._safe_url("https://jcpc.uk/news/jcpc-2024-0077")
 

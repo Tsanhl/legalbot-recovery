@@ -33,8 +33,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -118,11 +117,9 @@ def _validate_decision(value: dict[str, Any]) -> str:
             "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED",
             "CANDIDATE_REBIND_OR_SUCCESSOR_DECISION_REQUIRED",
         }
-        or source_admission
-        is not (action == "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED")
+        or source_admission is not (action == "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED")
         or value.get("candidate_rebind_or_successor_scope_if_approved") is not True
-        or value.get("defer_candidate_build_until_one_consolidated_phase2a_scope")
-        is not True
+        or value.get("defer_candidate_build_until_one_consolidated_phase2a_scope") is not True
         or value.get("expressly_not_authorized")
         != {
             "automatic_indexing_or_embedding": True,
@@ -173,10 +170,8 @@ def apply_approval(
         or proposal.get("status") != "PROPOSED_NOT_OWNER_APPROVED"
         or proposal.get("authoritative") is not False
         or proposal.get("item_count") != EXPECTED_ITEM_COUNT
-        or proposal.get("source_admission_row_count")
-        != EXPECTED_SOURCE_ADMISSION_COUNT
-        or proposal.get("candidate_rebind_row_count")
-        != EXPECTED_CANDIDATE_REBIND_COUNT
+        or proposal.get("source_admission_row_count") != EXPECTED_SOURCE_ADMISSION_COUNT
+        or proposal.get("candidate_rebind_row_count") != EXPECTED_CANDIDATE_REBIND_COUNT
         or proposal.get("owner_locator_confirmation_count")
         != EXPECTED_OWNER_LOCATOR_CONFIRMATION_COUNT
         or approval.get("schema") != APPROVAL_SCHEMA
@@ -245,19 +240,13 @@ def apply_approval(
             "official_citation": proposed["official_citation"],
             "official_legal_locator": proposed["official_legal_locator"],
             "official_source_url": proposed["official_source_url"],
-            "fresh_official_verification_status": proposed[
-                "fresh_official_verification_status"
-            ],
-            "owner_locator_confirmed": proposed[
-                "owner_locator_confirmation_required"
-            ],
+            "fresh_official_verification_status": proposed["fresh_official_verification_status"],
+            "owner_locator_confirmed": proposed["owner_locator_confirmation_required"],
             "source_verification_record_content_sha256": proposed[
                 "source_verification_record_content_sha256"
             ],
             "required_candidate_action": action,
-            "source_admission_scope_authorized": proposed[
-                "source_admission_if_approved"
-            ],
+            "source_admission_scope_authorized": proposed["source_admission_if_approved"],
             "candidate_rebind_or_successor_scope_authorized": True,
             "automatic_indexing_or_embedding_authorized": False,
             "candidate_build_authorized": False,
@@ -282,9 +271,7 @@ def apply_approval(
             "source_verification_record_content_sha256": proposed[
                 "source_verification_record_content_sha256"
             ],
-            "owner_approved_decision_content_sha256": approved[
-                "approved_decision_content_sha256"
-            ],
+            "owner_approved_decision_content_sha256": approved["approved_decision_content_sha256"],
         }
         candidate_rebinding_scope.append(scope_material)
         if proposed["source_admission_if_approved"] is True:
@@ -294,9 +281,7 @@ def apply_approval(
         actions
         != Counter(
             {
-                "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED": (
-                    EXPECTED_SOURCE_ADMISSION_COUNT
-                ),
+                "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED": (EXPECTED_SOURCE_ADMISSION_COUNT),
                 "CANDIDATE_REBIND_OR_SUCCESSOR_DECISION_REQUIRED": (
                     EXPECTED_CANDIDATE_REBIND_COUNT
                 ),
@@ -352,9 +337,7 @@ def apply_approval(
     source_material = {
         "schema": "legalbot.v111.phase2a.source-admission-scope.v1",
         "status": "OWNER_APPROVED_SCOPE_AWAITING_CONSOLIDATED_ADMISSION_MANIFEST",
-        "source_owner_approved_package_content_sha256": package[
-            "approved_package_content_sha256"
-        ],
+        "source_owner_approved_package_content_sha256": package["approved_package_content_sha256"],
         "row_count": len(source_admission_scope),
         "rows": source_admission_scope,
         "automatic_indexing_or_embedding_authorized": False,
@@ -368,9 +351,7 @@ def apply_approval(
     rebind_material = {
         "schema": "legalbot.v111.phase2a.candidate-rebinding-scope.v1",
         "status": "OWNER_APPROVED_SCOPE_AWAITING_ONE_CONSOLIDATED_CANDIDATE_DECISION",
-        "source_owner_approved_package_content_sha256": package[
-            "approved_package_content_sha256"
-        ],
+        "source_owner_approved_package_content_sha256": package["approved_package_content_sha256"],
         "row_count": len(candidate_rebinding_scope),
         "rows": candidate_rebinding_scope,
         "sealed_predecessor_mutated": False,
@@ -427,15 +408,9 @@ def apply_approval(
     return {
         "output_root": str(output_root),
         "receipt_content_sha256": receipt["receipt_content_sha256"],
-        "approved_package_content_sha256": package[
-            "approved_package_content_sha256"
-        ],
-        "source_admission_scope_content_sha256": source_artifact[
-            "artifact_content_sha256"
-        ],
-        "candidate_rebinding_scope_content_sha256": rebind_artifact[
-            "artifact_content_sha256"
-        ],
+        "approved_package_content_sha256": package["approved_package_content_sha256"],
+        "source_admission_scope_content_sha256": source_artifact["artifact_content_sha256"],
+        "candidate_rebinding_scope_content_sha256": rebind_artifact["artifact_content_sha256"],
         "approved_item_count": EXPECTED_ITEM_COUNT,
         "recorded_owner_decision_count": 83,
         "remaining_owner_decision_issue_count": 502,

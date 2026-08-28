@@ -22,8 +22,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data" / "evaluations" / "phase2a-owner-review"
 DEFAULT_PARTIAL_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r52-exact-semantic-span-advisory"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r52-exact-semantic-span-advisory"
 )
 DEFAULT_LOCATORS = (
     OWNER_REVIEW_ROOT
@@ -38,15 +37,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -187,8 +183,7 @@ def finalize_debug_stop(*, partial_root: Path, locators_path: Path) -> dict[str,
     over_bound_quality_locator = any(
         item.get("authority_identity_id") == "ukpga:1979:54"
         and item.get("canonical_locator") == "section 14"
-        and item.get("resolution_status")
-        == "LOCATOR_AMBIGUOUS_EXCEEDS_DETERMINISTIC_BOUND"
+        and item.get("resolution_status") == "LOCATOR_AMBIGUOUS_EXCEEDS_DETERMINISTIC_BOUND"
         for item in quality_selections
         if isinstance(item, dict)
     )
@@ -276,10 +271,10 @@ def finalize_debug_stop(*, partial_root: Path, locators_path: Path) -> dict[str,
     report = {**report_material, "report_content_sha256": _sealed(report_material)}
     report_raw = _pretty_json(report)
     outcome_raw = (
-        "PHASE 2A r52 ADVISORY PASS SAFELY STOPPED FOR ROOT-CAUSE DEBUG. "
-        "NO OWNER DECISION, SOURCE ADMISSION, CANDIDATE CHANGE, PHASE 2B, OR "
-        "DEVELOPMENT 30 AUTHORIZATION OCCURRED.\n"
-    ).encode()
+        b"PHASE 2A r52 ADVISORY PASS SAFELY STOPPED FOR ROOT-CAUSE DEBUG. "
+        b"NO OWNER DECISION, SOURCE ADMISSION, CANDIDATE CHANGE, PHASE 2B, OR "
+        b"DEVELOPMENT 30 AUTHORIZATION OCCURRED.\n"
+    )
     _write_exclusive(report_path, report_raw)
     _write_exclusive(partial_root / "DEBUG-STOP-OUTCOME.txt", outcome_raw)
     sums = (

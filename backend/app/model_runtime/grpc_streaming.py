@@ -286,15 +286,11 @@ class GrpcUdsTransportIntent:
     schema: Literal["legalbot.private-model-grpc-uds-intent.v1"] = (
         "legalbot.private-model-grpc-uds-intent.v1"
     )
-    service_name: Literal[
-        "legalbot.modelruntime.v1.LegalBotModelRuntime"
-    ] = GRPC_SERVICE_NAME
+    service_name: Literal["legalbot.modelruntime.v1.LegalBotModelRuntime"] = GRPC_SERVICE_NAME
     uds_only: Literal[True] = True
     network_fallback_allowed: Literal[False] = False
     browser_raw_token_forwarding_allowed: Literal[False] = False
-    activation_requirement: Literal[
-        "phase2b_exact_owner_payload_required"
-    ] = GRPC_ACTIVATION_STOP
+    activation_requirement: Literal["phase2b_exact_owner_payload_required"] = GRPC_ACTIVATION_STOP
     authorizing: Literal[False] = False
 
     @property

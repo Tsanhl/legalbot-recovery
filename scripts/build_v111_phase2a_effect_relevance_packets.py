@@ -21,12 +21,8 @@ from typing import Any
 
 from app.quality.evidence import MaterialFact, extract_material_facts
 
-EXPECTED_EFFECTS_DIGEST = (
-    "a4e315a333d30c3e02c02c0228696b37b61481c4936ca32cf7d2a205168b34a7"
-)
-EXPECTED_RESEARCH_DIGEST = (
-    "0718758e3bd9b0f938c4beab09eb3b603ffc5f419d68574399accc47c4a4015c"
-)
+EXPECTED_EFFECTS_DIGEST = "a4e315a333d30c3e02c02c0228696b37b61481c4936ca32cf7d2a205168b34a7"
+EXPECTED_RESEARCH_DIGEST = "0718758e3bd9b0f938c4beab09eb3b603ffc5f419d68574399accc47c4a4015c"
 EXPECTED_TOTAL_EFFECT_COUNT = 1_896
 EXPECTED_HELD_EFFECT_COUNT = 516
 EXPECTED_RESEARCH_ROW_COUNT = 502
@@ -49,15 +45,12 @@ _SPECIFIC_PROVISION_PREFIXES = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -138,8 +131,7 @@ def _validate_effects(value: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]
     summary = value.get("summary")
     if (
         digest != EXPECTED_EFFECTS_DIGEST
-        or value.get("schema")
-        != "legalbot.v111.phase2a.owner-reviewed-legislative-effects.v1"
+        or value.get("schema") != "legalbot.v111.phase2a.owner-reviewed-legislative-effects.v1"
         or value.get("record_count") != EXPECTED_TOTAL_EFFECT_COUNT
         or not isinstance(effects, list)
         or len(effects) != EXPECTED_TOTAL_EFFECT_COUNT
@@ -203,8 +195,7 @@ def _validate_research(
     rows = value.get("rows")
     if (
         digest != EXPECTED_RESEARCH_DIGEST
-        or value.get("schema")
-        != "legalbot.v111.phase2a.unresolved-research-packets.v1"
+        or value.get("schema") != "legalbot.v111.phase2a.unresolved-research-packets.v1"
         or value.get("row_count") != EXPECTED_RESEARCH_ROW_COUNT
         or not isinstance(rows, list)
         or len(rows) != EXPECTED_RESEARCH_ROW_COUNT
@@ -243,9 +234,7 @@ def _validate_research(
             if not isinstance(candidate, dict):
                 raise ValueError("phase2a_effect_relevance_candidate_invalid")
             candidate_material = dict(candidate)
-            candidate_seal = str(
-                candidate_material.pop("candidate_record_content_sha256", "")
-            )
+            candidate_seal = str(candidate_material.pop("candidate_record_content_sha256", ""))
             authority = str(candidate.get("authority_identity_id") or "")
             if (
                 not authority
@@ -284,34 +273,23 @@ def _effect_packet(
             exact.append(
                 {
                     **candidate,
-                    "locator_provision_facts": [
-                        _fact_record(fact) for fact in locator_facts
-                    ],
+                    "locator_provision_facts": [_fact_record(fact) for fact in locator_facts],
                     "exact_intersections": [
-                        {"kind": kind, "normalized_value": value}
-                        for kind, value in intersection
+                        {"kind": kind, "normalized_value": value} for kind, value in intersection
                     ],
                 }
             )
 
-    same_authority_rows = sorted(
-        {str(candidate["row_id"]) for candidate in authority_candidates}
-    )
+    same_authority_rows = sorted({str(candidate["row_id"]) for candidate in authority_candidates})
     if not authority_candidates:
         mapping_status = "NO_SAME_AUTHORITY_CANDIDATE_IN_UNRESOLVED_502_SET"
-        recommendation = (
-            "RECOMMEND_NONMATERIAL_TO_CURRENT_UNRESOLVED_502_EVIDENCE_SCOPE"
-        )
+        recommendation = "RECOMMEND_NONMATERIAL_TO_CURRENT_UNRESOLVED_502_EVIDENCE_SCOPE"
     elif exact:
         mapping_status = "EXACT_AFFECTED_PROVISION_INTERSECTION_FOUND"
-        recommendation = (
-            "RECOMMEND_PROPOSITION_LEVEL_OWNER_REVIEW_OF_EXACT_PROVISION_INTERSECTIONS"
-        )
+        recommendation = "RECOMMEND_PROPOSITION_LEVEL_OWNER_REVIEW_OF_EXACT_PROVISION_INTERSECTIONS"
     else:
         mapping_status = "SAME_AUTHORITY_ONLY_NO_EXACT_AFFECTED_PROVISION_INTERSECTION"
-        recommendation = (
-            "RECOMMEND_METADATA_ONLY_PENDING_FINAL_PROPOSITION_BINDING_CONFIRMATION"
-        )
+        recommendation = "RECOMMEND_METADATA_ONLY_PENDING_FINAL_PROPOSITION_BINDING_CONFIRMATION"
 
     material: dict[str, Any] = {
         "schema": "legalbot.v111.phase2a.effect-relevance-owner-review-row.v1",
@@ -324,15 +302,11 @@ def _effect_packet(
         "source_version_id": effect.get("source_version_id"),
         "source_effect_ordinal": effect.get("source_effect_ordinal"),
         "source_record_sha256": effect.get("record_sha256"),
-        "source_owner_decision_sha256": effect["owner_review"].get(
-            "owner_decision_sha256"
-        ),
+        "source_owner_decision_sha256": effect["owner_review"].get("owner_decision_sha256"),
         "source_title": effect.get("source_title"),
         "authority_identity": effect.get("authority_identity"),
         "official_source_url": effect.get("official_source_url"),
-        "official_source_version_sha256": effect.get(
-            "official_source_version_sha256"
-        ),
+        "official_source_version_sha256": effect.get("official_source_version_sha256"),
         "effect_type": effect.get("type"),
         "affected_provisions": effect.get("affected_provisions"),
         "affecting_provisions": effect.get("affecting_provisions"),
@@ -388,8 +362,7 @@ def build_effect_relevance_packets(
         for effect in held_effects
     ]
     no_authority = sum(
-        packet["mapping_status"]
-        == "NO_SAME_AUTHORITY_CANDIDATE_IN_UNRESOLVED_502_SET"
+        packet["mapping_status"] == "NO_SAME_AUTHORITY_CANDIDATE_IN_UNRESOLVED_502_SET"
         for packet in packets
     )
     exact = sum(
@@ -434,9 +407,7 @@ def build_effect_relevance_packets(
     progress_material: dict[str, Any] = {
         "schema": "legalbot.v111.phase2a.effect-relevance-progress.v1",
         "status": "PHASE2A_REMEDIATION_CONTINUES_OWNER_EFFECT_DECISIONS_REQUIRED",
-        "effect_relevance_artifact_content_sha256": artifact[
-            "artifact_content_sha256"
-        ],
+        "effect_relevance_artifact_content_sha256": artifact["artifact_content_sha256"],
         "effect_relevance_artifact_file_sha256": _sha256(artifact_raw),
         "effect_count": len(packets),
         "summary": material["summary"],
@@ -457,8 +428,7 @@ def build_effect_relevance_packets(
     _write_exclusive(output_root / OUTPUT_NAME, artifact_raw)
     _write_exclusive(output_root / PROGRESS_NAME, progress_raw)
     sums = (
-        f"{_sha256(artifact_raw)}  {OUTPUT_NAME}\n"
-        f"{_sha256(progress_raw)}  {PROGRESS_NAME}\n"
+        f"{_sha256(artifact_raw)}  {OUTPUT_NAME}\n{_sha256(progress_raw)}  {PROGRESS_NAME}\n"
     ).encode()
     _write_exclusive(output_root / "SHA256SUMS", sums)
     return progress

@@ -165,9 +165,7 @@ def _contracts(
     return bundle, manifest, authorization, workspace, initial, cipher
 
 
-def _evidence(
-    case: Any, *, threshold_policy_sha256: str
-) -> dict[str, EvidenceSpan]:
+def _evidence(case: Any, *, threshold_policy_sha256: str) -> dict[str, EvidenceSpan]:
     return {
         f"evidence-{number}": EvidenceSpan(
             id=f"evidence-{number}",
@@ -271,9 +269,7 @@ def _positive_result(
 ) -> OwnerCanaryCaseAttemptResult:
     evidence_by_id = _evidence(
         case,
-        threshold_policy_sha256=(
-            authorization.policy_bindings.relevance_threshold_policy_sha256
-        ),
+        threshold_policy_sha256=(authorization.policy_bindings.relevance_threshold_policy_sha256),
     )
     review, adjudication, standards = _review(case, evidence_by_id)
     content = ("analysis " * request.requested_word_target).rstrip().encode("utf-8")

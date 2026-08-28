@@ -47,9 +47,12 @@ def _body(
     proposition: str = "Section 11 requires a term to have been fair and reasonable.",
     span_id: str | None = None,
 ) -> dict[str, Any]:
-    selected_span_id = span_id or row_input["rows"][0]["evidence_candidates"][0][
-        "chunks"
-    ][0]["exact_span_options"][0]["span_id"]
+    selected_span_id = (
+        span_id
+        or row_input["rows"][0]["evidence_candidates"][0]["chunks"][0]["exact_span_options"][0][
+            "span_id"
+        ]
+    )
     structured = {
         "schema": verifier.OUTPUT_SCHEMA,
         "case_id": row_input["case_id"],
@@ -94,14 +97,10 @@ def _input() -> dict[str, Any]:
 
 def test_exact_span_and_typed_facts_are_bound() -> None:
     row_input = _input()
-    assert row_input["schema"] == (
-        "legalbot.v111.phase2a.exact-semantic-span-input.v3"
-    )
+    assert row_input["schema"] == ("legalbot.v111.phase2a.exact-semantic-span-input.v3")
     assert row_input["scenario"] == "Assess the limitation clause."
     assert row_input["scenario_text_supplied_to_exact_rule_extractor"] is True
-    assert row_input["scenario_content_sha256"] == verifier._sha256(
-        row_input["scenario"].encode()
-    )
+    assert row_input["scenario_content_sha256"] == verifier._sha256(row_input["scenario"].encode())
     findings, _metrics = verifier._validate_model_response(
         body=_body(row_input, "request-1"),
         row_input=row_input,
@@ -222,10 +221,7 @@ def test_exact_span_partition_is_complete_and_byte_preserving() -> None:
     options = chunk["exact_span_options"]
     assert len(options) > 1
     assert "".join(option["exact_text"] for option in options) == text
-    assert all(
-        len(option["exact_text"]) <= verifier.MAX_QUOTE_CHARACTERS
-        for option in options
-    )
+    assert all(len(option["exact_text"]) <= verifier.MAX_QUOTE_CHARACTERS for option in options)
     assert options[0]["start_character"] == 0
     assert options[-1]["end_character_exclusive"] == len(text)
     assert chunk["source_text_reproduced_by_partition_sha256"] == chunk["text_sha256"]
@@ -270,8 +266,7 @@ def test_proposition_contract_reports_type_missing_and_length_separately() -> No
         assert exc.code == "structured_output_proposition_too_long"
         assert exc.diagnostics["proposition_character_count"] == len(too_long)
         assert (
-            exc.diagnostics["maximum_proposition_characters"]
-            == verifier.MAX_PROPOSITION_CHARACTERS
+            exc.diagnostics["maximum_proposition_characters"] == verifier.MAX_PROPOSITION_CHARACTERS
         )
     else:
         raise AssertionError("overlong proposition was accepted")
@@ -289,8 +284,7 @@ def test_after_ceiling_source_cannot_enter_semantic_review() -> None:
                     "id": "source-version-after-ceiling",
                     "title": "Computer Misuse Act 1990",
                     "canonical_url": (
-                        "https://www.legislation.gov.uk/ukpga/1990/18/"
-                        "2026-08-17/data.xml"
+                        "https://www.legislation.gov.uk/ukpga/1990/18/2026-08-17/data.xml"
                     ),
                     "as_of_date": "2026-08-17",
                     "currentness_status": "latest_available_revised_snapshot",
@@ -405,10 +399,7 @@ def test_review_projection_exposes_only_the_deterministic_top_candidate() -> Non
     assert projected is not None
     assert verifier.MAX_REVIEW_EVIDENCE_CANDIDATES_PER_ROW == 1
     assert len(projected["evidence_candidates"]) == 1
-    assert (
-        projected["evidence_candidates"][0]["authority_identity_id"]
-        == "ukpga:2015:15"
-    )
+    assert projected["evidence_candidates"][0]["authority_identity_id"] == "ukpga:2015:15"
 
 
 def test_scenario_aware_prior_selection_precedes_issue_label_only_recovery() -> None:
@@ -493,9 +484,7 @@ def test_scenario_aware_prior_selection_precedes_issue_label_only_recovery() -> 
     )
 
     assert projected is not None
-    assert projected["evidence_candidates"][0]["source_version_id"] == (
-        "source-version-prior"
-    )
+    assert projected["evidence_candidates"][0]["source_version_id"] == ("source-version-prior")
 
 
 def test_exact_candidate_manifest_membership_overrides_stale_boolean_metadata() -> None:
@@ -562,9 +551,7 @@ def test_exact_candidate_manifest_membership_overrides_stale_boolean_metadata() 
     )
 
     assert projected is not None
-    assert projected["evidence_candidates"][0]["source_version_id"] == (
-        "source-version-admitted"
-    )
+    assert projected["evidence_candidates"][0]["source_version_id"] == ("source-version-admitted")
 
 
 def test_pinned_candidate_manifest_excludes_known_misclassified_source() -> None:

@@ -1009,9 +1009,7 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
                 status=prior_case_job["status"],
                 stage=prior_case_job["stage"],
                 events_url=f"/api/v1/jobs/{prior_case_job['id']}/events",
-                conversation_id=_conversation_id_for_job(
-                    services, str(prior_case_job["id"])
-                ),
+                conversation_id=_conversation_id_for_job(services, str(prior_case_job["id"])),
             )
     if idempotency_key is not None:
         existing = services.database.job_by_idempotency_key(idempotency_key)
@@ -1365,9 +1363,7 @@ async def job_events_websocket(websocket: WebSocket, job_id: str) -> None:
         return
     services = _services(websocket)
     with services.database.detached_read_snapshot() as (_snapshot_database, connection):
-        initial_job = connection.execute(
-            "SELECT * FROM jobs WHERE id=?", (job_id,)
-        ).fetchone()
+        initial_job = connection.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
         if initial_job is None:
             await websocket.close(code=4404, reason="answer job not found")
             return
@@ -1663,9 +1659,7 @@ async def get_answer_evidence(answer_id: str, request: Request) -> dict[str, Any
                             if row["retrieval_threshold_qualified"] is not None
                             else None
                         ),
-                        "retrieval_qualification_reason": row[
-                            "retrieval_qualification_reason"
-                        ],
+                        "retrieval_qualification_reason": row["retrieval_qualification_reason"],
                         "legal_role": row["legal_role"],
                         "unapplied_effect_count": row["unapplied_effect_count"],
                         "provision_extent_status": row["provision_extent_status"],

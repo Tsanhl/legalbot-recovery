@@ -224,10 +224,7 @@ def test_international_journal_paths_keep_exact_jurisdiction_and_scholarship_lan
 
 def test_case_path_is_not_demoted_by_incidental_official_guidance_words() -> None:
     classified = _classify(
-        Path(
-            "Law/Official Legislation/England and Wales/judgments/"
-            "ewca-crim-2015-351-data.xml"
-        )
+        Path("Law/Official Legislation/England and Wales/judgments/ewca-crim-2015-351-data.xml")
     )
     parsed = ParseResult(
         ParseStatus.READY,

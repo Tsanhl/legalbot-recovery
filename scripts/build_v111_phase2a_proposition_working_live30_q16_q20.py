@@ -20,9 +20,7 @@ QUALIFICATION_PATH = BLOCKED_ROOT / (
     "machine/qualification/DETERMINISTIC-ALL585-QUALIFICATION.json"
 )
 CASES_PATH = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
-CROSSWALK_PATH = BLOCKED_ROOT / (
-    "machine/crosswalk/DETERMINISTIC-EXACT-SPAN-PACKETS-364.json"
-)
+CROSSWALK_PATH = BLOCKED_ROOT / ("machine/crosswalk/DETERMINISTIC-EXACT-SPAN-PACKETS-364.json")
 R100_PATH = OWNER_ROOT / (
     "LegalBot-Phase2AB-2026-08-26-r100-debugged-held-exact-span-repair/"
     "REPAIRED-EXACT-SPAN-ADVISORY-361.json"
@@ -33,8 +31,7 @@ R117_PATH = OWNER_ROOT / (
 )
 SOURCE_MANIFEST_PATH = BLOCKED_ROOT / "machine/candidate/approved-source-manifest.json"
 DEFAULT_OUTPUT = OWNER_ROOT / (
-    "LegalBot-Phase2A-2026-08-27-remediation-working-r1/propositions/"
-    "live30-q16-q20.json"
+    "LegalBot-Phase2A-2026-08-27-remediation-working-r1/propositions/live30-q16-q20.json"
 )
 
 SCOPE_CASE_IDS = [f"live30-q{number:02d}" for number in range(16, 21)]
@@ -42,8 +39,7 @@ SCOPE_CASE_IDS = [f"live30-q{number:02d}" for number in range(16, 21)]
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -108,7 +104,9 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
             "Bind controlling testamentary-undue-influence authority and the applicable burden and standard of proof.",
             "Distinguish coercion from persuasion, dependency, opportunity, or suspicious circumstances alone.",
         ],
-        rejected=["The final lexical candidates contain no substantive testamentary-undue-influence rule."],
+        rejected=[
+            "The final lexical candidates contain no substantive testamentary-undue-influence rule."
+        ],
     ),
     "live30-q16:issue-06": _record(
         None,
@@ -138,7 +136,9 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
             "Bind the precise majority holding and preserved issues in Philipp v Barclays Bank UK plc.",
             "Check whether the finance director acted as Orion's agent and whether notice of want of authority, rather than APP fraud alone, is realistically arguable.",
         ],
-        rejected=["The final lexical candidates are unrelated to the bank mandate and Quincecare question."],
+        rejected=[
+            "The final lexical candidates are unrelated to the bank mandate and Quincecare question."
+        ],
     ),
     "live30-q18:issue-03": _record(
         "A restitutionary claim for unjust enrichment requires the defendant to have been enriched at the claimant's expense in circumstances recognised by English law as unjust, subject to any applicable defence.",
@@ -156,7 +156,7 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "READY_FOR_EVIDENCE_REVIEW",
         [
             "Bind current authority on good faith, causal reliance, disenrichment, and the limits of the defence.",
-            "Test whether payment of an existing genuine debt is enrichment, a defence, or a recipient-specific bar on recovery."
+            "Test whether payment of an existing genuine debt is enrichment, a defence, or a recipient-specific bar on recovery.",
         ],
     ),
     "live30-q18:issue-05": _record(
@@ -164,7 +164,7 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "READY_FOR_EVIDENCE_REVIEW",
         [
             "Bind the controlling knowing-receipt formulation and verify that Orion can establish an antecedent trust or fiduciary disposition for each transfer.",
-            "Separate knowing receipt from dishonest assistance and common-law restitution."
+            "Separate knowing receipt from dishonest assistance and common-law restitution.",
         ],
         conflicts=["The r117 notice formulation is broader than the unconscionability test."],
     ),
@@ -173,7 +173,7 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "READY_FOR_EVIDENCE_REVIEW",
         [
             "Bind current appellate authority and CPR/Senior Courts Act jurisdiction for domestic and third-party freezing relief.",
-            "Separate a freezing injunction from a proprietary injunction over identified traceable assets."
+            "Separate a freezing injunction from a proprietary injunction over identified traceable assets.",
         ],
         conflicts=[
             "The r117 serious-issue/balance-of-convenience formulation is not the complete freezing-order test."
@@ -184,61 +184,73 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Split practical recovery into tracing into substitutes, proprietary remedies and priorities, bona fide purchaser/recipient defences, disclosure, freezing/proprietary interim relief, and enforcement against crypto and land.",
-            "Bind only the legal propositions; keep operational recovery steps in a non-authority analytical lane."
+            "Bind only the legal propositions; keep operational recovery steps in a non-authority analytical lane.",
         ],
-        rejected=["The final lexical candidates do not support the proposed tracing and recovery analysis."],
+        rejected=[
+            "The final lexical candidates do not support the proposed tracing and recovery analysis."
+        ],
     ),
     "live30-q19:issue-01": _record(
         None,
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate the product/geographic substitutability test from digital-market adaptations for zero-price services, ecosystems, data, quality, and multi-sided platforms.",
-            "Bind Competition Act/retained competition authority and current official CMA market-definition guidance without treating guidance as legislation."
+            "Bind Competition Act/retained competition authority and current official CMA market-definition guidance without treating guidance as legislation.",
         ],
-        rejected=["DMCC Act sections 46, 77 and 116 do not state the general relevant-market definition test."],
+        rejected=[
+            "DMCC Act sections 46, 77 and 116 do not state the general relevant-market definition test."
+        ],
     ),
     "live30-q19:issue-02": _record(
         "Dominance is a position of economic strength enabling an undertaking to prevent effective competition and behave to an appreciable extent independently of competitors, customers, and ultimately consumers in the relevant market.",
         "NEEDS_LEGAL_RESEARCH",
         [
             "Bind the current Competition Act 1998 section 18 framework and controlling retained/EU or domestic authority for the dominance formulation.",
-            "Separate Competition Act dominance from the DMCC strategic-market-status designation tests."
+            "Separate Competition Act dominance from the DMCC strategic-market-status designation tests.",
         ],
-        conflicts=["The r100 DMCC adverse-effect-on-competition proposition does not establish dominance."],
+        conflicts=[
+            "The r100 DMCC adverse-effect-on-competition proposition does not establish dominance."
+        ],
     ),
     "live30-q19:issue-03": _record(
         None,
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate Competition Act 1998 abuse analysis for self-preferencing/tying from the DMCC conduct-requirement regime.",
-            "Under DMCC sections 19-20, state conditionally that the CMA may impose specified conduct requirements on a designated undertaking; do not describe every listed practice as automatically prohibited."
+            "Under DMCC sections 19-20, state conditionally that the CMA may impose specified conduct requirements on a designated undertaking; do not describe every listed practice as automatically prohibited.",
         ],
-        conflicts=["The r117 blanket-prohibition proposition overstates the DMCC statutory scheme."],
+        conflicts=[
+            "The r117 blanket-prohibition proposition overstates the DMCC statutory scheme."
+        ],
     ),
     "live30-q19:issue-04": _record(
         None,
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate discriminatory access and exclusive arrangements under Competition Act abuse doctrine from DMCC sections 19-20 permitted conduct requirements.",
-            "Identify the exact statutory language for fair terms, interoperability, access, and restrictions on use of competing products."
+            "Identify the exact statutory language for fair terms, interoperability, access, and restrictions on use of competing products.",
         ],
-        conflicts=["The r117 blanket-prohibition proposition overstates the DMCC statutory scheme."],
+        conflicts=[
+            "The r117 blanket-prohibition proposition overstates the DMCC statutory scheme."
+        ],
     ),
     "live30-q19:issue-05": _record(
         "Section 18 of the Competition Act 1998 prohibits abuse of a dominant position, and pricing or other exclusionary conduct is predatory only where the applicable cost, exclusion, and recoupment or intent criteria established by authority are met.",
         "NEEDS_LEGAL_RESEARCH",
         [
             "Bind section 18 and current controlling authority for predatory pricing and non-price predation.",
-            "Do not infer predation merely from low prices, free services, or vigorous competition."
+            "Do not infer predation merely from low prices, free services, or vigorous competition.",
         ],
-        rejected=["The final DMCC and consumer-law candidates do not establish predatory-abuse doctrine."],
+        rejected=[
+            "The final DMCC and consumer-law candidates do not establish predatory-abuse doctrine."
+        ],
     ),
     "live30-q19:issue-06": _record(
         None,
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate data as a barrier or source of market power from the DMCC conduct-requirement and pro-competition-intervention mechanisms.",
-            "Reconcile DMCC sections 19-20 and 46 with the distinct evidence needed to establish competitive harm."
+            "Reconcile DMCC sections 19-20 and 46 with the distinct evidence needed to establish competitive harm.",
         ],
         conflicts=[
             "The r100 section 46 proposition concerns adverse effects on competition, while the final selected section 20 span addresses only a permitted conduct-requirement type."
@@ -249,29 +261,33 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Identify the applicable Enterprise Act 2002 merger tests and the DMCC amendments/alternative thresholds current at the target date.",
-            "Separate jurisdictional thresholds, substantial-lessening-of-competition assessment, and digital/SMS reporting duties."
+            "Separate jurisdictional thresholds, substantial-lessening-of-competition assessment, and digital/SMS reporting duties.",
         ],
-        rejected=["The candidate schedule 21 excerpts are insufficient without exact amended Enterprise Act provisions."],
+        rejected=[
+            "The candidate schedule 21 excerpts are insufficient without exact amended Enterprise Act provisions."
+        ],
     ),
     "live30-q19:issue-08": _record(
         None,
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate legal tests from economic analysis of price, quality, privacy, choice, innovation, and dynamic competition.",
-            "Bind each statutory objective or adverse-effect test before treating a non-price effect as legally material."
+            "Bind each statutory objective or adverse-effect test before treating a non-price effect as legally material.",
         ],
-        conflicts=["The r100 section 46 proposition is too narrow to establish the whole consumer-harm and innovation issue."],
+        conflicts=[
+            "The r100 section 46 proposition is too narrow to establish the whole consumer-harm and innovation issue."
+        ],
     ),
     "live30-q19:issue-09": _record(
         None,
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate CMA public enforcement under Competition Act/DMCC, CAT/private competition damages or injunctions, and consumer-enforcement routes.",
-            "Identify exact standing, cause-of-action, forum, and remedy provisions for each private route."
+            "Identify exact standing, cause-of-action, forum, and remedy provisions for each private route.",
         ],
         conflicts=[
             "The r100 schedule 18 proposition concerns designation of public consumer enforcers and does not establish a private right of action for digital-market abuses.",
-            "The r117 combined public/private-right proposition is unsupported."
+            "The r117 combined public/private-right proposition is unsupported.",
         ],
     ),
     "live30-q20:issue-02": _record(
@@ -279,7 +295,7 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "NEEDS_LEGAL_RESEARCH",
         [
             "Bind current authority on bodily autonomy and refusal, together with the exact Mental Capacity Act route if capacity is lacking.",
-            "Separate consent, capacity, best interests, and emergency necessity."
+            "Separate consent, capacity, best interests, and emergency necessity.",
         ],
         rejected=["The final lexical candidates do not state the medical-consent rule."],
     ),
@@ -288,7 +304,7 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "READY_FOR_EVIDENCE_REVIEW",
         [
             "Bind the exact Montgomery material-risk and reasonable-alternatives passages and review later treatment.",
-            "Determine whether the AI system's subgroup error rate was a material risk or information affecting reasonable alternatives."
+            "Determine whether the AI system's subgroup error rate was a material risk or information affecting reasonable alternatives.",
         ],
         conflicts=["The r117 draft omits the patient-specific limb of materiality."],
     ),
@@ -297,9 +313,11 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         "NEEDS_PROPOSITION_SPLIT",
         [
             "Separate ordinary but-for causation for negligent treatment from causation for failure to disclose material risks and alternatives.",
-            "Bind the counterfactual choice and injury analysis, including the narrow status of any Chester v Afshar exception."
+            "Bind the counterfactual choice and injury analysis, including the narrow status of any Chester v Afshar exception.",
         ],
-        conflicts=["The r117 substantial-factor formulation is not the ordinary English clinical-negligence test."],
+        conflicts=[
+            "The r117 substantial-factor formulation is not the ordinary English clinical-negligence test."
+        ],
     ),
     "live30-q20:issue-08": _record(
         None,
@@ -307,7 +325,7 @@ PROPOSITION_WORK: dict[str, dict[str, Any]] = {
         [
             "Treat AI reliance as an application of existing duties: independent clinical judgment, reasonable diagnosis/treatment, informed disclosure, governance and record-keeping.",
             "Research whether any target-date statute, medical-device rule, regulator standard, or binding authority creates an AI-specific duty relevant to these facts.",
-            "Do not invent a free-standing AI verification rule."
+            "Do not invent a free-standing AI verification rule.",
         ],
         rejected=["The final lexical candidates contain no relevant AI-clinical-duty authority."],
     ),
@@ -322,8 +340,7 @@ def build(*, output_path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
         row
         for row in qualification["rows"]
         if row["case_id"] in SCOPE_CASE_IDS
-        and row["qualification_status"]
-        in {"OWNER_DECISION_REQUIRED", "BLOCKED_MATERIAL_GAP"}
+        and row["qualification_status"] in {"OWNER_DECISION_REQUIRED", "BLOCKED_MATERIAL_GAP"}
     ]
     pending_by_id = {row["row_id"]: row for row in pending}
     if set(pending_by_id) != set(PROPOSITION_WORK):

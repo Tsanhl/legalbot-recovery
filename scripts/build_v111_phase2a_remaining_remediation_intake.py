@@ -33,8 +33,7 @@ EXPECTED_STATUS_COUNTS = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -104,21 +103,15 @@ def _candidate_summary(candidate: dict[str, Any]) -> dict[str, Any]:
         "locator": candidate.get("locator"),
         "span_bundle_sha256": candidate.get("span_bundle_sha256"),
         "full_span_text_sha256": candidate.get("full_span_text_sha256"),
-        "candidate_record_content_sha256": candidate.get(
-            "candidate_record_content_sha256"
-        ),
+        "candidate_record_content_sha256": candidate.get("candidate_record_content_sha256"),
         "identity_verified": candidate.get("identity_verified"),
         "currentness_verified": candidate.get("currentness_verified"),
-        "later_treatment_review_required": candidate.get(
-            "later_treatment_review_required"
-        ),
+        "later_treatment_review_required": candidate.get("later_treatment_review_required"),
         "already_in_sealed_candidate": candidate.get("already_in_sealed_candidate"),
     }
 
 
-def _issue_queue_record(
-    qualification: dict[str, Any], crosswalk: dict[str, Any]
-) -> dict[str, Any]:
+def _issue_queue_record(qualification: dict[str, Any], crosswalk: dict[str, Any]) -> dict[str, Any]:
     candidates = crosswalk.get("candidate_evidence_packets")
     if not isinstance(candidates, list):
         candidates = []
@@ -131,9 +124,7 @@ def _issue_queue_record(
         "legal_domain": qualification["legal_domain"],
         "issue_label": qualification["issue_label"],
         "qualification_status": qualification["qualification_status"],
-        "qualification_record_content_sha256": qualification[
-            "record_content_sha256"
-        ],
+        "qualification_record_content_sha256": qualification["record_content_sha256"],
         "crosswalk_status": crosswalk.get("status"),
         "crosswalk_record_content_sha256": crosswalk.get("record_content_sha256"),
         "deterministic_work_class": crosswalk.get("deterministic_work_class"),
@@ -141,9 +132,7 @@ def _issue_queue_record(
         "issue_terms": crosswalk.get("issue_terms") or [],
         "candidate_count": len(candidates),
         "candidate_evidence": [
-            _candidate_summary(candidate)
-            for candidate in candidates
-            if isinstance(candidate, dict)
+            _candidate_summary(candidate) for candidate in candidates if isinstance(candidate, dict)
         ],
         "required_next_action": (
             "RESEARCH_AND_FREEZE_EXACT_PROPOSITION_SPAN"
@@ -166,9 +155,7 @@ def _group_source_units(
         grouped[str(source["authority_identity_id"])].append(source)
     units: list[dict[str, Any]] = []
     for authority_id, representations in sorted(grouped.items()):
-        representations = sorted(
-            representations, key=lambda item: str(item["source_version_id"])
-        )
+        representations = sorted(representations, key=lambda item: str(item["source_version_id"]))
         later_required = any(
             item.get("subsequent_treatment_check_required") is True
             and item.get("subsequent_treatment_verified") is not True
@@ -191,9 +178,7 @@ def _group_source_units(
             "representation_count": len(representations),
             "source_version_ids": [item["source_version_id"] for item in representations],
             "version_sha256s": [item["version_sha256"] for item in representations],
-            "canonical_urls": sorted(
-                {str(item.get("canonical_url")) for item in representations}
-            ),
+            "canonical_urls": sorted({str(item.get("canonical_url")) for item in representations}),
             "source_dates": sorted(
                 {str(item.get("source_date") or "") for item in representations}
             ),
@@ -217,17 +202,13 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
         raise FileExistsError("remaining-remediation intake output already exists")
 
     receipt_path = BLOCKED_ROOT / "FINAL-DELIVERY-RECEIPT-r2.json"
-    qualification_path = MACHINE_ROOT / (
-        "qualification/DETERMINISTIC-ALL585-QUALIFICATION.json"
-    )
+    qualification_path = MACHINE_ROOT / ("qualification/DETERMINISTIC-ALL585-QUALIFICATION.json")
     crosswalk_path = MACHINE_ROOT / "crosswalk/DETERMINISTIC-EXACT-SPAN-PACKETS-364.json"
     source_manifest_path = MACHINE_ROOT / "candidate/approved-source-manifest.json"
     mismatch_path = MACHINE_ROOT / (
         "registries/COMPLETE-LEGISLATION-BYTE-MISMATCH-REGISTER-65.json"
     )
-    effects_path = MACHINE_ROOT / (
-        "registries/COMPLETE-LEGISLATIVE-EFFECT-REGISTER-1896.json"
-    )
+    effects_path = MACHINE_ROOT / ("registries/COMPLETE-LEGISLATIVE-EFFECT-REGISTER-1896.json")
     legacy_later_path = MACHINE_ROOT / (
         "registries/COMPLETE-JUDGMENT-LATER-TREATMENT-REGISTER-20.json"
     )
@@ -251,8 +232,7 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
 
     receipt = _load_object(receipt_path)
     if (
-        receipt.get("final_delivery_content_sha256")
-        != EXPECTED_BLOCKED_DELIVERY_SHA256
+        receipt.get("final_delivery_content_sha256") != EXPECTED_BLOCKED_DELIVERY_SHA256
         or receipt.get("phase2a_technical_qualification_passed") is not False
         or receipt.get("phase2b_authorized") is not False
     ):
@@ -271,17 +251,14 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
     pending_ids = {
         row_id
         for row_id, row in qualification_rows.items()
-        if row["qualification_status"]
-        in {"OWNER_DECISION_REQUIRED", "BLOCKED_MATERIAL_GAP"}
+        if row["qualification_status"] in {"OWNER_DECISION_REQUIRED", "BLOCKED_MATERIAL_GAP"}
     }
     if len(pending_ids) != 361 or not pending_ids.issubset(crosswalk_rows):
         raise ValueError("remaining issue queue does not bind to the exact crosswalk")
 
     issue_queue = [
         _issue_queue_record(qualification_rows[row_id], crosswalk_rows[row_id])
-        for row_id in sorted(
-            pending_ids, key=lambda item: int(qualification_rows[item]["ordinal"])
-        )
+        for row_id in sorted(pending_ids, key=lambda item: int(qualification_rows[item]["ordinal"]))
     ]
     candidate_rows_by_authority: dict[str, set[str]] = defaultdict(set)
     for row in issue_queue:
@@ -314,12 +291,8 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
     mismatch_queue = [
         {
             "ordinal": row.get("ordinal"),
-            "source_version_id": row.get("byte_mismatch_record", {}).get(
-                "source_version_id"
-            ),
-            "authority_identity_id": row.get("byte_mismatch_record", {}).get(
-                "authority_identity"
-            ),
+            "source_version_id": row.get("byte_mismatch_record", {}).get("source_version_id"),
+            "authority_identity_id": row.get("byte_mismatch_record", {}).get("authority_identity"),
             "title": row.get("byte_mismatch_record", {}).get("title"),
             "classification": row.get("byte_mismatch_record", {})
             .get("comparison", {})
@@ -346,17 +319,11 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
         {
             "ordinal": row.get("ordinal"),
             "effect_id": row.get("effect_record", {}).get("effect_id"),
-            "authority_identity_id": row.get("effect_record", {}).get(
-                "authority_identity"
-            ),
-            "affected_provisions": row.get("effect_record", {}).get(
-                "affected_provisions"
-            ),
+            "authority_identity_id": row.get("effect_record", {}).get("authority_identity"),
+            "affected_provisions": row.get("effect_record", {}).get("affected_provisions"),
             "affecting_uri": row.get("effect_record", {}).get("affecting_uri"),
             "disposition": row.get("effect_record", {}).get("disposition"),
-            "blocks_common_cutoff": row.get("effect_record", {}).get(
-                "blocks_common_cutoff"
-            ),
+            "blocks_common_cutoff": row.get("effect_record", {}).get("blocks_common_cutoff"),
             "advisory_recommendation": row.get("advisory_recommendation"),
             "record_content_sha256": row.get("record_content_sha256"),
         }
@@ -408,9 +375,7 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
             "pending_legislative_effect_records": effect_queue,
             "pending_legislation_representation_mismatch_count": len(mismatch_queue),
             "pending_legislation_representation_mismatch_records": mismatch_queue,
-            "legacy_judgment_later_treatment_subset_count": len(
-                legacy_later_records
-            ),
+            "legacy_judgment_later_treatment_subset_count": len(legacy_later_records),
             "legacy_judgment_later_treatment_subset_sha256s": [
                 row.get("record_content_sha256") for row in legacy_later_records
             ],
@@ -420,9 +385,9 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
                 "code": "CANDIDATE_IDENTITY_FIELD_NAMES_BIND_SEAL_NOT_MANIFEST",
                 "actual_candidate_manifest_file_sha256": actual_candidate_manifest_file_sha,
                 "actual_candidate_seal_file_sha256": actual_candidate_seal_file_sha,
-                "final_candidate_identity_candidate_manifest_hash": qualification
-                .get("candidate_identity", {})
-                .get("candidate_manifest_hash"),
+                "final_candidate_identity_candidate_manifest_hash": qualification.get(
+                    "candidate_identity", {}
+                ).get("candidate_manifest_hash"),
                 "repair_required_before_successful_delivery": True,
             },
             {
@@ -463,9 +428,7 @@ def build_intake(*, output_root: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
             "phase2b_authorized": False,
             "development30_authorized": False,
         },
-        "next_gate": (
-            "EXACT_DIGEST_BOUND_OWNER_DECISIONS_AND_ANY_NEW_SOURCE_ADMISSIONS"
-        ),
+        "next_gate": ("EXACT_DIGEST_BOUND_OWNER_DECISIONS_AND_ANY_NEW_SOURCE_ADMISSIONS"),
         "status": "REMAINING_REMEDIATION_INTAKE_READY_NON_AUTHORIZING",
     }
     intake = _sealed(intake, field="artifact_content_sha256")
@@ -509,15 +472,13 @@ def main() -> None:
     intake = build_intake()
     summary = {
         "artifact_content_sha256": intake["artifact_content_sha256"],
-        "remaining_issue_work_count": intake["issue_scope"][
-            "remaining_issue_work_count"
-        ],
+        "remaining_issue_work_count": intake["issue_scope"]["remaining_issue_work_count"],
         "deduplicated_currentness_authority_count": intake["source_scope"][
             "deduplicated_currentness_authority_count"
         ],
-        "pending_legislative_effect_count": intake[
-            "policy_and_representation_scope"
-        ]["pending_legislative_effect_count"],
+        "pending_legislative_effect_count": intake["policy_and_representation_scope"][
+            "pending_legislative_effect_count"
+        ],
         "pending_legislation_representation_mismatch_count": intake[
             "policy_and_representation_scope"
         ]["pending_legislation_representation_mismatch_count"],

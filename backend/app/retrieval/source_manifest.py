@@ -347,23 +347,23 @@ def select_approved_authority_rows(
     preferred_small_first: bool = False,
 ) -> list[dict[str, Any]]:
     if is_phase2a_frozen_scope_corpus(corpus_id):
-        rows, _scope = select_phase2a_frozen_scope_rows(
+        frozen_rows, _scope = select_phase2a_frozen_scope_rows(
             database,
             settings,
             corpus_id=str(corpus_id),
             max_chunks=max_chunks,
             preferred_small_first=preferred_small_first,
         )
-        return rows
+        return frozen_rows
     if is_dynamic_phase2a_scope_corpus(corpus_id):
-        rows, _scope = select_dynamic_phase2a_scope_rows(
+        dynamic_rows, _scope = select_dynamic_phase2a_scope_rows(
             database,
             settings,
             corpus_id=str(corpus_id),
             max_chunks=max_chunks,
             preferred_small_first=preferred_small_first,
         )
-        return rows
+        return dynamic_rows
     packs = load_pack_identities(settings, corpus_id=corpus_id)
     wanted = _wanted_identifiers(packs, corpus_id=corpus_id)
     slice_mode = is_current_law_slice_corpus(corpus_id)

@@ -24,8 +24,7 @@ R110_PATH = R110_ROOT / "DETERMINISTIC-SOURCE-CURRENTNESS-RECONCILIATION-26.json
 R110_CONTENT_SHA256 = "cffacc05bf449daa5071445531dbb1d8a2e3f98238288b38c6ae8831375299a3"
 R110_FILE_SHA256 = "d28ecd4cb9597382a5c82ca54ac7ced8747ff859bd5958c2949795b4bbd4329c"
 DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r111-source-currentness-owner-batch"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r111-source-currentness-owner-batch"
 )
 BATCH_NAME = "OWNER-SOURCE-CURRENTNESS-DECISION-BATCH.json"
 PROMPT_NAME = "OWNER-APPROVAL-PROMPT.txt"
@@ -51,15 +50,12 @@ _BOUNDARY_FIELDS = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -129,16 +125,11 @@ def _mapping_decision(row: Mapping[str, Any]) -> dict[str, Any]:
         "recommended_owner_outcome": row["recommended_owner_outcome"],
         "deterministic_reason_code": row["deterministic_reason_code"],
         "deterministic_rationale": row["deterministic_rationale"],
-        "replacement_authority_identity_ids": row[
-            "replacement_authority_identity_ids"
-        ],
+        "replacement_authority_identity_ids": row["replacement_authority_identity_ids"],
         "exact_proposition_bindings": [
-            _sealed_binding(binding)
-            for binding in row["exact_proposition_bindings"]
+            _sealed_binding(binding) for binding in row["exact_proposition_bindings"]
         ],
-        "same_adapter_advisory_assessment": row[
-            "same_adapter_advisory_assessment"
-        ],
+        "same_adapter_advisory_assessment": row["same_adapter_advisory_assessment"],
         "same_adapter_false_negative": row["same_adapter_false_negative"],
         "source_record_content_sha256": row["record_content_sha256"],
         "owner_decision_required": True,
@@ -168,8 +159,7 @@ def _source_admission_decision(proposal: Mapping[str, Any]) -> dict[str, Any]:
         "proposed_candidate_use": proposal["proposed_candidate_use"],
         "currentness_status": proposal["currentness_status"],
         "exact_proposition_bindings": [
-            _sealed_binding(binding)
-            for binding in proposal["exact_proposition_bindings"]
+            _sealed_binding(binding) for binding in proposal["exact_proposition_bindings"]
         ],
         "recommended_owner_outcome": (
             "APPROVE_PROPOSITION_LEVEL_SOURCE_ADMISSION_FOR_CONTINUED_PHASE2A"
@@ -204,11 +194,7 @@ def build(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
     if tuple(row["authority_identity_id"] for row in source_decisions) != SOURCE_IDS:
         raise ValueError("phase2a_r111_source_identity_inventory_invalid")
     outcome_counts = dict(
-        sorted(
-            Counter(
-                row["recommended_owner_outcome"] for row in mapping_decisions
-            ).items()
-        )
+        sorted(Counter(row["recommended_owner_outcome"] for row in mapping_decisions).items())
     )
     if outcome_counts != r110["recommendation_counts"]:
         raise ValueError("phase2a_r111_mapping_count_mismatch")
@@ -245,9 +231,7 @@ def build(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
             "mapping_recommendation_counts": outcome_counts,
             "proposition_level_source_admission_count": len(source_decisions),
             "currentness_metadata_only_decision_count": 1,
-            "same_adapter_false_negative_count": r110[
-                "same_adapter_false_negative_count"
-            ],
+            "same_adapter_false_negative_count": r110["same_adapter_false_negative_count"],
         },
         "mapping_decisions": mapping_decisions,
         "source_admission_decisions": source_decisions,
@@ -328,9 +312,7 @@ Decision date: 2026-08-26
         "status": batch["status"],
         "owner_batch_content_sha256": digest,
         "owner_batch_file_sha256": _sha256_file(batch_path),
-        "owner_approval_prompt_file_sha256": _sha256_file(
-            output_root / PROMPT_NAME
-        ),
+        "owner_approval_prompt_file_sha256": _sha256_file(output_root / PROMPT_NAME),
         "outcome_file_sha256": _sha256_file(output_root / "OUTCOME.txt"),
         "owner_approved": False,
         "source_admission_authorized": False,
@@ -348,9 +330,7 @@ Decision date: 2026-08-26
         for path in output_root.iterdir()
         if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in names
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in names)
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return batch
 

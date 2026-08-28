@@ -28,8 +28,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -104,9 +103,7 @@ def build_proposal(
 
     historical = _load_json(historical_path)
     historical_records = historical.get("records")
-    if historical.get("schema") != HISTORICAL_SCHEMA or not isinstance(
-        historical_records, list
-    ):
+    if historical.get("schema") != HISTORICAL_SCHEMA or not isinstance(historical_records, list):
         raise ValueError("phase2a_48_owner_proposal_historical_invalid")
     historical_by_row = {
         str(record.get("issue_key") or ""): record

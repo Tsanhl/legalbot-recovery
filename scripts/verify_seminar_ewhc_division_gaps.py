@@ -16,9 +16,7 @@ from app.ingestion.models import BlockKind, ParseStatus
 from app.ingestion.parsers import ParserRegistry
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MANIFEST = (
-    PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
-)
+DEFAULT_MANIFEST = PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
 DEFAULT_SOURCE_ROOT = Path("/Users/hltsang/Desktop/Law")
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_OUTPUT = (
@@ -80,16 +78,12 @@ def _xml_identity(raw: bytes) -> tuple[str, str, str]:
     )
 
 
-def verify(
-    *, manifest_path: Path, source_root: Path, catalogue_path: Path
-) -> dict[str, Any]:
+def verify(*, manifest_path: Path, source_root: Path, catalogue_path: Path) -> dict[str, Any]:
     manifest = _load(manifest_path)
     if manifest.get("schema") != EXPECTED_SCHEMA:
         raise ValueError("ewhc_verification_manifest_schema_invalid")
     source_root = source_root.resolve(strict=True)
-    connection = sqlite3.connect(
-        f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True
-    )
+    connection = sqlite3.connect(f"file:{catalogue_path.resolve()}?mode=ro&immutable=1", uri=True)
     connection.row_factory = sqlite3.Row
     parser = ParserRegistry.default()
     records: list[dict[str, Any]] = []
@@ -99,9 +93,7 @@ def verify(
         ).fetchone():
             raise ValueError("ewhc_verification_requires_no_active_source_scan")
         for target in manifest["targets"]:
-            path = (source_root / str(target["source_root_relative_path"])).resolve(
-                strict=True
-            )
+            path = (source_root / str(target["source_root_relative_path"])).resolve(strict=True)
             path.relative_to(source_root)
             raw = path.read_bytes()
             title, citation, uri = _xml_identity(raw)
@@ -148,8 +140,7 @@ def verify(
                 and int(row["empty_chunk_count"] or 0) == 0
                 and int(row["path_leak_chunk_count"] or 0) == 0,
                 "file_byte_count_exact": len(raw) == int(target["byte_count"]),
-                "file_hash_exact": hashlib.sha256(raw).hexdigest()
-                == target["content_sha256"],
+                "file_hash_exact": hashlib.sha256(raw).hexdigest() == target["content_sha256"],
                 "official_xml_title_exact": title == target["source_title"],
                 "official_xml_citation_exact": citation == target["authority_identity"],
                 "official_xml_uri_exact": uri == expected_uri,
@@ -202,9 +193,9 @@ def verify(
         "active_pointer_written": False,
         "live_activation_authorized": False,
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     return report
 

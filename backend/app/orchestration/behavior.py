@@ -204,9 +204,7 @@ def route_behavior(signals: BehaviorSignals) -> BehaviorDecision:
             False,
             ReleaseState.HELD_FOR_REVIEW,
             "The calibrated retrieval relevance policy is not frozen, so no answer model was invoked.",
-            (
-                "relevance_threshold_policy_not_frozen: retrieval may not supply answer evidence.",
-            ),
+            ("relevance_threshold_policy_not_frozen: retrieval may not supply answer evidence.",),
         )
     if signals.retrieval_failure_code == "no_threshold_qualified_evidence":
         return BehaviorDecision(

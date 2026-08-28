@@ -16,55 +16,46 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r94-consolidated-substantive-owner-batch"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r94-consolidated-substantive-owner-batch"
 )
 SOURCES: dict[str, tuple[Path, str]] = {
     "patents_delta": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r53-patents-s60-7-advisory/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r53-patents-s60-7-advisory/"
         "PATENTS-ACT-1977-S60-7-EXACT-DELTA-ADVISORY.json",
         "574e8bfd80955116e5c4eabda2171ba3d37eb8a8b6802a539dc9e0ea25247ae9",
     ),
     "judgments": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r59-consolidated-judgment-advisory/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r59-consolidated-judgment-advisory/"
         "CONSOLIDATED-JUDGMENT-ADVISORY-20-AND-SOURCE-PROPOSALS-9.json",
         "5f851f18c26107f4fb95f85481137dc307ac057df176f7a303c1b5fbeac336c5",
     ),
     "issues": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r70-complete-issue-advisory-448/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r70-complete-issue-advisory-448/"
         "COMPLETE-ISSUE-ADVISORY-448.json",
         "a022848094a5e4ef27f97b6c245c992f1d311509163d084ecc7ed3aa021def58",
     ),
     "xml_mismatch": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r79-xml-byte-mismatch-reconciliation/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r79-xml-byte-mismatch-reconciliation/"
         "XML-BYTE-MISMATCH-RECONCILIATION.json",
         "921e40c1876748c947918bb6a4f4563d502a4871fdfc8463a7316a63b755e190",
     ),
     "supplemental_material": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r83-supplemental-proposition-verification/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r83-supplemental-proposition-verification/"
         "OWNER-SOURCE-ADMISSION-BATCH.json",
         "5410b7888ac72224a0828d43d0ddbc36768a636ea54ecb1687e576958108b28d",
     ),
     "procurement_currentness": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r84-procurement-currentness-verification/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r84-procurement-currentness-verification/"
         "OWNER-SOURCE-ADMISSION-BATCH.json",
         "1f33e04ef9ea7d39c15fba16bd2c10b1f5e7e40af008eb3180fc4d37ca03a10f",
     ),
     "as_made_currentness": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r85-as-made-currentness-verification/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r85-as-made-currentness-verification/"
         "OWNER-SOURCE-ADMISSION-BATCH.json",
         "0ead28488b0fa6fc8c18cdfe532092b0ce397613361426b1991cbfe66ceb9fb6",
     ),
     "uksc_rehoming": (
-        REVIEW_ROOT
-        / "LegalBot-Phase2AB-2026-08-25-r86-issue-source-rehoming-review/"
+        REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r86-issue-source-rehoming-review/"
         "OWNER-ISSUE-SOURCE-ADMISSION-BATCH.json",
         "623836f3882d6c921920adb8af32bb8bd9cf3836bfb9ed20cdd4095fc627d9b3",
     ),
@@ -74,8 +65,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -182,8 +172,7 @@ def build(*, output_root: Path) -> dict[str, Any]:
     positive_findings = [
         row
         for row in findings
-        if row.get("assessment")
-        in {"DIRECT_EXACT_SPAN_ADVISORY", "PARTIAL_EXACT_SPAN_ADVISORY"}
+        if row.get("assessment") in {"DIRECT_EXACT_SPAN_ADVISORY", "PARTIAL_EXACT_SPAN_ADVISORY"}
     ]
     gap_findings = [row for row in findings if row.get("assessment") == "MATERIAL_GAP_ADVISORY"]
     if len(positive_findings) != 84 or len(gap_findings) != 364:
@@ -254,8 +243,16 @@ def build(*, output_root: Path) -> dict[str, Any]:
     ):
         batch = artifacts[name]
         proposals = batch.get("proposals")
-        expected_count = {"supplemental_material": 10, "procurement_currentness": 1, "as_made_currentness": 2}[name]
-        if batch.get("proposal_count") != expected_count or not isinstance(proposals, list) or len(proposals) != expected_count:
+        expected_count = {
+            "supplemental_material": 10,
+            "procurement_currentness": 1,
+            "as_made_currentness": 2,
+        }[name]
+        if (
+            batch.get("proposal_count") != expected_count
+            or not isinstance(proposals, list)
+            or len(proposals) != expected_count
+        ):
             raise ValueError(f"phase2a_consolidated_batch_{name}_inventory_invalid")
         for proposal in proposals:
             admission_required = proposal.get("owner_source_admission_required") is True
@@ -273,7 +270,9 @@ def build(*, output_root: Path) -> dict[str, Any]:
                 "recommended_owner_outcome": proposal["advisory_recommendation"],
                 "owner_outcome": None,
             }
-            supplemental_decisions.append({**material, "decision_content_sha256": _sealed(material)})
+            supplemental_decisions.append(
+                {**material, "decision_content_sha256": _sealed(material)}
+            )
     if len(supplemental_admission_source_ids) != 7:
         raise ValueError("phase2a_consolidated_batch_supplemental_source_count_invalid")
 
@@ -320,7 +319,9 @@ def build(*, output_root: Path) -> dict[str, Any]:
     if not str(patents.get("advisory_recommendation") or "").startswith("DEFER_OWNER_OUTCOME"):
         raise ValueError("phase2a_consolidated_batch_patents_disposition_invalid")
 
-    source_admission_count = len(judgment_admissions) + len(supplemental_admission_source_ids) + len(uksc_admission_ids)
+    source_admission_count = (
+        len(judgment_admissions) + len(supplemental_admission_source_ids) + len(uksc_admission_ids)
+    )
     if source_admission_count != 20:
         raise ValueError("phase2a_consolidated_batch_total_source_admission_count_invalid")
 
@@ -428,7 +429,9 @@ Decision date: 2026-08-25
         "status": batch["status"],
         "owner_batch_content_sha256": digest,
         "owner_batch_file_sha256": _sha256_file(batch_path),
-        "owner_approval_prompt_file_sha256": _sha256_file(output_root / "OWNER-APPROVAL-PROMPT.txt"),
+        "owner_approval_prompt_file_sha256": _sha256_file(
+            output_root / "OWNER-APPROVAL-PROMPT.txt"
+        ),
         "owner_approved": False,
         "source_admission_authorized": False,
         "candidate_mutated": False,
@@ -470,7 +473,9 @@ def _persist_failure(output_root: Path, exc: BaseException) -> None:
             "phase2b_authorized": False,
             "development30_authorized": False,
         }
-        _write_exclusive(path, _pretty_json({**material, "failure_content_sha256": _sealed(material)}))
+        _write_exclusive(
+            path, _pretty_json({**material, "failure_content_sha256": _sealed(material)})
+        )
     except Exception:
         return
 

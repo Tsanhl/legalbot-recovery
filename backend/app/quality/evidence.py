@@ -60,8 +60,12 @@ _MONTHS = {
 }
 _MONTH_PATTERN = "|".join(_MONTHS)
 _DATE_PATTERNS = (
-    re.compile(r"\b(?P<year>(?:19|20)\d{2})-(?P<month>0?[1-9]|1[0-2])-(?P<day>0?[1-9]|[12]\d|3[01])\b"),
-    re.compile(r"\b(?P<day>0?[1-9]|[12]\d|3[01])/(?P<month>0?[1-9]|1[0-2])/(?P<year>(?:19|20)\d{2})\b"),
+    re.compile(
+        r"\b(?P<year>(?:19|20)\d{2})-(?P<month>0?[1-9]|1[0-2])-(?P<day>0?[1-9]|[12]\d|3[01])\b"
+    ),
+    re.compile(
+        r"\b(?P<day>0?[1-9]|[12]\d|3[01])/(?P<month>0?[1-9]|1[0-2])/(?P<year>(?:19|20)\d{2})\b"
+    ),
     re.compile(
         rf"\b(?P<day>0?[1-9]|[12]\d|3[01])\s+(?P<month_name>{_MONTH_PATTERN})\s+(?P<year>(?:19|20)\d{{2}})\b",
         re.IGNORECASE,
@@ -98,9 +102,7 @@ _PROVISION_ATOM = (
     r"(?:\d+[A-Za-z]?(?:\.\d+)*(?:\([0-9A-Za-z]+\))*|"
     r"\([0-9A-Za-z]+\)(?:\([0-9A-Za-z]+\))*)"
 )
-_PROVISION_RANGE = (
-    rf"{_PROVISION_ATOM}(?:\s*(?:-|–|—|to)\s*{_PROVISION_ATOM})?"
-)
+_PROVISION_RANGE = rf"{_PROVISION_ATOM}(?:\s*(?:-|–|—|to)\s*{_PROVISION_ATOM})?"
 _PROVISION_SERIES_RE = re.compile(
     r"(?<![A-Za-z0-9])"
     rf"(?P<label>{_PROVISION_LABEL})"
@@ -294,22 +296,18 @@ def non_atomic_material_claim_reasons(text: str) -> tuple[str, ...]:
         reasons.append("multiple_sentences")
     if ";" in text:
         reasons.append("semicolon_joined_propositions")
-    for match in re.finditer(
-        r"\b(?:and|or|but|whereas|while|however)\b", text, re.IGNORECASE
-    ):
+    for match in re.finditer(r"\b(?:and|or|but|whereas|while|however)\b", text, re.IGNORECASE):
         left = text[: match.start()]
         right = text[match.end() :]
         if (
             _CLAUSE_PREDICATE_RE.search(left)
             and _CLAUSE_PREDICATE_RE.search(right)
-            and (
-                _EXPLICIT_SUBJECT_RE.search(right)
-                or _CLAUSE_PREDICATE_RE.match(right.lstrip())
-            )
+            and (_EXPLICIT_SUBJECT_RE.search(right) or _CLAUSE_PREDICATE_RE.match(right.lstrip()))
         ):
             reasons.append("coordinated_independent_clauses")
             break
     return tuple(dict.fromkeys(reasons))
+
 
 # Removing generic prose terms prevents a draft from laundering an unrelated
 # span merely by repeating words such as "analysis", "law" or "evidence".

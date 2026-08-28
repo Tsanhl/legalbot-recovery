@@ -28,21 +28,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 CATALOGUE_PATH = PROJECT_ROOT / "data/catalog.sqlite3"
 TARGET_SOURCE_ROOT = PROJECT_ROOT / "sources/phase2a-approved-2026-08-27"
-OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-consolidated-source-staging"
-)
+OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-consolidated-source-staging"
 
-SEMINAR_PACKET_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
-)
+SEMINAR_PACKET_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
 SEMINAR_BATCH_PATH = SEMINAR_PACKET_ROOT / "SEMINAR-SOURCE-OWNER-DECISION-BATCH.json"
 SEMINAR_PAYLOAD_PATH = SEMINAR_PACKET_ROOT / "OWNER-APPROVAL-PAYLOAD.json"
-SEMINAR_APPROVAL_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-approved"
-)
-CROSSWALK_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-deterministic-exact-span-crosswalk-r2"
-)
+SEMINAR_APPROVAL_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-approved"
+CROSSWALK_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-deterministic-exact-span-crosswalk-r2"
 CROSSWALK_PATH = CROSSWALK_ROOT / "APPROVED-142-SOURCE-CROSSWALK.json"
 CROSSWALK_PACKAGE_PATH = CROSSWALK_ROOT / "PACKAGE-INDEX.json"
 CUMULATIVE_25_PATH = (
@@ -82,40 +74,26 @@ R111_PATH = (
 )
 QUARANTINE_ROOT = PROJECT_ROOT / "data/quarantine"
 
-EXPECTED_SEMINAR_PAYLOAD_DIGEST = (
-    "20e21e43aefc6348db5344782ddc3ab9d41a05c2c19aeb24b58a3fcd02371c73"
-)
-EXPECTED_SEMINAR_BATCH_DIGEST = (
-    "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
-)
+EXPECTED_SEMINAR_PAYLOAD_DIGEST = "20e21e43aefc6348db5344782ddc3ab9d41a05c2c19aeb24b58a3fcd02371c73"
+EXPECTED_SEMINAR_BATCH_DIGEST = "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
 EXPECTED_SEMINAR_APPROVAL_RECEIPT_DIGEST = (
     "878a1d2582a07c40dda7b5311aa22970885f78437e5f3d39109e667b9a6be7f9"
 )
 EXPECTED_CROSSWALK_PACKAGE_DIGEST = (
     "80f666c6dae4f323778eff0924d4b4894cc960d6484b2ee57edea08592f527ba"
 )
-EXPECTED_CROSSWALK_DIGEST = (
-    "0994b3be171601055d26f9bee7c275aaa5291538d4da1e3fdfdef084be13011b"
-)
-EXPECTED_CUMULATIVE_25_DIGEST = (
-    "667fa9cb36188740fa28b0d4e0970ec71c82dcb123505f07584ea678bae9c32d"
-)
+EXPECTED_CROSSWALK_DIGEST = "0994b3be171601055d26f9bee7c275aaa5291538d4da1e3fdfdef084be13011b"
+EXPECTED_CUMULATIVE_25_DIGEST = "667fa9cb36188740fa28b0d4e0970ec71c82dcb123505f07584ea678bae9c32d"
 EXPECTED_SCAN_ID = "1670d95fd8629a80-r1"
-EXPECTED_SCAN_MANIFEST_SHA256 = (
-    "034320999a3180d0bdd7eede82b8d969a6305bf79fee00cef058d986beccd257"
-)
+EXPECTED_SCAN_MANIFEST_SHA256 = "034320999a3180d0bdd7eede82b8d969a6305bf79fee00cef058d986beccd257"
 EXPECTED_SEMINAR_COUNT = 142
 EXPECTED_PRIOR_COUNT = 25
 EXPECTED_OVERLAP_COUNT = 1
 EXPECTED_CONSOLIDATED_COUNT = 166
 EXPECTED_FAMILY_COUNTS = {"official_judgment": 115, "legislation": 51}
 NAMED_PRIOR_SOURCE_IDENTITIES = {
-    "currentness-data-use-access-act-commencement-no-6-2026-as-made": (
-        "uksi:2026:82"
-    ),
-    "currentness-mental-capacity-act-commencement-no-2-2007-as-made": (
-        "uksi:2007:1897"
-    ),
+    "currentness-data-use-access-act-commencement-no-6-2026-as-made": ("uksi:2026:82"),
+    "currentness-mental-capacity-act-commencement-no-2-2007-as-made": ("uksi:2007:1897"),
     "currentness-procurement-act-commencement-no-3-2024": "uksi:2024:716",
     "supplemental-carriage-of-goods-by-sea-act-1992": "ukpga:1992:50",
     "supplemental-data-use-and-access-act-2025": "ukpga:2025:18",
@@ -147,9 +125,7 @@ def _canonical_json(value: Any, *, newline: bool = True) -> bytes:
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256_bytes(raw: bytes) -> str:
@@ -164,9 +140,7 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _sealed(
-    value: Mapping[str, Any], field_name: str, *, newline: bool = True
-) -> str:
+def _sealed(value: Mapping[str, Any], field_name: str, *, newline: bool = True) -> str:
     material = dict(value)
     supplied = str(material.pop(field_name, ""))
     if not _SHA256.fullmatch(supplied) or supplied != _sha256_bytes(
@@ -262,19 +236,14 @@ def _load_142_specs(connection: sqlite3.Connection) -> list[SourceSpec]:
             newline=False,
         )
         != EXPECTED_SEMINAR_APPROVAL_RECEIPT_DIGEST
-        or approval.get("owner_approval_payload_content_sha256")
-        != EXPECTED_SEMINAR_PAYLOAD_DIGEST
-        or approval.get("owner_decision_batch_content_sha256")
-        != EXPECTED_SEMINAR_BATCH_DIGEST
+        or approval.get("owner_approval_payload_content_sha256") != EXPECTED_SEMINAR_PAYLOAD_DIGEST
+        or approval.get("owner_decision_batch_content_sha256") != EXPECTED_SEMINAR_BATCH_DIGEST
         or approval.get("source_admission_authorized") is not True
         or approval.get("one_consolidated_full_source_scan_authorized") is not True
-        or approval.get("one_consolidated_successor_candidate_build_authorized")
-        is not True
+        or approval.get("one_consolidated_successor_candidate_build_authorized") is not True
         or approval.get("embedding_in_consolidated_successor_authorized") is not True
-        or approval.get("reuse_overlapping_staged_bytes_and_chunks_required")
-        is not True
-        or approval.get("canonical_identity_and_content_sha_crosswalk_required")
-        is not True
+        or approval.get("reuse_overlapping_staged_bytes_and_chunks_required") is not True
+        or approval.get("canonical_identity_and_content_sha_crosswalk_required") is not True
         or approval.get("currentness_and_later_treatment_holds_retained") is not True
         or approval.get("exclusions_retained") is not True
         or approval.get("answer_release_eligible") is not False
@@ -291,15 +260,11 @@ def _load_142_specs(connection: sqlite3.Connection) -> list[SourceSpec]:
     ):
         raise ValueError("seminar owner approval boundary changed")
     crosswalk_package = _load_object(CROSSWALK_PACKAGE_PATH)
-    if (
-        _sealed(crosswalk_package, "package_content_sha256")
-        != EXPECTED_CROSSWALK_PACKAGE_DIGEST
-    ):
+    if _sealed(crosswalk_package, "package_content_sha256") != EXPECTED_CROSSWALK_PACKAGE_DIGEST:
         raise ValueError("deterministic crosswalk package changed")
     crosswalk = _load_object(CROSSWALK_PATH)
     if (
-        _sealed(crosswalk, "artifact_content_sha256")
-        != EXPECTED_CROSSWALK_DIGEST
+        _sealed(crosswalk, "artifact_content_sha256") != EXPECTED_CROSSWALK_DIGEST
         or crosswalk.get("source_count") != EXPECTED_SEMINAR_COUNT
         or crosswalk.get("all_packet_exclusions_retained") is not True
         or crosswalk.get("currentness_and_later_treatment_holds_retained") is not True
@@ -456,10 +421,7 @@ def _prior_source_inputs() -> dict[str, SourceSpec]:
     }
     expected_hashes = {
         str(item.get("official_file_sha256") or "") for item in supplemental.values()
-    } | {
-        str(item.get("source_representation_sha256") or "")
-        for item in r111_sources.values()
-    }
+    } | {str(item.get("source_representation_sha256") or "") for item in r111_sources.values()}
     if any(not _SHA256.fullmatch(value) for value in expected_hashes):
         raise ValueError("approved source representation hash is invalid")
     located = _hash_index(expected_hashes)
@@ -526,8 +488,7 @@ def _prior_source_inputs() -> dict[str, SourceSpec]:
 def _load_prior_25_specs() -> list[SourceSpec]:
     cumulative = _load_object(CUMULATIVE_25_PATH)
     if (
-        _sealed(cumulative, "artifact_content_sha256")
-        != EXPECTED_CUMULATIVE_25_DIGEST
+        _sealed(cumulative, "artifact_content_sha256") != EXPECTED_CUMULATIVE_25_DIGEST
         or cumulative.get("record_count") != EXPECTED_PRIOR_COUNT
         or cumulative.get("automatic_indexing") is not False
         or cumulative.get("automatic_embedding") is not False
@@ -583,9 +544,7 @@ def _merge_specs(specs: list[SourceSpec]) -> tuple[list[SourceSpec], int]:
         if existing.content_sha256 != spec.content_sha256:
             raise ValueError("owner-approved authority has conflicting source bytes")
         overlap_count += 1
-        existing.approval_origins = sorted(
-            set(existing.approval_origins + spec.approval_origins)
-        )
+        existing.approval_origins = sorted(set(existing.approval_origins + spec.approval_origins))
         existing.retained_hold_codes.update(spec.retained_hold_codes)
     merged = sorted(
         by_identity.values(), key=lambda item: (item.source_family, item.authority_identity_id)
@@ -616,9 +575,7 @@ def _latest_scan(connection: sqlite3.Connection) -> sqlite3.Row:
     return row
 
 
-def _covered_by_scan(
-    connection: sqlite3.Connection, *, scan_id: str, content_sha256: str
-) -> bool:
+def _covered_by_scan(connection: sqlite3.Connection, *, scan_id: str, content_sha256: str) -> bool:
     row = connection.execute(
         """
         SELECT COUNT(*) AS n FROM source_scan_files
@@ -718,12 +675,8 @@ def build_plan() -> dict[str, Any]:
             "owner_qualification_route": "OWNER_ADOPTED_INTERNAL",
             "seminar_owner_payload_content_sha256": EXPECTED_SEMINAR_PAYLOAD_DIGEST,
             "seminar_owner_decision_batch_content_sha256": EXPECTED_SEMINAR_BATCH_DIGEST,
-            "deterministic_crosswalk_package_content_sha256": (
-                EXPECTED_CROSSWALK_PACKAGE_DIGEST
-            ),
-            "cumulative_prior_source_approval_content_sha256": (
-                EXPECTED_CUMULATIVE_25_DIGEST
-            ),
+            "deterministic_crosswalk_package_content_sha256": (EXPECTED_CROSSWALK_PACKAGE_DIGEST),
+            "cumulative_prior_source_approval_content_sha256": (EXPECTED_CUMULATIVE_25_DIGEST),
             "bound_pre_staging_scan_id": str(scan["id"]),
             "bound_pre_staging_scan_manifest_sha256": str(scan["manifest_sha256"]),
             "seminar_source_count": EXPECTED_SEMINAR_COUNT,
@@ -734,9 +687,7 @@ def build_plan() -> dict[str, Any]:
             "already_scan_covered_count": sum(
                 record["covered_by_bound_scan"] for record in records
             ),
-            "staging_required_count": sum(
-                record["requires_final_scan"] for record in records
-            ),
+            "staging_required_count": sum(record["requires_final_scan"] for record in records),
             "target_source_root": str(TARGET_SOURCE_ROOT.relative_to(PROJECT_ROOT)),
             "records": records,
             "all_packet_exclusions_retained": True,
@@ -792,9 +743,7 @@ def apply_plan(plan: Mapping[str, Any]) -> None:
     inputs = _source_input_by_identity()
     staging_parent = TARGET_SOURCE_ROOT.parent
     staging_parent.mkdir(parents=True, exist_ok=True)
-    temporary = Path(
-        tempfile.mkdtemp(prefix=".phase2a-approved-2026-08-27-", dir=staging_parent)
-    )
+    temporary = Path(tempfile.mkdtemp(prefix=".phase2a-approved-2026-08-27-", dir=staging_parent))
     try:
         for record in plan["records"]:
             relative = record.get("staged_relative_path")
@@ -802,7 +751,9 @@ def apply_plan(plan: Mapping[str, Any]) -> None:
                 continue
             identity = str(record["authority_identity_id"])
             source = inputs[identity]
-            destination = temporary / Path(str(relative)).relative_to(TARGET_SOURCE_ROOT.relative_to(PROJECT_ROOT))
+            destination = temporary / Path(str(relative)).relative_to(
+                TARGET_SOURCE_ROOT.relative_to(PROJECT_ROOT)
+            )
             destination.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             shutil.copyfile(source.input_path, destination, follow_symlinks=False)
             os.chmod(destination, 0o600)
@@ -840,9 +791,7 @@ def apply_plan(plan: Mapping[str, Any]) -> None:
             "phase2b_authorized": False,
             "development30_authorized": False,
         }
-        index_material["package_content_sha256"] = _sha256_bytes(
-            _canonical_json(index_material)
-        )
+        index_material["package_content_sha256"] = _sha256_bytes(_canonical_json(index_material))
         _write_exclusive(OUTPUT_ROOT / "PACKAGE-INDEX.json", _pretty_json(index_material))
         sums = "".join(
             f"{_sha256_file(path)}  {path.name}\n"

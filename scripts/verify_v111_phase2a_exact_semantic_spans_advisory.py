@@ -80,9 +80,7 @@ DEFAULT_OUTPUT = (
     / "LegalBot-Phase2AB-2026-08-25-r67-candidate-bound-exact-semantic-span-advisory"
 )
 VERIFIER_CODE_PATH = Path(__file__).resolve()
-EVIDENCE_VALIDATOR_CODE_PATH = (
-    PROJECT_ROOT / "backend" / "app" / "quality" / "evidence.py"
-)
+EVIDENCE_VALIDATOR_CODE_PATH = PROJECT_ROOT / "backend" / "app" / "quality" / "evidence.py"
 
 EXPECTED_ISSUE_COUNT = 448
 EXPECTED_CANDIDATE_SOURCE_COUNT = 85
@@ -104,8 +102,7 @@ MAX_PEAK_MEMORY_GB = 12.0
 MAX_REVIEW_EVIDENCE_CANDIDATES_PER_ROW = 1
 MAX_REVIEW_WHOLE_CHUNKS_PER_CANDIDATE = 1
 REVIEWER_EXECUTION_MODE = (
-    "separate_advisory_exact_span_verifier_same_model_adapter_as_drafting_"
-    "not_model_independent"
+    "separate_advisory_exact_span_verifier_same_model_adapter_as_drafting_not_model_independent"
 )
 
 SYSTEM_PROMPT = """/no_think
@@ -135,15 +132,12 @@ class SemanticValidationError(ValueError):
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -258,8 +252,7 @@ def _load_inputs(
     records = locator_artifact.get("records")
     held_row_ids: list[str] = []
     if (
-        locator_artifact.get("schema")
-        != "legalbot.v111.phase2a.targeted-global-recovery-448.v7"
+        locator_artifact.get("schema") != "legalbot.v111.phase2a.targeted-global-recovery-448.v7"
         or locator_artifact.get("source_remaining_content_sha256")
         != plans_artifact.get("source_remaining_content_sha256")
         or locator_artifact.get("source_catalogue_file_sha256")
@@ -313,8 +306,7 @@ def _load_inputs(
             raise ValueError("phase2a_semantic_locator_row_identity_invalid")
         selections = record.get("resolved_selections")
         if (
-            record.get("schema")
-            != "legalbot.v111.phase2a.targeted-global-recovery-row.v7"
+            record.get("schema") != "legalbot.v111.phase2a.targeted-global-recovery-row.v7"
             or not isinstance(selections, list)
             or not selections
         ):
@@ -367,13 +359,9 @@ def _semantic_chunk_score(
 ) -> tuple[float, float, int, int]:
     base = targeted_recovery._chunk_score(issue_label, chunk)
     text = " ".join(str(chunk.get("text") or "").casefold().split())
-    linked_rule = (
-        targeted_recovery._token_coverage(
-            issue_label, str(chunk.get("text") or "")
-        )
-        >= 0.5
-        and targeted_recovery._direct_rule_signal(str(chunk.get("text") or ""))
-    )
+    linked_rule = targeted_recovery._token_coverage(
+        issue_label, str(chunk.get("text") or "")
+    ) >= 0.5 and targeted_recovery._direct_rule_signal(str(chunk.get("text") or ""))
     scope_or_commencement_only = any(
         marker in text
         for marker in (
@@ -384,7 +372,9 @@ def _semantic_chunk_score(
             "before the commencement of this act",
         )
     )
-    direct_weight = 20.0 if linked_rule and not scope_or_commencement_only else 5.0 if linked_rule else 0.0
+    direct_weight = (
+        20.0 if linked_rule and not scope_or_commencement_only else 5.0 if linked_rule else 0.0
+    )
     return (direct_weight, *base)
 
 
@@ -521,9 +511,7 @@ def _review_row(
         source_version_id = str(source.get("id") or "")
         admitted_candidate = candidate_sources.get(source_version_id)
         already_in_candidate = (
-            metadata.get("already_in_sealed_candidate")
-            if isinstance(metadata, dict)
-            else None
+            metadata.get("already_in_sealed_candidate") if isinstance(metadata, dict) else None
         )
         if admitted_candidate is None:
             continue
@@ -540,8 +528,7 @@ def _review_row(
             != str(admitted_candidate.get("stable_identifier") or "")
             or str(source.get("canonical_url") or "")
             != str(admitted_candidate.get("canonical_url") or "")
-            or str(source.get("lane") or "")
-            != str(admitted_candidate.get("lane") or "")
+            or str(source.get("lane") or "") != str(admitted_candidate.get("lane") or "")
             or str(source.get("document_status") or "")
             != str(admitted_candidate.get("document_status") or "")
         ):
@@ -549,53 +536,42 @@ def _review_row(
         label_linked_rule = targeted_recovery._label_linked_direct_rule(
             issue_label, verified_chunks
         )
-        candidate_material = (
-            {
-                "authority_identity_id": str(selection.get("authority_identity_id") or ""),
-                "source_version_id": str(source.get("id") or ""),
-                "title": str(source.get("title") or ""),
-                "canonical_url": str(source.get("canonical_url") or ""),
-                "as_of_date": source.get("as_of_date"),
-                "currentness_status": source.get("currentness_status"),
-                "locator_hint": str(selection.get("locator_hint") or ""),
-                "candidate_source_metadata": {
-                    key: metadata.get(key)
-                    for key in (
-                        "already_in_sealed_candidate",
-                        "canonical_citation",
-                        "currentness_verified",
-                        "later_treatment_review_required",
-                        "combined_advisory_score",
-                    )
-                    if isinstance(metadata, dict) and key in metadata
-                },
-                "selection_origin": selection.get("selection_origin"),
-                "projection_integrity": {
-                    "whole_chunks_only": selection.get("whole_chunks_only"),
-                    "silent_text_truncation": selection.get(
-                        "silent_text_truncation"
-                    ),
-                    "complete_locator_result_used": selection.get(
-                        "complete_locator_result_used"
-                    ),
-                    "omitted_chunk_count": selection.get("omitted_chunk_count"),
-                    "omitted_chunk_identities_sha256": selection.get(
-                        "omitted_chunk_identities_sha256"
-                    ),
-                    "selection_content_sha256": selection.get(
-                        "selection_content_sha256"
-                    ),
-                },
-                "chunks": verified_chunks,
-            }
-        )
+        candidate_material = {
+            "authority_identity_id": str(selection.get("authority_identity_id") or ""),
+            "source_version_id": str(source.get("id") or ""),
+            "title": str(source.get("title") or ""),
+            "canonical_url": str(source.get("canonical_url") or ""),
+            "as_of_date": source.get("as_of_date"),
+            "currentness_status": source.get("currentness_status"),
+            "locator_hint": str(selection.get("locator_hint") or ""),
+            "candidate_source_metadata": {
+                key: metadata.get(key)
+                for key in (
+                    "already_in_sealed_candidate",
+                    "canonical_citation",
+                    "currentness_verified",
+                    "later_treatment_review_required",
+                    "combined_advisory_score",
+                )
+                if isinstance(metadata, dict) and key in metadata
+            },
+            "selection_origin": selection.get("selection_origin"),
+            "projection_integrity": {
+                "whole_chunks_only": selection.get("whole_chunks_only"),
+                "silent_text_truncation": selection.get("silent_text_truncation"),
+                "complete_locator_result_used": selection.get("complete_locator_result_used"),
+                "omitted_chunk_count": selection.get("omitted_chunk_count"),
+                "omitted_chunk_identities_sha256": selection.get("omitted_chunk_identities_sha256"),
+                "selection_content_sha256": selection.get("selection_content_sha256"),
+            },
+            "chunks": verified_chunks,
+        }
         candidates.append(
             {
                 **candidate_material,
                 "_advisory_selection_order": (
                     1
-                    if selection.get("selection_origin")
-                    == "PRIOR_EXACT_SELECTION_REPROJECTED"
+                    if selection.get("selection_origin") == "PRIOR_EXACT_SELECTION_REPROJECTED"
                     else 0,
                     1 if label_linked_rule else 0,
                     max(
@@ -603,9 +579,7 @@ def _review_row(
                         + _semantic_chunk_score(issue_label, chunk)[1]
                         for chunk in verified_chunks
                     ),
-                    float(
-                        (metadata or {}).get("combined_advisory_score") or 0.0
-                    ),
+                    float((metadata or {}).get("combined_advisory_score") or 0.0),
                 ),
             }
         )
@@ -630,15 +604,9 @@ def _review_row(
             ),
             reverse=True,
         )
-        selected_source_chunks = ordered_chunks[
-            :MAX_REVIEW_WHOLE_CHUNKS_PER_CANDIDATE
-        ]
-        selected_chunks = [
-            _exact_span_partition(chunk) for chunk in selected_source_chunks
-        ]
-        selected_ids = {
-            str(chunk["chunk_id"]) for chunk in selected_source_chunks
-        }
+        selected_source_chunks = ordered_chunks[:MAX_REVIEW_WHOLE_CHUNKS_PER_CANDIDATE]
+        selected_chunks = [_exact_span_partition(chunk) for chunk in selected_source_chunks]
+        selected_ids = {str(chunk["chunk_id"]) for chunk in selected_source_chunks}
         omitted = [
             {"chunk_id": chunk["chunk_id"], "text_sha256": chunk["text_sha256"]}
             for chunk in all_chunks
@@ -649,8 +617,7 @@ def _review_row(
             {
                 "semantic_input_whole_chunk_count": len(selected_chunks),
                 "semantic_input_exact_span_option_count": sum(
-                    int(chunk["exact_span_option_count"])
-                    for chunk in selected_chunks
+                    int(chunk["exact_span_option_count"]) for chunk in selected_chunks
                 ),
                 "semantic_input_source_text_fully_partitioned": True,
                 "semantic_input_omitted_chunk_count": len(omitted),
@@ -691,9 +658,7 @@ def _build_input(
         "case_id": case["case_id"],
         "subject": case["subject"],
         "scenario": case["question"],
-        "scenario_content_sha256": _sha256(
-            str(case["question"]).encode("utf-8")
-        ),
+        "scenario_content_sha256": _sha256(str(case["question"]).encode("utf-8")),
         "scenario_text_supplied_to_exact_rule_extractor": True,
         "review_scope": (
             "GENERAL_GOVERNING_RULE_FOR_CONTEXTUALIZED_NAMED_ISSUE_ONLY_"
@@ -812,9 +777,7 @@ def _envelope(row_input: Mapping[str, Any]) -> tuple[dict[str, Any], str]:
     )
 
 
-def _http_invoker(
-    model_url: str, timeout_seconds: float
-) -> tuple[Invoke, dict[str, Any]]:
+def _http_invoker(model_url: str, timeout_seconds: float) -> tuple[Invoke, dict[str, Any]]:
     parsed = urlparse(model_url)
     if (
         parsed.scheme != "http"
@@ -967,8 +930,7 @@ def _chunk_map(row: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
                     or end <= start
                     or end - start != len(exact_text)
                     or len(exact_text) > MAX_QUOTE_CHARACTERS
-                    or option.get("exact_text_sha256")
-                    != _sha256(exact_text.encode("utf-8"))
+                    or option.get("exact_text_sha256") != _sha256(exact_text.encode("utf-8"))
                     or supplied_seal != _sealed(material)
                 ):
                     raise SemanticValidationError("supplied_span_option_invalid")
@@ -987,10 +949,8 @@ def _chunk_map(row: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
             if (
                 expected_start != character_count
                 or reproduced_sha256 != chunk.get("text_sha256")
-                or reproduced_sha256
-                != chunk.get("source_text_reproduced_by_partition_sha256")
-                or chunk.get("exact_span_partition_content_sha256")
-                != _sealed(partition_identity)
+                or reproduced_sha256 != chunk.get("source_text_reproduced_by_partition_sha256")
+                or chunk.get("exact_span_partition_content_sha256") != _sealed(partition_identity)
             ):
                 raise SemanticValidationError("supplied_span_partition_invalid")
             chunks[chunk_id] = {"source": source, "chunk": chunk, "spans": spans}
@@ -1045,12 +1005,12 @@ def _validate_supported_row(
     offset = int(span_option["start_character"])
     supported_fact_ids = {
         fact.identity
-        for fact in extract_material_facts(
-            f"{exact_quote}\n{chunk.get('locator') or ''}"
-        )
+        for fact in extract_material_facts(f"{exact_quote}\n{chunk.get('locator') or ''}")
     }
     unsupported = [
-        fact for fact in extract_material_facts(proposition) if fact.identity not in supported_fact_ids
+        fact
+        for fact in extract_material_facts(proposition)
+        if fact.identity not in supported_fact_ids
     ]
     if unsupported:
         raise SemanticValidationError("structured_output_unsupported_material_fact")
@@ -1084,14 +1044,10 @@ def _validate_supported_row(
             "currentness_status": source.get("currentness_status"),
             "candidate_source_metadata": source.get("candidate_source_metadata"),
             "already_in_sealed_candidate": bool(
-                (source.get("candidate_source_metadata") or {}).get(
-                    "already_in_sealed_candidate"
-                )
+                (source.get("candidate_source_metadata") or {}).get("already_in_sealed_candidate")
             ),
             "proposition_level_source_admission_required_if_owner_approves": (
-                (source.get("candidate_source_metadata") or {}).get(
-                    "already_in_sealed_candidate"
-                )
+                (source.get("candidate_source_metadata") or {}).get("already_in_sealed_candidate")
                 is False
             ),
             "separate_currentness_or_later_treatment_review_still_required": True,
@@ -1107,9 +1063,7 @@ def _validate_supported_row(
             "lexical_relatedness_screen_passed": True,
             "unsupported_material_fact_count": 0,
             "proposition_material_facts": _fact_records(proposition),
-            "span_material_facts": _fact_records(
-                f"{exact_quote}\n{chunk.get('locator') or ''}"
-            ),
+            "span_material_facts": _fact_records(f"{exact_quote}\n{chunk.get('locator') or ''}"),
         },
         "owner_outcome": None,
         "owner_decision_required": True,
@@ -1269,9 +1223,7 @@ def _review_batch(
         except Exception as exc:
             error = _error_code(exc)
             validation_diagnostics = (
-                dict(exc.diagnostics)
-                if isinstance(exc, SemanticValidationError)
-                else {}
+                dict(exc.diagnostics) if isinstance(exc, SemanticValidationError) else {}
             )
             fingerprint = _sealed(
                 {
@@ -1318,9 +1270,7 @@ def _review_batch(
                 "diagnostic_content_sha256": _sealed(diagnostic_material),
             }
             stem = _checkpoint_name(ordinal, rows)[:-5]
-            _write_exclusive(
-                diagnostics_root / f"{stem}-a{attempt}.json", _pretty_json(diagnostic)
-            )
+            _write_exclusive(diagnostics_root / f"{stem}-a{attempt}.json", _pretty_json(diagnostic))
             prior_error = error
             if attempt == 1:
                 continue
@@ -1345,9 +1295,7 @@ def _review_batch(
                 "development30_authorized": False,
             }
             held = {**held_material, "held_content_sha256": _sealed(held_material)}
-            _write_exclusive(
-                checkpoints_root / _checkpoint_name(ordinal, rows), _pretty_json(held)
-            )
+            _write_exclusive(checkpoints_root / _checkpoint_name(ordinal, rows), _pretty_json(held))
             return held
         checkpoint_material = {
             "schema": "legalbot.v111.phase2a.exact-span-checkpoint.v1",
@@ -1432,8 +1380,7 @@ def verify_exact_semantic_spans(
         "phase2a_semantic_runtime_identity_seal_invalid",
     )
     if (
-        runtime_identity.get("schema")
-        != "legalbot.v111.phase2a.exact-span-runtime-identity.v1"
+        runtime_identity.get("schema") != "legalbot.v111.phase2a.exact-span-runtime-identity.v1"
         or runtime_identity.get("model_id") != EXPECTED_MODEL_ID
         or runtime_identity.get("expected_model_version") != EXPECTED_MODEL_VERSION
         or runtime_identity.get("model_independent_reviewer") is not False
@@ -1447,9 +1394,7 @@ def verify_exact_semantic_spans(
         candidate_manifest_path=candidate_manifest_path,
     )
     locator_artifact = _load_object(locators_path)
-    records_by_id = {
-        str(record["row_id"]): record for record in locator_artifact["records"]
-    }
+    records_by_id = {str(record["row_id"]): record for record in locator_artifact["records"]}
     reviewable: list[dict[str, Any]] = []
     static_findings: dict[str, dict[str, Any]] = {
         row_id: _static_finding(
@@ -1490,13 +1435,11 @@ def verify_exact_semantic_spans(
             intent.get("source_locator_content_sha256") != hashes["locators"]
             or intent.get("source_plans_content_sha256") != hashes["plans"]
             or intent.get("source_remaining_content_sha256") != hashes["remaining"]
-            or intent.get("source_candidate_manifest_sha256")
-            != hashes["candidate_manifest"]
+            or intent.get("source_candidate_manifest_sha256") != hashes["candidate_manifest"]
             or intent.get("source_candidate_manifest_file_sha256")
             != hashes["candidate_manifest_file"]
             or intent.get("prompt_sha256") != _sha256((SYSTEM_PROMPT + "\n").encode())
-            or intent.get("verifier_code_file_sha256")
-            != _sha256_file(VERIFIER_CODE_PATH)
+            or intent.get("verifier_code_file_sha256") != _sha256_file(VERIFIER_CODE_PATH)
             or intent.get("evidence_validator_code_file_sha256")
             != _sha256_file(EVIDENCE_VALIDATOR_CODE_PATH)
             or intent.get("runtime_identity_sha256") != runtime_identity_sha256
@@ -1515,18 +1458,14 @@ def verify_exact_semantic_spans(
             "source_plans_content_sha256": hashes["plans"],
             "source_remaining_content_sha256": hashes["remaining"],
             "source_candidate_manifest_sha256": hashes["candidate_manifest"],
-            "source_candidate_manifest_file_sha256": hashes[
-                "candidate_manifest_file"
-            ],
+            "source_candidate_manifest_file_sha256": hashes["candidate_manifest_file"],
             "sealed_candidate_source_count": len(candidate_sources),
             "sealed_candidate_sources_only": True,
             "noncandidate_and_unadmitted_sources_excluded": True,
             "source_cases_file_sha256": planner.EXPECTED_CASES_FILE_SHA256,
             "prompt_sha256": _sha256((SYSTEM_PROMPT + "\n").encode()),
             "verifier_code_file_sha256": _sha256_file(VERIFIER_CODE_PATH),
-            "evidence_validator_code_file_sha256": _sha256_file(
-                EVIDENCE_VALIDATOR_CODE_PATH
-            ),
+            "evidence_validator_code_file_sha256": _sha256_file(EVIDENCE_VALIDATOR_CODE_PATH),
             "model_id": EXPECTED_MODEL_ID,
             "model_version": EXPECTED_MODEL_VERSION,
             "reviewer_execution_mode": REVIEWER_EXECUTION_MODE,
@@ -1537,12 +1476,8 @@ def verify_exact_semantic_spans(
             "issue_count": EXPECTED_ISSUE_COUNT,
             "model_batch_count": len(batches),
             "maximum_rows_per_batch": BATCH_SIZE,
-            "maximum_evidence_candidates_per_row": (
-                MAX_REVIEW_EVIDENCE_CANDIDATES_PER_ROW
-            ),
-            "maximum_whole_chunks_per_evidence_candidate": (
-                MAX_REVIEW_WHOLE_CHUNKS_PER_CANDIDATE
-            ),
+            "maximum_evidence_candidates_per_row": (MAX_REVIEW_EVIDENCE_CANDIDATES_PER_ROW),
+            "maximum_whole_chunks_per_evidence_candidate": (MAX_REVIEW_WHOLE_CHUNKS_PER_CANDIDATE),
             "maximum_prompt_characters": MAX_PROMPT_CHARACTERS,
             "maximum_output_tokens": MAX_OUTPUT_TOKENS,
             "model_output_schema": OUTPUT_SCHEMA,
@@ -1627,9 +1562,7 @@ def verify_exact_semantic_spans(
         "source_plans_content_sha256": hashes["plans"],
         "source_remaining_content_sha256": hashes["remaining"],
         "source_candidate_manifest_sha256": hashes["candidate_manifest"],
-        "source_candidate_manifest_file_sha256": hashes[
-            "candidate_manifest_file"
-        ],
+        "source_candidate_manifest_file_sha256": hashes["candidate_manifest_file"],
         "sealed_candidate_sources_only": True,
         "noncandidate_and_unadmitted_sources_excluded": True,
         "reviewer_execution_mode": REVIEWER_EXECUTION_MODE,
@@ -1639,9 +1572,7 @@ def verify_exact_semantic_spans(
         "issue_count": EXPECTED_ISSUE_COUNT,
         "assessment_counts": dict(sorted(counts.items())),
         "held_batch_count": len(held_batches),
-        "held_batch_content_sha256s": [
-            str(batch["held_content_sha256"]) for batch in held_batches
-        ],
+        "held_batch_content_sha256s": [str(batch["held_content_sha256"]) for batch in held_batches],
         "findings": findings,
         "raw_model_output_persisted": False,
         "hidden_reasoning_persisted": False,
@@ -1672,9 +1603,7 @@ def _arguments() -> argparse.Namespace:
     parser.add_argument("--plans", type=Path, default=DEFAULT_PLANS)
     parser.add_argument("--remaining", type=Path, default=DEFAULT_REMAINING)
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
-    parser.add_argument(
-        "--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST
-    )
+    parser.add_argument("--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--model-url", default="http://127.0.0.1:8779")
     parser.add_argument("--timeout-seconds", type=float, default=300.0)
