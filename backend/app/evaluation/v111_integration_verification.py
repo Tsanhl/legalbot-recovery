@@ -68,7 +68,7 @@ CHECK_MATRIX: Final[tuple[CheckSpec, ...]] = (
             "--frozen",
             "--all-extras",
             "python",
-            "scripts/validate_v111_integration_records.py",
+            "scripts/validate_v111_recovery_baseline.py",
         ),
         600,
     ),
@@ -393,10 +393,16 @@ def _semantic_counts(check_id: str, stdout: bytes, stderr: bytes) -> dict[str, i
     if isinstance(payload, dict):
         for key in (
             "archive_file_count",
+            "candidate_chunk_count",
+            "candidate_document_count",
+            "candidate_vector_count",
             "ledger_entry_count",
             "private_path_hit_count",
+            "question_bank_package_count",
             "release_artifact_count",
+            "retrieval_case_count",
             "secret_hit_count",
+            "source_scan_file_count",
             "tracked_member_count",
         ):
             value = payload.get(key)
