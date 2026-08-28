@@ -15,9 +15,7 @@ def test_exact_source_contract_is_fail_closed() -> None:
         r98d_root=held_gap.DEFAULT_R98D_ROOT,
     )
     assert r100["artifact_content_sha256"] == held_gap.EXPECTED_R100_CONTENT_SHA256
-    assert repair["artifact_content_sha256"] == (
-        held_gap.EXPECTED_R100_REPAIR_CONTENT_SHA256
-    )
+    assert repair["artifact_content_sha256"] == (held_gap.EXPECTED_R100_REPAIR_CONTENT_SHA256)
     assert diagnostic["diagnostic_content_sha256"] == (
         held_gap.EXPECTED_R100_DIAGNOSTIC_CONTENT_SHA256
     )
@@ -48,9 +46,7 @@ def test_deterministic_resolution_completes_361_without_authorizing_gate(
     assert artifact["candidate_mutated"] is False
     assert artifact["phase2b_authorized"] is False
     assert artifact["development30_authorized"] is False
-    persisted = json.loads(
-        (output / "COMPLETE-EXACT-SPAN-ADVISORY-361.json").read_bytes()
-    )
+    persisted = json.loads((output / "COMPLETE-EXACT-SPAN-ADVISORY-361.json").read_bytes())
     assert persisted == artifact
     assert (output / "SHA256SUMS.txt").is_file()
 

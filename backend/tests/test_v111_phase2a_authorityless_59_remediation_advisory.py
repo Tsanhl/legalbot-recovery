@@ -15,8 +15,7 @@ def _content_sha(value: dict, field: str = "artifact_content_sha256") -> str:
     material = dict(value)
     material.pop(field, None)
     raw = (
-        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
     return hashlib.sha256(raw).hexdigest()
 
@@ -132,9 +131,7 @@ def test_inspected_sources_are_exact_local_bytes_but_create_no_binding() -> None
         "SEALED_251_SOURCE_CANDIDATE",
     }
     for binding in bindings:
-        assert binding["record_content_sha256"] == _content_sha(
-            binding, "record_content_sha256"
-        )
+        assert binding["record_content_sha256"] == _content_sha(binding, "record_content_sha256")
         assert binding["representation_byte_hash_verified"] is True
         assert binding["inspection_only"] is True
         assert binding["new_source_proposed"] is False
@@ -161,17 +158,14 @@ def test_every_row_retains_preexisting_full_support_and_all_holds() -> None:
         assert row["preexisting_full_components_retained"]
         full_total += len(row["preexisting_full_components_retained"])
         assert {
-            hold["record_content_sha256"]
-            for hold in row["all_unclassified_holds_retained"]
+            hold["record_content_sha256"] for hold in row["all_unclassified_holds_retained"]
         } == {
             hold["record_content_sha256"]
             for hold in r3_rows[row["row_id"]]["unclassified_unresolved_holds"]
         }
         assert row["fallback_eligible"] is False
         assert row["owner_decision_applied"] is False
-    assert full_total == advisory["counts"][
-        "preexisting_full_component_retained_count"
-    ] == 127
+    assert full_total == advisory["counts"]["preexisting_full_component_retained_count"] == 127
 
 
 def test_no_execution_fallback_or_phase2b_authority() -> None:
@@ -196,7 +190,9 @@ def test_no_execution_fallback_or_phase2b_authority() -> None:
     assert advisory["decision_boundary"]["execution_chain_remaining"] == 1
     assert advisory["decision_boundary"]["no_blanket_fallback"] is True
     assert advisory["counts"]["new_fallback_row_count"] == 0
-    assert advisory["counts"]["unresolved_blocker_count_if_exact_recommendations_owner_adopted"] == 0
+    assert (
+        advisory["counts"]["unresolved_blocker_count_if_exact_recommendations_owner_adopted"] == 0
+    )
 
 
 def test_review_json_has_no_absolute_or_old_project_paths() -> None:

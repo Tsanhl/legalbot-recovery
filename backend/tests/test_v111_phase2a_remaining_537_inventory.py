@@ -20,9 +20,7 @@ from scripts.build_v111_phase2a_remaining_537_inventory import (
 )
 
 
-def _write_sealed(
-    path: Path, material: dict[str, object], seal_field: str
-) -> dict[str, object]:
+def _write_sealed(path: Path, material: dict[str, object], seal_field: str) -> dict[str, object]:
     value = {**material, seal_field: _sealed(material)}
     path.write_bytes(_pretty_json(value))
     return value
@@ -76,9 +74,7 @@ def _synthetic_inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
                 "source_type": "legislation_or_procedural_instrument",
                 "citation": "2020 c 1",
                 "legal_locator": "s 1",
-                "official_source_url": (
-                    "https://www.legislation.gov.uk/ukpga/2020/1/section/1"
-                ),
+                "official_source_url": ("https://www.legislation.gov.uk/ukpga/2020/1/section/1"),
             }
             historical_records.append(historical_record)
             if ordinal <= 48:

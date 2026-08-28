@@ -16,40 +16,28 @@ from PIL import Image, ImageChops
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = (
-    PROJECT_ROOT
-    / "data/evaluations/phase2a-owner-review/"
+    PROJECT_ROOT / "data/evaluations/phase2a-owner-review/"
     "LegalBot-Phase2AB-2026-08-26-r112b-post-r110-owner-review-docx"
 )
 DOCX_NAME = "LegalBot-Phase2A-Post-r110-Owner-Decision-Agnes-2026-08-26.docx"
 BUILD_NAME = "DOCX-BUILD-MANIFEST.json"
 EXPECTED_DOCX_SHA256 = "b12388d0e94eb195b5ccd21b71b2ff93e165339b914e5ae1ecdc1d193422091b"
-EXPECTED_BUILD_CONTENT_SHA256 = (
-    "cc0b1136b74ab01d877ebb8afc72f177c12935d07e011368d6a62ffd0dcbfcef"
-)
-EXPECTED_BUILD_FILE_SHA256 = (
-    "ea19e395ee89a4e743c43ff60c53395d534956886889c20e9f6ea09fd06fb3a4"
-)
-EXPECTED_OUTCOME_FILE_SHA256 = (
-    "e1ae97744ca5ec85feda0a2bba85e8bac4ecbaf74394a1a63fba8100ca34a7bc"
-)
-EXPECTED_OWNER_BATCH_SHA256 = (
-    "6c9eda0de5c9c921b99127cac9c6e41bb3ae87151178e250b9f4abcf4a0d7fa1"
-)
+EXPECTED_BUILD_CONTENT_SHA256 = "cc0b1136b74ab01d877ebb8afc72f177c12935d07e011368d6a62ffd0dcbfcef"
+EXPECTED_BUILD_FILE_SHA256 = "ea19e395ee89a4e743c43ff60c53395d534956886889c20e9f6ea09fd06fb3a4"
+EXPECTED_OUTCOME_FILE_SHA256 = "e1ae97744ca5ec85feda0a2bba85e8bac4ecbaf74394a1a63fba8100ca34a7bc"
+EXPECTED_OWNER_BATCH_SHA256 = "6c9eda0de5c9c921b99127cac9c6e41bb3ae87151178e250b9f4abcf4a0d7fa1"
 PAGE_COUNT = 13
 PAGE_SIZE = (1547, 2002)
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -106,8 +94,7 @@ def _load_build(package_root: Path) -> dict[str, Any]:
     if supplied != EXPECTED_BUILD_CONTENT_SHA256 or supplied != _sealed(material):
         raise ValueError("phase2a_r112b_qa_build_content_seal_invalid")
     if (
-        build.get("source_owner_batch_content_sha256")
-        != EXPECTED_OWNER_BATCH_SHA256
+        build.get("source_owner_batch_content_sha256") != EXPECTED_OWNER_BATCH_SHA256
         or build.get("visual_qa_completed") is not False
         or build.get("owner_approved") is not False
         or build.get("source_admission_authorized") is not False
@@ -236,9 +223,7 @@ def finalize(
         "build_manifest_content_sha256": build["manifest_content_sha256"],
         "visual_qa_file_sha256": _sha256_file(qa_path),
         "visual_qa_content_sha256": qa["qa_content_sha256"],
-        "final_outcome_file_sha256": _sha256_file(
-            package_root / "FINAL-OUTCOME.txt"
-        ),
+        "final_outcome_file_sha256": _sha256_file(package_root / "FINAL-OUTCOME.txt"),
         "owner_approved": False,
         "source_admission_authorized": False,
         "candidate_mutated": False,
@@ -258,9 +243,7 @@ def finalize(
         for path in package_root.iterdir()
         if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(package_root / name)}  {name}\n" for name in names
-    )
+    sums = "".join(f"{_sha256_file(package_root / name)}  {name}\n" for name in names)
     _write_exclusive(package_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return package
 
@@ -282,9 +265,7 @@ def _persist_failure(package_root: Path, exc: BaseException) -> None:
             "affected_rows": "26_SOURCE_LINKS_ACROSS_22_ROWS",
             "completed_work": "PRESERVED_BEFORE_EXCEPTION",
             "root_cause_status": "DEBUG_REQUIRED",
-            "required_execution_plan_change": (
-                "INSPECT_RENDER_AND_QA_INPUTS_BEFORE_RETRY"
-            ),
+            "required_execution_plan_change": ("INSPECT_RENDER_AND_QA_INPUTS_BEFORE_RETRY"),
             "source_admission_authorized": False,
             "candidate_mutated": False,
             "phase2b_authorized": False,

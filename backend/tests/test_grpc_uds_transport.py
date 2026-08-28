@@ -152,7 +152,10 @@ def test_grpc_deadline_and_explicit_cancellation(short_root: Path) -> None:
     try:
         with pytest.raises(grpc.RpcError) as deadline:
             client.generate(_request(), timeout=0.05)
-        assert deadline.value.code() in {grpc.StatusCode.DEADLINE_EXCEEDED, grpc.StatusCode.CANCELLED}
+        assert deadline.value.code() in {
+            grpc.StatusCode.DEADLINE_EXCEEDED,
+            grpc.StatusCode.CANCELLED,
+        }
     finally:
         client.close()
         server.stop()

@@ -32,9 +32,7 @@ def _report(*, recall_at_5: float = 1.0) -> dict[str, Any]:
             "status": "bound",
             "row_count": 24,
             "issues": [],
-            "bindings": [
-                {"case_id": row["id"], "status": "bound"} for row in rows
-            ],
+            "bindings": [{"case_id": row["id"], "status": "bound"} for row in rows],
         },
         "per_query": rows,
         "aggregates": {

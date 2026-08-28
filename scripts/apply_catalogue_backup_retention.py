@@ -241,8 +241,7 @@ def main() -> int:
     result_path = output / "PRUNE-RESULT.json"
     _private_write(result_path, json.dumps(result, indent=2, sort_keys=True).encode() + b"\n")
     sums = (
-        f"{_sha256(plan_path)}  {plan_path.name}\n"
-        f"{_sha256(result_path)}  {result_path.name}\n"
+        f"{_sha256(plan_path)}  {plan_path.name}\n{_sha256(result_path)}  {result_path.name}\n"
     ).encode()
     _private_write(output / "SHA256SUMS.txt", sums)
     print(json.dumps(result, sort_keys=True))

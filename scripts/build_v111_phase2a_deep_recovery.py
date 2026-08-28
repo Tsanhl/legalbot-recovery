@@ -47,12 +47,8 @@ from scripts.build_v111_phase2a_cross_subject_recovery import (  # noqa: E402
     _write_exclusive,
 )
 
-EXPECTED_ADVISORY_DIGEST = (
-    "3f7ad672f0e35068919ca1d27483d5aa1e885ba1533800402b718cfafd6d670f"
-)
-EXPECTED_BASELINE_DIGEST = (
-    "f535fa63a27b86d1c34ef3e3107fc9a0153ddcb1db3a58d51babacbc20704b33"
-)
+EXPECTED_ADVISORY_DIGEST = "3f7ad672f0e35068919ca1d27483d5aa1e885ba1533800402b718cfafd6d670f"
+EXPECTED_BASELINE_DIGEST = "f535fa63a27b86d1c34ef3e3107fc9a0153ddcb1db3a58d51babacbc20704b33"
 EXPECTED_TARGET_ROWS = 176
 DIAGNOSTIC_TRIAGE_FLOOR = 0.5
 DEFAULT_LIMIT = 12
@@ -167,8 +163,7 @@ def build_deep_recovery(
         remainder_digest != EXPECTED_REMAINDER_DIGEST
         or advisory_digest != EXPECTED_ADVISORY_DIGEST
         or baseline_digest != EXPECTED_BASELINE_DIGEST
-        or advisory.get("schema")
-        != "legalbot.phase2a.independent-reranker-advisory-448.v1"
+        or advisory.get("schema") != "legalbot.phase2a.independent-reranker-advisory-448.v1"
         or advisory.get("held_for_debug_count") != 0
         or advisory.get("score_threshold_applied") is not False
         or baseline.get("schema") != "legalbot.v111.phase2a.owner-reviewed-issues.v1"
@@ -184,8 +179,8 @@ def build_deep_recovery(
         baseline=baseline,
     )
     cases = _load_cases(cases_path)
-    manifest_digest, candidate_authorities, candidate_versions = (
-        _candidate_manifest_authorities(candidate_manifest_path)
+    manifest_digest, candidate_authorities, candidate_versions = _candidate_manifest_authorities(
+        candidate_manifest_path
     )
     if manifest_digest != EXPECTED_CANDIDATE_MANIFEST_DIGEST:
         raise ValueError("phase2a_deep_recovery_candidate_manifest_identity_invalid")
@@ -208,9 +203,7 @@ def build_deep_recovery(
         "candidate_limit_per_row": candidate_limit,
         "diagnostic_triage_floor": DIAGNOSTIC_TRIAGE_FLOOR,
         "diagnostic_triage_floor_is_not_release_threshold": True,
-        "selection_rule": (
-            "independent_top_score_below_diagnostic_floor_or_baseline_material_gap"
-        ),
+        "selection_rule": ("independent_top_score_below_diagnostic_floor_or_baseline_material_gap"),
         "source_remainder_content_sha256": remainder_digest,
         "source_advisory_content_sha256": advisory_digest,
         "source_baseline_content_sha256": baseline_digest,

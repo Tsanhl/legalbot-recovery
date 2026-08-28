@@ -69,9 +69,7 @@ def test_most_specific_comparison_does_not_allow_schedule_laundering() -> None:
 
     assert [fact.normalized_value for fact in affected] == ["section:66(1)"]
     assert [fact.normalized_value for fact in unrelated] == ["schedule:8"]
-    assert {fact.identity for fact in affected}.isdisjoint(
-        fact.identity for fact in unrelated
-    )
+    assert {fact.identity for fact in affected}.isdisjoint(fact.identity for fact in unrelated)
 
 
 def test_rejects_resealed_input_that_changes_the_exact_approved_baseline(

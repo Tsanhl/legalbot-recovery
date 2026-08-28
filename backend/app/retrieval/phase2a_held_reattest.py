@@ -33,9 +33,7 @@ from .service import (
 )
 
 BUILD_ID = "current-law-ew-full-fp16-v111-20260827-phase2a-a"
-EXPECTED_SOURCE_MANIFEST_SHA256 = (
-    "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
-)
+EXPECTED_SOURCE_MANIFEST_SHA256 = "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
 SCHEMA = "legalbot.v111.phase2a.held-retrieval-reattestation.v1"
 MIN_RECALL_AT_10 = 0.95
 MIN_MRR = 0.80
@@ -84,13 +82,10 @@ def _validate_held_source_manifest(manifest: Mapping[str, Any]) -> None:
         or manifest.get("manifest_sha256") != EXPECTED_SOURCE_MANIFEST_SHA256
         or manifest.get("source_count") != EXPECTED_SOURCE_COUNT
         or manifest.get("chunk_count") != EXPECTED_CHUNK_COUNT
-        or manifest.get("selection_policy")
-        != "exact-owner-approved-held-phase2a-successor-scope"
-        or manifest.get("frozen_scope_content_sha256")
-        != EXPECTED_SCOPE_CONTENT_SHA256
+        or manifest.get("selection_policy") != "exact-owner-approved-held-phase2a-successor-scope"
+        or manifest.get("frozen_scope_content_sha256") != EXPECTED_SCOPE_CONTENT_SHA256
         or manifest.get("source_scan_id") != EXPECTED_SCAN_ID
-        or manifest.get("source_scan_manifest_sha256")
-        != EXPECTED_SCAN_MANIFEST_SHA256
+        or manifest.get("source_scan_manifest_sha256") != EXPECTED_SCAN_MANIFEST_SHA256
         or manifest.get("answer_release_eligible") is not False
         or manifest.get("successor_must_remain_non_active") is not True
         or manifest.get("active_or_previous_write_authorized") is not False
@@ -147,10 +142,7 @@ def validate_held_retrieval_report(
     if (
         not isinstance(bindings, list)
         or len(bindings) != EXPECTED_QUERY_COUNT
-        or any(
-            not isinstance(item, Mapping) or item.get("status") != "bound"
-            for item in bindings
-        )
+        or any(not isinstance(item, Mapping) or item.get("status") != "bound" for item in bindings)
     ):
         raise RuntimeError("held retrieval report is not bound 24/24")
 
@@ -162,9 +154,7 @@ def validate_held_retrieval_report(
     )
     mrr = _finite_metric(aggregates.get("mrr"), name="mrr")
     span_rows = [
-        row
-        for row in rows
-        if isinstance(row, Mapping) and int(row.get("gold_span_count") or 0) > 0
+        row for row in rows if isinstance(row, Mapping) and int(row.get("gold_span_count") or 0) > 0
     ]
     mean_exact_span_recall_at_5 = (
         sum(
@@ -304,10 +294,7 @@ def reattest_phase2a_held_successor(
         "development30_authorized": False,
     }
     output = destination or (
-        settings.evaluation_dir
-        / "retrieval"
-        / build_id
-        / "phase2a-held-v1.1-reattestation.json"
+        settings.evaluation_dir / "retrieval" / build_id / "phase2a-held-v1.1-reattestation.json"
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     _write_new_json(output, payload)

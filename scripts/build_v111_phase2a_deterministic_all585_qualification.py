@@ -21,32 +21,27 @@ RUN_NAME = "LegalBot-Phase2A-2026-08-27-deterministic-all585-qualification"
 RETRIEVAL_RUN_NAME = "LegalBot-Phase2A-2026-08-27-held-retrieval-reattestation-r2"
 
 MATRIX = OWNER_ROOT / (
-    "LegalBot-Phase2AB-2026-08-24-r47-consolidated-owner-gate/"
-    "COMPLETE-REMEDIATION-MATRIX-585.json"
+    "LegalBot-Phase2AB-2026-08-24-r47-consolidated-owner-gate/COMPLETE-REMEDIATION-MATRIX-585.json"
 )
 R94 = OWNER_ROOT / (
     "LegalBot-Phase2AB-2026-08-25-r94-consolidated-substantive-owner-batch/"
     "OWNER-SUBSTANTIVE-DECISION-BATCH.json"
 )
 R95_RECEIPT = OWNER_ROOT / (
-    "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved/"
-    "OWNER-APPROVAL-RECEIPT-R94.json"
+    "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved/OWNER-APPROVAL-RECEIPT-R94.json"
 )
 R113 = OWNER_ROOT / (
-    "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved/"
-    "REMAINING-MATERIAL-GAPS-364.json"
+    "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved/REMAINING-MATERIAL-GAPS-364.json"
 )
 R113_RECEIPT = OWNER_ROOT / (
-    "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved/"
-    "OWNER-APPROVAL-RECEIPT-R111.json"
+    "LegalBot-Phase2AB-2026-08-26-r113-post-r110-owner-approved/OWNER-APPROVAL-RECEIPT-R111.json"
 )
 CROSSWALK = OWNER_ROOT / (
     "LegalBot-Phase2A-2026-08-27-deterministic-exact-span-crosswalk-r2/"
     "DETERMINISTIC-EXACT-SPAN-PACKETS-364.json"
 )
 SOURCE_SCOPE = OWNER_ROOT / (
-    "LegalBot-Phase2A-2026-08-27-consolidated-source-admission/"
-    "FROZEN-SUCCESSOR-SOURCE-SCOPE.json"
+    "LegalBot-Phase2A-2026-08-27-consolidated-source-admission/FROZEN-SUCCESSOR-SOURCE-SCOPE.json"
 )
 SOURCE_ADMISSION_PACKAGE = OWNER_ROOT / (
     "LegalBot-Phase2A-2026-08-27-consolidated-source-admission/PACKAGE-INDEX.json"
@@ -73,8 +68,7 @@ def _sha256_file(path: Path) -> str:
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -204,9 +198,7 @@ def main() -> None:
     package["package_content_sha256"] = hashlib.sha256(_canonical_json(package)).hexdigest()
     _write_new_json(output / "PACKAGE-INDEX.json", package)
     sums = "\n".join(
-        f"{_sha256_file(path)}  {path.name}"
-        for path in sorted(output.iterdir())
-        if path.is_file()
+        f"{_sha256_file(path)}  {path.name}" for path in sorted(output.iterdir()) if path.is_file()
     )
     _write_new(output / "SHA256SUMS.txt", (sums + "\n").encode())
     print(json.dumps(summary, indent=2, sort_keys=True), flush=True)

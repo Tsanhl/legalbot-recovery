@@ -31,9 +31,7 @@ def test_additional_relationships_bind_exact_context_without_authorizing(
         "[2022] UKSC 25",
     }
     for row in result["records"]:
-        combined = "\n".join(
-            span["exact_text"] for span in row["exact_treatment_spans"]
-        )
+        combined = "\n".join(span["exact_text"] for span in row["exact_treatment_spans"])
         assert row["target_neutral_citation"] in combined
         assert all(phrase in combined for phrase in row["explicit_required_phrases"])
         assert row["owner_outcome"] is None

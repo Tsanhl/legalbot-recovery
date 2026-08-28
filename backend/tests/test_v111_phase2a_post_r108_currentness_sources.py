@@ -11,9 +11,7 @@ import pytest
 from scripts import collect_v111_phase2a_post_r108_currentness_sources as collector
 
 
-def _judgment_xml(
-    authority: str, required: list[str], *, use_paragraph_eid: bool = True
-) -> bytes:
+def _judgment_xml(authority: str, required: list[str], *, use_paragraph_eid: bool = True) -> bytes:
     citation = authority.removeprefix("neutral-citation:")
     blocks = []
     for locator in required:
@@ -32,7 +30,7 @@ def _judgment_xml(
       <FRBRname value="Synthetic official judgment"/>
     </FRBRWork></identification></meta>
     <header><p><neutralCitation>{citation}</neutralCitation></p></header>
-    <judgmentBody><decision>{''.join(blocks)}</decision></judgmentBody>
+    <judgmentBody><decision>{"".join(blocks)}</decision></judgmentBody>
   </judgment>
 </akomaNtoso>
 """.encode()
@@ -66,9 +64,7 @@ def _mock_plan(tmp_path: Path) -> tuple[Path, httpx.MockTransport]:
             else _legislation_xml()
         )
         target["preflight_response_sha256"] = collector._sha256(raw)
-        canonical = ET.canonicalize(
-            from_file=io.BytesIO(raw), with_comments=False
-        ).encode("utf-8")
+        canonical = ET.canonicalize(from_file=io.BytesIO(raw), with_comments=False).encode("utf-8")
         target["expected_canonical_xml_sha256"] = collector._sha256(canonical)
         by_url[target["official_url"]] = raw
     path = tmp_path / "plan.json"
@@ -162,9 +158,7 @@ def test_canonical_digest_change_fails_before_admission(tmp_path: Path) -> None:
     plan["targets"][0]["expected_canonical_xml_sha256"] = "0" * 64
     plan_path.write_bytes(collector._pretty_json(plan))
 
-    with pytest.raises(
-        ValueError, match="phase2a_r109c_canonical_xml_digest_mismatch"
-    ):
+    with pytest.raises(ValueError, match="phase2a_r109c_canonical_xml_digest_mismatch"):
         collector.collect(
             output_root=tmp_path / "r109",
             plan_path=plan_path,
@@ -186,9 +180,7 @@ def test_raw_byte_variant_is_recorded_when_canonical_xml_is_exact(
         transport=transport,
     )
 
-    assert manifest["records"][0]["raw_byte_status"] == (
-        "CANONICAL_XML_IDENTICAL_RAW_BYTE_VARIANT"
-    )
+    assert manifest["records"][0]["raw_byte_status"] == ("CANONICAL_XML_IDENTICAL_RAW_BYTE_VARIANT")
     assert manifest["records"][0]["automatically_admitted"] is False
 
 

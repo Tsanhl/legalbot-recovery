@@ -46,8 +46,7 @@ def test_r119_partition_reuses_296_and_repairs_only_68() -> None:
     source = r119._load_post_r118_source()
     repair_ids = set(source.remaining_row_ids)
     reused_ids = {
-        str(plan["row_id"])
-        for plan in (*source.r117.accepted_plans, *source.r118_accepted_plans)
+        str(plan["row_id"]) for plan in (*source.r117.accepted_plans, *source.r118_accepted_plans)
     }
 
     assert len(repair_ids) == r119.EXPECTED_REPAIR_ROW_COUNT

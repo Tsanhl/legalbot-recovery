@@ -36,15 +36,9 @@ R67_ROOT = (
 )
 R67_ARTIFACT_PATH = R67_ROOT / "ADVISORY-EXACT-SEMANTIC-SPANS-448.json"
 R67_INTENT_PATH = R67_ROOT / "INTENT.json"
-R69_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r69-deterministic-held-gap-resolution"
-)
+R69_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r69-deterministic-held-gap-resolution"
 R69_ARTIFACT_PATH = R69_ROOT / "RESOLVED-HELD-FINDINGS-5.json"
-OUTPUT_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r70-complete-issue-advisory-448"
-)
+OUTPUT_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r70-complete-issue-advisory-448"
 OUTPUT_PATH = OUTPUT_ROOT / "COMPLETE-ISSUE-ADVISORY-448.json"
 
 EXPECTED_R67_ARTIFACT_CONTENT_SHA256 = (
@@ -67,15 +61,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -185,8 +176,7 @@ def _validate_supported_finding(
         raise ValueError("phase2a_issue_advisory_exact_projection_binding_invalid")
 
     supported_fact_ids = {
-        fact.identity
-        for fact in extract_material_facts(f"{exact_text}\n{locator}")
+        fact.identity for fact in extract_material_facts(f"{exact_text}\n{locator}")
     }
     unsupported = [
         fact.identity
@@ -201,9 +191,7 @@ def _validate_supported_finding(
     if (
         not isinstance(currentness, dict)
         or currentness.get("already_in_sealed_candidate") is not True
-        or currentness.get(
-            "proposition_level_source_admission_required_if_owner_approves"
-        )
+        or currentness.get("proposition_level_source_admission_required_if_owner_approves")
         is not False
     ):
         raise ValueError("phase2a_issue_advisory_candidate_boundary_invalid")
@@ -248,9 +236,7 @@ def main() -> None:
     if not isinstance(old_findings, list) or not isinstance(replacements, list):
         raise ValueError("phase2a_issue_advisory_findings_invalid")
     old_by_id = {str(row.get("row_id") or ""): row for row in old_findings}
-    replacement_by_id = {
-        str(row.get("row_id") or ""): row for row in replacements
-    }
+    replacement_by_id = {str(row.get("row_id") or ""): row for row in replacements}
     if (
         len(old_by_id) != verifier.EXPECTED_ISSUE_COUNT
         or len(replacement_by_id) != 5
@@ -258,8 +244,7 @@ def main() -> None:
         != {
             row_id
             for row_id, row in old_by_id.items()
-            if row.get("assessment")
-            == "HELD_FOR_DEBUG_BEFORE_ANY_THIRD_ATTEMPT"
+            if row.get("assessment") == "HELD_FOR_DEBUG_BEFORE_ANY_THIRD_ATTEMPT"
         }
     ):
         raise ValueError("phase2a_issue_advisory_replacement_scope_invalid")
@@ -285,16 +270,12 @@ def main() -> None:
         or r67.get("source_locator_content_sha256") != hashes["locators"]
         or r67.get("source_plans_content_sha256") != hashes["plans"]
         or r67.get("source_remaining_content_sha256") != hashes["remaining"]
-        or r67.get("source_candidate_manifest_sha256")
-        != hashes["candidate_manifest"]
-        or r67.get("source_candidate_manifest_file_sha256")
-        != hashes["candidate_manifest_file"]
+        or r67.get("source_candidate_manifest_sha256") != hashes["candidate_manifest"]
+        or r67.get("source_candidate_manifest_file_sha256") != hashes["candidate_manifest_file"]
     ):
         raise ValueError("phase2a_issue_advisory_source_identity_changed")
 
-    findings = [
-        replacement_by_id.get(row_id, old_by_id[row_id]) for row_id in issue_order
-    ]
+    findings = [replacement_by_id.get(row_id, old_by_id[row_id]) for row_id in issue_order]
     counts = Counter(str(row.get("assessment") or "") for row in findings)
     if dict(sorted(counts.items())) != EXPECTED_COUNTS:
         raise ValueError("phase2a_issue_advisory_assessment_counts_invalid")
@@ -337,15 +318,9 @@ def main() -> None:
         "source_plans_content_sha256": hashes["plans"],
         "source_remaining_content_sha256": hashes["remaining"],
         "source_candidate_manifest_sha256": hashes["candidate_manifest"],
-        "source_candidate_manifest_file_sha256": hashes[
-            "candidate_manifest_file"
-        ],
-        "verifier_code_file_sha256": _sha256_file(
-            Path(verifier.__file__).resolve()
-        ),
-        "evidence_validator_code_file_sha256": _sha256_file(
-            verifier.EVIDENCE_VALIDATOR_CODE_PATH
-        ),
+        "source_candidate_manifest_file_sha256": hashes["candidate_manifest_file"],
+        "verifier_code_file_sha256": _sha256_file(Path(verifier.__file__).resolve()),
+        "evidence_validator_code_file_sha256": _sha256_file(verifier.EVIDENCE_VALIDATOR_CODE_PATH),
         "issue_count": len(findings),
         "assessment_counts": dict(sorted(counts.items())),
         "held_row_count": 0,
@@ -380,9 +355,7 @@ def main() -> None:
         b"PHASE 2B AND DEVELOPMENT 30 ARE NOT AUTHORIZED.\n",
     )
     names = [OUTPUT_PATH.name, "OUTCOME.txt"]
-    sums = "".join(
-        f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names).encode()
     _write_exclusive(OUTPUT_ROOT / "SHA256SUMS.txt", sums)
     print(json.dumps(artifact, sort_keys=True))
 

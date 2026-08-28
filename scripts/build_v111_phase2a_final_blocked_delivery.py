@@ -18,18 +18,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RUN_NAME = "LegalBot-Phase2A-2026-08-27-final-owner-review-blocked"
 FINAL_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review" / RUN_NAME
 MACHINE_ROOT = FINAL_ROOT / "machine"
-DOCX = FINAL_ROOT / (
-    "LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27-rev4.docx"
-)
+DOCX = FINAL_ROOT / ("LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27-rev4.docx")
 RENDER_ROOT = FINAL_ROOT / "rendered-r4"
-PDF = RENDER_ROOT / (
-    "LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27-rev4.pdf"
-)
+PDF = RENDER_ROOT / ("LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27-rev4.pdf")
 A11Y = RENDER_ROOT / "a11y-audit.json"
 DELIVERY_FAILURE = FINAL_ROOT / "delivery-debug-r1/FAILURE-REPORT.json"
-ARCHIVE = FINAL_ROOT / (
-    "LegalBot-v111-Phase2A-Final-Blocked-External-Audit-2026-08-27-r2.zip"
-)
+ARCHIVE = FINAL_ROOT / ("LegalBot-v111-Phase2A-Final-Blocked-External-Audit-2026-08-27-r2.zip")
 RECEIPT = FINAL_ROOT / "FINAL-DELIVERY-RECEIPT-r2.json"
 SUMS = FINAL_ROOT / "FINAL-DELIVERY-SHA256-r2.txt"
 
@@ -54,8 +48,7 @@ FORBIDDEN = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -208,12 +201,12 @@ def _build_entries() -> tuple[dict[str, bytes], list[dict[str, Any]]]:
     _scan(docx_raw, label="owner-review.docx")
     _scan_docx(docx_raw, label="owner-review.docx")
     _scan(pdf_raw, label="owner-review.pdf")
-    entries[
-        "owner-review/LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27.docx"
-    ] = docx_raw
-    entries[
-        "owner-review/LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27.pdf"
-    ] = pdf_raw
+    entries["owner-review/LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27.docx"] = (
+        docx_raw
+    )
+    entries["owner-review/LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27.pdf"] = (
+        pdf_raw
+    )
     entries["qa/A11Y-AUDIT.json"] = _pretty_json(a11y)
     entries["qa/VISUAL-QA.json"] = _pretty_json(_visual_qa())
     failure_raw = DELIVERY_FAILURE.read_bytes()
@@ -236,9 +229,7 @@ def _build_entries() -> tuple[dict[str, bytes], list[dict[str, Any]]]:
         },
         field="bridge_content_sha256",
     )
-    entries["provenance/ORIGINAL-TO-SANITIZED-HASH-BRIDGE.json"] = _pretty_json(
-        bridge_record
-    )
+    entries["provenance/ORIGINAL-TO-SANITIZED-HASH-BRIDGE.json"] = _pretty_json(bridge_record)
     readme = (
         "LegalBot v1.11 Phase 2A final blocked external-audit package\n\n"
         f"Verdict: {VERDICT}\n\n"
@@ -254,8 +245,7 @@ def _build_entries() -> tuple[dict[str, bytes], list[dict[str, Any]]]:
 
 def _write_archive(entries: dict[str, bytes]) -> dict[str, Any]:
     payload_files = {
-        name: {"sha256": _sha256(raw), "bytes": len(raw)}
-        for name, raw in sorted(entries.items())
+        name: {"sha256": _sha256(raw), "bytes": len(raw)} for name, raw in sorted(entries.items())
     }
     manifest = _sealed(
         {
@@ -374,9 +364,7 @@ def main() -> None:
                 "docx": str(DOCX),
                 "external_audit_zip": str(ARCHIVE),
                 "external_audit_zip_sha256": receipt["external_audit_zip"]["sha256"],
-                "final_delivery_content_sha256": receipt[
-                    "final_delivery_content_sha256"
-                ],
+                "final_delivery_content_sha256": receipt["final_delivery_content_sha256"],
                 "terminal_verdict": VERDICT,
             },
             indent=2,

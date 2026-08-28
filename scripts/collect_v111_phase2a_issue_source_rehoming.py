@@ -29,13 +29,8 @@ from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PLAN = (
-    PROJECT_ROOT / "config/phase2a_issue_source_rehoming.2026-08-25.v1.json"
-)
-DEFAULT_OUTPUT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-25/phase2a-issue-source-rehoming-r77"
-)
+DEFAULT_PLAN = PROJECT_ROOT / "config/phase2a_issue_source_rehoming.2026-08-25.v1.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/quarantine/2026-08-25/phase2a-issue-source-rehoming-r77"
 EXPECTED_ITEM_COUNT = 5
 TARGET_CEILING_DATE = date(2026, 8, 14)
 ALLOWED_HOSTS = frozenset({"supremecourt.uk", "www.supremecourt.uk"})
@@ -49,15 +44,12 @@ _LOCATOR = re.compile(r"^p\s+(?P<number>[1-9]\d*)$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -104,9 +96,7 @@ def _safe_url(value: str, *, expected_path_prefix: str | None = None) -> str:
         or parsed.port not in (None, 443)
     ):
         raise ValueError("phase2a_source_rehoming_url_outside_allowlist")
-    if expected_path_prefix is not None and not parsed.path.startswith(
-        expected_path_prefix
-    ):
+    if expected_path_prefix is not None and not parsed.path.startswith(expected_path_prefix):
         raise ValueError("phase2a_source_rehoming_url_path_invalid")
     return urlunsplit(("https", parsed.netloc, parsed.path, parsed.query, ""))
 
@@ -127,8 +117,7 @@ def _load_plan(path: Path) -> dict[str, Any]:
 def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     items = plan.get("items")
     if (
-        plan.get("schema")
-        != "legalbot.v111.phase2a.issue-source-rehoming-plan.v1"
+        plan.get("schema") != "legalbot.v111.phase2a.issue-source-rehoming-plan.v1"
         or plan.get("as_of_date") != TARGET_CEILING_DATE.isoformat()
         or plan.get("purpose")
         != "REHOME_RESTRICTED_FIND_CASE_LAW_REFERENCES_TO_OFFICIAL_UKSC_REPRESENTATIONS"
@@ -191,7 +180,10 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
             )
             or not isinstance(locators, list)
             or not locators
-            or any(not isinstance(value, str) or _LOCATOR.fullmatch(value) is None for value in locators)
+            or any(
+                not isinstance(value, str) or _LOCATOR.fullmatch(value) is None
+                for value in locators
+            )
         ):
             raise ValueError("phase2a_source_rehoming_plan_item_invalid")
         item["official_case_url"] = case_url
@@ -250,17 +242,13 @@ def _pdf_pages(raw: bytes) -> list[dict[str, Any]]:
     return pages
 
 
-def _page_text_contains_identity(
-    *, page_html: bytes, citation: str, judgment_date: str
-) -> bool:
+def _page_text_contains_identity(*, page_html: bytes, citation: str, judgment_date: str) -> bool:
     text = _normal_text(BeautifulSoup(page_html, "html.parser").get_text(" ", strip=True))
     rendered_date = datetime.strptime(judgment_date, "%Y-%m-%d").strftime("%-d %B %Y")
     return citation in text and rendered_date in text
 
 
-def _collect(
-    *, plan_path: Path, output_root: Path, retrieved_at: datetime
-) -> dict[str, Any]:
+def _collect(*, plan_path: Path, output_root: Path, retrieved_at: datetime) -> dict[str, Any]:
     if retrieved_at.tzinfo is None:
         raise ValueError("phase2a_source_rehoming_retrieved_at_naive")
     if output_root.exists() or output_root.is_symlink():
@@ -447,15 +435,12 @@ def _collect(
         _pretty_json(manifest),
     )
     checksum_paths = sorted(
-        path
-        for path in output_root.rglob("*")
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",
         "".join(
-            f"{_sha256_file(path)}  {path.relative_to(output_root)}\n"
-            for path in checksum_paths
+            f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in checksum_paths
         ).encode("utf-8"),
     )
     return manifest

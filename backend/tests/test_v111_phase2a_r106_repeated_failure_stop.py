@@ -17,9 +17,7 @@ def test_seals_exact_two_failure_stop_append_only(tmp_path: Path) -> None:
 
     assert artifact["failure_fingerprint"] == stop.EXPECTED_FINGERPRINT
     assert artifact["attempt_count"] == 2
-    assert artifact["required_execution_plan_change"][
-        "no_identical_third_attempt"
-    ] is True
+    assert artifact["required_execution_plan_change"]["no_identical_third_attempt"] is True
     assert artifact["phase2b_authorized"] is False
     persisted = json.loads((root / "DEBUG-STOP.json").read_bytes())
     assert persisted == artifact

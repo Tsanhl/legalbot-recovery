@@ -53,9 +53,7 @@ def _relative(path: Path) -> str:
 
 def _sidecars(catalogue: Path) -> list[str]:
     return [
-        suffix
-        for suffix in ("-wal", "-shm", "-journal")
-        if Path(f"{catalogue}{suffix}").exists()
+        suffix for suffix in ("-wal", "-shm", "-journal") if Path(f"{catalogue}{suffix}").exists()
     ]
 
 
@@ -322,7 +320,9 @@ def create_backup_and_restore_drill(catalogue: Path, output: Path) -> dict[str, 
     }
     receipt["receipt_content_sha256"] = hashlib.sha256(_canonical_json(receipt)).hexdigest()
     receipt_path = output / "BACKUP-RESTORE-RECEIPT.json"
-    _write_private_create_only(receipt_path, json.dumps(receipt, indent=2, sort_keys=True).encode() + b"\n")
+    _write_private_create_only(
+        receipt_path, json.dumps(receipt, indent=2, sort_keys=True).encode() + b"\n"
+    )
     sums = (
         f"{_sha256(receipt_path)}  {receipt_path.name}\n"
         f"{receipt['backup']['sha256']}  {backup_path.name}\n"
@@ -469,8 +469,7 @@ def finalize_existing_backup(catalogue: Path, output: Path) -> dict[str, Any]:
         json.dumps(receipt, indent=2, sort_keys=True).encode() + b"\n",
     )
     sums = (
-        f"{_sha256(receipt_path)}  {receipt_path.name}\n"
-        f"{backup_sha256}  {backup_path.name}\n"
+        f"{_sha256(receipt_path)}  {receipt_path.name}\n{backup_sha256}  {backup_path.name}\n"
     ).encode()
     _write_private_create_only(output / "SHA256SUMS.txt", sums)
     return receipt

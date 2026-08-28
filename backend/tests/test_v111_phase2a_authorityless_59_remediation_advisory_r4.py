@@ -20,8 +20,7 @@ def _content_sha(value: dict, field: str) -> str:
     material = dict(value)
     material.pop(field, None)
     raw = (
-        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
     return hashlib.sha256(raw).hexdigest()
 
@@ -53,12 +52,8 @@ def _all_spans(advisory: dict) -> list[dict]:
 
 
 def test_exact_topology_lineage_and_residual_arithmetic(advisory: dict) -> None:
-    assert advisory["artifact_content_sha256"] == _content_sha(
-        advisory, "artifact_content_sha256"
-    )
-    assert advisory["supersedes_advisory_content_sha256"] == (
-        builder.R3_ADVISORY_CONTENT_SHA256
-    )
+    assert advisory["artifact_content_sha256"] == _content_sha(advisory, "artifact_content_sha256")
+    assert advisory["supersedes_advisory_content_sha256"] == (builder.R3_ADVISORY_CONTENT_SHA256)
     assert len(advisory["row_ids"]) == len(set(advisory["row_ids"])) == 59
     assert advisory["row_id_set_sha256"] == (
         "45a35173be61cce0e472db89e979d9834125baa868bf96c78ae5e3f0fbb8f376"
@@ -101,9 +96,10 @@ def test_exact_three_resolved_rows_and_exact_52_residual_set(advisory: dict) -> 
     assert len(advisory["residual_material_gap_row_ids"]) == 52
     for row_id in advisory["resolved_r3_residual_row_ids"]:
         assert rows[row_id]["material_legal_support_gap"] is False
-        assert rows[row_id][
-            "legal_component_coverage_complete_after_exact_action_if_owner_adopted"
-        ] is True
+        assert (
+            rows[row_id]["legal_component_coverage_complete_after_exact_action_if_owner_adopted"]
+            is True
+        )
         assert rows[row_id]["qualification_eligible"] is False
         assert rows[row_id]["answer_release_eligible"] is False
 
@@ -128,10 +124,13 @@ def test_all_80_components_still_dispositioned_exactly_once(advisory: dict) -> N
     ]
     assert sorted(observed) == sorted(expected)
     assert len(observed) == len(set(observed)) == 80
-    assert sum(
-        recommendation["component_material_blocker_after_owner_adoption"]
-        for _, recommendation in _recommendations(advisory)
-    ) == 65
+    assert (
+        sum(
+            recommendation["component_material_blocker_after_owner_adoption"]
+            for _, recommendation in _recommendations(advisory)
+        )
+        == 65
+    )
 
 
 def test_r3_safe_four_exclusions_and_nine_matter_splits_are_preserved(
@@ -161,9 +160,7 @@ def test_q58_section_7_1_correction_is_exact_and_span_bound(advisory: dict) -> N
         if item["row_id"] == "live60-q58:issue-10"
     )
     assert repair["exact_locator_added"] == "section 7(1)"
-    assert "Section 7(1) preserves any third-party right or remedy" in repair[
-        "after_proposition"
-    ]
+    assert "Section 7(1) preserves any third-party right or remedy" in repair["after_proposition"]
     span = repair["frozen_evidence_span_proposals"][0]
     assert span["authority_identity_id"] == "ukpga:1999:31"
     assert span["exact_locator"] == "section 7(1)"
@@ -182,9 +179,7 @@ def test_q58_section_7_1_correction_is_exact_and_span_bound(advisory: dict) -> N
     ]
     component = next(
         item
-        for item in _rows(advisory)["live60-q58:issue-10"][
-            "retained_full_component_inventory"
-        ]
+        for item in _rows(advisory)["live60-q58:issue-10"]["retained_full_component_inventory"]
         if item["component_ordinal"] == 1
     )
     assert "section 7(1)" in component["authorities"][0]["exact_locators"]
@@ -221,9 +216,7 @@ def test_q12_campbell_gap_is_narrowed_to_exact_bloomberg_support(
     row = _rows(advisory)["live30-q12:issue-06"]
     assert row["source_binding_material_holds"] == []
     repair = row["retained_full_component_repairs"][0]
-    assert repair["repair"] == (
-        "NARROW_TO_BLOOMBERG_ONLY_REMOVE_UNAVAILABLE_CAMPBELL_DEPENDENCY"
-    )
+    assert repair["repair"] == ("NARROW_TO_BLOOMBERG_ONLY_REMOVE_UNAVAILABLE_CAMPBELL_DEPENDENCY")
     component = next(
         item for item in row["retained_full_component_inventory"] if item["component_ordinal"] == 2
     )
@@ -241,7 +234,9 @@ def test_q16_false_necessary_intestacy_is_excluded_with_exact_coverage(
 ) -> None:
     row = _rows(advisory)["live30-q16:issue-06"]
     recommendation = next(
-        item for item in row["component_recommendations"] if item["before"]["component_ordinal"] == 3
+        item
+        for item in row["component_recommendations"]
+        if item["before"]["component_ordinal"] == 3
     )
     assert recommendation["action"] == (
         "EXCLUDE_FALSE_NECESSARY_INTESTACY_AND_RETAIN_MATTER_INTAKE"
@@ -260,7 +255,9 @@ def test_q30_partial_is_narrowed_to_osborn_and_facts_are_intake(
 ) -> None:
     row = _rows(advisory)["live30-q30:issue-02"]
     recommendation = next(
-        item for item in row["component_recommendations"] if item["before"]["component_ordinal"] == 5
+        item
+        for item in row["component_recommendations"]
+        if item["before"]["component_ordinal"] == 5
     )
     assert recommendation["before"]["support_fit"] == "PARTIAL"
     assert recommendation["action"] == (
@@ -283,29 +280,26 @@ def test_every_frozen_span_excerpt_is_reverified_in_exact_bound_bytes(
     # q58/q59 repairs appear both in the global audit ledger and their row repair
     # lists, so there are nine references to seven unique sealed span proposals.
     assert len({span["span_proposal_content_sha256"] for span in spans}) == 7
-    bindings = {
-        item["record_content_sha256"]: item for item in advisory["source_byte_bindings"]
-    }
+    bindings = {item["record_content_sha256"]: item for item in advisory["source_byte_bindings"]}
     for span in spans:
         assert span["span_proposal_content_sha256"] == _content_sha(
             span, "span_proposal_content_sha256"
         )
         binding = bindings[span["source_binding_content_sha256"]]
         path = builder._binding_path(binding)
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == span[
-            "representation_file_sha256"
-        ]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == span["representation_file_sha256"]
         source_text, _ = builder.r2._representation_text(path)
         normalized_source = builder.r2._normalise_text(source_text)
-        assert hashlib.sha256(normalized_source.encode()).hexdigest() == span[
-            "derived_normalized_representation_text_sha256"
-        ]
+        assert (
+            hashlib.sha256(normalized_source.encode()).hexdigest()
+            == span["derived_normalized_representation_text_sha256"]
+        )
         for excerpt in span["supporting_excerpts"]:
             normalized = builder.r2._normalise_text(excerpt["text"])
             assert normalized in normalized_source
-            assert hashlib.sha256(normalized.encode()).hexdigest() == excerpt[
-                "normalised_text_sha256"
-            ]
+            assert (
+                hashlib.sha256(normalized.encode()).hexdigest() == excerpt["normalised_text_sha256"]
+            )
 
 
 def test_all_seven_ready_rows_have_all_retained_full_sources_byte_bound(
@@ -315,9 +309,7 @@ def test_all_seven_ready_rows_have_all_retained_full_sources_byte_bound(
     ready = {
         row_id
         for row_id, row in rows.items()
-        if row[
-            "legal_component_coverage_complete_after_exact_action_if_owner_adopted"
-        ]
+        if row["legal_component_coverage_complete_after_exact_action_if_owner_adopted"]
     }
     assert ready == builder.FUTURE_SUPPORT_READY_ROWS
     assert len(ready) == 7
@@ -327,9 +319,7 @@ def test_all_seven_ready_rows_have_all_retained_full_sources_byte_bound(
     for row_id in ready:
         assert rows[row_id]["retained_release_hold_codes"]
         for component in rows[row_id]["retained_full_component_inventory"]:
-            assert component["coverage_role"] == (
-                "RELIED_ON_FOR_EXACT_ISSUE_DIMENSION_COVERAGE_R4"
-            )
+            assert component["coverage_role"] == ("RELIED_ON_FOR_EXACT_ISSUE_DIMENSION_COVERAGE_R4")
             for authority in component["authorities"]:
                 assert authority["source_byte_binding_status"] == "EXACT_LOCAL_BYTE_BOUND_R4"
                 binding = binding_by_content[authority["source_binding_content_sha256"]]
@@ -338,9 +328,7 @@ def test_all_seven_ready_rows_have_all_retained_full_sources_byte_bound(
 
 
 def test_sources_roles_holds_and_all_127_full_inventory_records(advisory: dict) -> None:
-    assert len(advisory["source_byte_bindings"]) == advisory["counts"][
-        "source_byte_binding_count"
-    ]
+    assert len(advisory["source_byte_bindings"]) == advisory["counts"]["source_byte_binding_count"]
     assert len({item["authority_identity_id"] for item in advisory["source_byte_bindings"]}) == len(
         advisory["source_byte_bindings"]
     )

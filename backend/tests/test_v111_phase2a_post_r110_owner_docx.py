@@ -61,8 +61,7 @@ def test_docx_uses_exact_table_geometry_and_no_fixed_rows(tmp_path: Path) -> Non
         table_width = table.xpath("./w:tblPr/w:tblW", namespaces=ns)[0]
         table_indent = table.xpath("./w:tblPr/w:tblInd", namespaces=ns)[0]
         grid = [
-            int(cell.get(attr("w")))
-            for cell in table.xpath("./w:tblGrid/w:gridCol", namespaces=ns)
+            int(cell.get(attr("w"))) for cell in table.xpath("./w:tblGrid/w:gridCol", namespaces=ns)
         ]
         assert table_width.get(attr("type")) == "dxa"
         assert int(table_width.get(attr("w"))) == renderer.CONTENT_WIDTH_DXA
@@ -71,8 +70,7 @@ def test_docx_uses_exact_table_geometry_and_no_fixed_rows(tmp_path: Path) -> Non
         assert sum(grid) == renderer.CONTENT_WIDTH_DXA
         for row in table.xpath("./w:tr", namespaces=ns):
             widths = [
-                int(cell.get(attr("w")))
-                for cell in row.xpath("./w:tc/w:tcPr/w:tcW", namespaces=ns)
+                int(cell.get(attr("w"))) for cell in row.xpath("./w:tc/w:tcPr/w:tcW", namespaces=ns)
             ]
             assert widths == grid
             assert not row.xpath("./w:trPr/w:trHeight", namespaces=ns)
@@ -87,9 +85,7 @@ def test_docx_build_manifest_is_sealed(tmp_path: Path) -> None:
     material = dict(persisted)
     supplied = material.pop("manifest_content_sha256")
     assert supplied == renderer._sealed(material)
-    assert persisted["docx_file_sha256"] == renderer._sha256_file(
-        output / renderer.DOCX_NAME
-    )
+    assert persisted["docx_file_sha256"] == renderer._sha256_file(output / renderer.DOCX_NAME)
 
 
 def test_docx_builder_is_create_only(tmp_path: Path) -> None:

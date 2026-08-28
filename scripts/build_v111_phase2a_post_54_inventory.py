@@ -19,15 +19,11 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-EXPECTED_UNRESOLVED_DIGEST = (
-    "0718758e3bd9b0f938c4beab09eb3b603ffc5f419d68574399accc47c4a4015c"
-)
+EXPECTED_UNRESOLVED_DIGEST = "0718758e3bd9b0f938c4beab09eb3b603ffc5f419d68574399accc47c4a4015c"
 EXPECTED_APPROVED_PACKAGE_DIGEST = (
     "40d7ded06badedee0349fcb3efc3c1ed2f707e2915c2b1d1208dc1796a73cf31"
 )
-EXPECTED_SOURCE_SCOPE_DIGEST = (
-    "f898a2db5e20a4ff86e4742672a0bc28ac00581c43453f14dde4ac783f40613b"
-)
+EXPECTED_SOURCE_SCOPE_DIGEST = "f898a2db5e20a4ff86e4742672a0bc28ac00581c43453f14dde4ac783f40613b"
 EXPECTED_STARTING_ROWS = 502
 EXPECTED_APPROVED_ROWS = 54
 EXPECTED_REMAINING_ROWS = 448
@@ -37,15 +33,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -109,16 +102,10 @@ def _evidence_records(row: dict[str, Any]) -> list[dict[str, Any]]:
 def _authority_evidence(
     rows: list[dict[str, Any]],
 ) -> dict[str, dict[str, set[str]]]:
-    result: dict[str, dict[str, set[str]]] = defaultdict(
-        lambda: defaultdict(set)
-    )
+    result: dict[str, dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
     for row in rows:
         row_id = str(row.get("row_id") or "")
-        authorities = {
-            str(value)
-            for value in row.get("authority_identity_ids", [])
-            if str(value)
-        }
+        authorities = {str(value) for value in row.get("authority_identity_ids", []) if str(value)}
         if not row_id or not authorities:
             raise ValueError("phase2a_post54_source_scope_row_invalid")
         for evidence in _evidence_records(row):
@@ -276,8 +263,7 @@ def build_inventory(
     ):
         raise ValueError("phase2a_post54_row_set_invariant_failed")
     remaining_rows = [
-        starting_by_id[row_id]
-        for row_id in sorted(set(starting_by_id) - approved_ids)
+        starting_by_id[row_id] for row_id in sorted(set(starting_by_id) - approved_ids)
     ]
     if len(remaining_rows) != EXPECTED_REMAINING_ROWS:
         raise ValueError("phase2a_post54_remaining_count_invalid")
@@ -333,19 +319,13 @@ def build_inventory(
             "official_file_sha256": digest,
             "official_urls": sorted(value for value in evidence["official_urls"] if value),
             "source_titles": sorted(value for value in evidence["source_titles"] if value),
-            "source_target_ids": sorted(
-                value for value in evidence["source_target_ids"] if value
-            ),
+            "source_target_ids": sorted(value for value in evidence["source_target_ids"] if value),
             "anchor_ids": sorted(value for value in evidence["anchor_ids"] if value),
             "row_ids": sorted(evidence["row_ids"]),
             "quarantine_root": selected["quarantine_root"],
             "quarantine_member": selected["quarantine_member"],
-            "quarantine_manifest_content_sha256": selected[
-                "quarantine_manifest_content_sha256"
-            ],
-            "quarantine_manifest_file_sha256": selected[
-                "quarantine_manifest_file_sha256"
-            ],
+            "quarantine_manifest_content_sha256": selected["quarantine_manifest_content_sha256"],
+            "quarantine_manifest_file_sha256": selected["quarantine_manifest_file_sha256"],
             "bytes": selected["bytes"],
             "content_type": selected.get("content_type"),
             "retrieved_at": selected.get("retrieved_at"),

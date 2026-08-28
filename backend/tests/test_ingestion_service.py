@@ -51,9 +51,7 @@ def test_linked_resume_reuses_only_hash_verified_current_processing(
     prior_file = database.source_scan_files("resume-seed")[0]
 
     descriptors = database.create_source_scan("resume-interrupted", settings.source_roots)
-    database.start_source_scan(
-        "resume-interrupted", roots_seen=descriptors, expected_file_count=1
-    )
+    database.start_source_scan("resume-interrupted", roots_seen=descriptors, expected_file_count=1)
     database.record_source_scan_file(
         "resume-interrupted",
         path_fingerprint=str(prior_file["path_fingerprint"]),
@@ -90,9 +88,7 @@ def test_linked_resume_reprocesses_changed_bytes(
     prior_file = database.source_scan_files("changed-seed")[0]
 
     descriptors = database.create_source_scan("changed-interrupted", settings.source_roots)
-    database.start_source_scan(
-        "changed-interrupted", roots_seen=descriptors, expected_file_count=1
-    )
+    database.start_source_scan("changed-interrupted", roots_seen=descriptors, expected_file_count=1)
     database.record_source_scan_file(
         "changed-interrupted",
         path_fingerprint=str(prior_file["path_fingerprint"]),

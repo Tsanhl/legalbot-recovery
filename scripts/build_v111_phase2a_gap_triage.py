@@ -42,18 +42,12 @@ R70_PATH = (
 )
 CATALOGUE_PATH = PROJECT_ROOT / "data/catalog.sqlite3"
 CASES_PATH = planner.DEFAULT_CASES
-OUTPUT_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r71-gap-triage"
-)
+OUTPUT_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r71-gap-triage"
 OUTPUT_PATH = OUTPUT_ROOT / "ISSUE-GAP-TRIAGE-448.json"
 
 EXPECTED_R49_CONTENT_SHA256 = planner.EXPECTED_REMAINING_CONTENT_SHA256
-EXPECTED_R50_CONTENT_SHA256 = (
-    "f53537cb5b050547cb01282fbc8314c7e66dbf51e5e6407963336397fe59cd77"
-)
-EXPECTED_R70_CONTENT_SHA256 = (
-    "a022848094a5e4ef27f97b6c245c992f1d311509163d084ecc7ed3aa021def58"
-)
+EXPECTED_R50_CONTENT_SHA256 = "f53537cb5b050547cb01282fbc8314c7e66dbf51e5e6407963336397fe59cd77"
+EXPECTED_R70_CONTENT_SHA256 = "a022848094a5e4ef27f97b6c245c992f1d311509163d084ecc7ed3aa021def58"
 FCL_HOST = "caselaw.nationalarchives.gov.uk"
 LEGISLATION_HOST = "www.legislation.gov.uk"
 TARGET_CEILING_DATE = "2026-08-14"
@@ -65,15 +59,12 @@ _LOCATOR_SEGMENTS = frozenset(
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -235,9 +226,7 @@ def _local_official_snapshots(connection: sqlite3.Connection) -> list[dict[str, 
             "locator": locator_text,
             "version_sha256": str(row["version_sha256"] or ""),
             "as_of_date": as_of_date,
-            "post_target_ceiling_snapshot": bool(
-                as_of_date and as_of_date > TARGET_CEILING_DATE
-            ),
+            "post_target_ceiling_snapshot": bool(as_of_date and as_of_date > TARGET_CEILING_DATE),
             "temporal_equivalence_to_target_required": True,
             "eligible_as_target_date_evidence": False,
             "currentness_status": str(row["currentness_status"] or ""),
@@ -258,15 +247,9 @@ def main() -> None:
     r49 = _load_object(R49_PATH)
     r50 = _load_object(R50_PATH)
     r70 = _load_object(R70_PATH)
-    r49_digest = _verify_seal(
-        r49, "artifact_content_sha256", "phase2a_gap_triage_r49_invalid"
-    )
-    r50_digest = _verify_seal(
-        r50, "artifact_content_sha256", "phase2a_gap_triage_r50_invalid"
-    )
-    r70_digest = _verify_seal(
-        r70, "artifact_content_sha256", "phase2a_gap_triage_r70_invalid"
-    )
+    r49_digest = _verify_seal(r49, "artifact_content_sha256", "phase2a_gap_triage_r49_invalid")
+    r50_digest = _verify_seal(r50, "artifact_content_sha256", "phase2a_gap_triage_r50_invalid")
+    r70_digest = _verify_seal(r70, "artifact_content_sha256", "phase2a_gap_triage_r70_invalid")
     if (
         r49_digest != EXPECTED_R49_CONTENT_SHA256
         or r50_digest != EXPECTED_R50_CONTENT_SHA256
@@ -285,11 +268,7 @@ def main() -> None:
     issues = {str(item["item_id"]): item for item in issue_items}
     plans = {str(item["row_id"]): item for item in r50["plans"]}
     findings = {str(item["row_id"]): item for item in r70["findings"]}
-    if (
-        len(issues) != 448
-        or set(issues) != set(plans)
-        or set(issues) != set(findings)
-    ):
+    if len(issues) != 448 or set(issues) != set(plans) or set(issues) != set(findings):
         raise ValueError("phase2a_gap_triage_row_coverage_invalid")
     candidate_sources, candidate_manifest_digest, candidate_manifest_file = (
         verifier._load_candidate_manifest(verifier.DEFAULT_CANDIDATE_MANIFEST)
@@ -302,9 +281,7 @@ def main() -> None:
         for plan in plans.values()
         for selection in plan.get("selections", [])
     }
-    connection = sqlite3.connect(
-        f"file:{CATALOGUE_PATH.resolve()}?mode=ro&immutable=1", uri=True
-    )
+    connection = sqlite3.connect(f"file:{CATALOGUE_PATH.resolve()}?mode=ro&immutable=1", uri=True)
     connection.row_factory = sqlite3.Row
     try:
         source_urls = _catalogue_urls(connection, selected_authorities)
@@ -385,9 +362,7 @@ def main() -> None:
             "required_next_action": required_action,
             "planned_authorities": selections,
             "outside_candidate_authority_ids": sorted(set(outside_authorities)),
-            "find_case_law_full_text_only_authority_ids": sorted(
-                set(fcl_only_authorities)
-            ),
+            "find_case_law_full_text_only_authority_ids": sorted(set(fcl_only_authorities)),
             "find_case_law_computational_analysis_permitted": False,
             "owner_decision_required": True,
             "owner_outcome": None,
@@ -441,17 +416,23 @@ def main() -> None:
         b"DETERMINISTIC 448-ROW TRIAGE COMPLETE. RESEARCH AND OWNER DECISIONS REMAIN REQUIRED.\n",
     )
     names = [OUTPUT_PATH.name, "OUTCOME.txt"]
-    sums = "".join(
-        f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names).encode()
     _write_exclusive(OUTPUT_ROOT / "SHA256SUMS.txt", sums)
-    print(json.dumps({key: artifact[key] for key in (
-        "artifact_content_sha256",
-        "row_count",
-        "triage_class_counts",
-        "find_case_law_affected_row_count",
-        "local_official_snapshot_count",
-    )}, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                key: artifact[key]
+                for key in (
+                    "artifact_content_sha256",
+                    "row_count",
+                    "triage_class_counts",
+                    "find_case_law_affected_row_count",
+                    "local_official_snapshot_count",
+                )
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -62,7 +62,9 @@ def test_scope_is_exact_four_held_judgments_and_eight_rows() -> None:
     ]
     assert len({plan.old_record_id for plan in module.PLANS}) == 4
     assert len({row for plan in module.PLANS for row in plan.affected_row_ids}) == 8
-    assert all(module._is_exact_representation_url(plan.representation_url, plan) for plan in module.PLANS)
+    assert all(
+        module._is_exact_representation_url(plan.representation_url, plan) for plan in module.PLANS
+    )
     assert [plan.representation_mode for plan in module.PLANS] == ["html", "pdf", "html", "html"]
 
 

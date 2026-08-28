@@ -43,9 +43,7 @@ def test_official_source_research_queue_rows_bind_the_361_ledger() -> None:
 
     for queued in artifact["records"]:
         source = records[queued["row_id"]]
-        assert queued["proposition_record_content_sha256"] == source[
-            "record_content_sha256"
-        ]
+        assert queued["proposition_record_content_sha256"] == source["record_content_sha256"]
         assert queued["owner_outcome"] is None
         assert queued["official_primary_sources_only"] is True
 

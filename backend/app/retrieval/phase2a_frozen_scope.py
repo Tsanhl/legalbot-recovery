@@ -18,16 +18,10 @@ SCOPE_RELATIVE_PATH = Path(
     "FROZEN-SUCCESSOR-SOURCE-SCOPE.json"
 )
 PACKAGE_RELATIVE_PATH = SCOPE_RELATIVE_PATH.with_name("PACKAGE-INDEX.json")
-EXPECTED_SCOPE_CONTENT_SHA256 = (
-    "9c7ee397441eccd00a3b909dc2bdeb6d01d7baf9710bddb966f9d4a04882d84d"
-)
-EXPECTED_PACKAGE_CONTENT_SHA256 = (
-    "923270611744c0da1927c639b64b042612fb34628e8b115f65c9562cc91f86bf"
-)
+EXPECTED_SCOPE_CONTENT_SHA256 = "9c7ee397441eccd00a3b909dc2bdeb6d01d7baf9710bddb966f9d4a04882d84d"
+EXPECTED_PACKAGE_CONTENT_SHA256 = "923270611744c0da1927c639b64b042612fb34628e8b115f65c9562cc91f86bf"
 EXPECTED_SCAN_ID = "18dded91dadf9fa0"
-EXPECTED_SCAN_MANIFEST_SHA256 = (
-    "fb6e0d82ff205e74052aa0f536049702e84c8af86624305f5fa03e19eb6e820d"
-)
+EXPECTED_SCAN_MANIFEST_SHA256 = "fb6e0d82ff205e74052aa0f536049702e84c8af86624305f5fa03e19eb6e820d"
 EXPECTED_STAGING_ARTIFACT_SHA256 = (
     "edd0c6e6a0e26ee776193ceb9256a8a2f5dbc92520dc5ad2346e012e0941e68c"
 )
@@ -46,8 +40,7 @@ def is_phase2a_frozen_scope_corpus(corpus_id: str | None) -> bool:
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -72,9 +65,7 @@ def _load_object(path: Path) -> dict[str, Any]:
     return value
 
 
-def _verify_content_digest(
-    value: Mapping[str, Any], *, field: str, expected: str
-) -> None:
+def _verify_content_digest(value: Mapping[str, Any], *, field: str, expected: str) -> None:
     material = dict(value)
     supplied = str(material.pop(field, ""))
     if supplied != expected or _sha256_bytes(_canonical_json(material)) != supplied:
@@ -100,8 +91,7 @@ def load_phase2a_frozen_scope(settings: Settings) -> dict[str, Any]:
     if (
         not isinstance(scope_entry, dict)
         or scope_entry.get("sha256") != _sha256_file(scope_path)
-        or package.get("frozen_scope_content_sha256")
-        != EXPECTED_SCOPE_CONTENT_SHA256
+        or package.get("frozen_scope_content_sha256") != EXPECTED_SCOPE_CONTENT_SHA256
         or package.get("source_count") != EXPECTED_SOURCE_COUNT
         or package.get("chunk_count") != EXPECTED_CHUNK_COUNT
         or package.get("answer_release_eligible") is not False
@@ -112,25 +102,18 @@ def load_phase2a_frozen_scope(settings: Settings) -> dict[str, Any]:
         raise ValueError("Phase-2A frozen-scope package boundary changed")
     sources = scope.get("sources")
     if (
-        scope.get("schema")
-        != "legalbot.v111.phase2a.frozen-successor-source-scope.v1"
-        or scope.get("status")
-        != "OWNER_APPROVED_HELD_RESEARCH_SCOPE_FROZEN_BUILD_NOT_STARTED"
+        scope.get("schema") != "legalbot.v111.phase2a.frozen-successor-source-scope.v1"
+        or scope.get("status") != "OWNER_APPROVED_HELD_RESEARCH_SCOPE_FROZEN_BUILD_NOT_STARTED"
         or scope.get("corpus_id") != CORPUS_ID
         or scope.get("source_scan_id") != EXPECTED_SCAN_ID
-        or scope.get("source_scan_manifest_sha256")
-        != EXPECTED_SCAN_MANIFEST_SHA256
-        or scope.get("staging_artifact_content_sha256")
-        != EXPECTED_STAGING_ARTIFACT_SHA256
-        or scope.get("predecessor_source_manifest_sha256")
-        != EXPECTED_PREDECESSOR_MANIFEST_SHA256
+        or scope.get("source_scan_manifest_sha256") != EXPECTED_SCAN_MANIFEST_SHA256
+        or scope.get("staging_artifact_content_sha256") != EXPECTED_STAGING_ARTIFACT_SHA256
+        or scope.get("predecessor_source_manifest_sha256") != EXPECTED_PREDECESSOR_MANIFEST_SHA256
         or scope.get("source_count") != EXPECTED_SOURCE_COUNT
         or scope.get("chunk_count") != EXPECTED_CHUNK_COUNT
-        or scope.get("owner_admitted_source_count")
-        != EXPECTED_OWNER_ADMITTED_SOURCE_COUNT
+        or scope.get("owner_admitted_source_count") != EXPECTED_OWNER_ADMITTED_SOURCE_COUNT
         or scope.get("source_family_counts") != EXPECTED_FAMILY_COUNTS
-        or scope.get("selection_policy")
-        != "exact-owner-approved-held-phase2a-successor-scope"
+        or scope.get("selection_policy") != "exact-owner-approved-held-phase2a-successor-scope"
         or scope.get("source_admission_applied") is not True
         or scope.get("answer_release_eligible") is not False
         or scope.get("successor_must_remain_non_active") is not True
@@ -267,12 +250,10 @@ def select_phase2a_frozen_scope_rows(
         if (
             row.get("document_id") != frozen.get("document_id")
             or row.get("stable_identifier") != frozen.get("stable_identifier")
-            or row.get("authority_identity_id")
-            != frozen.get("authority_identity_id")
+            or row.get("authority_identity_id") != frozen.get("authority_identity_id")
             or row.get("content_sha256") != frozen.get("content_sha256")
             or row.get("version_sha256") != frozen.get("version_sha256")
-            or row.get("canonical_markdown_path")
-            != frozen.get("canonical_markdown_path")
+            or row.get("canonical_markdown_path") != frozen.get("canonical_markdown_path")
             or chunks != int(frozen.get("body_chunk_count") or -1)
             or row.get("review_status") != "approved"
             or row.get("superseded_by") is not None

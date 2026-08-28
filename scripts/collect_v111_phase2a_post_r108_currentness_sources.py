@@ -30,50 +30,32 @@ else:
     import collect_v111_phase2a_official_sources as official
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PLAN_PATH = (
-    PROJECT_ROOT
-    / "config/phase2a_post_r108_currentness_sources.2026-08-26.v2.json"
-)
+PLAN_PATH = PROJECT_ROOT / "config/phase2a_post_r108_currentness_sources.2026-08-26.v2.json"
 DEFAULT_OUTPUT_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-26/phase2a-post-r108-currentness-sources-r109c"
+    PROJECT_ROOT / "data/quarantine/2026-08-26/phase2a-post-r108-currentness-sources-r109c"
 )
 PRIOR_FAILURES = (
     {
         "root": PROJECT_ROOT
         / "data/quarantine/2026-08-26/phase2a-post-r108-currentness-sources-r109",
-        "file_sha256": (
-            "3b1d42cd5ffe6e55769b2f4c4d9400b847d0eb8c3e3fd74fa725c4400347b113"
-        ),
-        "content_sha256": (
-            "8bf85428f433ce7ef4d29a25173b35bdb066a28e5191fbf613246a275120bea1"
-        ),
-        "fingerprint": (
-            "b92862f054be7bca27e0bb84b566ce30050209e04f83d5ca1b38e5bded5e5abf"
-        ),
+        "file_sha256": ("3b1d42cd5ffe6e55769b2f4c4d9400b847d0eb8c3e3fd74fa725c4400347b113"),
+        "content_sha256": ("8bf85428f433ce7ef4d29a25173b35bdb066a28e5191fbf613246a275120bea1"),
+        "fingerprint": ("b92862f054be7bca27e0bb84b566ce30050209e04f83d5ca1b38e5bded5e5abf"),
         "error": "phase2a_r103_judgment_paragraphs_missing",
     },
     {
         "root": PROJECT_ROOT
         / "data/quarantine/2026-08-26/phase2a-post-r108-currentness-sources-r109b",
-        "file_sha256": (
-            "489996e4281bdffb32f92c69415ad6c7b87fbbd380a3ea6d9d444659d51441b4"
-        ),
-        "content_sha256": (
-            "2fc8db2123a11cf7cb847794968026f312695b878cf680e354c2cefe6819c342"
-        ),
-        "fingerprint": (
-            "7972ec609489cdf6c6b85714ae66b28dc13d1235c2b99158c8e1be24acecf2a6"
-        ),
+        "file_sha256": ("489996e4281bdffb32f92c69415ad6c7b87fbbd380a3ea6d9d444659d51441b4"),
+        "content_sha256": ("2fc8db2123a11cf7cb847794968026f312695b878cf680e354c2cefe6819c342"),
+        "fingerprint": ("7972ec609489cdf6c6b85714ae66b28dc13d1235c2b99158c8e1be24acecf2a6"),
         "error": "phase2a_r109_response_digest_mismatch",
     },
 )
 TARGET_DATE = "2026-08-14"
 TARGET_CEILING = "2026-08-14T23:59:59+01:00 Europe/London"
 EXPECTED_TARGET_COUNT = 4
-ALLOWED_HOSTS = frozenset(
-    {"caselaw.nationalarchives.gov.uk", "www.legislation.gov.uk"}
-)
+ALLOWED_HOSTS = frozenset({"caselaw.nationalarchives.gov.uk", "www.legislation.gov.uk"})
 USER_AGENT = "LegalBot-v1.11-Phase2A-post-r108-currentness/1.0"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _UKSI = re.compile(r"^uksi:(?P<year>\d{4}):(?P<number>\d+)$")
@@ -95,15 +77,12 @@ _BOUNDARY_FIELDS = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -157,8 +136,7 @@ def _safe_url(value: str) -> str:
 def _validate_targets(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     targets = plan.get("targets")
     if (
-        plan.get("schema")
-        != "legalbot.v111.phase2a.post-r108-currentness-source-plan.v2"
+        plan.get("schema") != "legalbot.v111.phase2a.post-r108-currentness-source-plan.v2"
         or plan.get("target_ceiling") != TARGET_CEILING
         or plan.get("owner_source_admission_required") is not True
         or any(plan.get(field) is not False for field in _BOUNDARY_FIELDS)
@@ -284,11 +262,7 @@ def _judgment_extraction(authority: str, raw: bytes) -> dict[str, Any]:
             number = int(identifier_match.group(1))
         else:
             direct_num = next(
-                (
-                    child
-                    for child in list(element)
-                    if _local_name(child.tag) == "num"
-                ),
+                (child for child in list(element) if _local_name(child.tag) == "num"),
                 None,
             )
             if direct_num is not None:
@@ -381,8 +355,7 @@ def _uksi_extraction(authority: str, raw: bytes) -> dict[str, Any]:
     titles = [
         _normal_text(element)
         for element in root.iter()
-        if _local_name(element.tag) in {"title", "Title"}
-        and _normal_text(element)
+        if _local_name(element.tag) in {"title", "Title"} and _normal_text(element)
     ]
     blocks: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -491,9 +464,7 @@ def collect(
             requested_url = str(target["official_url"])
             final_url, status, content_type, raw = official._fetch(client, requested_url)
             if status != 200:
-                raise ValueError(
-                    f"phase2a_r109_official_source_unavailable_http_{status}"
-                )
+                raise ValueError(f"phase2a_r109_official_source_unavailable_http_{status}")
             if _safe_url(final_url) != requested_url:
                 raise ValueError("phase2a_r109_final_url_invalid")
             raw_sha256 = _sha256(raw)
@@ -520,9 +491,7 @@ def collect(
                 **extraction,
                 "source_representation_sha256": raw_sha256,
                 "source_canonical_xml_sha256": canonical_xml_sha256,
-                "preflight_response_sha256": target[
-                    "preflight_response_sha256"
-                ],
+                "preflight_response_sha256": target["preflight_response_sha256"],
                 "raw_byte_status": raw_byte_status,
                 "requested_url": requested_url,
                 "final_url": final_url,
@@ -543,9 +512,7 @@ def collect(
             raw_member = f"{stem}.xml"
             extraction_member = f"{stem}.extraction.json"
             _write_exclusive(output_root / raw_member, raw)
-            _write_exclusive(
-                output_root / extraction_member, _pretty_json(extraction_artifact)
-            )
+            _write_exclusive(output_root / extraction_member, _pretty_json(extraction_artifact))
             record_material = {
                 "ordinal": target["ordinal"],
                 "target_id": target["target_id"],
@@ -564,20 +531,12 @@ def collect(
                 "raw_quarantine_member": raw_member,
                 "raw_bytes": len(raw),
                 "raw_sha256": raw_sha256,
-                "preflight_response_sha256": target[
-                    "preflight_response_sha256"
-                ],
+                "preflight_response_sha256": target["preflight_response_sha256"],
                 "raw_byte_status": raw_byte_status,
-                "canonical_xml_sha256": extraction_artifact[
-                    "source_canonical_xml_sha256"
-                ],
+                "canonical_xml_sha256": extraction_artifact["source_canonical_xml_sha256"],
                 "extraction_member": extraction_member,
-                "extraction_file_sha256": _sha256_file(
-                    output_root / extraction_member
-                ),
-                "extraction_content_sha256": extraction_artifact[
-                    "artifact_content_sha256"
-                ],
+                "extraction_file_sha256": _sha256_file(output_root / extraction_member),
+                "extraction_content_sha256": extraction_artifact["artifact_content_sha256"],
                 "extracted_block_count": extraction_artifact["block_count"],
                 "result": "OFFICIAL_SOURCE_QUARANTINED_NOT_ADMITTED",
                 "owner_source_admission_required": True,
@@ -585,9 +544,7 @@ def collect(
                 "automatically_indexed": False,
                 "automatically_embedded": False,
             }
-            records.append(
-                {**record_material, "record_content_sha256": _sealed(record_material)}
-            )
+            records.append({**record_material, "record_content_sha256": _sealed(record_material)})
 
     manifest_material = {
         "schema": "legalbot.v111.phase2a.post-r108-currentness-source-quarantine.v1",
@@ -622,9 +579,7 @@ def collect(
         **manifest_material,
         "manifest_content_sha256": _sealed(manifest_material),
     }
-    _write_exclusive(
-        output_root / "QUARANTINE-MANIFEST.json", _pretty_json(manifest)
-    )
+    _write_exclusive(output_root / "QUARANTINE-MANIFEST.json", _pretty_json(manifest))
     _write_exclusive(
         output_root / "OUTCOME.txt",
         b"4 OFFICIAL CURRENTNESS SOURCES QUARANTINED. OWNER REVIEW REQUIRED; "
@@ -635,9 +590,7 @@ def collect(
         for path in output_root.iterdir()
         if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in names
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in names)
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return manifest
 
@@ -665,9 +618,7 @@ def _persist_failure(output_root: Path, exc: BaseException) -> None:
         }
         _write_exclusive(
             path,
-            _pretty_json(
-                {**material, "failure_content_sha256": _sealed(material)}
-            ),
+            _pretty_json({**material, "failure_content_sha256": _sealed(material)}),
         )
     except Exception:
         return

@@ -629,6 +629,7 @@ def build_preflight(
         else:
             materialization_ledger_sha256 = str(materialization["content_sha256"])
             materialization_ledger_file_sha256 = str(materialization["file_sha256"])
+            resolved_materialization_ledger_path = materialization_ledger_path.resolve()
 
     prior_by_stage: dict[str, list[dict[str, Any]]] = {}
     for record in stage_inventory["stages"]:
@@ -642,7 +643,7 @@ def build_preflight(
             and (
                 settings.evaluation_dir / "phase2a-owner-review" / str(record["relative_path"])
             ).resolve()
-            == materialization_ledger_path.resolve()
+            == resolved_materialization_ledger_path
         ]
         if len(materialization_stages) != 1 or len(matching_materialization) != 1:
             blockers.append("CONFLICTING_EXECUTION_MATERIALIZATION_STAGE")

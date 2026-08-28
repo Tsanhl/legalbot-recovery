@@ -24,12 +24,9 @@ import httpx
 from lxml import etree
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PLAN = (
-    PROJECT_ROOT / "config/phase2a_direct_hold_later_treatment.2026-08-27.v1.json"
-)
+DEFAULT_PLAN = PROJECT_ROOT / "config/phase2a_direct_hold_later_treatment.2026-08-27.v1.json"
 DEFAULT_QUARANTINE = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-27/phase2a-direct-hold-later-treatment-r1"
+    PROJECT_ROOT / "data/quarantine/2026-08-27/phase2a-direct-hold-later-treatment-r1"
 )
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
@@ -37,12 +34,8 @@ DEFAULT_OUTPUT = (
     / "LegalBot-Phase2A-2026-08-27-remediation-working-r1"
     / "DIRECT-HOLD-LATER-TREATMENT-ADVISORY-4.json"
 )
-EXPECTED_PLAN_FILE_SHA256 = (
-    "34198599ea929042af4b59d4e34f3003cc7be8a1626b296d393932782a54c5b9"
-)
-EXPECTED_SOURCE_QUEUE_SHA256 = (
-    "155af28ca81bb6848a875fab8173e0f646339282d695d2ae61edece143bda7a5"
-)
+EXPECTED_PLAN_FILE_SHA256 = "34198599ea929042af4b59d4e34f3003cc7be8a1626b296d393932782a54c5b9"
+EXPECTED_SOURCE_QUEUE_SHA256 = "155af28ca81bb6848a875fab8173e0f646339282d695d2ae61edece143bda7a5"
 ALLOWED_HOST = "caselaw.nationalarchives.gov.uk"
 MAX_RESPONSE_BYTES = 32 * 1024 * 1024
 USER_AGENT = "LegalBot-v1.11-targeted-exact-citation-review/1.0"
@@ -54,15 +47,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -122,8 +112,7 @@ def _load_plan(path: Path) -> dict[str, Any]:
 def _validate_plan(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
     targets = plan.get("targets")
     if (
-        plan.get("schema")
-        != "legalbot.v111.phase2a.direct-hold-later-treatment-plan.v1"
+        plan.get("schema") != "legalbot.v111.phase2a.direct-hold-later-treatment-plan.v1"
         or plan.get("purpose")
         != "TARGETED_NON_BULK_EXACT_CITATION_LATER_TREATMENT_FOR_DIRECT_READY_ROWS"
         or plan.get("source_ceiling_date") != "2026-08-14"
@@ -238,9 +227,7 @@ def _judgment_metadata(raw: bytes) -> tuple[str, date, etree._Element]:
     root = etree.fromstring(raw)
     namespace = {"akn": AKN_NS, "tna": "https://caselaw.nationalarchives.gov.uk/akn"}
     citations = root.xpath(".//tna:cite/text()", namespaces=namespace)
-    dates = root.xpath(
-        './/akn:FRBRdate[@name="judgment"]/@date', namespaces=namespace
-    )
+    dates = root.xpath('.//akn:FRBRdate[@name="judgment"]/@date', namespaces=namespace)
     if len(set(citations)) != 1 or not dates:
         raise ValueError("phase2a_direct_hold_judgment_metadata_invalid")
     judgment_date = date.fromisoformat(str(dates[0])[:10])
@@ -255,9 +242,7 @@ def _paragraph_spans(
     namespace = {"akn": AKN_NS}
     spans: list[dict[str, Any]] = []
     for paragraph_id in paragraph_ids:
-        matches = root.xpath(
-            f'.//akn:paragraph[@eId="{paragraph_id}"]', namespaces=namespace
-        )
+        matches = root.xpath(f'.//akn:paragraph[@eId="{paragraph_id}"]', namespaces=namespace)
         if len(matches) != 1:
             raise ValueError("phase2a_direct_hold_exact_paragraph_missing")
         exact_text = " ".join("".join(matches[0].itertext()).split())
@@ -368,9 +353,7 @@ def collect(
                     ),
                     "owner_outcome": None,
                 }
-                candidate_records.append(
-                    {**material, "record_content_sha256": _sealed(material)}
-                )
+                candidate_records.append({**material, "record_content_sha256": _sealed(material)})
             material = {
                 "schema": "legalbot.v111.phase2a.direct-hold-target-review.v1",
                 "target_neutral_citation": target_citation,

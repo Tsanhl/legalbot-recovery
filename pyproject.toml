@@ -83,3 +83,7 @@ ignore = ["E501", "B008", "RUF001"]
 python_version = "3.13"
 strict = true
 packages = ["backend.app"]
+
+[[tool.mypy.overrides]]
+module = ["app.model_runtime.proto.*"]
+ignore_errors = true

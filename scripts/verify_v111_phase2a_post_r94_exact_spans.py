@@ -39,21 +39,13 @@ DEFAULT_RECOVERY = (
     / "LegalBot-Phase2AB-2026-08-26-r98d-candidate-recovery"
     / "CANDIDATE-RECOVERY-361.json"
 )
-DEFAULT_CASES = (
-    PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
-)
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r99b-exact-span-advisory"
-)
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+DEFAULT_CASES = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1/cases.jsonl"
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r99b-exact-span-advisory"
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 EXPECTED_CANDIDATE_MANIFEST_DIGEST = (
     "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0"
 )
-EXPECTED_ISSUE_REGISTRY_DIGEST = (
-    "d813a1fdc1b9b6f2d6c67b0ac2c113af696343cc8c619355c74ee8654beca475"
-)
+EXPECTED_ISSUE_REGISTRY_DIGEST = "d813a1fdc1b9b6f2d6c67b0ac2c113af696343cc8c619355c74ee8654beca475"
 EXPECTED_ROW_COUNT = 361
 MAX_EVIDENCE_CANDIDATES_PER_ROW = 3
 # Keep the shared verifier's proven singleton contract.  Multi-row character
@@ -71,8 +63,7 @@ KNOWN_RECOVERY_STATUSES = frozenset(
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -135,18 +126,15 @@ def _load_recovery(path: Path) -> tuple[list[dict[str, Any]], str]:
     rows = value.get("rows")
     query_strategy = value.get("deterministic_query_strategy")
     if (
-        value.get("schema")
-        != "legalbot.v111.phase2a.post-r94-candidate-recovery-361.v2"
+        value.get("schema") != "legalbot.v111.phase2a.post-r94-candidate-recovery-361.v2"
         or value.get("row_count") != EXPECTED_ROW_COUNT
         or value.get("candidate_manifest_sha256") != EXPECTED_CANDIDATE_MANIFEST_DIGEST
-        or value.get("source_issue_registry_content_sha256")
-        != EXPECTED_ISSUE_REGISTRY_DIGEST
+        or value.get("source_issue_registry_content_sha256") != EXPECTED_ISSUE_REGISTRY_DIGEST
         or value.get("deterministic_retrieval_precedes_advisory_ai") is not True
         or value.get("advisory_planner_required") is not False
         or value.get("issue_labels_and_legal_domains_registry_bound") is not True
         or not isinstance(query_strategy, dict)
-        or query_strategy.get("sealed_registry_planned_authority_routes_used")
-        is not True
+        or query_strategy.get("sealed_registry_planned_authority_routes_used") is not True
         or query_strategy.get("route_diverse_candidate_selection") is not True
         or value.get("threshold_applied") is not False
         or value.get("old_candidate_fallback") is not False
@@ -180,35 +168,26 @@ def _load_recovery(path: Path) -> tuple[list[dict[str, Any]], str]:
             raise ValueError("phase2a_post_r94_span_recovery_status_invalid")
         if (
             not isinstance(candidates, list)
-            or row.get("schema")
-            != "legalbot.v111.phase2a.post-r94-candidate-recovery-row.v2"
+            or row.get("schema") != "legalbot.v111.phase2a.post-r94-candidate-recovery-row.v2"
             or row.get("classification") != "DETERMINISTIC_ISSUE_QUERY"
             or row.get("advisory_atomic_proposition") is not None
             or not isinstance(row.get("planned_authority_ids"), list)
             or not isinstance(row.get("planned_source_identities_in_candidate"), list)
             or not isinstance(row.get("planned_authority_ids_outside_candidate"), list)
             or not str(row.get("issue_label") or "").strip()
-            or row.get("source_issue_registry_content_sha256")
-            != EXPECTED_ISSUE_REGISTRY_DIGEST
-            or len(str(row.get("source_issue_registry_row_content_sha256") or ""))
-            != 64
+            or row.get("source_issue_registry_content_sha256") != EXPECTED_ISSUE_REGISTRY_DIGEST
+            or len(str(row.get("source_issue_registry_row_content_sha256") or "")) != 64
             or row.get("technical_qualification_assigned") is not False
             or row.get("owner_decision_required") is not True
         ):
             raise ValueError("phase2a_post_r94_span_recovery_row_boundary_invalid")
-        if (status == "EXACT_CANDIDATE_CHUNKS_READY_FOR_SPAN_VERIFICATION") != bool(
-            candidates
-        ):
+        if (status == "EXACT_CANDIDATE_CHUNKS_READY_FOR_SPAN_VERIFICATION") != bool(candidates):
             raise ValueError("phase2a_post_r94_span_recovery_status_candidates_invalid")
         seen_chunks: set[str] = set()
         planned_source_identities = {
-            str(value)
-            for value in row["planned_source_identities_in_candidate"]
-            if str(value)
+            str(value) for value in row["planned_source_identities_in_candidate"] if str(value)
         }
-        if len(planned_source_identities) != len(
-            row["planned_source_identities_in_candidate"]
-        ):
+        if len(planned_source_identities) != len(row["planned_source_identities_in_candidate"]):
             raise ValueError("phase2a_post_r94_span_planned_identities_invalid")
         observed_planned_source_identities: set[str] = set()
         for expected_rank, candidate in enumerate(candidates, start=1):
@@ -238,9 +217,7 @@ def _load_recovery(path: Path) -> tuple[list[dict[str, Any]], str]:
             if candidate.get("selection_basis") == "REGISTRY_PLANNED_IDENTITY_DIVERSITY":
                 source_identity = str(candidate["source_identity"])
                 if source_identity not in planned_source_identities:
-                    raise ValueError(
-                        "phase2a_post_r94_span_planned_candidate_identity_invalid"
-                    )
+                    raise ValueError("phase2a_post_r94_span_planned_candidate_identity_invalid")
                 observed_planned_source_identities.add(source_identity)
             seen_chunks.add(chunk_id)
         if observed_planned_source_identities != planned_source_identities:
@@ -330,16 +307,12 @@ def _project_review_row(row: Mapping[str, Any]) -> dict[str, Any]:
                     "rrf_score": candidate.get("rrf_score"),
                     "selection_basis": candidate.get("selection_basis"),
                     "route_evidence": candidate.get("route_evidence"),
-                    "candidate_content_sha256": candidate.get(
-                        "candidate_content_sha256"
-                    ),
+                    "candidate_content_sha256": candidate.get("candidate_content_sha256"),
                 },
                 "selection_origin": "POST_R94_SEALED_CANDIDATE_HYBRID_RECOVERY",
                 "projection_integrity": {
                     "selected_candidate_rank": candidate["rank"],
-                    "selected_candidate_content_sha256": candidate[
-                        "candidate_content_sha256"
-                    ],
+                    "selected_candidate_content_sha256": candidate["candidate_content_sha256"],
                     "source_text_fully_partitioned": True,
                     "silent_text_truncation": False,
                     "omitted_candidate_count": len(omitted),
@@ -420,9 +393,7 @@ def verify_spans(
         "prompt_sha256": _sha256((base.SYSTEM_PROMPT + "\n").encode()),
         "shared_verifier_code_file_sha256": _sha256_file(Path(base.__file__).resolve()),
         "wrapper_code_file_sha256": _sha256_file(Path(__file__).resolve()),
-        "evidence_validator_code_file_sha256": _sha256_file(
-            base.EVIDENCE_VALIDATOR_CODE_PATH
-        ),
+        "evidence_validator_code_file_sha256": _sha256_file(base.EVIDENCE_VALIDATOR_CODE_PATH),
         "runtime_identity_sha256": runtime_digest,
         "maximum_evidence_candidates_per_row": MAX_EVIDENCE_CANDIDATES_PER_ROW,
         "maximum_batch_size": MAX_BATCH_SIZE,
@@ -568,9 +539,7 @@ def verify_spans(
         b"PHASE 2A POST-R94 EXACT-SPAN ADVISORY COMPLETE - OWNER DECISIONS REQUIRED; NO PHASE 2B\n",
     )
     files = sorted(
-        path
-        for path in output_root.iterdir()
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.iterdir() if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",
@@ -592,9 +561,7 @@ def _arguments() -> argparse.Namespace:
 
 def main() -> None:
     args = _arguments()
-    invoke, runtime_identity = base._http_invoker(
-        args.model_url, args.timeout_seconds
-    )
+    invoke, runtime_identity = base._http_invoker(args.model_url, args.timeout_seconds)
     result = verify_spans(
         recovery_path=args.recovery.resolve(strict=True),
         cases_path=args.cases.resolve(strict=True),

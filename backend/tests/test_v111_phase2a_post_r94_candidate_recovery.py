@@ -36,7 +36,10 @@ def _route(chunk_id: str, route: str, rank: int, score: float) -> dict[str, obje
 def test_fusion_rewards_independent_routes_and_preserves_route_evidence() -> None:
     fused = recovery._fuse_candidates(
         [
-            [_route("chunk-a", "VECTOR_GLOBAL", 1, 0.1), _route("chunk-b", "VECTOR_GLOBAL", 2, 0.2)],
+            [
+                _route("chunk-a", "VECTOR_GLOBAL", 1, 0.1),
+                _route("chunk-b", "VECTOR_GLOBAL", 2, 0.2),
+            ],
             [_route("chunk-b", "FTS_GLOBAL", 1, 9.0)],
         ]
     )
@@ -69,9 +72,7 @@ def test_query_is_deterministic_and_does_not_depend_on_ai_proposition() -> None:
     assert "official primary authority" in value
     assert len(value) <= recovery.MAX_QUERY_CHARACTERS
 
-    with pytest.raises(
-        ValueError, match="phase2a_candidate_recovery_query_fields_missing"
-    ):
+    with pytest.raises(ValueError, match="phase2a_candidate_recovery_query_fields_missing"):
         recovery._build_query(
             issue_label="",
             legal_domain="contract",
@@ -90,9 +91,7 @@ def test_remaining_rows_are_bound_to_registry_labels_and_domains(monkeypatch) ->
                 "issue_label": "breach",
                 "legal_domain": "contract",
                 "triage_class": "CANDIDATE_LOCATOR_OR_GOLD_DEFINITION_REPAIR",
-                "planned_authorities": [
-                    {"authority_identity_id": "ukpga:2000:1"}
-                ],
+                "planned_authorities": [{"authority_identity_id": "ukpga:2000:1"}],
                 "r70_assessment": "MATERIAL_GAP_ADVISORY",
                 "technical_qualification_assigned": False,
                 "record_content_sha256": "1" * 64,
@@ -134,9 +133,7 @@ def test_candidate_projection_requires_exact_text_hash_and_manifest_binding() ->
     )
     assert projected["text"] == text
     assert projected["authority_identity_id"] == "ukpga:2000:1"
-    assert projected["source_identity"] == (
-        "ukpga:2000:1:latest-available@2026-08-14"
-    )
+    assert projected["source_identity"] == ("ukpga:2000:1:latest-available@2026-08-14")
     assert projected["candidate_manifest_source_bound"] is True
     assert projected["reranker_score"] == 0.95
 
@@ -227,9 +224,7 @@ def test_pre_rerank_selection_reserves_registry_identity_candidates() -> None:
         {
             **_route(f"global-{index}", "VECTOR_GLOBAL", index, 0.1),
             "rrf_score": 1.0 / (60 + index),
-            "route_evidence": [
-                {"route": "VECTOR_GLOBAL", "rank": index, "score": 0.1}
-            ],
+            "route_evidence": [{"route": "VECTOR_GLOBAL", "rank": index, "score": 0.1}],
         }
         for index in range(1, 14)
     ]
@@ -254,9 +249,7 @@ def test_pre_rerank_selection_reserves_registry_identity_candidates() -> None:
         row.pop("route_rank")
         row.pop("route_score")
 
-    selected = recovery._preselect_route_diverse_fused(
-        [*global_rows, planned], [planned_identity]
-    )
+    selected = recovery._preselect_route_diverse_fused([*global_rows, planned], [planned_identity])
 
     assert len(selected) == recovery.PRE_RERANK_LIMIT
     assert selected[0]["chunk_id"] == "planned"

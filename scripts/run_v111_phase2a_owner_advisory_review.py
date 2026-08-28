@@ -39,15 +39,9 @@ from app.model_runtime.config import (  # noqa: E402
     PINNED_RUNTIME_REPO,
 )
 
-EXPECTED_REMAINDER_DIGEST = (
-    "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
-)
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
-EXPECTED_PROMPT_SHA256 = (
-    "41e3e6ae5024e6512dc77551f3cee6344c94d2b16c6621209ece89fd9f2cb123"
-)
+EXPECTED_REMAINDER_DIGEST = "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
+EXPECTED_PROMPT_SHA256 = "41e3e6ae5024e6512dc77551f3cee6344c94d2b16c6621209ece89fd9f2cb123"
 EXPECTED_ROW_COUNT = 448
 MODEL_BACKEND = "mlx_lm"
 REVIEWER_EXECUTION_MODE = (
@@ -131,15 +125,12 @@ class AdvisoryValidationError(ValueError):
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -240,11 +231,7 @@ def _salient_excerpt(text: str, *, issue_label: str, question: str) -> tuple[str
             break
     lowered_text = clean.casefold()
     positions = sorted(
-        {
-            position
-            for needle in needles
-            if (position := lowered_text.find(needle)) >= 0
-        }
+        {position for needle in needles if (position := lowered_text.find(needle)) >= 0}
     )
     windows: list[str] = []
     for position in positions[:3]:
@@ -289,17 +276,11 @@ def _build_row_input(row: Mapping[str, Any], case: Mapping[str, Any]) -> dict[st
                 "canonical_citation": candidate.get("canonical_citation"),
                 "locator": candidate.get("locator"),
                 "span_bundle_sha256": candidate.get("span_bundle_sha256"),
-                "candidate_record_content_sha256": candidate.get(
-                    "candidate_record_content_sha256"
-                ),
+                "candidate_record_content_sha256": candidate.get("candidate_record_content_sha256"),
                 "identity_verified": candidate.get("identity_verified"),
                 "currentness_verified": candidate.get("currentness_verified"),
-                "later_treatment_review_required": candidate.get(
-                    "later_treatment_review_required"
-                ),
-                "already_in_sealed_candidate": candidate.get(
-                    "already_in_sealed_candidate"
-                ),
+                "later_treatment_review_required": candidate.get("later_treatment_review_required"),
+                "already_in_sealed_candidate": candidate.get("already_in_sealed_candidate"),
                 "full_span_text_sha256": _sha256((text + "\n").encode("utf-8")),
                 "full_span_character_count": len(text),
                 "excerpt": excerpt,
@@ -428,8 +409,7 @@ def _available_memory_bytes() -> int | None:
                 if separator:
                     pages[key] = int(value.strip().rstrip("."))
             available_pages = sum(
-                pages.get(key, 0)
-                for key in ("Pages free", "Pages inactive", "Pages speculative")
+                pages.get(key, 0) for key in ("Pages free", "Pages inactive", "Pages speculative")
             )
             return available_pages * int(match.group(1)) if available_pages > 0 else None
         except (OSError, ValueError, subprocess.SubprocessError):
@@ -437,7 +417,9 @@ def _available_memory_bytes() -> int | None:
     return None
 
 
-def _http_invoker(model_url: str, timeout_seconds: float) -> Callable[[dict[str, Any]], dict[str, Any]]:
+def _http_invoker(
+    model_url: str, timeout_seconds: float
+) -> Callable[[dict[str, Any]], dict[str, Any]]:
     parsed = urlparse(model_url)
     if (
         parsed.scheme != "http"
@@ -580,8 +562,7 @@ def _validated_output(
     ):
         raise AdvisoryValidationError("ambiguous_assessment_boundary_invalid")
     if semantic_assessment == "PARTIAL_SUPPORT_RESEARCH_NEEDED" and (
-        "partial_support_only" not in codes
-        or (selected and "candidates_unrelated" in codes)
+        "partial_support_only" not in codes or (selected and "candidates_unrelated" in codes)
     ):
         raise AdvisoryValidationError("partial_support_assessment_boundary_invalid")
     if not selected and (
@@ -603,9 +584,7 @@ def _validated_output(
         "time_to_first_token_ms": body.get("time_to_first_token_ms"),
         "peak_memory_gb": peak,
         "finish_reason": finish,
-        "raw_output_sha256": _sha256(
-            str(body.get("raw_text") or "").encode("utf-8")
-        ),
+        "raw_output_sha256": _sha256(str(body.get("raw_text") or "").encode("utf-8")),
         "raw_output_character_count": len(str(body.get("raw_text") or "")),
     }
     return dict(structured), metrics
@@ -752,7 +731,8 @@ def _review_one(
                 "diagnostic_content_sha256": _sealed(diagnostic_material),
             }
             _write_exclusive(
-                diagnostics_root / f"{_checkpoint_name(ordinal, str(row_input['row_id']))[:-5]}-a{attempt}.json",
+                diagnostics_root
+                / f"{_checkpoint_name(ordinal, str(row_input['row_id']))[:-5]}-a{attempt}.json",
                 _pretty_json(diagnostic),
             )
             prior_error = error
@@ -795,8 +775,7 @@ def _review_one(
         }
         selected_input = [selected_input_candidates[rank] for rank in ranks]
         if any(
-            candidate.get("later_treatment_review_required") is True
-            for candidate in selected_input
+            candidate.get("later_treatment_review_required") is True for candidate in selected_input
         ):
             deterministic_codes.append("case_later_treatment_required")
         if any(
@@ -1013,9 +992,7 @@ def run_review(
     recommendation_counts = Counter(
         str(item["effective_owner_review_recommendation"]) for item in passed
     )
-    semantic_assessment_counts = Counter(
-        str(item["model_semantic_assessment"]) for item in passed
-    )
+    semantic_assessment_counts = Counter(str(item["model_semantic_assessment"]) for item in passed)
     final_rows: list[dict[str, Any]] = []
     for item in results:
         if item in held:
@@ -1036,15 +1013,11 @@ def run_review(
                     "status": "ADVISORY_RECOMMENDATION_READY_OWNER_DECISION_REQUIRED",
                     "model_semantic_assessment": item["model_semantic_assessment"],
                     "recommendation": item["effective_owner_review_recommendation"],
-                    "selected_candidate_ranks": item["model_output"][
-                        "selected_candidate_ranks"
-                    ],
+                    "selected_candidate_ranks": item["model_output"]["selected_candidate_ranks"],
                     "model_semantic_finding_codes": item["model_semantic_finding_codes"],
                     "deterministic_finding_codes": item["deterministic_finding_codes"],
                     "finding_codes": item["combined_finding_codes"],
-                    "deterministic_owner_review_note": item[
-                        "deterministic_owner_review_note"
-                    ],
+                    "deterministic_owner_review_note": item["deterministic_owner_review_note"],
                     "selected_candidates": item["selected_candidates"],
                     "checkpoint_content_sha256": item["checkpoint_content_sha256"],
                     "owner_decision_required": True,

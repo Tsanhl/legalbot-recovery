@@ -33,9 +33,7 @@ DEFAULT_PLANS = (
     / "ADVISORY-AUTHORITY-PLANS-448.json"
 )
 DEFAULT_ORIGINAL = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-24-r29"
-    / "REMAINING-448-RESEARCH-PACKETS.json"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-24-r29" / "REMAINING-448-RESEARCH-PACKETS.json"
 )
 DEFAULT_DEEP = (
     OWNER_REVIEW_ROOT
@@ -44,19 +42,14 @@ DEFAULT_DEEP = (
 )
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data" / "catalog.sqlite3"
 DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r51c-context-safe-locator-resolution"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r51c-context-safe-locator-resolution"
 )
 
 EXPECTED_ORIGINAL_CONTENT_SHA256 = (
     "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
 )
-EXPECTED_DEEP_CONTENT_SHA256 = (
-    "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
-)
-EXPECTED_CATALOGUE_FILE_SHA256 = (
-    "8c700c3e8f9cc77abe4b03cf5011624db9ff14a74f02f3a37b59c1fcf595a10d"
-)
+EXPECTED_DEEP_CONTENT_SHA256 = "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
+EXPECTED_CATALOGUE_FILE_SHA256 = "8c700c3e8f9cc77abe4b03cf5011624db9ff14a74f02f3a37b59c1fcf595a10d"
 EXPECTED_ISSUE_COUNT = 448
 TARGET_CEILING_DATE = date(2026, 8, 14)
 MAX_FALLBACK_CANDIDATES = 3
@@ -74,15 +67,12 @@ _PAGE = re.compile(r"^(?:p(?:age)?\s*)(\d+)$", re.IGNORECASE)
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -153,9 +143,7 @@ def _candidate_rows(
     original_sha256 = _verify_seal(
         original, "artifact_content_sha256", "phase2a_locator_original_seal_invalid"
     )
-    deep_sha256 = _verify_seal(
-        deep, "artifact_content_sha256", "phase2a_locator_deep_seal_invalid"
-    )
+    deep_sha256 = _verify_seal(deep, "artifact_content_sha256", "phase2a_locator_deep_seal_invalid")
     if (
         original_sha256 != EXPECTED_ORIGINAL_CONTENT_SHA256
         or deep_sha256 != EXPECTED_DEEP_CONTENT_SHA256
@@ -170,9 +158,7 @@ def _candidate_rows(
             if not isinstance(row, dict) or not isinstance(row.get("candidates"), list):
                 raise ValueError("phase2a_locator_candidate_row_invalid")
             by_row[str(row.get("row_id") or "")].extend(
-                dict(candidate)
-                for candidate in row["candidates"]
-                if isinstance(candidate, dict)
+                dict(candidate) for candidate in row["candidates"] if isinstance(candidate, dict)
             )
     return dict(by_row), {"original": original_sha256, "deep": deep_sha256}
 
@@ -335,10 +321,7 @@ def _bounded_fallback_chunks(
 
     available_count = len(chunks)
     available_characters = sum(len(str(chunk.get("text") or "")) for chunk in chunks)
-    accepted = (
-        available_count <= remaining_chunks
-        and available_characters <= remaining_characters
-    )
+    accepted = available_count <= remaining_chunks and available_characters <= remaining_characters
     return (
         [dict(chunk) for chunk in chunks] if accepted else [],
         {
@@ -410,9 +393,7 @@ def _candidate_chunks(
                 "text_sha256": supplied_sha256,
                 "token_count": int(row["token_count"]),
                 "stream": str(row["stream"] or ""),
-                "metadata_json_sha256": _sha256(
-                    str(row["metadata_json"] or "{}").encode()
-                ),
+                "metadata_json_sha256": _sha256(str(row["metadata_json"] or "{}").encode()),
             }
         )
     return exact
@@ -595,7 +576,8 @@ def resolve_plans(
                             "canonical_citation": source_candidate.get("canonical_citation"),
                             "canonical_url": source_candidate.get("canonical_url"),
                             "identity_verified": source_candidate.get("identity_verified") is True,
-                            "currentness_verified": source_candidate.get("currentness_verified") is True,
+                            "currentness_verified": source_candidate.get("currentness_verified")
+                            is True,
                             "later_treatment_review_required": (
                                 source_candidate.get("later_treatment_review_required") is True
                             ),
@@ -659,9 +641,7 @@ def resolve_plans(
                         "canonical_citation": candidate.get("canonical_citation"),
                         "canonical_url": candidate.get("canonical_url"),
                         "identity_verified": candidate.get("identity_verified") is True,
-                        "currentness_verified": (
-                            candidate.get("currentness_verified") is True
-                        ),
+                        "currentness_verified": (candidate.get("currentness_verified") is True),
                         "later_treatment_review_required": (
                             candidate.get("later_treatment_review_required") is True
                         ),
@@ -720,9 +700,7 @@ def resolve_plans(
                 "phase2b_authorized": False,
                 "development30_authorized": False,
             }
-            records.append(
-                {**record_material, "record_content_sha256": _sealed(record_material)}
-            )
+            records.append({**record_material, "record_content_sha256": _sealed(record_material)})
     finally:
         connection.close()
 
@@ -749,9 +727,7 @@ def resolve_plans(
         "candidate_span_fallback_policy": {
             "trigger": "NO_EXACT_PLANNER_CHUNK_AND_NOT_NONMATERIAL",
             "maximum_candidates_per_row": MAX_FALLBACK_CANDIDATES,
-            "maximum_exact_chunk_text_characters_per_row": (
-                MAX_FALLBACK_TEXT_CHARACTERS
-            ),
+            "maximum_exact_chunk_text_characters_per_row": (MAX_FALLBACK_TEXT_CHARACTERS),
             "maximum_exact_chunks_per_row": MAX_FALLBACK_EXACT_CHUNKS_PER_ROW,
             "row_specific_candidates_only": True,
             "catalogue_read_only": True,
@@ -763,16 +739,10 @@ def resolve_plans(
         "planner_locator_bound_policy": {
             "complete_locator_result_required": True,
             "silent_truncation": False,
-            "maximum_exact_chunks_per_selection": (
-                MAX_PLANNER_EXACT_CHUNKS_PER_SELECTION
-            ),
+            "maximum_exact_chunks_per_selection": (MAX_PLANNER_EXACT_CHUNKS_PER_SELECTION),
             "maximum_exact_chunks_per_row": MAX_PLANNER_EXACT_CHUNKS_PER_ROW,
-            "maximum_exact_chunk_text_characters_per_row": (
-                MAX_PLANNER_TEXT_CHARACTERS_PER_ROW
-            ),
-            "over_bound_status": (
-                "LOCATOR_AMBIGUOUS_EXCEEDS_DETERMINISTIC_BOUND"
-            ),
+            "maximum_exact_chunk_text_characters_per_row": (MAX_PLANNER_TEXT_CHARACTERS_PER_ROW),
+            "over_bound_status": ("LOCATOR_AMBIGUOUS_EXCEEDS_DETERMINISTIC_BOUND"),
             "semantic_support_assigned": False,
         },
         "candidate_span_fallback_row_count": sum(

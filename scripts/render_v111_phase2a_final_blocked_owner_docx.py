@@ -20,27 +20,17 @@ from docx.shared import Pt, RGBColor
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RUN_NAME = "LegalBot-Phase2A-2026-08-27-final-owner-review-blocked"
-DEFAULT_SOURCE_ROOT = (
-    PROJECT_ROOT / "data/evaluations/phase2a-owner-review" / RUN_NAME / "machine"
-)
+DEFAULT_SOURCE_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review" / RUN_NAME / "machine"
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
     / "data/evaluations/phase2a-owner-review"
     / RUN_NAME
     / "LegalBot-v111-Phase2A-Final-Blocked-Owner-Review-2026-08-27-rev4.docx"
 )
-EXPECTED_MACHINE_DIGEST = (
-    "24490cd8ae21fa9eb2f0217096a7d8556f1910514d6b9c7e5889c243d21d91d8"
-)
-EXPECTED_QUALIFICATION_SHA = (
-    "4170aa192181c7b9a368af01cf4f813eb6b3417c0c57c58bb7b4f03257727df8"
-)
-EXPECTED_RETRIEVAL_SHA = (
-    "e8345b3e5c2dd8be164dc7e7dfaed90712fa59c01dbbc1c499fbe1a4e5997224"
-)
-EXPECTED_VERDICT = (
-    "PHASE 2A SAFELY STOPPED - PHASE 2B AND DEVELOPMENT 30 NOT AUTHORIZED"
-)
+EXPECTED_MACHINE_DIGEST = "24490cd8ae21fa9eb2f0217096a7d8556f1910514d6b9c7e5889c243d21d91d8"
+EXPECTED_QUALIFICATION_SHA = "4170aa192181c7b9a368af01cf4f813eb6b3417c0c57c58bb7b4f03257727df8"
+EXPECTED_RETRIEVAL_SHA = "e8345b3e5c2dd8be164dc7e7dfaed90712fa59c01dbbc1c499fbe1a4e5997224"
+EXPECTED_VERDICT = "PHASE 2A SAFELY STOPPED - PHASE 2B AND DEVELOPMENT 30 NOT AUTHORIZED"
 
 INK = RGBColor(31, 41, 55)
 MUTED = RGBColor(91, 101, 116)
@@ -121,9 +111,7 @@ def _header_footer(document: Document) -> None:
         paragraph = header.paragraphs[0]
         paragraph.text = ""
         paragraph.paragraph_format.space_after = Pt(0)
-        paragraph.paragraph_format.tab_stops.add_tab_stop(
-            Pt(468), alignment=WD_TAB_ALIGNMENT.RIGHT
-        )
+        paragraph.paragraph_format.tab_stops.add_tab_stop(Pt(468), alignment=WD_TAB_ALIGNMENT.RIGHT)
         left = paragraph.add_run("LEGALBOT v1.11  |  PHASE 2A FINAL REVIEW")
         _set_font(left, size=8.5, color=MUTED, bold=True)
         right = paragraph.add_run("\tINTERNAL / NON-AUTHORIZING")
@@ -295,9 +283,7 @@ def _configure_document(document: Document) -> None:
 def _validate_inputs(source_root: Path) -> tuple[dict[str, Any], ...]:
     package = _load(source_root / "MACHINE-PACKAGE-INDEX.json")
     verdict = _load(source_root / "FINAL-PHASE2A-VERDICT.json")
-    qualification = _load(
-        source_root / "qualification/DETERMINISTIC-ALL585-QUALIFICATION.json"
-    )
+    qualification = _load(source_root / "qualification/DETERMINISTIC-ALL585-QUALIFICATION.json")
     retrieval = _load(source_root / "retrieval/HELD-RETRIEVAL-REATTESTATION.json")
     debug = _load(source_root / "DEBUG-AND-ANTI-LOOP-REGISTER.json")
     code = _load(source_root / "CODE-IDENTITY-AND-WORKTREE-STATUS.json")
@@ -358,7 +344,9 @@ def render(source_root: Path, output_path: Path, doc_skill_scripts: Path) -> dic
     subtitle = document.add_paragraph()
     subtitle.paragraph_format.space_after = Pt(13)
     _set_font(
-        subtitle.add_run("Successor retrieval passed; legal-evidence qualification remains blocked"),
+        subtitle.add_run(
+            "Successor retrieval passed; legal-evidence qualification remains blocked"
+        ),
         name="Arial",
         size=12.5,
         color=MUTED,

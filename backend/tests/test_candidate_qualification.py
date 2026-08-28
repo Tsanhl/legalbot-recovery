@@ -70,8 +70,7 @@ def test_predecessor_candidate_qualification_remains_replayable_from_archive() -
     build_id = "current-law-ew-full-fp16-v111-20260818-a"
     build_path = PROJECT_ROOT / "data" / "indexes" / "builds" / build_id
     archive = (
-        PROJECT_ROOT
-        / "config/archive/provision-verification/"
+        PROJECT_ROOT / "config/archive/provision-verification/"
         "candidate-provision-qualification-current-law-ew-full-fp16-v111-20260818-a.v1.json"
     )
 

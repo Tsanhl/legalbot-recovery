@@ -41,9 +41,7 @@ R1_PACKAGE_PATH = R1_ROOT / r1_builder.PACKAGE_NAME
 
 R1_ADVISORY_FILE_SHA256 = "971bb4390e3284ab37172246de729ab68718faba33d5add7cfd725e503058534"
 R1_ADVISORY_CONTENT_SHA256 = "2bfd1baec0603f03140dd2aaa44437d2c9bfc9ef0e585bbe9ff5fcc1e322f53f"
-R1_SOURCE_MANIFEST_FILE_SHA256 = (
-    "3b573ba336776e6b625114694518a2ed815f9dda391c4048f9e381fbe9623b7d"
-)
+R1_SOURCE_MANIFEST_FILE_SHA256 = "3b573ba336776e6b625114694518a2ed815f9dda391c4048f9e381fbe9623b7d"
 R1_SOURCE_MANIFEST_CONTENT_SHA256 = (
     "42c15bb950b51ee0fcff0e11360398644fc807103e9818b0c4dbad5ffd3e5046"
 )
@@ -53,19 +51,13 @@ R1_PACKAGE_CONTENT_SHA256 = "944be291003776b5e9b95cca308cb731b7e84e685c46742f0a2
 R2_SOURCE_QUARANTINE_ROOT = REVIEW_ROOT / (
     "LegalBot-Phase2A-2026-08-28-held-missing-28-r2-source-quarantine-r1"
 )
-CJIA_2008_SECTION_76_PATH = R2_SOURCE_QUARANTINE_ROOT / (
-    "cjia-2008-section-76-2026-08-14.xml"
-)
-CJIA_2008_SECTION_76_SHA256 = (
-    "093c795ecb3912333eadc4e1d11e2b7deaa3e500ff56371372397ff06e4acf71"
-)
+CJIA_2008_SECTION_76_PATH = R2_SOURCE_QUARANTINE_ROOT / ("cjia-2008-section-76-2026-08-14.xml")
+CJIA_2008_SECTION_76_SHA256 = "093c795ecb3912333eadc4e1d11e2b7deaa3e500ff56371372397ff06e4acf71"
 CRIMINAL_LAW_ACT_1967_PATH = PROJECT_ROOT / (
     "sources/phase2a-approved-2026-08-27/Official Legislation/"
     "002-ukpga-1967-58-191cdb8510792ff0.xml"
 )
-CRIMINAL_LAW_ACT_1967_SHA256 = (
-    "191cdb8510792ff065606830c2fd7371e8b9df1c341f1dbaed7db147d9cebce1"
-)
+CRIMINAL_LAW_ACT_1967_SHA256 = "191cdb8510792ff065606830c2fd7371e8b9df1c341f1dbaed7db147d9cebce1"
 
 OUTPUT_ROOT = REVIEW_ROOT / (
     "LegalBot-Phase2A-2026-08-28-held-missing-28-substantive-remediation-advisory-r2"
@@ -238,12 +230,24 @@ PROVE_OR_REVERSE = {
 }
 
 PARTIAL_RESIDUALS = {
-    _key("live30-q04:issue-07", 4): "The rule that duress is unavailable to murder or attempted murder remains unsupported by locally bound primary official bytes; Johnson paragraphs 49-50 cannot supply it.",
-    _key("live30-q19:issue-01", 1): "Section 18 supplies the statutory dominance/abuse gateway but not a complete product-and-geographic market-definition methodology.",
-    _key("live30-q20:issue-08", 1): "Montgomery supplies material-risk and reasonable-alternative disclosure only; diagnosis, professional practice and AI governance remain unsupported.",
-    _key("live30-q28:issue-05", 4): "Waller-Edwards supplies lender-on-inquiry mechanics only; it does not establish actual or presumed undue influence or any benchmark fact.",
-    _key("live60-q37:issue-06", 1): "SI 2024/234 corrects the instrument identity but exact provision-level disclosure, capital-protection, distribution, commencement and effects propositions remain unsupported.",
-    _key("live60-q40:issue-09", 1): "Senior Courts Act 1981 section 31(4) supplies only the damages condition; interim relief and the remaining discretionary/final-remedy rules require their own exact sources.",
+    _key(
+        "live30-q04:issue-07", 4
+    ): "The rule that duress is unavailable to murder or attempted murder remains unsupported by locally bound primary official bytes; Johnson paragraphs 49-50 cannot supply it.",
+    _key(
+        "live30-q19:issue-01", 1
+    ): "Section 18 supplies the statutory dominance/abuse gateway but not a complete product-and-geographic market-definition methodology.",
+    _key(
+        "live30-q20:issue-08", 1
+    ): "Montgomery supplies material-risk and reasonable-alternative disclosure only; diagnosis, professional practice and AI governance remain unsupported.",
+    _key(
+        "live30-q28:issue-05", 4
+    ): "Waller-Edwards supplies lender-on-inquiry mechanics only; it does not establish actual or presumed undue influence or any benchmark fact.",
+    _key(
+        "live60-q37:issue-06", 1
+    ): "SI 2024/234 corrects the instrument identity but exact provision-level disclosure, capital-protection, distribution, commencement and effects propositions remain unsupported.",
+    _key(
+        "live60-q40:issue-09", 1
+    ): "Senior Courts Act 1981 section 31(4) supplies only the damages condition; interim relief and the remaining discretionary/final-remedy rules require their own exact sources.",
 }
 
 
@@ -269,9 +273,7 @@ def _load_r1() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     advisory = r1_builder._load(R1_ADVISORY_PATH, R1_ADVISORY_FILE_SHA256)
     manifest = r1_builder._load(R1_SOURCE_MANIFEST_PATH, R1_SOURCE_MANIFEST_FILE_SHA256)
     package = r1_builder._load(R1_PACKAGE_PATH, R1_PACKAGE_FILE_SHA256)
-    r1_builder._verify_content(
-        advisory, "artifact_content_sha256", R1_ADVISORY_CONTENT_SHA256
-    )
+    r1_builder._verify_content(advisory, "artifact_content_sha256", R1_ADVISORY_CONTENT_SHA256)
     r1_builder._verify_content(
         manifest, "artifact_content_sha256", R1_SOURCE_MANIFEST_CONTENT_SHA256
     )
@@ -304,9 +306,7 @@ def _freeze_span(span: dict[str, Any]) -> dict[str, Any]:
     material.update(
         {
             "schema": "legalbot.v111.phase2a.held-missing-28-evidence-span-proposal.r2.v1",
-            "supersedes_r1_span_proposal_content_sha256": span[
-                "span_proposal_content_sha256"
-            ],
+            "supersedes_r1_span_proposal_content_sha256": span["span_proposal_content_sha256"],
             "frozen_exact_span_for_owner_decision": True,
             "frozen_for_execution": False,
         }
@@ -711,11 +711,7 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     new_bindings = _build_new_source_bindings()
 
     all_mode_keys = (
-        FULL_REUSE_KEYS
-        | NEW_FULL_KEYS
-        | PARTIAL_KEYS
-        | set(RETAIN_REASONS)
-        | set(EXCLUSION_PROOFS)
+        FULL_REUSE_KEYS | NEW_FULL_KEYS | PARTIAL_KEYS | set(RETAIN_REASONS) | set(EXCLUSION_PROOFS)
     )
     expected_keys = {
         _key(rec["row_id"], rec["component_ordinal"])
@@ -727,9 +723,21 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     if any(
         left & right
         for index, left in enumerate(
-            [FULL_REUSE_KEYS, NEW_FULL_KEYS, PARTIAL_KEYS, set(RETAIN_REASONS), set(EXCLUSION_PROOFS)]
+            [
+                FULL_REUSE_KEYS,
+                NEW_FULL_KEYS,
+                PARTIAL_KEYS,
+                set(RETAIN_REASONS),
+                set(EXCLUSION_PROOFS),
+            ]
         )
-        for right in [FULL_REUSE_KEYS, NEW_FULL_KEYS, PARTIAL_KEYS, set(RETAIN_REASONS), set(EXCLUSION_PROOFS)][index + 1 :]
+        for right in [
+            FULL_REUSE_KEYS,
+            NEW_FULL_KEYS,
+            PARTIAL_KEYS,
+            set(RETAIN_REASONS),
+            set(EXCLUSION_PROOFS),
+        ][index + 1 :]
     ):
         raise ValueError("r2_disposition_partition_overlaps")
 
@@ -741,17 +749,13 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
         recommendations = []
         row_residuals = []
         for r1_recommendation in r1_row["blocker_recommendations"]:
-            key = _key(
-                r1_recommendation["row_id"], r1_recommendation["component_ordinal"]
-            )
+            key = _key(r1_recommendation["row_id"], r1_recommendation["component_ordinal"])
             if key in FULL_REUSE_KEYS:
                 recommendation = _full_reuse(r1_recommendation)
             elif key in NEW_FULL_KEYS:
                 recommendation = _new_self_defence(r1_recommendation, new_bindings)
             elif key in PARTIAL_KEYS:
-                recommendation = _partial_recommendation(
-                    key, r1_recommendation, r1_bindings
-                )
+                recommendation = _partial_recommendation(key, r1_recommendation, r1_bindings)
             elif key in RETAIN_REASONS:
                 recommendation = _retain(key, r1_recommendation)
             else:
@@ -769,9 +773,7 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
         material.update(
             {
                 "schema": "legalbot.v111.phase2a.held-missing-28-row-substantive-remediation.r2.v1",
-                "supersedes_r1_row_record_content_sha256": r1_row[
-                    "record_content_sha256"
-                ],
+                "supersedes_r1_row_record_content_sha256": r1_row["record_content_sha256"],
                 "blocker_recommendations": recommendations,
                 "residual_qualification_blocker_predeclared": bool(row_residuals),
                 "residual_blocker_keys": row_residuals,
@@ -810,18 +812,14 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     )
     if len(active_bindings) != 19:
         raise ValueError(f"unexpected_active_source_binding_count:{len(active_bindings)}")
-    if {
-        binding["record_content_sha256"] for binding in active_bindings
-    } != active_source_hashes:
+    if {binding["record_content_sha256"] for binding in active_bindings} != active_source_hashes:
         raise ValueError("active_source_binding_crosswalk_incomplete")
 
     recommendation_by_identity: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         for recommendation in row["blocker_recommendations"]:
             for span in recommendation["evidence_span_proposals"]:
-                recommendation_by_identity.setdefault(
-                    span["authority_identity_id"], []
-                ).append(
+                recommendation_by_identity.setdefault(span["authority_identity_id"], []).append(
                     {
                         "row_id": recommendation["row_id"],
                         "component_ordinal": recommendation["component_ordinal"],
@@ -835,13 +833,9 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
                             item["proposition_text_sha256"]
                             for item in recommendation["after_propositions"]
                         ],
-                        "span_proposal_content_sha256": span[
-                            "span_proposal_content_sha256"
-                        ],
+                        "span_proposal_content_sha256": span["span_proposal_content_sha256"],
                         "exact_locators": span["exact_locators"],
-                        "source_binding_content_sha256": span[
-                            "source_binding_content_sha256"
-                        ],
+                        "source_binding_content_sha256": span["source_binding_content_sha256"],
                     }
                 )
 
@@ -857,13 +851,9 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
         material.update(
             {
                 "schema": "legalbot.v111.phase2a.held-missing-nine-proposed-representation.r2.v1",
-                "supersedes_r1_record_content_sha256": r1_record[
-                    "record_content_sha256"
-                ],
+                "supersedes_r1_record_content_sha256": r1_record["record_content_sha256"],
                 "component_bindings": component_bindings,
-                "affected_row_ids": sorted(
-                    {item["row_id"] for item in component_bindings}
-                ),
+                "affected_row_ids": sorted({item["row_id"] for item in component_bindings}),
                 "admission_recommended": bool(component_bindings),
                 "not_needed_reason": (
                     None
@@ -968,9 +958,7 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
             },
             "exact_invalid_r1_exclusion_partition": sorted(INVALID_R1_EXCLUSIONS),
             "exact_prove_or_reverse_partition": sorted(PROVE_OR_REVERSE),
-            "exact_permitted_nonlegal_or_meta_exclusion_partition": sorted(
-                EXCLUSION_PROOFS
-            ),
+            "exact_permitted_nonlegal_or_meta_exclusion_partition": sorted(EXCLUSION_PROOFS),
             "residual_blocker_keys": sorted(residual_blocker_keys),
             "residual_row_ids": residual_rows,
             "legal_accuracy_contract": {
@@ -1021,9 +1009,7 @@ def build_advisory() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
                 "loose_nine_representation_affected_row_links_removed": True,
             },
             "r2_advisory_content_sha256": advisory["artifact_content_sha256"],
-            "r2_source_manifest_content_sha256": source_manifest[
-                "artifact_content_sha256"
-            ],
+            "r2_source_manifest_content_sha256": source_manifest["artifact_content_sha256"],
             "owner_adoption_required": True,
             "owner_adopted": False,
             "recursive_no_execution_control": r1_builder._recursive_no_execution_control(),
@@ -1082,9 +1068,7 @@ def publish(output_root: Path = OUTPUT_ROOT) -> dict[str, str]:
         os.chmod(temp_root / PACKAGE_NAME, 0o600)
         checksum_names = sorted([*artifacts, PACKAGE_NAME])
         (temp_root / CHECKSUMS_NAME).write_text(
-            "".join(
-                f"{_file_sha256(temp_root / name)}  {name}\n" for name in checksum_names
-            ),
+            "".join(f"{_file_sha256(temp_root / name)}  {name}\n" for name in checksum_names),
             encoding="utf-8",
         )
         os.chmod(temp_root / CHECKSUMS_NAME, 0o600)
@@ -1114,9 +1098,7 @@ def main() -> int:
             json.dumps(
                 {
                     "advisory_content_sha256": advisory["artifact_content_sha256"],
-                    "source_manifest_content_sha256": source_manifest[
-                        "artifact_content_sha256"
-                    ],
+                    "source_manifest_content_sha256": source_manifest["artifact_content_sha256"],
                     "r1_no_go_content_sha256": no_go["artifact_content_sha256"],
                     "counts": advisory["counts"],
                 },

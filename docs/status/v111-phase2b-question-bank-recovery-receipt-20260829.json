@@ -1,0 +1,126 @@
+{
+  "authorizing": false,
+  "builder_and_module_receipts": [
+    {
+      "path": "scripts/build_v111_phase2b_question_bank_draft.py",
+      "sha256": "19f774f10d8e13838c2c2830945a229f474f567becf18576cba0cf924a6412a5"
+    },
+    {
+      "path": "scripts/phase2b_unseen_question_bank.py",
+      "sha256": "51a4c36b203ab79f635aca300655eb8f952f0e942453909576d6243f6168267a"
+    },
+    {
+      "path": "scripts/build_v111_phase2b_full_question_bank_draft.py",
+      "sha256": "e357f6e336f04915c6337b9c99f25a9395a3caa532bf08022ad221d501bfb2cf"
+    },
+    {
+      "path": "scripts/build_v111_phase2b_expansion_preparation.py",
+      "sha256": "8edc35fe6bf05f1d41f20b34befb08ccf2214ca28f93b819f94e3453b3e4d152"
+    },
+    {
+      "path": "scripts/phase2b_expansion_preparation_questions.py",
+      "sha256": "ea2a80f393e2747d0b31950a5e1152ccc13954fce9dfb6c4a0bb1790a2577ec1"
+    },
+    {
+      "path": "scripts/build_v111_phase2b_common_public_enquiry_bank.py",
+      "sha256": "f1e2203107c10a780793e3c16a392ed67c6c6127b6b531342060780ae131c454"
+    },
+    {
+      "path": "scripts/phase2b_common_public_enquiry_questions.py",
+      "sha256": "4334ea84d32abcd494e0364eea7dc49c2d5abc7f6bedcbad00c2463872d23599"
+    },
+    {
+      "path": "scripts/phase2b_common_public_enquiry_r2_patch.py",
+      "sha256": "b8ef1e31d5e2797b0b9239705a1c669043689e63220446ea436ffd96bd1efab0"
+    },
+    {
+      "path": "scripts/build_v111_phase2b_common_public_enquiry_r2.py",
+      "sha256": "3ec80af905752381b1c6b00cbae3f6b21598544efe55c069102f5696b2565823"
+    }
+  ],
+  "evidence_classification": {
+    "content_and_structure": "surviving checked Recovery builders, modules, audit patch and exact package digest pins",
+    "historical_zip_method_only": "archived Codex task 01a045e4-76bd-70e2-bf2a-0d453b9c0d64, evidence ordinals 3465-3507",
+    "retired_workspace_files_consumed": false,
+    "session_prompt_content_copied": false
+  },
+  "input_receipts": [
+    {
+      "path": "data/evaluations/phase2b-question-drafts/source-inputs/LegalBot-Phase2B-question-bank-audit-patch-2026-08-28.zip",
+      "sha256": "403354ad02832852b0bce9dafca628b334d83871ecbec289a269924d88547e15",
+      "zip_integrity": "PASS",
+      "mode": "0600"
+    }
+  ],
+  "package_receipts": [
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-full-question-bank-draft-r3",
+      "package_content_sha256": "cc625f2b80323654fbd4c3e3a53b16ac99fe54eb460f1a20fc04461c98ce79ec",
+      "topic_count": 15,
+      "visible_core_count": 270,
+      "visible_stress_count": 30,
+      "private_unseen_count": 270
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-expansion-and-pre-gold-r1",
+      "package_content_sha256": "66493d9a8dcf54f5fa563be521ce42674ff30222d54b037e76e7b0afa47f968a",
+      "topic_count": 2,
+      "visible_count": 40,
+      "private_unseen_count": 36,
+      "gold_work_slot_count": 340,
+      "proposition_work_slot_count": 1678
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-enquiries-draft-r1",
+      "package_content_sha256": "03a4d862d81e2b5a91da8bf0423f08aaf00c25297b5566708452ceced7acc0a8",
+      "status": "TRANSITIONAL_INPUT_ONLY_NOT_FINAL"
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-visible-development-r2",
+      "package_content_sha256": "d03fe95ee1ad72444580d7ca492f7fc947db4604d23214da8a086e3dbbecb359",
+      "visible_core_count": 306,
+      "visible_stress_count": 25,
+      "visible_total_count": 331,
+      "zip_sha256": "e95aa7f6ec544dc6c06446c48c9a87f2ef9042aafebe61f401e4ac3adfb2ae91",
+      "zip_size": 210008,
+      "zip_mode": "0644",
+      "zip_contains_unseen": false
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2",
+      "package_content_sha256": "a73ef297738cf0745d1233e8d2c4748412d534bff41afadd1086e6e349f68a91",
+      "private_unseen_count": 306,
+      "zip_sha256": "a5c782b011995932419788b0bcc66ebe10467fabd8d4244a0003a6f4efd6c267",
+      "zip_size": 99831,
+      "zip_mode": "0600"
+    }
+  ],
+  "prohibited_actions": {
+    "answer_model_run": false,
+    "development_or_validation_run": false,
+    "index_or_retrieval_run_for_question_bank_recovery": false,
+    "owner_freeze_created": false,
+    "phase2b_run": false,
+    "promotion_or_live_activation": false
+  },
+  "recovered_at": "2026-08-29",
+  "schema": "legalbot.v111.phase2b.question-bank-recovery-receipt.v1",
+  "status": "PASS_EXACT_CANONICAL_AND_ZIP_IDENTITIES_RECOVERED_NOT_PHASE2B_AUTHORIZED",
+  "validation": {
+    "academic_exact_overlap_count": 0,
+    "academic_maximum_similarity": 0.34765453,
+    "academic_similarity_threshold_exclusive": 0.55,
+    "amendments_applied": 44,
+    "common_public_private_exact_overlap_count": 0,
+    "common_public_private_maximum_similarity": 0.37406274,
+    "common_public_visible_exact_overlap_count": 0,
+    "common_public_visible_maximum_similarity": 0.49984931,
+    "controlled_question_types": [
+      "GENERAL_ENQUIRY",
+      "ESSAY",
+      "PROBLEM_BASED"
+    ],
+    "targeted_tests_passed": 20,
+    "targeted_tests_total": 20
+  }
+}

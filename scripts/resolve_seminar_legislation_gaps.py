@@ -20,8 +20,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_AUDIT = PROJECT_ROOT / "data/reports/seminar-authority-coverage-2026-08-26-v5.json"
 DEFAULT_OUTPUT = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
 )
 REPORT_SCHEMA = "legalbot.seminar-gap-legislation-title-resolution.v1"
 OFFICIAL_HOST = "www.legislation.gov.uk"
@@ -89,8 +88,7 @@ def _title_candidates(reference: str) -> list[str]:
         (
             index
             for index, word in enumerate(words)
-            if word.casefold().strip("(),")
-            in {"act", "regulations", "rules", "order", "measure"}
+            if word.casefold().strip("(),") in {"act", "regulations", "rules", "order", "measure"}
         ),
         -1,
     )
@@ -183,9 +181,7 @@ class _OfficialTitleSearch:
         return result
 
 
-def resolve(
-    *, audit_path: Path, timeout_seconds: float, delay_seconds: float
-) -> dict[str, Any]:
+def resolve(*, audit_path: Path, timeout_seconds: float, delay_seconds: float) -> dict[str, Any]:
     audit = _load(audit_path)
     if audit.get("schema") != "legalbot.seminar-authority-coverage-audit.v3":
         raise ValueError("legislation_resolution_audit_schema_invalid")
@@ -223,9 +219,7 @@ def resolve(
         records.append(
             {
                 "extracted_reference": extracted,
-                "extracted_reference_sha256": hashlib.sha256(
-                    extracted.encode("utf-8")
-                ).hexdigest(),
+                "extracted_reference_sha256": hashlib.sha256(extracted.encode("utf-8")).hexdigest(),
                 "presentation_subjects": sorted(
                     str(value) for value in reference.get("presentation_subjects", [])
                 ),
@@ -275,9 +269,9 @@ def resolve(
         "active_pointer_written": False,
         "live_activation_authorized": False,
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     return report
 

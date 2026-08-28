@@ -39,22 +39,15 @@ DEFAULT_REMAINING = (
     / "REMAINING-SUBSTANTIVE-OWNER-DECISIONS-478.json"
 )
 DEFAULT_ORIGINAL = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-24-r29"
-    / "REMAINING-448-RESEARCH-PACKETS.json"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-24-r29" / "REMAINING-448-RESEARCH-PACKETS.json"
 )
 DEFAULT_DEEP = (
     OWNER_REVIEW_ROOT
     / "LegalBot-Phase2AB-2026-08-24-r40-deep-recovery"
     / "DEEP-CURRENT-OFFICIAL-CANDIDATES-176.json"
 )
-DEFAULT_CASES = (
-    PROJECT_ROOT / "benchmarks" / "evaluation" / "live-evaluation-60-v1" / "cases.jsonl"
-)
-DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r50-authority-plan-advisory"
-)
+DEFAULT_CASES = PROJECT_ROOT / "benchmarks" / "evaluation" / "live-evaluation-60-v1" / "cases.jsonl"
+DEFAULT_OUTPUT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r50-authority-plan-advisory"
 
 EXPECTED_REMAINING_CONTENT_SHA256 = (
     "da2fa31552199958143516b6804fc5d744988b451571c8cd9900f3095a3723a2"
@@ -62,12 +55,8 @@ EXPECTED_REMAINING_CONTENT_SHA256 = (
 EXPECTED_ORIGINAL_CONTENT_SHA256 = (
     "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
 )
-EXPECTED_DEEP_CONTENT_SHA256 = (
-    "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
-)
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+EXPECTED_DEEP_CONTENT_SHA256 = "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 EXPECTED_ISSUE_COUNT = 448
 EXPECTED_CASE_COUNT = 60
 EXPECTED_MODEL_ID = "mlx-community/Qwen3.5-9B-4bit"
@@ -80,8 +69,7 @@ MAX_LOCATOR_LENGTH = 160
 MAX_OUTPUT_TOKENS = 700
 MAX_PEAK_MEMORY_GB = 12.0
 REVIEWER_EXECUTION_MODE = (
-    "separate_advisory_authority_planner_same_model_adapter_as_drafting_"
-    "not_model_independent"
+    "separate_advisory_authority_planner_same_model_adapter_as_drafting_not_model_independent"
 )
 
 SYSTEM_PROMPT = """/no_think
@@ -107,15 +95,12 @@ class AdvisoryValidationError(ValueError):
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -208,7 +193,9 @@ def _load_issue_rows(path: Path) -> tuple[list[dict[str, Any]], str]:
         or remaining.get("development30_authorized") is not False
     ):
         raise ValueError("phase2a_authority_plan_remaining_boundary_invalid")
-    issue_rows = [dict(row) for row in items if isinstance(row, dict) and row.get("category") == "issue"]
+    issue_rows = [
+        dict(row) for row in items if isinstance(row, dict) and row.get("category") == "issue"
+    ]
     row_ids = [str(row.get("item_id") or "") for row in issue_rows]
     if (
         len(issue_rows) != EXPECTED_ISSUE_COUNT
@@ -313,7 +300,11 @@ def _authority_catalogue(
                 },
             )
             locator = _short_locator(candidate.get("locator"))
-            if locator and locator not in item["locator_examples"] and len(item["locator_examples"]) < 5:
+            if (
+                locator
+                and locator not in item["locator_examples"]
+                and len(item["locator_examples"]) < 5
+            ):
                 item["locator_examples"].append(locator)
     return list(catalogue.values())
 
@@ -462,7 +453,9 @@ def _validate_model_response(
     structured = body.get("structured")
     if not isinstance(structured, dict) or set(structured) != {"schema", "case_id", "rows"}:
         raise AdvisoryValidationError("structured_output_keys_invalid")
-    if structured.get("schema") != OUTPUT_SCHEMA or structured.get("case_id") != row_input.get("case_id"):
+    if structured.get("schema") != OUTPUT_SCHEMA or structured.get("case_id") != row_input.get(
+        "case_id"
+    ):
         raise AdvisoryValidationError("structured_output_identity_invalid")
     supplied_rows = [str(row["row_id"]) for row in row_input["rows"]]
     supplied_authorities = {str(item["id"]) for item in row_input["authorities"]}
@@ -878,16 +871,21 @@ def main() -> None:
         started_at=datetime.now(UTC),
         resume=args.resume,
     )
-    print(json.dumps({
-        "output_root": str(args.output_root),
-        "status": result["status"],
-        "planned_issue_count": result["planned_issue_count"],
-        "held_issue_count": result["held_issue_count"],
-        "assessment_counts": result["assessment_counts"],
-        "artifact_content_sha256": result["artifact_content_sha256"],
-        "phase2b_authorized": result["phase2b_authorized"],
-        "development30_authorized": result["development30_authorized"],
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "output_root": str(args.output_root),
+                "status": result["status"],
+                "planned_issue_count": result["planned_issue_count"],
+                "held_issue_count": result["held_issue_count"],
+                "assessment_counts": result["assessment_counts"],
+                "artifact_content_sha256": result["artifact_content_sha256"],
+                "phase2b_authorized": result["phase2b_authorized"],
+                "development30_authorized": result["development30_authorized"],
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

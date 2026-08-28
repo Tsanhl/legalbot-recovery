@@ -59,9 +59,7 @@ async def test_conversation_window_api_exposes_explicit_omission_metadata(
             transport=transport,
             base_url="http://127.0.0.1:8777",
         ) as client:
-            response = await client.get(
-                f"/api/v1/conversation-sessions/{conversation_id}/window"
-            )
+            response = await client.get(f"/api/v1/conversation-sessions/{conversation_id}/window")
     finally:
         if previous is None:
             del app.state.services

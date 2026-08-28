@@ -42,12 +42,8 @@ def test_finalizer_seals_visual_qa_and_keeps_gates_closed(tmp_path: Path) -> Non
         visual_inspection_confirmed=True,
     )
 
-    assert result["status"] == (
-        "VISUAL_AND_STRUCTURAL_QA_PASS_OWNER_DECISION_REQUIRED"
-    )
-    assert result["owner_batch_content_sha256"] == (
-        finalizer.EXPECTED_OWNER_BATCH_SHA256
-    )
+    assert result["status"] == ("VISUAL_AND_STRUCTURAL_QA_PASS_OWNER_DECISION_REQUIRED")
+    assert result["owner_batch_content_sha256"] == (finalizer.EXPECTED_OWNER_BATCH_SHA256)
     assert result["owner_approved"] is False
     assert result["source_admission_authorized"] is False
     assert result["phase2b_authorized"] is False
@@ -58,9 +54,7 @@ def test_finalizer_seals_visual_qa_and_keeps_gates_closed(tmp_path: Path) -> Non
 
 
 def test_finalizer_requires_visual_confirmation(tmp_path: Path) -> None:
-    with pytest.raises(
-        ValueError, match="phase2a_r112b_qa_visual_inspection_required"
-    ):
+    with pytest.raises(ValueError, match="phase2a_r112b_qa_visual_inspection_required"):
         finalizer.finalize(
             package_root=_copy_package(tmp_path),
             render_root=_fake_render(tmp_path),
@@ -82,7 +76,5 @@ def test_finalizer_checksums_cover_every_package_file(tmp_path: Path) -> None:
         names.add(name)
         assert finalizer._sha256_file(package / name) == digest
     assert names == {
-        path.name
-        for path in package.iterdir()
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path.name for path in package.iterdir() if path.is_file() and path.name != "SHA256SUMS.txt"
     }

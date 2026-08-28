@@ -79,9 +79,9 @@ def test_exact_r102_scope_derives_sixteen_narrow_official_targets() -> None:
         "www.legislation.gov.uk",
     }
     by_authority = {target["authority_identity_id"]: target for target in targets}
-    assert by_authority["neutral-citation:[2007] EWCA Crim 125"][
-        "official_url"
-    ].endswith("/ewca/crim/2007/125/data.xml")
+    assert by_authority["neutral-citation:[2007] EWCA Crim 125"]["official_url"].endswith(
+        "/ewca/crim/2007/125/data.xml"
+    )
     assert by_authority["ukpga:1957:31"]["official_url"].endswith(
         "/ukpga/1957/31/2026-08-14/data.xml"
     )
@@ -98,9 +98,7 @@ def test_collector_quarantines_exact_scope_without_admission(tmp_path: Path) -> 
 
     assert manifest["record_count"] == 16
     assert manifest["row_link_count"] == 26
-    assert manifest["result_counts"] == {
-        "OFFICIAL_SOURCE_QUARANTINED_NOT_ADMITTED": 16
-    }
+    assert manifest["result_counts"] == {"OFFICIAL_SOURCE_QUARANTINED_NOT_ADMITTED": 16}
     assert all(
         manifest[field] is False
         for field in (

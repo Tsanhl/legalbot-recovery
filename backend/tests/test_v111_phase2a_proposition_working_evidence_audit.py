@@ -23,9 +23,7 @@ def _span_corpus(text: str) -> dict:
                         "start_character": 2,
                         "end_character_exclusive": 7,
                         "exact_text": exact,
-                        "exact_text_sha256": hashlib.sha256(
-                            exact.encode("utf-8")
-                        ).hexdigest(),
+                        "exact_text_sha256": hashlib.sha256(exact.encode("utf-8")).hexdigest(),
                     }
                 ],
             }

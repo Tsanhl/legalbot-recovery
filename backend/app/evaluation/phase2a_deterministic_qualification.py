@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 from typing import Any
 
 from .live_suite import LiveEvaluationBundle
@@ -35,8 +35,7 @@ EXPECTED_NO_EXACT_SPAN = 98
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -98,13 +97,11 @@ def _source_hold_summary(source_manifest: Mapping[str, Any]) -> dict[str, Any]:
         for source in sources
     )
     later_treatment_required = sum(
-        isinstance(source, Mapping)
-        and source.get("subsequent_treatment_check_required") is True
+        isinstance(source, Mapping) and source.get("subsequent_treatment_check_required") is True
         for source in sources
     )
     later_treatment_verified = sum(
-        isinstance(source, Mapping)
-        and source.get("subsequent_treatment_verified") is True
+        isinstance(source, Mapping) and source.get("subsequent_treatment_verified") is True
         for source in sources
     )
     return {
@@ -162,8 +159,7 @@ def build_deterministic_all585_qualification(
     preserved_ready = {
         row_id
         for row_id, row in crosswalk.items()
-        if row.get("status")
-        == "OWNER_APPROVED_EXACT_BINDINGS_READY_FOR_FINAL_QUALIFICATION"
+        if row.get("status") == "OWNER_APPROVED_EXACT_BINDINGS_READY_FOR_FINAL_QUALIFICATION"
         and row.get("owner_decision_required") is False
         and row.get("selected_exact_span_id")
     }

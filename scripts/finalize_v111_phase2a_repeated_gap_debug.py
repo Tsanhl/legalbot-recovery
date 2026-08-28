@@ -24,9 +24,7 @@ CANARY_ROOTS = (
     OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61c-exact-span-canary",
     OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61d-exact-span-canary",
 )
-OUTPUT_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61e-repeat-gap-debug"
-)
+OUTPUT_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61e-repeat-gap-debug"
 AFFECTED_ROW_ID = "live30-q02:issue-03"
 EXPECTED_AUTHORITY = "ukpga:2015:15"
 EXPECTED_LOCATOR = "section 11"
@@ -36,15 +34,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -137,9 +132,7 @@ def main() -> None:
         raise ValueError("phase2a_repeat_gap_upstream_rows_held")
     locators = verifier._load_object(verifier.DEFAULT_LOCATORS)
     issue = next(row for row in issue_rows if row["item_id"] == AFFECTED_ROW_ID)
-    locator = next(
-        row for row in locators["records"] if row["row_id"] == AFFECTED_ROW_ID
-    )
+    locator = next(row for row in locators["records"] if row["row_id"] == AFFECTED_ROW_ID)
     review_row = verifier._review_row(issue, locator)
     if not isinstance(review_row, dict) or len(review_row["evidence_candidates"]) != 2:
         raise ValueError("phase2a_repeat_gap_projection_fingerprint_changed")
@@ -217,14 +210,12 @@ def main() -> None:
     _write_exclusive(
         OUTPUT_ROOT / "OUTCOME.txt",
         (
-            "REPEATED ADVISORY GAP SEALED; TOP-ONE DETERMINISTIC PROJECTION "
-            "REQUIRED BEFORE A NEW CANARY.\n"
-        ).encode(),
+            b"REPEATED ADVISORY GAP SEALED; TOP-ONE DETERMINISTIC PROJECTION "
+            b"REQUIRED BEFORE A NEW CANARY.\n"
+        ),
     )
     names = ("DEBUG-REPORT.json", "OUTCOME.txt")
-    sums = "".join(
-        f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names).encode()
     _write_exclusive(OUTPUT_ROOT / "SHA256SUMS.txt", sums)
     print(json.dumps(report, sort_keys=True))
 

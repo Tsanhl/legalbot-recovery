@@ -48,14 +48,10 @@ R108_PATH = (
     / "DETERMINISTIC-HELD-SOURCE-RESOLUTION-26.json"
 )
 R103_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-26/phase2a-post-r101-official-source-research-r103"
+    PROJECT_ROOT / "data/quarantine/2026-08-26/phase2a-post-r101-official-source-research-r103"
 )
 R103_PATH = R103_ROOT / "QUARANTINE-MANIFEST.json"
-R109_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-26/phase2a-post-r108-currentness-sources-r109c"
-)
+R109_ROOT = PROJECT_ROOT / "data/quarantine/2026-08-26/phase2a-post-r108-currentness-sources-r109c"
 R109_PATH = R109_ROOT / "QUARANTINE-MANIFEST.json"
 DEFAULT_OUTPUT_ROOT = (
     REVIEW_ROOT
@@ -257,8 +253,7 @@ WALLER_LENDER_QUOTE = (
     "or misrepresentation is taking place"
 )
 WALLER_LENDER_PROPOSITION = (
-    "A lender put on inquiry need not investigate whether undue influence "
-    "actually occurred."
+    "A lender put on inquiry need not investigate whether undue influence actually occurred."
 )
 GETTY_QUOTE = (
     "The allegation (made in the text prompts claim) that an output from Stable "
@@ -311,15 +306,12 @@ GETTY_LATER_TREATMENT_QUOTE = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -370,9 +362,7 @@ def _load_verified(path: Path) -> dict[str, Any]:
     return value
 
 
-def _load_extractions(
-    manifest: Mapping[str, Any], root: Path
-) -> dict[str, dict[str, Any]]:
+def _load_extractions(manifest: Mapping[str, Any], root: Path) -> dict[str, dict[str, Any]]:
     records = manifest.get("records")
     if not isinstance(records, list):
         raise ValueError("phase2a_r110_source_manifest_records_invalid")
@@ -382,18 +372,14 @@ def _load_extractions(
             raise ValueError("phase2a_r110_source_record_invalid")
         member = str(record.get("extraction_member") or "")
         path = root / member
-        if path.parent != root or _sha256_file(path) != record.get(
-            "extraction_file_sha256"
-        ):
+        if path.parent != root or _sha256_file(path) != record.get("extraction_file_sha256"):
             raise ValueError("phase2a_r110_extraction_file_digest_invalid")
         value = json.loads(path.read_bytes())
         if not isinstance(value, dict):
             raise ValueError("phase2a_r110_extraction_invalid")
         material = dict(value)
         supplied = str(material.pop("artifact_content_sha256", ""))
-        if supplied != record.get("extraction_content_sha256") or supplied != _sealed(
-            material
-        ):
+        if supplied != record.get("extraction_content_sha256") or supplied != _sealed(material):
             raise ValueError("phase2a_r110_extraction_content_seal_invalid")
         authority = str(value.get("authority_identity_id") or "")
         if not authority or authority in extractions:
@@ -440,9 +426,7 @@ def _binding(
     if start < 0:
         raise ValueError("phase2a_r110_quote_not_contiguous")
     proposition_facts = {fact.identity for fact in extract_material_facts(proposition)}
-    span_facts = {
-        fact.identity for fact in extract_material_facts(f"{quote}\n{locator}")
-    }
+    span_facts = {fact.identity for fact in extract_material_facts(f"{quote}\n{locator}")}
     if proposition_facts - span_facts:
         raise ValueError("phase2a_r110_unsupported_material_fact")
     overlap = set(substantive_tokens(proposition)) & set(substantive_tokens(quote))
@@ -468,9 +452,7 @@ def _binding(
     }
 
 
-def _metadata_span(
-    extraction: Mapping[str, Any], *, locator: str, quote: str
-) -> dict[str, Any]:
+def _metadata_span(extraction: Mapping[str, Any], *, locator: str, quote: str) -> dict[str, Any]:
     block = _block(extraction, locator)
     text = str(block["text"])
     start = text.find(quote)
@@ -500,12 +482,8 @@ def _source_proposal(
         "authority_identity_id": extraction["authority_identity_id"],
         "source_title": extraction["source_title"],
         "source_date": extraction["source_date"],
-        "source_representation_sha256": extraction[
-            "source_representation_sha256"
-        ],
-        "source_canonical_xml_sha256": extraction[
-            "source_canonical_xml_sha256"
-        ],
+        "source_representation_sha256": extraction["source_representation_sha256"],
+        "source_canonical_xml_sha256": extraction["source_canonical_xml_sha256"],
         "source_class": extraction["source_class"],
         "affected_row_ids": [affected_row_id],
         "proposed_candidate_use": proposed_candidate_use,
@@ -543,14 +521,10 @@ def build_reconciliation(
     ):
         raise ValueError("phase2a_r110_input_inventory_invalid")
     ranking_by_link = {
-        str(row["row_source_link_id"]): row
-        for row in rankings
-        if isinstance(row, Mapping)
+        str(row["row_source_link_id"]): row for row in rankings if isinstance(row, Mapping)
     }
     finding_by_link = {
-        str(row["row_source_link_id"]): row
-        for row in findings
-        if isinstance(row, Mapping)
+        str(row["row_source_link_id"]): row for row in findings if isinstance(row, Mapping)
     }
     if len(ranking_by_link) != 26 or len(finding_by_link) != 26:
         raise ValueError("phase2a_r110_input_identity_collision")
@@ -645,9 +619,7 @@ def build_reconciliation(
             r103_sources["neutral-citation:[2012] EWHC 1257 (Ch)"],
             affected_row_id="live60-q54:issue-07",
             proposed_candidate_use="PARTIAL_TUPE_PENSION_PROPOSITION",
-            currentness_status=(
-                "PERSUASIVE_FIRST_INSTANCE_WITH_CURRENT_STATUTORY_CONFIRMATION"
-            ),
+            currentness_status=("PERSUASIVE_FIRST_INSTANCE_WITH_CURRENT_STATUTORY_CONFIRMATION"),
             bindings=[p_and_g_binding],
         ),
         _source_proposal(
@@ -667,12 +639,12 @@ def build_reconciliation(
         8: [getty_binding],
         9: [
             {
-                **dict(finding_by_link[str(packets[8]["row_source_link_id"])][
-                    "exact_span_binding"
-                ]),
-                "atomic_proposition": finding_by_link[
-                    str(packets[8]["row_source_link_id"])
-                ]["atomic_proposition"],
+                **dict(
+                    finding_by_link[str(packets[8]["row_source_link_id"])]["exact_span_binding"]
+                ),
+                "atomic_proposition": finding_by_link[str(packets[8]["row_source_link_id"])][
+                    "atomic_proposition"
+                ],
                 "authority_identity_id": "ukpga:1957:31",
             }
         ],
@@ -702,21 +674,15 @@ def build_reconciliation(
             "authority_identity_id": packet["authority_identity_id"],
             "source_title": packet["source_title"],
             "research_route": packet["research_route"],
-            "independent_reranker_top_locator": ranking["top_candidates"][0][
-                "locator"
-            ],
-            "independent_reranker_top_score": ranking["top_candidates"][0][
-                "reranker_score"
-            ],
+            "independent_reranker_top_locator": ranking["top_candidates"][0]["locator"],
+            "independent_reranker_top_score": ranking["top_candidates"][0]["reranker_score"],
             "same_adapter_advisory_assessment": finding["assessment"],
             "same_adapter_false_negative": false_negative,
             "recommended_owner_outcome": outcome,
             "deterministic_reason_code": reason_code,
             "deterministic_rationale": rationale,
             "exact_proposition_bindings": exact_bindings_by_ordinal.get(ordinal, []),
-            "replacement_authority_identity_ids": replacement_sources_by_ordinal.get(
-                ordinal, []
-            ),
+            "replacement_authority_identity_ids": replacement_sources_by_ordinal.get(ordinal, []),
             "owner_decision_required": True,
             "owner_outcome": None,
             "source_admission_authorized": False,
@@ -745,12 +711,8 @@ def build_reconciliation(
         "source_r104_content_sha256": r104["artifact_content_sha256"],
         "source_r105_content_sha256": r105["artifact_content_sha256"],
         "source_r108_content_sha256": r108["artifact_content_sha256"],
-        "source_r103_manifest_content_sha256": r103_manifest[
-            "manifest_content_sha256"
-        ],
-        "source_r109_manifest_content_sha256": r109_manifest[
-            "manifest_content_sha256"
-        ],
+        "source_r103_manifest_content_sha256": r103_manifest["manifest_content_sha256"],
+        "source_r109_manifest_content_sha256": r109_manifest["manifest_content_sha256"],
         "row_source_link_count": len(reconciled_links),
         "unique_row_count": len({row["row_id"] for row in reconciled_links}),
         "recommendation_counts": outcome_counts,
@@ -805,9 +767,7 @@ def build_reconciliation(
         for path in output_root.iterdir()
         if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in names
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in names)
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return artifact
 
@@ -869,9 +829,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "artifact_content_sha256": artifact["artifact_content_sha256"],
                 "row_source_link_count": artifact["row_source_link_count"],
                 "recommendation_counts": artifact["recommendation_counts"],
-                "source_admission_proposal_count": artifact[
-                    "source_admission_proposal_count"
-                ],
+                "source_admission_proposal_count": artifact["source_admission_proposal_count"],
                 "source_admission_authorized": False,
                 "automatic_indexing": False,
                 "automatic_embedding": False,

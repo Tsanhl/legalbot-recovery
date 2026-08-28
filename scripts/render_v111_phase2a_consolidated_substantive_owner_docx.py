@@ -21,14 +21,12 @@ from docx.shared import Inches, Pt, RGBColor
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 R94_ROOT = (
-    PROJECT_ROOT
-    / "data/evaluations/phase2a-owner-review/"
+    PROJECT_ROOT / "data/evaluations/phase2a-owner-review/"
     "LegalBot-Phase2AB-2026-08-25-r94-consolidated-substantive-owner-batch"
 )
 DEFAULT_BATCH = R94_ROOT / "OWNER-SUBSTANTIVE-DECISION-BATCH.json"
 DEFAULT_TRIAGE = (
-    PROJECT_ROOT
-    / "data/evaluations/phase2a-owner-review/"
+    PROJECT_ROOT / "data/evaluations/phase2a-owner-review/"
     "LegalBot-Phase2AB-2026-08-25-r71-gap-triage/ISSUE-GAP-TRIAGE-448.json"
 )
 DEFAULT_OUTPUT = R94_ROOT / "LegalBot-Phase2A-Owner-Decision-Batch-Agnes-2026-08-25.docx"
@@ -51,8 +49,7 @@ TABLE_INDENT_DXA = 120
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -103,7 +100,9 @@ def _set_cell_shading(cell: Any, fill: str) -> None:
     shading.set(qn("w:fill"), fill)
 
 
-def _set_cell_margins(cell: Any, *, top: int = 80, bottom: int = 80, start: int = 120, end: int = 120) -> None:
+def _set_cell_margins(
+    cell: Any, *, top: int = 80, bottom: int = 80, start: int = 120, end: int = 120
+) -> None:
     tc_pr = cell._tc.get_or_add_tcPr()
     tc_mar = tc_pr.first_child_found_in("w:tcMar")
     if tc_mar is None:
@@ -118,7 +117,9 @@ def _set_cell_margins(cell: Any, *, top: int = 80, bottom: int = 80, start: int 
         node.set(qn("w:type"), "dxa")
 
 
-def _set_table_geometry(table: Any, widths_dxa: list[int], *, indent_dxa: int = TABLE_INDENT_DXA) -> None:
+def _set_table_geometry(
+    table: Any, widths_dxa: list[int], *, indent_dxa: int = TABLE_INDENT_DXA
+) -> None:
     if sum(widths_dxa) != TABLE_WIDTH_DXA:
         raise ValueError("phase2a_owner_docx_table_width_invalid")
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
@@ -162,7 +163,9 @@ def _set_table_geometry(table: Any, widths_dxa: list[int], *, indent_dxa: int = 
             _set_cell_margins(cell)
 
 
-def _set_run(run: Any, *, size: float = 10.0, bold: bool = False, color: str = BLACK, italic: bool = False) -> None:
+def _set_run(
+    run: Any, *, size: float = 10.0, bold: bool = False, color: str = BLACK, italic: bool = False
+) -> None:
     run.font.name = "Calibri"
     run._element.get_or_add_rPr().rFonts.set(qn("w:ascii"), "Calibri")
     run._element.get_or_add_rPr().rFonts.set(qn("w:hAnsi"), "Calibri")
@@ -172,7 +175,15 @@ def _set_run(run: Any, *, size: float = 10.0, bold: bool = False, color: str = B
     run.font.color.rgb = RGBColor.from_string(color)
 
 
-def _set_cell_text(cell: Any, text: str, *, bold: bool = False, color: str = BLACK, size: float = 9.0, align: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.LEFT) -> None:
+def _set_cell_text(
+    cell: Any,
+    text: str,
+    *,
+    bold: bool = False,
+    color: str = BLACK,
+    size: float = 9.0,
+    align: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.LEFT,
+) -> None:
     cell.text = ""
     paragraph = cell.paragraphs[0]
     paragraph.alignment = align
@@ -182,7 +193,14 @@ def _set_cell_text(cell: Any, text: str, *, bold: bool = False, color: str = BLA
     _set_run(paragraph.add_run(text), size=size, bold=bold, color=color)
 
 
-def _add_table(doc: Document, headers: list[str], widths: list[int], rows: Iterable[list[str]], *, font_size: float = 8.6) -> Any:
+def _add_table(
+    doc: Document,
+    headers: list[str],
+    widths: list[int],
+    rows: Iterable[list[str]],
+    *,
+    font_size: float = 8.6,
+) -> Any:
     table = doc.add_table(rows=1, cols=len(headers))
     table.style = "Table Grid"
     for index, header in enumerate(headers):
@@ -234,7 +252,9 @@ def _add_number(doc: Document, text: str) -> None:
     _set_run(paragraph.add_run(text), size=11)
 
 
-def _add_callout(doc: Document, label: str, text: str, *, fill: str = GOLD_FILL, color: str = GOLD_TEXT) -> None:
+def _add_callout(
+    doc: Document, label: str, text: str, *, fill: str = GOLD_FILL, color: str = GOLD_TEXT
+) -> None:
     table = doc.add_table(rows=1, cols=1)
     table.style = "Table Grid"
     cell = table.cell(0, 0)
@@ -319,7 +339,13 @@ def _configure_page(doc: Document) -> None:
     for header in (section.header, section.even_page_header):
         table = header.add_table(rows=1, cols=2, width=Inches(6.5))
         table.alignment = WD_TABLE_ALIGNMENT.LEFT
-        _set_cell_text(table.cell(0, 0), "LEGALBOT v1.11 | PHASE 2A OWNER GATE", bold=True, color=MUTED, size=8.5)
+        _set_cell_text(
+            table.cell(0, 0),
+            "LEGALBOT v1.11 | PHASE 2A OWNER GATE",
+            bold=True,
+            color=MUTED,
+            size=8.5,
+        )
         _set_cell_text(
             table.cell(0, 1),
             "CONFIDENTIAL - OWNER REVIEW",
@@ -355,7 +381,14 @@ def _source_admission_rows(batch: dict[str, Any]) -> list[list[str]]:
             if proposal["proposal_id"] == item["proposal_id"]
             for relation in proposal["proposition_level_relationships"]
         )
-        rows.append(["Judgment", item["neutral_citation"], use, _short(item["source_proposal_content_sha256"])])
+        rows.append(
+            [
+                "Judgment",
+                item["neutral_citation"],
+                use,
+                _short(item["source_proposal_content_sha256"]),
+            ]
+        )
     supplemental = batch["supplemental_binding_and_source_decisions"]
     grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for item in supplemental:
@@ -409,7 +442,11 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
     _set_run(title.add_run("PHASE 2A OWNER DECISION PACKAGE"), size=23, bold=True, color=BLACK)
     subtitle = doc.add_paragraph()
     subtitle.paragraph_format.space_after = Pt(14)
-    _set_run(subtitle.add_run("LegalBot v1.11 - Consolidated substantive batch r94"), size=14, color=MUTED)
+    _set_run(
+        subtitle.add_run("LegalBot v1.11 - Consolidated substantive batch r94"),
+        size=14,
+        color=MUTED,
+    )
     for label, value in (
         ("Owner", "Agnes"),
         ("Decision date", "2026-08-25"),
@@ -441,20 +478,54 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
         ["Decision group", "Count", "Effect of approval"],
         [3000, 900, 5460],
         [
-            ["Candidate exact-span bindings", str(summary["candidate_exact_binding_decision_count"]), "Accept proposition/span use for continued remediation; no row is technically qualified yet."],
-            ["Judgment later-treatment dispositions", str(summary["judgment_later_treatment_decision_count"]), "Apply the listed recommended relationship or no-reliance outcome."],
-            ["Unique official-source admissions", str(summary["total_unique_source_admission_count"]), "Admit only for the exact proposition-level uses listed in the batch."],
-            ["Supplemental binding decisions", str(summary["supplemental_binding_decision_count"]), "Accept exact official material/currentness spans."],
-            ["UKSC source reviews", str(summary["uksc_source_review_decision_count"]), "Accept direct mappings and reject the listed unrelated mappings."],
-            ["XML byte mismatch", "1", "Treat as serialization-only because canonical XML is identical."],
-            ["Patents s 60(7) delta", "1", "Defer substantive outcome until final Patents bindings are available."],
-            ["Unresolved material-gap rows", str(summary["unresolved_material_gap_row_count"]), "Remain blocked and outside this approval."],
+            [
+                "Candidate exact-span bindings",
+                str(summary["candidate_exact_binding_decision_count"]),
+                "Accept proposition/span use for continued remediation; no row is technically qualified yet.",
+            ],
+            [
+                "Judgment later-treatment dispositions",
+                str(summary["judgment_later_treatment_decision_count"]),
+                "Apply the listed recommended relationship or no-reliance outcome.",
+            ],
+            [
+                "Unique official-source admissions",
+                str(summary["total_unique_source_admission_count"]),
+                "Admit only for the exact proposition-level uses listed in the batch.",
+            ],
+            [
+                "Supplemental binding decisions",
+                str(summary["supplemental_binding_decision_count"]),
+                "Accept exact official material/currentness spans.",
+            ],
+            [
+                "UKSC source reviews",
+                str(summary["uksc_source_review_decision_count"]),
+                "Accept direct mappings and reject the listed unrelated mappings.",
+            ],
+            [
+                "XML byte mismatch",
+                "1",
+                "Treat as serialization-only because canonical XML is identical.",
+            ],
+            [
+                "Patents s 60(7) delta",
+                "1",
+                "Defer substantive outcome until final Patents bindings are available.",
+            ],
+            [
+                "Unresolved material-gap rows",
+                str(summary["unresolved_material_gap_row_count"]),
+                "Remain blocked and outside this approval.",
+            ],
         ],
         font_size=9.0,
     )
 
     _add_heading(doc, "2. Boundaries")
-    _add_body(doc, "This is an evidence-remediation decision, not legal certification or legal advice.")
+    _add_body(
+        doc, "This is an evidence-remediation decision, not legal certification or legal advice."
+    )
     for text in (
         "AI recommendations remain advisory; Agnes is the substantive owner decision-maker.",
         "No source outside the exact 20-source admission inventory is approved.",
@@ -466,7 +537,10 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
         _add_bullet(doc, text)
 
     _add_heading(doc, "3. Candidate proposition and exact-span decisions", new_page=True)
-    _add_body(doc, "All 84 rows below have a sealed candidate-bound exact span. Approval accepts the proposition/span pairing for continued Phase-2A remediation only. Currentness or later-treatment work shown in the machine-readable record still remains a final qualification dependency.")
+    _add_body(
+        doc,
+        "All 84 rows below have a sealed candidate-bound exact span. Approval accepts the proposition/span pairing for continued Phase-2A remediation only. Currentness or later-treatment work shown in the machine-readable record still remains a final qualification dependency.",
+    )
     issue_rows: list[list[str]] = []
     for item in batch["candidate_exact_binding_decisions"]:
         triage_row = triage_by_id[item["row_id"]]
@@ -479,7 +553,13 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
                 f"{triage_row['issue_label']} | {_short(item['exact_span_binding_content_sha256'])} | {currentness.get('currentness_status', 'review required')}",
             ]
         )
-    _add_table(doc, ["Row", "Scope", "Atomic proposition", "Evidence/currentness"], [1550, 850, 4300, 2660], issue_rows, font_size=7.8)
+    _add_table(
+        doc,
+        ["Row", "Scope", "Atomic proposition", "Evidence/currentness"],
+        [1550, 850, 4300, 2660],
+        issue_rows,
+        font_size=7.8,
+    )
 
     _add_heading(doc, "4. Judgment later-treatment decisions", new_page=True)
     judgments = _read_source(batch, "judgments")
@@ -493,17 +573,34 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
                 item["neutral_citation"],
                 judgment_by_citation[item["neutral_citation"]]["title"],
                 item["recommended_owner_outcome"].replace("_", " "),
-                judgment_by_citation[item["neutral_citation"]]["advisory_category"].replace("_", " "),
+                judgment_by_citation[item["neutral_citation"]]["advisory_category"].replace(
+                    "_", " "
+                ),
             ]
             for item in batch["judgment_later_treatment_decisions"]
         ],
         font_size=8.2,
     )
-    _add_callout(doc, "Search limitation", "The judgment review records bounded official searches. They expressly do not treat absence of another hit as proof that no other later treatment exists.", fill=LIGHT_GRAY, color=DARK_BLUE)
+    _add_callout(
+        doc,
+        "Search limitation",
+        "The judgment review records bounded official searches. They expressly do not treat absence of another hit as proof that no other later treatment exists.",
+        fill=LIGHT_GRAY,
+        color=DARK_BLUE,
+    )
 
     _add_heading(doc, "5. Exact official-source admission inventory", new_page=True)
-    _add_body(doc, "Approval admits exactly these 20 official primary sources for the proposition-level uses shown. Admission does not itself index, embed, or rebuild a candidate.")
-    _add_table(doc, ["Group", "Source", "Approved use", "Record digest"], [1500, 2200, 4400, 1260], _source_admission_rows(batch), font_size=8.0)
+    _add_body(
+        doc,
+        "Approval admits exactly these 20 official primary sources for the proposition-level uses shown. Admission does not itself index, embed, or rebuild a candidate.",
+    )
+    _add_table(
+        doc,
+        ["Group", "Source", "Approved use", "Record digest"],
+        [1500, 2200, 4400, 1260],
+        _source_admission_rows(batch),
+        font_size=8.0,
+    )
 
     _add_heading(doc, "6. UKSC mapping corrections")
     uksc_source = _read_source(batch, "uksc_rehoming")
@@ -516,14 +613,29 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
             [
                 item["neutral_citation"],
                 item["recommended_owner_outcome"].replace("_", " "),
-                ", ".join(sorted({row for claim in uksc_by_id[item["proposal_id"]]["supported_claims"] for row in claim["row_ids"]})) or "None",
-                ", ".join(row["row_id"] for row in uksc_by_id[item["proposal_id"]]["rejected_mappings"]) or "None",
+                ", ".join(
+                    sorted(
+                        {
+                            row
+                            for claim in uksc_by_id[item["proposal_id"]]["supported_claims"]
+                            for row in claim["row_ids"]
+                        }
+                    )
+                )
+                or "None",
+                ", ".join(
+                    row["row_id"] for row in uksc_by_id[item["proposal_id"]]["rejected_mappings"]
+                )
+                or "None",
             ]
             for item in batch["uksc_source_review_decisions"]
         ],
         font_size=8.0,
     )
-    _add_body(doc, "Key correction: Byers v Saudi National Bank is proposed for the knowing-receipt row; Lifestyle Equities is rejected for the unrelated restitution/tracing mappings.")
+    _add_body(
+        doc,
+        "Key correction: Byers v Saudi National Bank is proposed for the knowing-receipt row; Lifestyle Equities is rejected for the unrelated restitution/tracing mappings.",
+    )
 
     _add_heading(doc, "7. Statute and byte-level dispositions")
     _add_table(
@@ -531,14 +643,25 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
         ["Item", "Verified finding", "Recommended decision"],
         [2100, 3800, 3460],
         [
-            ["Data (Use and Access) Act 2025 XML", "Raw bytes differ, but canonical XML digest is identical and no legal XML infoset change was detected.", "Approve nonmaterial serialization-only disposition; preserve both raw provenance records."],
-            ["Patents Act 1977 s 60(7)", "Fresh text removes the obsolete Civil Aviation Act reference; no final exact proposition binding yet resolves the benchmark use.", "Defer owner outcome until final Patents proposition bindings; if retained, use a fresh successor version, never an in-place patch."],
+            [
+                "Data (Use and Access) Act 2025 XML",
+                "Raw bytes differ, but canonical XML digest is identical and no legal XML infoset change was detected.",
+                "Approve nonmaterial serialization-only disposition; preserve both raw provenance records.",
+            ],
+            [
+                "Patents Act 1977 s 60(7)",
+                "Fresh text removes the obsolete Civil Aviation Act reference; no final exact proposition binding yet resolves the benchmark use.",
+                "Defer owner outcome until final Patents proposition bindings; if retained, use a fresh successor version, never an in-place patch.",
+            ],
         ],
         font_size=8.6,
     )
 
     _add_heading(doc, "8. Rows that remain blocked", new_page=True)
-    _add_body(doc, "The 364 rows below are not approved or qualified by this package. They require exact official-source research, gold/issue repair, or owner review before Phase 2A can pass.")
+    _add_body(
+        doc,
+        "The 364 rows below are not approved or qualified by this package. They require exact official-source research, gold/issue repair, or owner review before Phase 2A can pass.",
+    )
     by_case: dict[str, list[str]] = defaultdict(list)
     class_counts: Counter[str] = Counter()
     for item in batch["unresolved_material_gap_rows"]:
@@ -553,7 +676,10 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
         font_size=9.0,
     )
     _add_heading(doc, "Blocked-row inventory by case", 2)
-    case_rows = [[case_id, str(len(values)), ", ".join(values)] for case_id, values in sorted(by_case.items())]
+    case_rows = [
+        [case_id, str(len(values)), ", ".join(values)]
+        for case_id, values in sorted(by_case.items())
+    ]
     _add_table(doc, ["Case", "Count", "Issue rows"], [1650, 800, 6910], case_rows, font_size=8.2)
 
     _add_heading(doc, "9. What happens after approval")
@@ -569,7 +695,13 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
         _add_number(doc, text)
 
     _add_heading(doc, "10. Exact approval text", new_page=True)
-    _add_callout(doc, "Copy exactly", "The digest must remain unchanged. A general OK does not approve a different package.", fill=BLUE_GRAY, color=DARK_BLUE)
+    _add_callout(
+        doc,
+        "Copy exactly",
+        "The digest must remain unchanged. A general OK does not approve a different package.",
+        fill=BLUE_GRAY,
+        color=DARK_BLUE,
+    )
     prompt = (R94_ROOT / "OWNER-APPROVAL-PROMPT.txt").read_text(encoding="utf-8").strip()
     prompt_table = doc.add_table(rows=1, cols=1)
     prompt_table.style = "Table Grid"
@@ -580,14 +712,25 @@ def render(*, batch_path: Path, triage_path: Path, output_path: Path) -> dict[st
     for index, line in enumerate(prompt.splitlines()):
         paragraph = prompt_cell.paragraphs[0] if index == 0 else prompt_cell.add_paragraph()
         paragraph.paragraph_format.space_after = Pt(3)
-        _set_run(paragraph.add_run(line or " "), size=9.2, bold=(index == 0), color=(DARK_BLUE if index == 0 else BLACK))
+        _set_run(
+            paragraph.add_run(line or " "),
+            size=9.2,
+            bold=(index == 0),
+            color=(DARK_BLUE if index == 0 else BLACK),
+        )
     _set_table_geometry(prompt_table, [TABLE_WIDTH_DXA])
 
     _add_heading(doc, "11. Audit identities")
     _add_body(doc, f"Owner batch digest: {EXPECTED_BATCH_DIGEST}")
     for reference in batch["source_artifacts"]:
-        _add_body(doc, f"{reference['source_name']}: {reference['artifact_content_sha256']} (file {_short(reference['file_sha256'], 16)})")
-    _add_body(doc, "Reviewer status: advisory review uses the same pinned model adapter as drafting and is not a genuinely model-independent reviewer. Deterministic evidence checks remain controlling.")
+        _add_body(
+            doc,
+            f"{reference['source_name']}: {reference['artifact_content_sha256']} (file {_short(reference['file_sha256'], 16)})",
+        )
+    _add_body(
+        doc,
+        "Reviewer status: advisory review uses the same pinned model adapter as drafting and is not a genuinely model-independent reviewer. Deterministic evidence checks remain controlling.",
+    )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = output_path.with_suffix(".tmp.docx")

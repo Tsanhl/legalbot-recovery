@@ -93,13 +93,9 @@ def main() -> None:
                     "build_status": (
                         final_build["status"] if final_build is not None else "missing"
                     ),
-                    "build_stage": (
-                        final_build["stage"] if final_build is not None else "missing"
-                    ),
+                    "build_stage": (final_build["stage"] if final_build is not None else "missing"),
                     "failure_reason_code": (
-                        final_build["failure_reason_code"]
-                        if final_build is not None
-                        else None
+                        final_build["failure_reason_code"] if final_build is not None else None
                     ),
                     "automatic_third_claim": False,
                 },

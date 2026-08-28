@@ -44,17 +44,10 @@ SOURCE_PATH = (
     / "LegalBot-Phase2AB-2026-08-26-r104b-context-aware-source-review-packets"
     / "DETERMINISTIC-SOURCE-REVIEW-PACKETS-26.json"
 )
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r105-independent-source-reranker"
-)
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r105-independent-source-reranker"
 DEFAULT_MODEL_PATH = PROJECT_ROOT / "models/retrieval/Qwen3-Reranker-0.6B"
-EXPECTED_SOURCE_CONTENT_SHA256 = (
-    "5fc1c6d1f8eebb1d7624abf3ca3249451f3e66873ae8826471a51fb11303318f"
-)
-EXPECTED_SOURCE_FILE_SHA256 = (
-    "a33a918d4f2e38573ad25f08e2f66490cf87a5c68ef21b0e26dde989c938fff2"
-)
+EXPECTED_SOURCE_CONTENT_SHA256 = "5fc1c6d1f8eebb1d7624abf3ca3249451f3e66873ae8826471a51fb11303318f"
+EXPECTED_SOURCE_FILE_SHA256 = "a33a918d4f2e38573ad25f08e2f66490cf87a5c68ef21b0e26dde989c938fff2"
 EXPECTED_ROW_COUNT = 26
 EXPECTED_UNIQUE_ROW_COUNT = 22
 MAX_PROJECTED_CANDIDATES = 40
@@ -81,15 +74,12 @@ ScoreRow = Callable[
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -153,8 +143,7 @@ def _load_source(path: Path) -> dict[str, Any]:
     rows = source.get("rows")
     if (
         digest != EXPECTED_SOURCE_CONTENT_SHA256
-        or source.get("schema")
-        != "legalbot.v111.phase2a.source-review-packets-26.v2"
+        or source.get("schema") != "legalbot.v111.phase2a.source-review-packets-26.v2"
         or source.get("row_source_link_count") != EXPECTED_ROW_COUNT
         or source.get("unique_row_count") != EXPECTED_UNIQUE_ROW_COUNT
         or not isinstance(rows, list)
@@ -200,8 +189,7 @@ def _load_source(path: Path) -> dict[str, Any]:
                 or block_id in block_ids
                 or not block_id
                 or not text
-                or _sha256(text.encode("utf-8"))
-                != candidate.get("exact_text_sha256")
+                or _sha256(text.encode("utf-8")) != candidate.get("exact_text_sha256")
             ):
                 raise ValueError("phase2a_r105_source_candidate_boundary_invalid")
             ranks.append(rank)
@@ -216,8 +204,7 @@ def _runtime_identity(runtime_identity: Mapping[str, Any]) -> dict[str, Any]:
     if (
         identity.get("model_repo") != PINNED_MODEL_REPO
         or identity.get("model_revision") != PINNED_MODEL_REVISION
-        or identity.get("model_file_manifest_sha256")
-        != PINNED_MODEL_FILE_MANIFEST_SHA256
+        or identity.get("model_file_manifest_sha256") != PINNED_MODEL_FILE_MANIFEST_SHA256
         or identity.get("model_independent_from_drafting_adapter") is not True
         or identity.get("generative_model_used") is not False
         or identity.get("qualification_threshold") is not None
@@ -268,9 +255,7 @@ def _project_row(row: Mapping[str, Any]) -> tuple[str, list[dict[str, Any]]]:
                 "excerpt_character_count": len(excerpt),
                 "excerpt_truncated": truncated,
                 "lexical_tfidf_score": candidate["lexical_score"],
-                "deterministic_selection_reasons": candidate[
-                    "selection_reasons"
-                ],
+                "deterministic_selection_reasons": candidate["selection_reasons"],
                 "question_segment_match": candidate.get("question_segment_match"),
             }
         )
@@ -294,15 +279,12 @@ def _validate_scores(
     raw_scores: Sequence[float], candidates: Sequence[Mapping[str, Any]]
 ) -> list[float]:
     scores = list(raw_scores)
-    if (
-        len(scores) != len(candidates)
-        or any(
-            isinstance(score, bool)
-            or not isinstance(score, int | float)
-            or not math.isfinite(float(score))
-            or not 0.0 <= float(score) <= 1.0
-            for score in scores
-        )
+    if len(scores) != len(candidates) or any(
+        isinstance(score, bool)
+        or not isinstance(score, int | float)
+        or not math.isfinite(float(score))
+        or not 0.0 <= float(score) <= 1.0
+        for score in scores
     ):
         raise ValueError("phase2a_r105_scores_invalid")
     return [round(float(score), 10) for score in scores]
@@ -374,8 +356,7 @@ def _review_one(
                 "diagnostic_content_sha256": _sealed(diagnostic_material),
             }
             diagnostic_name = (
-                f"{_checkpoint_name(ordinal, str(row['row_source_link_id']))[:-5]}"
-                f"-a{attempt}.json"
+                f"{_checkpoint_name(ordinal, str(row['row_source_link_id']))[:-5]}-a{attempt}.json"
             )
             _write_exclusive(
                 diagnostics_root / diagnostic_name,
@@ -404,8 +385,7 @@ def _review_one(
             }
             held = {**held_material, "held_content_sha256": _sealed(held_material)}
             _write_exclusive(
-                checkpoints_root
-                / _checkpoint_name(ordinal, str(row["row_source_link_id"])),
+                checkpoints_root / _checkpoint_name(ordinal, str(row["row_source_link_id"])),
                 _pretty_json(held),
             )
             return held
@@ -456,8 +436,7 @@ def _review_one(
             "checkpoint_content_sha256": _sealed(checkpoint_material),
         }
         _write_exclusive(
-            checkpoints_root
-            / _checkpoint_name(ordinal, str(row["row_source_link_id"])),
+            checkpoints_root / _checkpoint_name(ordinal, str(row["row_source_link_id"])),
             _pretty_json(checkpoint),
         )
         return checkpoint
@@ -514,13 +493,9 @@ def _custody_entries(root: Path, pattern: str) -> list[dict[str, Any]]:
 
 def _write_checksums(output_root: Path) -> None:
     paths = sorted(
-        path
-        for path in output_root.rglob("*")
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    lines = "".join(
-        f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in paths
-    )
+    lines = "".join(f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in paths)
     _write_exclusive(output_root / "SHA256SUMS.txt", lines.encode("utf-8"))
 
 
@@ -593,8 +568,7 @@ def run_review(
             checkpoint = _load_checkpoint(checkpoint_path)
             if (
                 checkpoint.get("ordinal") != ordinal
-                or checkpoint.get("row_source_link_id")
-                != row["row_source_link_id"]
+                or checkpoint.get("row_source_link_id") != row["row_source_link_id"]
                 or checkpoint.get("source_row_record_content_sha256")
                 != row["record_content_sha256"]
             ):

@@ -2038,15 +2038,9 @@ class Database:
             self._ensure_column("evidence_spans", "retrieval_relevance_score", "REAL")
             self._ensure_column("evidence_spans", "retrieval_route", "TEXT")
             self._ensure_column("evidence_spans", "retrieval_threshold", "REAL")
-            self._ensure_column(
-                "evidence_spans", "retrieval_threshold_policy_sha256", "TEXT"
-            )
-            self._ensure_column(
-                "evidence_spans", "retrieval_threshold_qualified", "INTEGER"
-            )
-            self._ensure_column(
-                "evidence_spans", "retrieval_qualification_reason", "TEXT"
-            )
+            self._ensure_column("evidence_spans", "retrieval_threshold_policy_sha256", "TEXT")
+            self._ensure_column("evidence_spans", "retrieval_threshold_qualified", "INTEGER")
+            self._ensure_column("evidence_spans", "retrieval_qualification_reason", "TEXT")
             self._ensure_column(
                 "evidence_spans", "legal_role", "TEXT NOT NULL DEFAULT 'unclassified'"
             )
@@ -4557,9 +4551,7 @@ class Database:
         # retry before its lease expires. Preserve the connection's ordinary
         # 30-second policy for every other catalogue operation.
         with self._lock:
-            previous_timeout = int(
-                self._connection.execute("PRAGMA busy_timeout").fetchone()[0]
-            )
+            previous_timeout = int(self._connection.execute("PRAGMA busy_timeout").fetchone()[0])
             try:
                 self._require_primary_connection_identity_current()
                 self._connection.execute(f"PRAGMA busy_timeout={busy_timeout_ms}")
@@ -6172,11 +6164,7 @@ class Database:
                     item.get("retrieval_route"),
                     item.get("retrieval_threshold"),
                     item.get("retrieval_threshold_policy_sha256"),
-                    (
-                        None
-                        if threshold_qualified is None
-                        else int(bool(threshold_qualified))
-                    ),
+                    (None if threshold_qualified is None else int(bool(threshold_qualified))),
                     item.get("retrieval_qualification_reason"),
                     item.get("legal_role", "unclassified"),
                     item.get("unapplied_effect_count"),

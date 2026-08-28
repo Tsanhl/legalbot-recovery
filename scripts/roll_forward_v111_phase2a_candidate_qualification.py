@@ -20,24 +20,14 @@ BUILD_ID = "current-law-ew-full-fp16-v111-20260827-phase2a-a"
 PREDECESSOR_BUILD_ID = "current-law-ew-full-fp16-v111-20260818-a"
 RUN_NAME = "LegalBot-Phase2A-2026-08-27-candidate-provision-qualification-roll-forward"
 FAILURE_FINGERPRINT = "4c32a571c5c2d8770676b48ffb8b0566fb024d70ba0a240b8253fa678fd7692f"
-EXPECTED_ACTIVE_SHA256 = (
-    "91468882d1a6e9e57057f24e098936df14abe07d50c5a76b14ee03dc57e91b2b"
-)
-EXPECTED_MANIFEST_SHA256 = (
-    "acc4b0aee4f43a00b21c56663a354e4b232c0c2d82f52a792779ea3088929d00"
-)
-EXPECTED_SEAL_SHA256 = (
-    "b7a8dfabcd5b91c4bebe81cba5817ca35a4366dd8855acd24a2aeda7f7d91b13"
-)
-EXPECTED_SOURCE_MANIFEST_SHA256 = (
-    "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
-)
+EXPECTED_ACTIVE_SHA256 = "91468882d1a6e9e57057f24e098936df14abe07d50c5a76b14ee03dc57e91b2b"
+EXPECTED_MANIFEST_SHA256 = "acc4b0aee4f43a00b21c56663a354e4b232c0c2d82f52a792779ea3088929d00"
+EXPECTED_SEAL_SHA256 = "b7a8dfabcd5b91c4bebe81cba5817ca35a4366dd8855acd24a2aeda7f7d91b13"
+EXPECTED_SOURCE_MANIFEST_SHA256 = "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
 EXPECTED_PROVISION_REGISTRY_SHA256 = (
     "1bb3c036a555cd67bc618a7edff1f1f5a0274ea4061c0775bccf8f722f7f88ac"
 )
-EXPECTED_LANCE_TREE_SHA256 = (
-    "2f561a0ec55743ad2897ddd59789e0d41eecb465c4c0c4b6e23b7bf304010da3"
-)
+EXPECTED_LANCE_TREE_SHA256 = "2f561a0ec55743ad2897ddd59789e0d41eecb465c4c0c4b6e23b7bf304010da3"
 ARCHIVE_RELATIVE = (
     "config/archive/provision-verification/"
     "candidate-provision-qualification-current-law-ew-full-fp16-v111-20260818-a.v1.json"
@@ -46,8 +36,7 @@ ARCHIVE_RELATIVE = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 

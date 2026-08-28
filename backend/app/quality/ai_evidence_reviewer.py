@@ -180,12 +180,8 @@ class FrozenClaimReviewInput:
                     "retrieval_route": span.retrieval_route,
                     "retrieval_relevance_score": span.retrieval_relevance_score,
                     "retrieval_threshold": span.retrieval_threshold,
-                    "retrieval_threshold_policy_sha256": (
-                        span.retrieval_threshold_policy_sha256
-                    ),
-                    "retrieval_threshold_qualified": (
-                        span.retrieval_threshold_qualified
-                    ),
+                    "retrieval_threshold_policy_sha256": (span.retrieval_threshold_policy_sha256),
+                    "retrieval_threshold_qualified": (span.retrieval_threshold_qualified),
                 }
                 for span in self.evidence
             ],
@@ -207,9 +203,7 @@ def _evidence_identity(span: EvidenceSpan) -> dict[str, Any]:
         "retrieval_route": span.retrieval_route,
         "retrieval_relevance_score": span.retrieval_relevance_score,
         "retrieval_threshold": span.retrieval_threshold,
-        "retrieval_threshold_policy_sha256": (
-            span.retrieval_threshold_policy_sha256
-        ),
+        "retrieval_threshold_policy_sha256": (span.retrieval_threshold_policy_sha256),
         "retrieval_threshold_qualified": span.retrieval_threshold_qualified,
         "identity_verified": span.identity_verified,
         "currentness_verified": span.currentness_verified,
@@ -764,9 +758,9 @@ class AIEvidenceReviewResult(BaseModel):
     )
     review_id: str = Field(pattern=r"^ai-review-[0-9a-f]{24}$")
     reviewer_role: Literal["ai_evidence_reviewer"] = "ai_evidence_reviewer"
-    reviewer_execution_mode: Literal[
+    reviewer_execution_mode: Literal["separate_verification_pass_same_model_adapter"] = (
         "separate_verification_pass_same_model_adapter"
-    ] = "separate_verification_pass_same_model_adapter"
+    )
     model_independent: Literal[False] = False
     advisory_recommendations_only: Literal[True] = True
     can_decide_or_adopt: Literal[False] = False

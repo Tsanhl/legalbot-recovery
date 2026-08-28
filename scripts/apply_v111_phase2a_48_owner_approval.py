@@ -28,8 +28,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -99,8 +98,7 @@ def _validate_decision(value: dict[str, Any]) -> str:
         or value.get("legal_advice") is not False
         or not isinstance(value.get("exact_candidate_span_bindings"), list)
         or not value["exact_candidate_span_bindings"]
-        or value.get("all_candidate_components_match_fresh_2026_08_14_official_anchors")
-        is not True
+        or value.get("all_candidate_components_match_fresh_2026_08_14_official_anchors") is not True
         or forbidden
         != {
             "automatic_source_admission_indexing_or_embedding": True,
@@ -236,9 +234,7 @@ def apply_approval(
             "official_legal_locator": proposed["official_legal_locator"],
             "official_source_url": proposed["official_source_url"],
             "exact_span_bindings": proposed["exact_candidate_span_bindings"],
-            "owner_approved_decision_content_sha256": approved[
-                "approved_decision_content_sha256"
-            ],
+            "owner_approved_decision_content_sha256": approved["approved_decision_content_sha256"],
             "technical_status": "TECHNICALLY_EVIDENCE_READY_OWNER_ADOPTED_INTERNAL",
             "candidate_change_required_for_exact_proposition": False,
             "whole_document_byte_mismatch_outside_exact_spans_resolved": False,
@@ -336,9 +332,7 @@ def apply_approval(
     return {
         "output_root": str(output_root),
         "receipt_content_sha256": receipt["receipt_content_sha256"],
-        "approved_package_content_sha256": approved_package[
-            "approved_package_content_sha256"
-        ],
+        "approved_package_content_sha256": approved_package["approved_package_content_sha256"],
         "gold_successor_bindings_content_sha256": gold["artifact_content_sha256"],
         "approved_binding_count": 48,
         "remaining_blocked_material_issue_count": 537,

@@ -16,16 +16,16 @@ def _load(path: Path) -> dict[str, object]:
 
 def _expected_reply() -> str:
     return (
-        approval.DEFAULT_SOURCE_ROOT / "OWNER-APPROVAL-PROMPT.txt"
-    ).read_text(encoding="utf-8").strip()
+        (approval.DEFAULT_SOURCE_ROOT / "OWNER-APPROVAL-PROMPT.txt")
+        .read_text(encoding="utf-8")
+        .strip()
+    )
 
 
 def test_exact_r94_approval_records_scope_and_keeps_later_gates_closed(
     tmp_path: Path,
 ) -> None:
-    source_batch = (
-        approval.DEFAULT_SOURCE_ROOT / "OWNER-SUBSTANTIVE-DECISION-BATCH.json"
-    )
+    source_batch = approval.DEFAULT_SOURCE_ROOT / "OWNER-SUBSTANTIVE-DECISION-BATCH.json"
     source_before = approval._sha256_file(source_batch)
     output = tmp_path / "approved"
 

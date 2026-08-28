@@ -230,9 +230,9 @@ class SafeAdvisoryAIReview(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     status: Literal["available", "unavailable", "not_run"]
-    reviewer_execution_mode: Literal[
+    reviewer_execution_mode: Literal["separate_verification_pass_same_model_adapter"] = (
         "separate_verification_pass_same_model_adapter"
-    ] = "separate_verification_pass_same_model_adapter"
+    )
     model_independent: Literal[False] = False
     recommendations_only: Literal[True] = True
     can_decide_or_adopt: Literal[False] = False
@@ -263,7 +263,9 @@ class SafeAdvisoryAIReview(BaseModel):
                 raise ValueError("available AI recommendation lacks its exact review binding")
             if self.owner_review_required != bool(self.flagged_claim_count):
                 raise ValueError("AI owner-review flag differs from its claim findings")
-        elif self.review_sha256 is not None or self.flagged_claim_count or self.recommendation_codes:
+        elif (
+            self.review_sha256 is not None or self.flagged_claim_count or self.recommendation_codes
+        ):
             raise ValueError("unavailable AI recommendation contains fabricated review results")
         elif self.status == "unavailable" and self.unavailable_reason_code is None:
             raise ValueError("unavailable AI recommendation lacks a safe reason code")

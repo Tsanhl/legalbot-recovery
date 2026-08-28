@@ -55,8 +55,7 @@ _FORBIDDEN = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -188,8 +187,7 @@ def _authorization_digests() -> dict[str, Any]:
     sources = {
         "deterministic_route_owner_choice_receipt": DETERMINISTIC_AUTH
         / "OWNER-CHOICE-RECEIPT.json",
-        "seminar_source_owner_approval_receipt": SEMINAR_APPROVAL
-        / "OWNER-APPROVAL-RECEIPT.json",
+        "seminar_source_owner_approval_receipt": SEMINAR_APPROVAL / "OWNER-APPROVAL-RECEIPT.json",
         "r94_owner_approval_receipt": OWNER_ROOT
         / "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved"
         / "OWNER-APPROVAL-RECEIPT-R94.json",
@@ -291,8 +289,7 @@ def _copy_evidence() -> None:
         "source/FROZEN-SUCCESSOR-SOURCE-SCOPE.json": ADMISSION
         / "FROZEN-SUCCESSOR-SOURCE-SCOPE.json",
         "source/SOURCE-ADMISSION-PACKAGE-INDEX.json": ADMISSION / "PACKAGE-INDEX.json",
-        "source/CONSOLIDATED-SOURCE-STAGING.json": STAGING
-        / "CONSOLIDATED-SOURCE-STAGING.json",
+        "source/CONSOLIDATED-SOURCE-STAGING.json": STAGING / "CONSOLIDATED-SOURCE-STAGING.json",
         "source/SOURCE-STAGING-PACKAGE-INDEX.json": STAGING / "PACKAGE-INDEX.json",
         "candidate/approved-source-manifest.json": CANDIDATE / "approved-source-manifest.json",
         "candidate/manifest.json": CANDIDATE / "manifest.json",
@@ -306,19 +303,14 @@ def _copy_evidence() -> None:
         "retrieval/RETRIEVAL-SUMMARY.json": RETRIEVAL_R2 / "SUMMARY.json",
         "retrieval/RETRIEVAL-PACKAGE-INDEX.json": RETRIEVAL_R2 / "PACKAGE-INDEX.json",
         "debug/RETRIEVAL-ATTEMPT-1-FAILURE.json": RETRIEVAL_R1 / "FAILURE-REPORT.json",
-        "debug/RETRIEVAL-ATTEMPT-1-PACKAGE-INDEX.json": RETRIEVAL_R1
-        / "PACKAGE-INDEX.json",
-        "debug/SUCCESSOR-BUILD-ATTEMPT-1-FAILURE.json": BUILD_FAILURE
-        / "FAILURE-REPORT.json",
+        "debug/RETRIEVAL-ATTEMPT-1-PACKAGE-INDEX.json": RETRIEVAL_R1 / "PACKAGE-INDEX.json",
+        "debug/SUCCESSOR-BUILD-ATTEMPT-1-FAILURE.json": BUILD_FAILURE / "FAILURE-REPORT.json",
         "debug/SUCCESSOR-BUILD-RECOVERY-SUMMARY.json": BUILD_RECOVERY / "SUMMARY.json",
         "debug/SUCCESSOR-BUILD-CHECKPOINT-RECONCILIATION.json": BUILD_RECOVERY
         / "CHECKPOINT-RECONCILIATION.json",
-        "debug/SUCCESSOR-BUILD-RECOVERY-PACKAGE-INDEX.json": BUILD_RECOVERY
-        / "PACKAGE-INDEX.json",
-        "debug/RESUME-METADATA-RECONCILIATION.json": METADATA_REPAIR
-        / "RECONCILIATION.json",
-        "debug/RESUME-METADATA-PACKAGE-INDEX.json": METADATA_REPAIR
-        / "PACKAGE-INDEX.json",
+        "debug/SUCCESSOR-BUILD-RECOVERY-PACKAGE-INDEX.json": BUILD_RECOVERY / "PACKAGE-INDEX.json",
+        "debug/RESUME-METADATA-RECONCILIATION.json": METADATA_REPAIR / "RECONCILIATION.json",
+        "debug/RESUME-METADATA-PACKAGE-INDEX.json": METADATA_REPAIR / "PACKAGE-INDEX.json",
         "debug/CANDIDATE-QUALIFICATION-ROLL-FORWARD.json": QUALIFICATION_REPAIR
         / "ROLL-FORWARD.json",
         "debug/CANDIDATE-QUALIFICATION-ROLL-FORWARD-PACKAGE-INDEX.json": (
@@ -326,17 +318,14 @@ def _copy_evidence() -> None:
         ),
         "debug/PLANNER-CAP-CORRECTIVE-AUDIT.json": PLANNER_AUDIT
         / "PLANNER-CAP-CORRECTIVE-AUDIT.json",
-        "debug/PLANNER-OVER-CAP-ROW-INVENTORY.json": PLANNER_AUDIT
-        / "OVER-CAP-ROW-INVENTORY.json",
+        "debug/PLANNER-OVER-CAP-ROW-INVENTORY.json": PLANNER_AUDIT / "OVER-CAP-ROW-INVENTORY.json",
         "debug/PLANNER-PROCESS-QUIESCENCE.json": PLANNER_AUDIT / "PROCESS-QUIESCENCE.json",
     }
     # Validate the complete immutable input set before the first package write.  A
     # failed preflight therefore cannot leave a deceptively partial evidence set.
     for source in mapping.values():
         if source.is_symlink() or not source.is_file():
-            raise RuntimeError(
-                f"machine package source is missing or unsafe: {source.name}"
-            )
+            raise RuntimeError(f"machine package source is missing or unsafe: {source.name}")
         _scan(source.read_bytes())
     for relative, source in mapping.items():
         _copy_new(source, MACHINE_ROOT / relative)
@@ -371,9 +360,7 @@ def main() -> None:
 
     rows = qualification["rows"]
     blocked = [row for row in rows if row["qualification_status"] == "BLOCKED_MATERIAL_GAP"]
-    decisions = [
-        row for row in rows if row["qualification_status"] == "OWNER_DECISION_REQUIRED"
-    ]
+    decisions = [row for row in rows if row["qualification_status"] == "OWNER_DECISION_REQUIRED"]
     headers = [
         "ordinal",
         "row_id",
@@ -578,9 +565,7 @@ def main() -> None:
                 "status": package["status"],
                 "machine_root": str(MACHINE_ROOT),
                 "file_count": package["file_count"],
-                "machine_package_content_sha256": package[
-                    "machine_package_content_sha256"
-                ],
+                "machine_package_content_sha256": package["machine_package_content_sha256"],
                 "terminal_verdict": TERMINAL_VERDICT,
             },
             indent=2,

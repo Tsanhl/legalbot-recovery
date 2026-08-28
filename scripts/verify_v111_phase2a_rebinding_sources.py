@@ -71,8 +71,7 @@ _SCHEDULE_RULE_ID = re.compile(r"(?:^|-)paragraph-(?P<number>\d+[a-z]?)$", re.IG
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -152,9 +151,7 @@ def _normalise_text(value: str) -> str:
 
 def _components(value: str) -> tuple[str, ...]:
     components = tuple(
-        normalized
-        for part in re.split(r"\n\s*\n+", value)
-        if (normalized := _normalise_text(part))
+        normalized for part in re.split(r"\n\s*\n+", value) if (normalized := _normalise_text(part))
     )
     if not components:
         raise ValueError("phase2a_rebinding_verification_proposition_empty")
@@ -304,9 +301,7 @@ def _pdf_anchors(text: str) -> tuple[tuple[str, str], ...]:
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         normalized = _normalise_text(text[match.start() : end])
         if normalized:
-            anchors.append(
-                (f"paragraph-{match.group('number').casefold()}", normalized)
-            )
+            anchors.append((f"paragraph-{match.group('number').casefold()}", normalized))
     return tuple(anchors)
 
 
@@ -329,11 +324,7 @@ def _xml_anchors(root: ET.Element) -> tuple[tuple[str, str], ...]:
             append(identifier, element)
 
         number_element = next(
-            (
-                child
-                for child in element
-                if str(child.tag).rsplit("}", 1)[-1] == "Number"
-            ),
+            (child for child in element if str(child.tag).rsplit("}", 1)[-1] == "Number"),
             None,
         )
         if number_element is None:
@@ -390,11 +381,7 @@ def _stated_locator_corrections(
             if not locator_match_score:
                 continue
             anchor_tokens = _meaningful_tokens(anchor_text)
-            if (
-                len(anchor_text) < 20
-                or not anchor_tokens
-                or not _has_substantive_text(anchor_text)
-            ):
+            if len(anchor_text) < 20 or not anchor_tokens or not _has_substantive_text(anchor_text):
                 continue
             coverage = (
                 len(component_tokens & anchor_tokens) / len(component_tokens)
@@ -484,9 +471,7 @@ def _component_check(
         ]
         matching_anchors.sort()
         for length, identifier, anchor_text in matching_anchors[:5]:
-            anchor_candidates.append(
-                (length, str(document["target_id"]), identifier, anchor_text)
-            )
+            anchor_candidates.append((length, str(document["target_id"]), identifier, anchor_text))
         document_hits.append(
             {
                 "target_id": document["target_id"],
@@ -514,8 +499,7 @@ def _component_check(
         "document_hits": document_hits,
         "exact_anchor_hits": exact_anchors,
         "stated_locator_anchor_match": bool(
-            exact_anchors
-            and any(item["anchor_matches_stated_locator"] for item in exact_anchors)
+            exact_anchors and any(item["anchor_matches_stated_locator"] for item in exact_anchors)
         ),
         "stated_locator_evidence_state": _stated_locator_evidence_state(
             expected_stems,
@@ -537,9 +521,7 @@ def _component_check(
     return {**material, "check_content_sha256": _sealed(material)}
 
 
-def verify(
-    *, queue_path: Path, quarantine_root: Path, output_root: Path
-) -> dict[str, Any]:
+def verify(*, queue_path: Path, quarantine_root: Path, output_root: Path) -> dict[str, Any]:
     """Verify all queue rows while preserving every owner and phase boundary."""
 
     if output_root.exists() or output_root.is_symlink():

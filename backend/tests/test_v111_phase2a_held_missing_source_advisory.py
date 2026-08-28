@@ -16,8 +16,7 @@ def _content_sha256(value: dict, field: str) -> str:
     material = dict(value)
     material.pop(field)
     raw = (
-        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
@@ -30,18 +29,12 @@ def test_builds_exact_create_only_28_row_advisory(tmp_path: Path) -> None:
     assert advisory["artifact_content_sha256"] == _content_sha256(
         advisory, "artifact_content_sha256"
     )
-    assert advisory["scope"]["source_present_but_assessment_held_row_ids"] == list(
-        builder.HELD8
-    )
-    assert advisory["scope"]["missing_source_identity_row_ids"] == list(
-        builder.MISSING20
-    )
+    assert advisory["scope"]["source_present_but_assessment_held_row_ids"] == list(builder.HELD8)
+    assert advisory["scope"]["missing_source_identity_row_ids"] == list(builder.MISSING20)
     assert advisory["scope"]["source_present_but_assessment_held_set_sha256"] == (
         builder.HELD8_SET_SHA256
     )
-    assert advisory["scope"]["missing_source_identity_set_sha256"] == (
-        builder.MISSING20_SET_SHA256
-    )
+    assert advisory["scope"]["missing_source_identity_set_sha256"] == (builder.MISSING20_SET_SHA256)
     assert len(advisory["rows"]) == 28
     assert len({row["row_id"] for row in advisory["rows"]}) == 28
     assert advisory["result_counts"] == {
@@ -94,14 +87,10 @@ def test_retry_ledger_is_bounded_and_create_only(tmp_path: Path) -> None:
     output = tmp_path / "advisory"
     paths = builder.build_artifacts(output)
     ledger = _load(paths["retry_ledger"])
-    assert ledger["artifact_content_sha256"] == _content_sha256(
-        ledger, "artifact_content_sha256"
-    )
+    assert ledger["artifact_content_sha256"] == _content_sha256(ledger, "artifact_content_sha256")
     assert ledger["prior_failure_count"] == 12
     assert all(item["unchanged_retry_prohibited"] for item in ledger["prior_failures"])
-    assert all(
-        item["unchanged_retry_prohibited"] for item in ledger["additional_diagnostics"]
-    )
+    assert all(item["unchanged_retry_prohibited"] for item in ledger["additional_diagnostics"])
     with pytest.raises(FileExistsError):
         builder.build_artifacts(output)
 
@@ -109,9 +98,7 @@ def test_retry_ledger_is_bounded_and_create_only(tmp_path: Path) -> None:
 def test_package_checksums_and_no_private_paths(tmp_path: Path) -> None:
     paths = builder.build_artifacts(tmp_path / "advisory")
     package = _load(paths["package"])
-    assert package["package_content_sha256"] == _content_sha256(
-        package, "package_content_sha256"
-    )
+    assert package["package_content_sha256"] == _content_sha256(package, "package_content_sha256")
     checksums = paths["checksums"].read_text(encoding="utf-8")
     for record in package["artifacts"]:
         assert record["file_sha256"] in checksums

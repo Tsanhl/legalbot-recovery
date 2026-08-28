@@ -32,8 +32,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -130,9 +129,7 @@ def build_proposal(
         or queue.get("phase2b_authorized") is not False
     ):
         raise ValueError("phase2a_35_rebinding_proposal_boundary_invalid")
-    queue_by_row = {
-        str(item.get("row_id") or ""): item for item in queue.get("items", [])
-    }
+    queue_by_row = {str(item.get("row_id") or ""): item for item in queue.get("items", [])}
     if len(queue_by_row) != 89:
         raise ValueError("phase2a_35_rebinding_proposal_queue_duplicate")
 
@@ -181,16 +178,11 @@ def build_proposal(
             "official_source_url": queue_item.get("official_source_url"),
             "fresh_official_verification_status": locator_status,
             "owner_locator_confirmation_required": (
-                locator_status
-                == "EXACT_OFFICIAL_TEXT_DIFFERENT_OR_UNCONFIRMED_LOCATOR"
+                locator_status == "EXACT_OFFICIAL_TEXT_DIFFERENT_OR_UNCONFIRMED_LOCATOR"
             ),
-            "source_verification_record_content_sha256": record.get(
-                "record_content_sha256"
-            ),
+            "source_verification_record_content_sha256": record.get("record_content_sha256"),
             "required_candidate_action": action,
-            "source_admission_if_approved": (
-                action == "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED"
-            ),
+            "source_admission_if_approved": (action == "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED"),
             "candidate_rebind_or_successor_scope_if_approved": True,
             "defer_candidate_build_until_one_consolidated_phase2a_scope": True,
             "expressly_not_authorized": {
@@ -212,9 +204,7 @@ def build_proposal(
         or locator_counts
         != Counter(
             {
-                "EXACT_OFFICIAL_TEXT_AND_STATED_LOCATOR_MATCH": (
-                    EXPECTED_CONFIRMED_LOCATOR_COUNT
-                ),
+                "EXACT_OFFICIAL_TEXT_AND_STATED_LOCATOR_MATCH": (EXPECTED_CONFIRMED_LOCATOR_COUNT),
                 "EXACT_OFFICIAL_TEXT_DIFFERENT_OR_UNCONFIRMED_LOCATOR": (
                     EXPECTED_LOCATOR_CONFIRMATION_COUNT
                 ),
@@ -223,12 +213,8 @@ def build_proposal(
         or action_counts
         != Counter(
             {
-                "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED": (
-                    EXPECTED_SOURCE_ADMISSION_ROW_COUNT
-                ),
-                "CANDIDATE_REBIND_OR_SUCCESSOR_DECISION_REQUIRED": (
-                    EXPECTED_REBIND_ROW_COUNT
-                ),
+                "OWNER_SOURCE_ADMISSION_DECISION_REQUIRED": (EXPECTED_SOURCE_ADMISSION_ROW_COUNT),
+                "CANDIDATE_REBIND_OR_SUCCESSOR_DECISION_REQUIRED": (EXPECTED_REBIND_ROW_COUNT),
             }
         )
     ):
@@ -308,9 +294,7 @@ def build_proposal(
     return {
         "output_root": str(output_root),
         "proposal_content_sha256": proposal["proposal_content_sha256"],
-        "approval_payload_content_sha256": approval[
-            "approval_payload_content_sha256"
-        ],
+        "approval_payload_content_sha256": approval["approval_payload_content_sha256"],
         "item_count": EXPECTED_EXACT_COUNT,
         "source_admission_row_count": EXPECTED_SOURCE_ADMISSION_ROW_COUNT,
         "candidate_rebind_row_count": EXPECTED_REBIND_ROW_COUNT,

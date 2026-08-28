@@ -20,8 +20,7 @@ def _content_sha(value: dict, field: str) -> str:
     material = dict(value)
     material.pop(field, None)
     raw = (
-        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
     return hashlib.sha256(raw).hexdigest()
 
@@ -35,9 +34,7 @@ def _recommendations(advisory: dict) -> list[tuple[str, dict]]:
 
 
 def test_exact_59_row_80_blocker_topology_and_arithmetic(advisory: dict) -> None:
-    assert advisory["artifact_content_sha256"] == _content_sha(
-        advisory, "artifact_content_sha256"
-    )
+    assert advisory["artifact_content_sha256"] == _content_sha(advisory, "artifact_content_sha256")
     assert len(advisory["row_ids"]) == len(set(advisory["row_ids"])) == 59
     assert advisory["row_id_set_sha256"] == (
         "45a35173be61cce0e472db89e979d9834125baa868bf96c78ae5e3f0fbb8f376"
@@ -146,9 +143,7 @@ def test_all_partial_components_and_invalid_none_exclusions_remain_blocked(
     assert support.count("NONE") == 8
     for item in retained_exclusions:
         assert len(item["after_legal_propositions"]) == 1
-        assert item["after_legal_propositions"][0]["proposition"] == item["before"][
-            "proposition"
-        ]
+        assert item["after_legal_propositions"][0]["proposition"] == item["before"]["proposition"]
         assert item["component_material_blocker_after_owner_adoption"] is True
 
 
@@ -157,9 +152,7 @@ def test_four_issue_dimension_gaps_and_q12_source_gap_are_fail_closed(
 ) -> None:
     rows = {row["row_id"]: row for row in advisory["row_advisories"]}
     assert {
-        row_id
-        for row_id, row in rows.items()
-        if row["row_issue_dimension_coverage_holds"]
+        row_id for row_id, row in rows.items() if row["row_issue_dimension_coverage_holds"]
     } == {
         "live30-q12:issue-05",
         "live30-q13:issue-01",
@@ -198,7 +191,9 @@ def test_127_full_components_are_inventory_not_blanket_clearance(advisory: dict)
         if component["coverage_role"] == "RELIED_ON_FOR_EXACT_ISSUE_DIMENSION_COVERAGE"
     ]
     assert relied
-    assert all(component["does_not_clear_different_component"] is True for component in full_components)
+    assert all(
+        component["does_not_clear_different_component"] is True for component in full_components
+    )
     for component in relied:
         assert component["authorities"]
         assert all(
@@ -215,9 +210,7 @@ def test_exact_source_roles_release_holds_and_readiness_partition(advisory: dict
     assert sum(item["relied_on_for_support"] for item in bindings) == 5
     assert sum(not item["relied_on_for_support"] for item in bindings) == 18
     for item in bindings:
-        assert item["record_content_sha256"] == _content_sha(
-            item, "record_content_sha256"
-        )
+        assert item["record_content_sha256"] == _content_sha(item, "record_content_sha256")
         assert item["representation_byte_hash_verified"] is True
         assert item["source_admitted_by_r3"] is False
         assert item["answer_release_effect"] == "NONE"

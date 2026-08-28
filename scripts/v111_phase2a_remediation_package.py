@@ -15,11 +15,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
-import sys
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any
 
 
 def _sha256_file(path: Path) -> str:
@@ -30,12 +29,12 @@ def _sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def _write_json(path: Path, payload: Dict[str, Any]) -> None:
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def _row_matrix_to_counts(rows: Iterable[Dict[str, Any]]) -> Dict[str, int]:
-    counts: Dict[str, int] = {}
+def _row_matrix_to_counts(rows: Iterable[dict[str, Any]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
     for row in rows:
         status = str(row.get("status", "UNKNOWN")).upper()
         counts[status] = counts.get(status, 0) + 1
@@ -47,7 +46,7 @@ def _load_json(path: Path) -> Any:
         return json.load(f)
 
 
-def _norm(v: Optional[Any]) -> Any:
+def _norm(v: Any | None) -> Any:
     if isinstance(v, str):
         return v.strip()
     return v
@@ -60,10 +59,10 @@ def build_phase2a_package(
     cutoff_iso: str,
     output_dir: Path,
     run_id: str,
-    legal_policy_path: Optional[Path],
-    advisory_path: Optional[Path],
-) -> Dict[str, Any]:
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    legal_policy_path: Path | None,
+    advisory_path: Path | None,
+) -> dict[str, Any]:
+    now = datetime.now(UTC).isoformat(timespec="seconds")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     remediation = _load_json(remediation_path)
@@ -76,8 +75,16 @@ def build_phase2a_package(
             "Provide the canonical all-585 remediation table."
         )
 
-    gold_or_case_defects = [r for r in remediation_rows if str(r.get("primary_defect", "")).upper() == "GOLD_OR_CASE_DEFECT"]
-    candidate_impact_rows = [r for r in remediation_rows if str(r.get("primary_defect", "")).upper() == "MATERIAL_CANDIDATE_COVERAGE_GAP"]
+    gold_or_case_defects = [
+        r
+        for r in remediation_rows
+        if str(r.get("primary_defect", "")).upper() == "GOLD_OR_CASE_DEFECT"
+    ]
+    candidate_impact_rows = [
+        r
+        for r in remediation_rows
+        if str(r.get("primary_defect", "")).upper() == "MATERIAL_CANDIDATE_COVERAGE_GAP"
+    ]
     if len(gold_or_case_defects) != 509:
         # Explicitly keep exact arithmetic visible; do not auto-normalise classification.
         pass
@@ -91,7 +98,7 @@ def build_phase2a_package(
     case_count = len(registry.get("cases", []))
     issue_count = len(registry.get("issues", []))
 
-    package: Dict[str, Any] = {
+    package: dict[str, Any] = {
         "schema_version": "legalbot.v111.phase2a.package.v1",
         "run_id": run_id,
         "created_utc": now,
@@ -136,7 +143,7 @@ def build_phase2a_package(
             "gold_or_case_count": len(gold_or_case_defects),
             "material_candidate_impact_count": len(candidate_impact_rows),
             "row_status_counts": _row_matrix_to_counts(remediation_rows),
-            "row_fields_seen": sorted({k for r in remediation_rows for k in r.keys()}),
+            "row_fields_seen": sorted({k for r in remediation_rows for k in r}),
         },
         "currentness": {
             "requested_ceiling": cutoff_iso,
@@ -192,7 +199,9 @@ def build_phase2a_package(
         "gate": "PHASE_2A_REMEDIATION_COMPLETE_OR_BLOCKED",
         "counts": {
             "row_count": package["remediation_summary"]["row_count"],
-            "candidate_impact_count": package["remediation_summary"]["material_candidate_impact_count"],
+            "candidate_impact_count": package["remediation_summary"][
+                "material_candidate_impact_count"
+            ],
         },
     }
     _write_json(manifest_path, manifest)
@@ -202,7 +211,9 @@ def build_phase2a_package(
     if blockers:
         verdict = "PHASE 2A SAFELY STOPPED — PHASE 2B AND DEVELOPMENT 30 NOT AUTHORIZED"
     elif package["invariants"].get("candidate_rebuild_required", True) is False:
-        verdict = "PHASE 2A REMEDIATION COMPLETE — OWNER REVIEW AND ADOPTION REQUIRED BEFORE PHASE 2B"
+        verdict = (
+            "PHASE 2A REMEDIATION COMPLETE — OWNER REVIEW AND ADOPTION REQUIRED BEFORE PHASE 2B"
+        )
     else:
         # Still material blocker until owner approves any successor candidate and re-runs phase2A.
         verdict = "PHASE 2A SAFELY STOPPED — PHASE 2B AND DEVELOPMENT 30 NOT AUTHORIZED"
@@ -219,24 +230,36 @@ def build_phase2a_package(
     }
 
 
-def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Generate Phase-2A remediation package for owner review.")
-    p.add_argument("--remediation-json", required=True, help="Path to 585-row remediation matrix JSON")
-    p.add_argument("--registry-json", required=True, help="Path to case+issue registry snapshot JSON")
+def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="Generate Phase-2A remediation package for owner review."
+    )
+    p.add_argument(
+        "--remediation-json", required=True, help="Path to 585-row remediation matrix JSON"
+    )
+    p.add_argument(
+        "--registry-json", required=True, help="Path to case+issue registry snapshot JSON"
+    )
     p.add_argument(
         "--cutoff",
         required=True,
         help="Legal-currentness ceiling candidate in RFC3339 format (YYYY-MM-DDTHH:MM:SS+00:00)",
     )
     p.add_argument("--run-id", required=True, help="Deterministic Phase-2A run identifier")
-    p.add_argument("--output-dir", required=True, help="Output folder for package, manifest and outcome.")
-    p.add_argument("--legal-policy-json", help="Optional conservative certification policy snapshot JSON")
+    p.add_argument(
+        "--output-dir", required=True, help="Output folder for package, manifest and outcome."
+    )
+    p.add_argument(
+        "--legal-policy-json", help="Optional conservative certification policy snapshot JSON"
+    )
     p.add_argument("--ai-advisory-json", help="Optional advisory AI-audit JSON bundle")
-    p.add_argument("--require-blocking", action="store_true", help="Return non-zero only for blockers")
+    p.add_argument(
+        "--require-blocking", action="store_true", help="Return non-zero only for blockers"
+    )
     return p.parse_args(argv)
 
 
-def main(argv: Optional[Iterable[str]] = None) -> int:
+def main(argv: Iterable[str] | None = None) -> int:
     ns = parse_args(argv)
     result = build_phase2a_package(
         remediation_path=Path(ns.remediation_json),
@@ -249,7 +272,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     )
 
     verdict = result["verdict"]
-    if verdict == "PHASE 2A REMEDIATION COMPLETE — OWNER REVIEW AND ADOPTION REQUIRED BEFORE PHASE 2B":
+    if (
+        verdict
+        == "PHASE 2A REMEDIATION COMPLETE — OWNER REVIEW AND ADOPTION REQUIRED BEFORE PHASE 2B"
+    ):
         print(verdict)
         print(json.dumps(result, indent=2))
         return 0

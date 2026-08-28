@@ -341,8 +341,7 @@ def test_repository_candidate_successor_binds_all_frozen_cases_without_search() 
     build_id = "current-law-ew-full-fp16-v111-20260818-a"
     build_path = PROJECT_ROOT / "data" / "indexes" / "builds" / build_id
     qualification_path = (
-        PROJECT_ROOT
-        / "config/archive/provision-verification/"
+        PROJECT_ROOT / "config/archive/provision-verification/"
         "candidate-provision-qualification-current-law-ew-full-fp16-v111-20260818-a.v1.json"
     )
 
@@ -370,8 +369,7 @@ def test_candidate_bound_date_keeps_rebound_legislation_in_candidate_pool() -> N
     build_id = "current-law-ew-full-fp16-v111-20260818-a"
     build_path = PROJECT_ROOT / "data" / "indexes" / "builds" / build_id
     qualification_path = (
-        PROJECT_ROOT
-        / "config/archive/provision-verification/"
+        PROJECT_ROOT / "config/archive/provision-verification/"
         "candidate-provision-qualification-current-law-ew-full-fp16-v111-20260818-a.v1.json"
     )
     bound, report = bind_retrieval_rows_to_candidate(

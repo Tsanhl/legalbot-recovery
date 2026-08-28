@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PARENT = PROJECT_ROOT / "data/evaluations/phase2b-question-drafts"
 RUN_NAME = "LegalBot-Phase2B-2026-08-28-expansion-and-pre-gold-r1"
@@ -35,8 +34,7 @@ LEGAL_CURRENTNESS_CUTOFF = "2026-08-28"
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -92,7 +90,13 @@ OFFICIAL_SOURCE_CANDIDATES: dict[str, list[dict[str, Any]]] = {
             "authority_type": "OFFICIAL_PROCEDURAL_RULES",
             "title": "Civil Procedure Rules, Part 54",
             "url": "https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part54",
-            "coverage_tags": ["judicial-review", "procedure", "permission", "time-limit", "remedies"],
+            "coverage_tags": [
+                "judicial-review",
+                "procedure",
+                "permission",
+                "time-limit",
+                "remedies",
+            ],
         },
         {
             "source_scope_id": "admin-human-rights-act-1998",
@@ -106,7 +110,12 @@ OFFICIAL_SOURCE_CANDIDATES: dict[str, list[dict[str, Any]]] = {
             "authority_type": "PRIMARY_LEGISLATION",
             "title": "Judicial Review and Courts Act 2022",
             "url": "https://www.legislation.gov.uk/ukpga/2022/35/contents",
-            "coverage_tags": ["ouster-clauses", "remedies", "suspended-quashing-order", "currentness"],
+            "coverage_tags": [
+                "ouster-clauses",
+                "remedies",
+                "suspended-quashing-order",
+                "currentness",
+            ],
         },
         {
             "source_scope_id": "admin-constitutional-reform-act-2005",
@@ -155,7 +164,12 @@ OFFICIAL_SOURCE_CANDIDATES: dict[str, list[dict[str, Any]]] = {
             "authority_type": "OFFICIAL_JUDGMENT",
             "title": "R (Begum) v Special Immigration Appeals Commission [2021] UKSC 7",
             "url": "https://caselaw.nationalarchives.gov.uk/uksc/2021/7",
-            "coverage_tags": ["national-security", "fair-process", "appeal", "institutional-competence"],
+            "coverage_tags": [
+                "national-security",
+                "fair-process",
+                "appeal",
+                "institutional-competence",
+            ],
         },
         {
             "source_scope_id": "admin-aaa-syria-2023-uksc-42",
@@ -178,7 +192,12 @@ OFFICIAL_SOURCE_CANDIDATES: dict[str, list[dict[str, Any]]] = {
             "authority_type": "PRIMARY_LEGISLATION",
             "title": "Administration of Estates Act 1925",
             "url": "https://www.legislation.gov.uk/ukpga/Geo5/15-16/23/contents",
-            "coverage_tags": ["intestacy", "personal-representative", "administration", "creditors"],
+            "coverage_tags": [
+                "intestacy",
+                "personal-representative",
+                "administration",
+                "creditors",
+            ],
         },
         {
             "source_scope_id": "wills-inheritance-provision-act-1975",
@@ -234,7 +253,13 @@ OFFICIAL_SOURCE_CANDIDATES: dict[str, list[dict[str, Any]]] = {
             "authority_type": "OFFICIAL_JUDGMENT",
             "title": "Hirachand v Hirachand [2024] UKSC 43",
             "url": "https://caselaw.nationalarchives.gov.uk/uksc/2024/43",
-            "coverage_tags": ["family-provision", "financial-need", "success-fee", "remedy", "currentness"],
+            "coverage_tags": [
+                "family-provision",
+                "financial-need",
+                "success-fee",
+                "remedy",
+                "currentness",
+            ],
         },
     ],
 }
@@ -298,23 +323,42 @@ def _source_scope_proposal(question_topics: dict[str, Any]) -> dict[str, Any]:
     )
 
 
-def _question_records(topic_id: str, topic: dict[str, Any], r3) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+def _question_records(
+    topic_id: str, topic: dict[str, Any], r3
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     r3.DEFAULT_JURISDICTIONS[topic_id] = ["ENGLAND_AND_WALES"]
     difficulties = {
         "ESSAY": (
-            "SCHOOL_COMPARABLE", "SCHOOL_COMPARABLE", "HARDER", "HARDER", "EVEN_HARDER", "EVEN_HARDER"
+            "SCHOOL_COMPARABLE",
+            "SCHOOL_COMPARABLE",
+            "HARDER",
+            "HARDER",
+            "EVEN_HARDER",
+            "EVEN_HARDER",
         ),
         "PROBLEM_BASED": (
-            "SCHOOL_COMPARABLE", "SCHOOL_COMPARABLE", "HARDER", "HARDER", "EVEN_HARDER", "EVEN_HARDER"
+            "SCHOOL_COMPARABLE",
+            "SCHOOL_COMPARABLE",
+            "HARDER",
+            "HARDER",
+            "EVEN_HARDER",
+            "EVEN_HARDER",
         ),
         "GENERAL_ENQUIRY": (
-            "EVERYDAY", "EVERYDAY", "EVERYDAY", "EVERYDAY", "MULTI_ISSUE", "BOUNDARY_OR_URGENT"
+            "EVERYDAY",
+            "EVERYDAY",
+            "EVERYDAY",
+            "EVERYDAY",
+            "MULTI_ISSUE",
+            "BOUNDARY_OR_URGENT",
         ),
     }
     prefixes = {"ESSAY": "e", "PROBLEM_BASED": "p", "GENERAL_ENQUIRY": "g"}
     unseen_prefixes = {"ESSAY": "u-e", "PROBLEM_BASED": "u-p", "GENERAL_ENQUIRY": "u-g"}
 
-    def make(lane_name: str, source: dict[str, list[dict[str, Any]]], prefixes_for_lane: dict[str, str]) -> list[dict[str, Any]]:
+    def make(
+        lane_name: str, source: dict[str, list[dict[str, Any]]], prefixes_for_lane: dict[str, str]
+    ) -> list[dict[str, Any]]:
         output: list[dict[str, Any]] = []
         ordinal = 0
         for kind in ("ESSAY", "PROBLEM_BASED", "GENERAL_ENQUIRY"):
@@ -391,7 +435,9 @@ def _source_r3_questions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     unseen: list[dict[str, Any]] = []
     for path in sorted((SOURCE_PACKAGE_ROOT / "development/topics").rglob("*.jsonl")):
         visible.extend(_read_jsonl(path))
-    for path in sorted((SOURCE_PACKAGE_ROOT / "unseen-custody/topics").rglob("PRIVATE-UNSEEN-QUESTION-SET.jsonl")):
+    for path in sorted(
+        (SOURCE_PACKAGE_ROOT / "unseen-custody/topics").rglob("PRIVATE-UNSEEN-QUESTION-SET.jsonl")
+    ):
         unseen.extend(_read_jsonl(path))
     if len(visible) != 300 or len(unseen) != 270:
         raise ValueError("source r3 question boundary changed")
@@ -400,9 +446,14 @@ def _source_r3_questions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
 
 def _proposition_role(issue_tag: str, question: dict[str, Any]) -> str:
     lower = issue_tag.casefold()
-    if question["gold_answer_requires_negative_proposition"] or any(word in lower for word in ("false", "boundary", "does-not")):
+    if question["gold_answer_requires_negative_proposition"] or any(
+        word in lower for word in ("false", "boundary", "does-not")
+    ):
         return "NEGATIVE_BOUNDARY_OR_NON_APPLICATION"
-    if any(word in lower for word in ("remedy", "procedure", "deadline", "time-limit", "appeal", "court", "cost")):
+    if any(
+        word in lower
+        for word in ("remedy", "procedure", "deadline", "time-limit", "appeal", "court", "cost")
+    ):
         return "REMEDY_PROCEDURE_OR_DEADLINE"
     if any(word in lower for word in ("defence", "exception", "exemption", "justification")):
         return "EXCEPTION_DEFENCE_OR_JUSTIFICATION"
@@ -522,7 +573,9 @@ def _markdown(display_name: str, lane: str, records: list[dict[str, Any]]) -> st
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _validate_questions(core: list[dict[str, Any]], stress: list[dict[str, Any]], unseen: list[dict[str, Any]]) -> None:
+def _validate_questions(
+    core: list[dict[str, Any]], stress: list[dict[str, Any]], unseen: list[dict[str, Any]]
+) -> None:
     for records in (core, unseen):
         if len(records) != 18 or Counter(row["question_type"] for row in records) != {
             "ESSAY": 6,
@@ -574,7 +627,11 @@ def _assert_safety(root: Path) -> None:
                     raise ValueError("expansion question became authorizing")
             elif schema == "legalbot.v111.phase2b.proposition-evidence-work-item.v1":
                 proposition_count += 1
-                if row["proposition_text"] is not None or row["evidence_span_ids"] or row["gold_eligible"]:
+                if (
+                    row["proposition_text"] is not None
+                    or row["evidence_span_ids"]
+                    or row["gold_eligible"]
+                ):
                     raise ValueError("pre-gold proposition falsely completed")
             elif schema == "legalbot.v111.phase2b.gold-answer-work-item.v1":
                 answer_count += 1
@@ -592,8 +649,13 @@ def build() -> Path:
     if not SOURCE_PACKAGE_ROOT.is_dir():
         raise FileNotFoundError(f"source package missing: {SOURCE_RUN_NAME}")
     source_checksum_count = _verify_package_checksums(SOURCE_PACKAGE_ROOT)
-    source_manifest = json.loads((SOURCE_PACKAGE_ROOT / "PACKAGE-MANIFEST.json").read_text(encoding="utf-8"))
-    if source_manifest["package_content_sha256"] != "cc625f2b80323654fbd4c3e3a53b16ac99fe54eb460f1a20fc04461c98ce79ec":
+    source_manifest = json.loads(
+        (SOURCE_PACKAGE_ROOT / "PACKAGE-MANIFEST.json").read_text(encoding="utf-8")
+    )
+    if (
+        source_manifest["package_content_sha256"]
+        != "cc625f2b80323654fbd4c3e3a53b16ac99fe54eb460f1a20fc04461c98ce79ec"
+    ):
         raise ValueError("source r3 package digest changed")
     r3 = _load_module("phase2b_r3_builder", SOURCE_BUILDER)
     question_module = _load_module("phase2b_expansion_questions", QUESTION_MODULE)
@@ -601,7 +663,9 @@ def build() -> Path:
     source_scope = _source_scope_proposal(question_module.EXPANSION_TOPICS)
     existing_visible, existing_unseen = _source_r3_questions()
 
-    expansion: dict[str, tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]] = {}
+    expansion: dict[
+        str, tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]
+    ] = {}
     expansion_visible: list[dict[str, Any]] = []
     expansion_unseen: list[dict[str, Any]] = []
     for topic_id, topic in question_module.EXPANSION_TOPICS.items():
@@ -647,12 +711,16 @@ def build() -> Path:
             custody_dir.mkdir(parents=True)
             core_raw = _write_jsonl(development_dir / "CORE-QUESTION-SET.jsonl", core)
             stress_raw = _write_jsonl(development_dir / "STRESS-QUESTION-SET.jsonl", stress)
-            unseen_raw = _write_jsonl(custody_dir / "PRIVATE-UNSEEN-QUESTION-SET.jsonl", unseen, private=True)
+            unseen_raw = _write_jsonl(
+                custody_dir / "PRIVATE-UNSEEN-QUESTION-SET.jsonl", unseen, private=True
+            )
             (development_dir / "CORE-QUESTION-SET.md").write_text(
-                _markdown(topic["display_name"], "Development core proposal", core), encoding="utf-8"
+                _markdown(topic["display_name"], "Development core proposal", core),
+                encoding="utf-8",
             )
             (development_dir / "STRESS-QUESTION-SET.md").write_text(
-                _markdown(topic["display_name"], "Development stress proposal", stress), encoding="utf-8"
+                _markdown(topic["display_name"], "Development stress proposal", stress),
+                encoding="utf-8",
             )
             topic_manifest = _sealed(
                 {
@@ -677,7 +745,9 @@ def build() -> Path:
                 },
                 field="topic_content_sha256",
             )
-            _write_json(staging / "expansion-topics" / topic_id / "TOPIC-MANIFEST.json", topic_manifest)
+            _write_json(
+                staging / "expansion-topics" / topic_id / "TOPIC-MANIFEST.json", topic_manifest
+            )
             topic_registry.append(
                 {
                     "topic_id": topic_id,
@@ -696,7 +766,9 @@ def build() -> Path:
             ledger_dir.mkdir(parents=True)
             propositions = proposition_by_topic[topic_id]
             answers = answer_by_topic[topic_id]
-            proposition_raw = _write_jsonl(ledger_dir / "PROPOSITION-EVIDENCE-WORK-LEDGER.jsonl", propositions)
+            proposition_raw = _write_jsonl(
+                ledger_dir / "PROPOSITION-EVIDENCE-WORK-LEDGER.jsonl", propositions
+            )
             answer_raw = _write_jsonl(ledger_dir / "GOLD-ANSWER-WORK-ITEMS.jsonl", answers)
             proposition_count += len(propositions)
             answer_count += len(answers)
@@ -779,7 +851,9 @@ def build() -> Path:
             "Typed owner name: ____________________\n"
             "Decision date (YYYY-MM-DD): ____________________\n"
         )
-        (staging / "FUTURE-OWNER-SOURCE-SCOPE-DECISION-PROMPT.txt").write_text(approval_prompt, encoding="utf-8")
+        (staging / "FUTURE-OWNER-SOURCE-SCOPE-DECISION-PROMPT.txt").write_text(
+            approval_prompt, encoding="utf-8"
+        )
 
         readme = f"""# {RUN_NAME}
 

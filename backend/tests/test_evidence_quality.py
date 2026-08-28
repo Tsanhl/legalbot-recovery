@@ -297,12 +297,8 @@ def test_release_enforcement_requires_frozen_threshold_proof(evidence) -> None:
         rubric_scores={},
     )
 
-    assert any(
-        finding.code == "no_threshold_qualified_evidence" for finding in missing.findings
-    )
-    assert all(
-        finding.code != "no_threshold_qualified_evidence" for finding in passing.findings
-    )
+    assert any(finding.code == "no_threshold_qualified_evidence" for finding in missing.findings)
+    assert all(finding.code != "no_threshold_qualified_evidence" for finding in passing.findings)
 
 
 def test_possessive_apostrophes_are_not_misread_as_quotations(evidence) -> None:

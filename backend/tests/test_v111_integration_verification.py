@@ -10,6 +10,8 @@ from app.evaluation.live_suite import sealed_sha256
 from app.evaluation.v111_integration_verification import (
     CHECK_MATRIX,
     CHECK_MATRIX_SHA256,
+    PHASE1_ARTIFACT_TEST_EXCLUSIONS,
+    RECOVERY_BRANCH,
     _safe_output_path,
     _semantic_counts,
     _write_create_only_report,
@@ -48,6 +50,9 @@ def test_fixed_matrix_covers_phase1_without_later_gate_execution() -> None:
     assert " active" not in command_text
     assert all(spec.argv and spec.timeout_seconds > 0 for spec in CHECK_MATRIX)
     assert all("--frozen" in spec.argv for spec in CHECK_MATRIX if spec.argv[0] == "uv")
+    phase1_suite = next(spec for spec in CHECK_MATRIX if spec.check_id == "python_full_suite")
+    assert set(PHASE1_ARTIFACT_TEST_EXCLUSIONS).issubset(phase1_suite.argv)
+    assert RECOVERY_BRANCH == "main"
 
 
 def test_matrix_digest_covers_exact_commands_and_non_authority() -> None:

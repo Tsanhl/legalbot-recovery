@@ -18,9 +18,7 @@ def test_deep_recovery_comparison_is_complete_and_non_authorizing(tmp_path: Path
         deep_ranking_path=DEEP_RANKING,
         output_root=tmp_path / "comparison",
     )
-    artifact = json.loads(
-        (tmp_path / "comparison/DEEP-RANKING-COMPARISON-176.json").read_bytes()
-    )
+    artifact = json.loads((tmp_path / "comparison/DEEP-RANKING-COMPARISON-176.json").read_bytes())
 
     assert result["metrics"]["row_count"] == 176
     assert len(artifact["rows"]) == 176

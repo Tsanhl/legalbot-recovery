@@ -42,9 +42,7 @@ OWNER_PACKET_FILE_SHA256 = "992770c04cb3e08de64bb98e80aa9801171d3e66e4b573b85919
 OWNER_PACKET_CONTENT_SHA256 = "93ad9113af76896f0570a3666c446472af7587b7e3ff32b7464e670777ec6b6c"
 
 PRIOR_QUARANTINE_MANIFEST = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2A-2026-08-28-source-quarantine"
-    / "QUARANTINE-MANIFEST.json"
+    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-28-source-quarantine" / "QUARANTINE-MANIFEST.json"
 )
 PRIOR_QUARANTINE_MANIFEST_FILE_SHA256 = (
     "f482366a2ba0d9f636c56104d632767a8eadd6e9a9625d50ef5391a5f62995eb"
@@ -58,17 +56,13 @@ CANDIDATE_MANIFEST = (
     / "LegalBot-Phase2A-2026-08-27-final-owner-review-blocked"
     / "machine/candidate/approved-source-manifest.json"
 )
-CANDIDATE_MANIFEST_FILE_SHA256 = (
-    "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
-)
+CANDIDATE_MANIFEST_FILE_SHA256 = "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
 
 QUARANTINE_ROOT = REVIEW_ROOT / (
     "LegalBot-Phase2A-2026-08-28-held-missing-source-research-quarantine-r1"
 )
 OFFICIAL_ROOT = QUARANTINE_ROOT / "official"
-DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / (
-    "LegalBot-Phase2A-2026-08-28-held-missing-source-advisory-r2"
-)
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / ("LegalBot-Phase2A-2026-08-28-held-missing-source-advisory-r2")
 
 SUPERSEDED_R1_ADVISORY_CONTENT_SHA256 = (
     "73e77df0edb3b48ad3ce8116a149c861366df78828e29d22872f2fb3caf97194"
@@ -165,15 +159,12 @@ def _sha256_file(file_path: Path) -> str:
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _content_sha256(value: Any) -> str:
@@ -411,11 +402,16 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
         "source_refs": ["neutral-citation:[2016] EWCA Civ 982", "ukpga:1982:29"],
         "finding": "The candidate crosswalk for the 1982 Act is exact; Grand China already has sealed official quarantine bytes. Source presence does not prove the contract or breach facts.",
         "owner_action": "retain the proposition split and fact holds; no duplicate source proposal",
-        "additional_holds": ["Grand China later treatment and owner admission remain outside this advisory"],
+        "additional_holds": [
+            "Grand China later treatment and owner admission remain outside this advisory"
+        ],
     },
     "live30-q01:issue-03": {
         "status": STATUS_RESOLVED,
-        "source_refs": ["neutral-citation:[2016] EWCA Civ 982", "neutral-citation:[2009] EWCA Civ 9"],
+        "source_refs": [
+            "neutral-citation:[2016] EWCA Civ 982",
+            "neutral-citation:[2009] EWCA Civ 9",
+        ],
         "finding": "Both Court of Appeal identities and locators have official bytes; the distinct waiver-of-strict-compliance proposition remains only partial.",
         "owner_action": "retain the waiver proposition and post-breach fact holds",
         "additional_holds": ["comprehensive later treatment remains held"],
@@ -450,7 +446,10 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
     },
     "live30-q24:issue-01": {
         "status": STATUS_RESOLVED,
-        "source_refs": ["official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors", "ukpga:1982:29"],
+        "source_refs": [
+            "official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors",
+            "ukpga:1982:29",
+        ],
         "finding": "The 1982 Act candidate crosswalk is exact and the SRA Code now has official bytes. The SRA material is regulatory, not independent legal authority.",
         "owner_action": "admit the SRA bytes only through an exact regulatory lane and retain retainer/fact holds",
         "additional_holds": ["SRA source-ceiling version remains held"],
@@ -460,7 +459,9 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
         "source_refs": ["neutral-citation:[2011] EWCA Civ 1089", "neutral-citation:[2025] UKPC 34"],
         "finding": "Jardine candidate source-version source-version-8821b7dc63ebbb01d51e0ff2842f942cc23278cf is the exact judgment; the earlier mismatch was only the www.jcpc.uk versus jcpc.uk alias.",
         "owner_action": "retain the Bermuda/England-and-Wales role, later-treatment and relationship-fact holds",
-        "additional_holds": ["Jardine is a Bermuda appeal and is not relabelled as an England-and-Wales binding judgment"],
+        "additional_holds": [
+            "Jardine is a Bermuda appeal and is not relabelled as an England-and-Wales binding judgment"
+        ],
     },
     "live30-q04:issue-07": {
         "status": STATUS_RESOLVED,
@@ -471,7 +472,9 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
     },
     "live30-q05:issue-07": {
         "status": STATUS_REWRITE,
-        "source_refs": ["official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors"],
+        "source_refs": [
+            "official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors"
+        ],
         "finding": "Bounded primary-source research did not verify a binding AI-specific negligence rule. The exact SRA Code supports competence and supervision only and is regulatory material.",
         "owner_action": "remove any categorical AI-specific legal claim; retain an existing-duty/fact-specific atom or exclude the unsupported component",
         "additional_holds": ["the 17 August 2026 SRA warning remains post-ceiling and excluded"],
@@ -495,11 +498,16 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
         "source_refs": ["neutral-citation:[2015] UKSC 11", "neutral-citation:[2023] UKSC 26"],
         "finding": "The identified Supreme Court cases support ordinary clinical duties; bounded primary-source research did not verify a free-standing AI-specific verification duty.",
         "owner_action": "retain only the ordinary-duty atom and exclude any categorical AI-specific rule",
-        "additional_holds": ["device status, validation, governance, knowledge and accepted practice remain matter facts"],
+        "additional_holds": [
+            "device status, validation, governance, knowledge and accepted practice remain matter facts"
+        ],
     },
     "live30-q24:issue-08": {
         "status": STATUS_RESOLVED,
-        "source_refs": ["official-url:https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part-46-costs-special-cases", "official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors"],
+        "source_refs": [
+            "official-url:https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part-46-costs-special-cases",
+            "official-url:https://www.sra.org.uk/solicitors/standards-regulations/code-conduct-solicitors",
+        ],
         "finding": "The www.justice.gov.uk route resolves CPR 46.9; the SRA Code and Transparency Rules remain regulatory materials.",
         "owner_action": "use only the exact procedural/regulatory roles and retain retainer, bill, approval and accessibility facts",
         "additional_holds": ["live-page source-ceiling versions remain held"],
@@ -509,7 +517,9 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
         "source_refs": ["neutral-citation:[2001] UKHL 44", "neutral-citation:[2025] UKSC 22"],
         "finding": "The official Parliament representation for Etridge remains HTTP 403 after the bounded diagnosed route; Waller-Edwards is an exact candidate Supreme Court source but cannot silently replace every Etridge span.",
         "owner_action": "retain the Etridge representation hold or rewrite solely to exact Waller-Edwards propositions",
-        "additional_holds": ["transaction, relationship, notice and lender-response facts remain missing"],
+        "additional_holds": [
+            "transaction, relationship, notice and lender-response facts remain missing"
+        ],
     },
     "live30-q30:issue-07": {
         "status": STATUS_REWRITE,
@@ -523,7 +533,9 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
         "source_refs": [],
         "finding": "A prioritised litigation and settlement strategy is evidence-dependent professional analysis, not a source-verifiable legal proposition.",
         "owner_action": "rewrite as non-authority analysis or exclude from qualification",
-        "additional_holds": ["objectives, evidence, limitation, assets, funding, costs and enforcement facts remain missing"],
+        "additional_holds": [
+            "objectives, evidence, limitation, assets, funding, costs and enforcement facts remain missing"
+        ],
     },
     "live30-q30:issue-16": {
         "status": STATUS_REWRITE,
@@ -534,7 +546,9 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
     },
     "live30-q30:issue-18": {
         "status": STATUS_RESOLVED,
-        "source_refs": ["official-url:https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part-57a-business-and-property-courts/practice-direction-57ad-disclosure-in-the-business-and-property-courts"],
+        "source_refs": [
+            "official-url:https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part-57a-business-and-property-courts/practice-direction-57ad-disclosure-in-the-business-and-property-courts"
+        ],
         "finding": "The www.justice.gov.uk route resolves the PD57AD source and exact preservation, continuing-duty and sanction locators.",
         "owner_action": "admit only the sealed live-page bytes and retain deletion chronology, relevance, actor and consequence facts",
         "additional_holds": ["source-ceiling version remains held"],
@@ -551,56 +565,78 @@ ROW_FINDINGS: dict[str, dict[str, Any]] = {
         "source_refs": ["uksi:2024:234", "uksi:2024:1377"],
         "finding": "Official bytes prove SI 2024/1377 is a different protection-and-disclosure instrument. The correctly titled Limited Liability Partnerships (Application of Company Law) Regulations 2024 are SI 2024/234.",
         "owner_action": "reject the SI 2024/1377 identity mapping; consider exact admission of SI 2024/234 only after commencement/effects crosswalk",
-        "additional_holds": ["exact applied provisions, commencement, LLP agreement, distributions and insolvency effects remain held"],
+        "additional_holds": [
+            "exact applied provisions, commencement, LLP agreement, distributions and insolvency effects remain held"
+        ],
     },
     "live60-q40:issue-09": {
         "status": STATUS_RETAINED,
         "source_refs": ["ukpga:1981:54"],
         "finding": "The Senior Courts Act and CPR sources cover final judicial-review remedies, but no proposition-complete official interim-relief authority was selected in the bounded run.",
         "owner_action": "retain the interim-relief source gap and all remedy-application facts",
-        "additional_holds": ["construction timing, third parties, delay, likely outcome, damages basis and undertaking evidence remain missing"],
+        "additional_holds": [
+            "construction timing, third parties, delay, likely outcome, damages basis and undertaking evidence remain missing"
+        ],
     },
     "live60-q42:issue-03": {
         "status": STATUS_RETAINED,
-        "source_refs": ["neutral-citation:[2004] UKHL 48", "neutral-citation:[2026] EWHC 877 (Comm)"],
+        "source_refs": [
+            "neutral-citation:[2004] UKHL 48",
+            "neutral-citation:[2026] EWHC 877 (Comm)",
+        ],
         "finding": "The official Parliament representation for Three Rivers No 6 remains HTTP 403; other client-group and litigation-privilege sources do not remove that exact waiver/ownership span hold.",
         "owner_action": "retain the unavailable representation and Aabar first-instance/later-treatment holds",
-        "additional_holds": ["corporate authority, employee roles, purpose and disclosure facts remain missing"],
+        "additional_holds": [
+            "corporate authority, employee roles, purpose and disclosure facts remain missing"
+        ],
     },
     "live60-q46:issue-05": {
         "status": STATUS_REWRITE,
         "source_refs": [],
         "finding": "The exact minimum disclosure needed is matter- and procedure-specific; it is not a freestanding legal proposition for which a source identity can be supplied.",
         "owner_action": "retain the sourced safeguards and classify the minimum-disclosure application as a matter-information hold",
-        "additional_holds": ["withheld information, trade secret ownership and proposed safeguards remain unidentified"],
+        "additional_holds": [
+            "withheld information, trade secret ownership and proposed safeguards remain unidentified"
+        ],
     },
     "live60-q50:issue-06": {
         "status": STATUS_RETAINED,
         "source_refs": ["neutral-citation:[2003] UKHL 48"],
         "finding": "The official Parliament representation for Lloyds TSB remains HTTP 403. Later UKSC/EWCA aggregation sources are available but cannot silently substitute the exact missing span.",
         "owner_action": "retain the Lloyds representation hold or rewrite solely to exact available later authorities",
-        "additional_holds": ["exact clause, limits, retentions, policy periods and post-2024 treatment remain held"],
+        "additional_holds": [
+            "exact clause, limits, retentions, policy periods and post-2024 treatment remain held"
+        ],
     },
     "live60-q59:issue-14": {
         "status": STATUS_REWRITE,
         "source_refs": [],
         "finding": "The no-universal-control-or-full-disclosure statement is a caution about route and facts, not a positive legal rule needing a new source identity.",
         "owner_action": "rewrite as a no-conclusion/matter-information hold or exclude the component",
-        "additional_holds": ["agreement, route, representative, security, costs, control, disclosure and privilege facts remain missing"],
+        "additional_holds": [
+            "agreement, route, representative, security, costs, control, disclosure and privilege facts remain missing"
+        ],
     },
     "live60-q59:issue-15": {
         "status": STATUS_RESOLVED,
-        "source_refs": ["neutral-citation:[2021] EWCA Civ 565", "neutral-citation:[2021] EWCA Civ 1452"],
+        "source_refs": [
+            "neutral-citation:[2021] EWCA Civ 565",
+            "neutral-citation:[2021] EWCA Civ 1452",
+        ],
         "finding": "Doyle's official landing page confirms identity but supplies no proposition bytes. Infinity is an official Court of Appeal substitute for a narrower ATE/security-form proposition, not for unidentified policy terms.",
         "owner_action": "rewrite to the exact Infinity proposition and admit its sealed bytes; keep Doyle and all product facts held",
-        "additional_holds": ["policy wording, insurer, rating, limit, premium, exclusions, deed, route and later treatment remain held"],
+        "additional_holds": [
+            "policy wording, insurer, rating, limit, premium, exclusions, deed, route and later treatment remain held"
+        ],
     },
     "live60-q59:issue-17": {
         "status": STATUS_RESOLVED,
         "source_refs": ["neutral-citation:[2026] UKSC 24"],
         "finding": "A different official UKSC route recovered the full AXA judgment. The universal-distribution component remains route- and fact-specific rather than a missing-source proposition.",
         "owner_action": "admit only the sealed AXA representation and rewrite/exclude the universal-distribution component",
-        "additional_holds": ["route, class, orders, method, proof, settlement, costs, funding and unclaimed sums remain missing"],
+        "additional_holds": [
+            "route, class, orders, method, proof, settlement, costs, funding and unclaimed sums remain missing"
+        ],
     },
 }
 
@@ -787,9 +823,7 @@ def build_artifacts(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Path]:
             "source_identity_or_requirement_resolution": finding["finding"],
             "authority_identity_references": finding["source_refs"],
             "recommended_owner_action": finding["owner_action"],
-            "baseline_unresolved_holds": baseline["source_research_record"][
-                "unresolved_holds"
-            ],
+            "baseline_unresolved_holds": baseline["source_research_record"]["unresolved_holds"],
             "additional_retained_holds": finding["additional_holds"],
             "owner_decision_required": True,
             "material_gap_cleared": False,
@@ -832,8 +866,12 @@ def build_artifacts(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Path]:
             "result_counts": {
                 "row_advisory_count": len(row_records),
                 "source_topology_resolved_owner_action_required": status_counts[STATUS_RESOLVED],
-                "no_valid_missing_source_requirement_owner_rewrite_or_exclusion": status_counts[STATUS_REWRITE],
-                "unavailable_or_incomplete_official_source_gap_retained": status_counts[STATUS_RETAINED],
+                "no_valid_missing_source_requirement_owner_rewrite_or_exclusion": status_counts[
+                    STATUS_REWRITE
+                ],
+                "unavailable_or_incomplete_official_source_gap_retained": status_counts[
+                    STATUS_RETAINED
+                ],
                 "rows_with_any_retained_hold": 28,
                 "rows_automatically_qualified": 0,
                 "new_source_admission_representations_proposed": sum(

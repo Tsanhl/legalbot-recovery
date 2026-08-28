@@ -473,9 +473,7 @@ class LegislationXmlParser(DocumentParser):
         judgment = self._first_descendant(root, "judgment")
         work = self._first_descendant(judgment, "FRBRWork") if judgment is not None else None
         expression = (
-            self._first_descendant(judgment, "FRBRExpression")
-            if judgment is not None
-            else None
+            self._first_descendant(judgment, "FRBRExpression") if judgment is not None else None
         )
         body = self._first_descendant(judgment, "judgmentBody") if judgment is not None else None
         if judgment is None or work is None or expression is None or body is None:
@@ -488,15 +486,9 @@ class LegislationXmlParser(DocumentParser):
         title_element = self._first_descendant(work, "FRBRname")
         uri_element = self._first_descendant(expression, "FRBRthis")
         title = (
-            _clean(str(_attr(title_element, "value") or ""))
-            if title_element is not None
-            else ""
+            _clean(str(_attr(title_element, "value") or "")) if title_element is not None else ""
         )
-        document_uri = (
-            str(_attr(uri_element, "value") or "")
-            if uri_element is not None
-            else ""
-        )
+        document_uri = str(_attr(uri_element, "value") or "") if uri_element is not None else ""
         if not title:
             return ParseResult(
                 ParseStatus.INVALID,
@@ -593,9 +585,7 @@ class LegislationXmlParser(DocumentParser):
         )
 
     @staticmethod
-    def _first_descendant(
-        root: ET.Element | None, local_name: str
-    ) -> ET.Element | None:
+    def _first_descendant(root: ET.Element | None, local_name: str) -> ET.Element | None:
         if root is None:
             return None
         for element in root.iter():

@@ -52,9 +52,10 @@ def test_locator_and_official_url_normalization() -> None:
         "section 94",
         "section 139",
     }
-    assert _base_official_url(
-        "https://www.legislation.gov.uk/ukpga/2015/15/section/50/data.xml"
-    ) == "https://www.legislation.gov.uk/ukpga/2015/15"
+    assert (
+        _base_official_url("https://www.legislation.gov.uk/ukpga/2015/15/section/50/data.xml")
+        == "https://www.legislation.gov.uk/ukpga/2015/15"
+    )
 
 
 def test_exact_candidate_components_remain_owner_review_only() -> None:

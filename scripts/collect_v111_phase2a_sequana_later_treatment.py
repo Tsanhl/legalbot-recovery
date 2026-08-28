@@ -26,13 +26,9 @@ import httpx
 from bs4 import BeautifulSoup
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PLAN = (
-    PROJECT_ROOT
-    / "config/phase2a_targeted_later_treatment_sources.2026-08-25.v1.json"
-)
+DEFAULT_PLAN = PROJECT_ROOT / "config/phase2a_targeted_later_treatment_sources.2026-08-25.v1.json"
 DEFAULT_OUTPUT_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-25/phase2a-targeted-later-treatment-sequana-r56"
+    PROJECT_ROOT / "data/quarantine/2026-08-25/phase2a-targeted-later-treatment-sequana-r56"
 )
 ALLOWED_HOSTS = frozenset({"jcpc.uk", "www.jcpc.uk"})
 EXPECTED_AS_OF_DATE = date(2026, 8, 14)
@@ -51,15 +47,12 @@ _JUDGMENT_DATE = re.compile(
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -102,12 +95,10 @@ def _load_plan(path: Path) -> Mapping[str, Any]:
 def _validate_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
     items = plan.get("items")
     if (
-        plan.get("schema")
-        != "legalbot.v111.phase2a.targeted-later-treatment-plan.v2"
+        plan.get("schema") != "legalbot.v111.phase2a.targeted-later-treatment-plan.v2"
         or plan.get("as_of_date") != EXPECTED_AS_OF_DATE.isoformat()
         or plan.get("discovered_at") != EXPECTED_DISCOVERY_DATE.isoformat()
-        or plan.get("purpose")
-        != "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEAD_ONLY"
+        or plan.get("purpose") != "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEAD_ONLY"
         or plan.get("bulk_search") is not False
         or plan.get("owner_later_treatment_decision_required") is not True
         or plan.get("owner_source_admission_required") is not True
@@ -133,9 +124,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
         or item.get("court_weight") != "JCPC_PERSUASIVE"
         or item.get("owner_decision_required") is not True
         or not str(item.get("candidate_case_name") or "").strip()
-        or not str(item.get("provisional_relationship") or "").startswith(
-            "POTENTIAL_"
-        )
+        or not str(item.get("provisional_relationship") or "").startswith("POTENTIAL_")
         or not isinstance(targets, list)
         or targets != ["[2022] UKSC 25"]
         or any(_NEUTRAL_CITATION.fullmatch(str(value)) is None for value in targets)
@@ -337,15 +326,12 @@ def collect(
     _write_exclusive(manifest_path, _pretty_json(manifest))
 
     checksum_paths = sorted(
-        path
-        for path in output_root.rglob("*")
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",
         "".join(
-            f"{_sha256_file(path)}  {path.relative_to(output_root)}\n"
-            for path in checksum_paths
+            f"{_sha256_file(path)}  {path.relative_to(output_root)}\n" for path in checksum_paths
         ).encode("utf-8"),
     )
     return {

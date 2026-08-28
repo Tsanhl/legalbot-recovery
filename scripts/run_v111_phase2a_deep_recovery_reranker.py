@@ -23,9 +23,7 @@ from scripts.run_v111_phase2a_independent_reranker_advisory import (  # noqa: E4
     _real_scorer,
 )
 
-EXPECTED_SOURCE_DIGEST = (
-    "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
-)
+EXPECTED_SOURCE_DIGEST = "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
 EXPECTED_SOURCE_SCHEMA = "legalbot.v111.phase2a.deep-current-source-recovery-176.v1"
 EXPECTED_ROW_COUNT = 176
 OUTPUT_NAME = "INDEPENDENT-RERANKER-DEEP-RECOVERY-176.json"

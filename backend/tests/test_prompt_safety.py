@@ -265,9 +265,7 @@ async def test_invalid_or_truncated_model_output_never_enters_rendering(
 ) -> None:
     generated = _production_generated_body(evidence.id)
     if failure_case == "escaped_evidence":
-        generated["structured"]["sections"][0]["claims"][0]["evidence_ids"] = [
-            "not-in-prompt"
-        ]
+        generated["structured"]["sections"][0]["claims"][0]["evidence_ids"] = ["not-in-prompt"]
     elif failure_case == "nonmaterial":
         generated["structured"]["sections"][0]["claims"][0]["material"] = False
     elif failure_case == "malformed_json":

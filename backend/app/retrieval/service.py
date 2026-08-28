@@ -1111,11 +1111,9 @@ class HybridRetrievalService:
         self._reranker: Reranker | None = None
         self._reference_resolver: CandidateLegislationReferenceResolver | None = None
         self._retrieval_cache = SafeRetrievalCache(settings.retrieval_cache_dir)
-        self._relevance_policy: RelevanceThresholdPolicy = (
-            load_relevance_threshold_policy(
-                settings.relevance_threshold_policy_path,
-                test_mode=settings.test_mode,
-            )
+        self._relevance_policy: RelevanceThresholdPolicy = load_relevance_threshold_policy(
+            settings.relevance_threshold_policy_path,
+            test_mode=settings.test_mode,
         )
 
     def active_build_id(self) -> str | None:
@@ -1596,9 +1594,7 @@ class HybridRetrievalService:
                     "scorer_closure_aggregate_sha256": (
                         boundary.capability.scorer_closure_aggregate_sha256
                     ),
-                    "relevance_threshold_policy_sha256": (
-                        self._relevance_policy.policy_sha256
-                    ),
+                    "relevance_threshold_policy_sha256": (self._relevance_policy.policy_sha256),
                 },
             )
             cached = self._retrieval_cache.get(active_build_id=build_id, key=cache_key)
@@ -1713,9 +1709,7 @@ class HybridRetrievalService:
             retrieval_route = SEMANTIC_ROUTE
         for hit in hits:
             metadata = hit.chunk.metadata
-            locator = str(
-                metadata.get("locator") or metadata.get("legal_locator") or ""
-            ).strip()
+            locator = str(metadata.get("locator") or metadata.get("legal_locator") or "").strip()
             source_version_id = str(metadata.get("source_version_id") or "").strip()
             exact_identity_and_locator_verified = False
             if exact_authority is not None:
@@ -1831,13 +1825,9 @@ class HybridRetrievalService:
             if blocked_material_update:
                 pass
             elif relevance_policy_not_frozen and relevance_policy_not_frozen == raw_count:
-                self._emit_retrieval(
-                    "relevance_threshold_policy_not_frozen", build_id=build_id
-                )
+                self._emit_retrieval("relevance_threshold_policy_not_frozen", build_id=build_id)
             elif relevance_filtered and relevance_filtered == raw_count:
-                self._emit_retrieval(
-                    "no_threshold_qualified_evidence", build_id=build_id
-                )
+                self._emit_retrieval("no_threshold_qualified_evidence", build_id=build_id)
             elif wrong_jurisdiction and not filtered:
                 self._emit_retrieval("wrong_jurisdiction", build_id=build_id)
             elif historical and historical == raw_count:

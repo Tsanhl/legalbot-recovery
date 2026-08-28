@@ -634,7 +634,9 @@ class AnswerRunner:
         if row["evaluation_run_id"] is not None or row["evaluation_case_id"] is not None:
             raise RuntimeError("evaluation jobs cannot use conversation query rewriting")
         if self.conversations is None:
-            raise RuntimeError("conversation query rewriting requires encrypted conversation storage")
+            raise RuntimeError(
+                "conversation query rewriting requires encrypted conversation storage"
+            )
         window = self.conversations.window(request.conversation_id)
         history = tuple(item for item in window.messages if item.job_id != job_id)
         input_digest = hashlib.sha256(
@@ -657,9 +659,7 @@ class AnswerRunner:
                 separators=(",", ":"),
             ).encode()
         ).hexdigest()
-        completed = self.database.completed_stage_attempt(
-            job_id, "query-rewrite", "conversation"
-        )
+        completed = self.database.completed_stage_attempt(job_id, "query-rewrite", "conversation")
         if completed is not None:
             if str(completed["input_digest"] or "") != input_digest:
                 raise RuntimeError("completed conversation rewrite differs from frozen inputs")
@@ -903,9 +903,7 @@ class AnswerRunner:
         # answer or bypasses the owner-promoted ACTIVE authority store.
 
         if not evidence:
-            retrieval_failure_code = getattr(
-                self.retriever, "last_retrieval_code", None
-            )
+            retrieval_failure_code = getattr(self.retriever, "last_retrieval_code", None)
             post = route_behavior(
                 BehaviorSignals(
                     question=question,
@@ -915,9 +913,7 @@ class AnswerRunner:
                     retrieval_hit_count=0,
                     missing_named_document=looks_like_missing_document(question, 0),
                     retrieval_failure_code=(
-                        str(retrieval_failure_code)
-                        if retrieval_failure_code is not None
-                        else None
+                        str(retrieval_failure_code) if retrieval_failure_code is not None else None
                     ),
                 )
             )
@@ -1706,9 +1702,7 @@ class AnswerRunner:
             )
             path = self.gaps.persist(gap)
             self._store_gap(gap, path)
-            retrieval_failure_code = getattr(
-                self.retriever, "last_retrieval_code", None
-            )
+            retrieval_failure_code = getattr(self.retriever, "last_retrieval_code", None)
             if retrieval_failure_code in {
                 "relevance_threshold_policy_not_frozen",
                 "no_threshold_qualified_evidence",
@@ -1722,9 +1716,7 @@ class AnswerRunner:
                         retrieval_failure_code=str(retrieval_failure_code),
                     )
                 )
-                await self._release_behavior(
-                    job_id, request, task_type, as_of, decision, gap=gap
-                )
+                await self._release_behavior(job_id, request, task_type, as_of, decision, gap=gap)
             else:
                 await self._release_no_source(job_id, request, task_type, as_of, gap)
             return
@@ -2035,7 +2027,7 @@ class AnswerRunner:
                         claim_id=item.claim_id,
                         corrective_action=(
                             "Narrow only the affected claim and submit the new version "
-                                "for a fresh advisory evidence review."
+                            "for a fresh advisory evidence review."
                             if item.requires_targeted_narrowing
                             else "Remove the claim or bind qualifying frozen evidence before a fresh review."
                         ),

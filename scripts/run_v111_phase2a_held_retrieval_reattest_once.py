@@ -21,8 +21,7 @@ RUN_NAME = "LegalBot-Phase2A-2026-08-27-held-retrieval-reattestation"
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -150,9 +149,9 @@ def main() -> None:
     _write_new_bytes(
         root / "OUTCOME.txt",
         (
-            "PHASE 2A HELD RETRIEVAL RE-ATTESTATION PASSED\n"
-            "BUILD REMAINS BUILT_UNSCORED, NON-ACTIVE, AND ANSWER-INELIGIBLE\n"
-        ).encode(),
+            b"PHASE 2A HELD RETRIEVAL RE-ATTESTATION PASSED\n"
+            b"BUILD REMAINS BUILT_UNSCORED, NON-ACTIVE, AND ANSWER-INELIGIBLE\n"
+        ),
     )
     package = _package_index(root, status="PASSED_NON_AUTHORIZING_HELD_EVIDENCE")
     _write_new_json(root / "PACKAGE-INDEX.json", package)

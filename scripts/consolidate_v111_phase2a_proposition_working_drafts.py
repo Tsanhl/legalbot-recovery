@@ -15,15 +15,12 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-validator = importlib.import_module(
-    "scripts.validate_v111_phase2a_proposition_working_drafts"
-)
+validator = importlib.import_module("scripts.validate_v111_phase2a_proposition_working_drafts")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -117,9 +114,7 @@ def consolidate(
         "input_draft_files": input_files,
         "records": [
             records_by_id[row_id]
-            for row_id in sorted(
-                records_by_id, key=lambda item: expected[item]["ordinal"]
-            )
+            for row_id in sorted(records_by_id, key=lambda item: expected[item]["ordinal"])
         ],
         "automatic_source_admission": False,
         "automatic_indexing": False,

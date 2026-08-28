@@ -313,9 +313,7 @@ class EvidenceSpan(Record):
     retrieval_relevance_score: float | None = None
     retrieval_route: str | None = None
     retrieval_threshold: float | None = Field(default=None, ge=0.0, le=1.0)
-    retrieval_threshold_policy_sha256: str | None = Field(
-        default=None, pattern=r"^[0-9a-f]{64}$"
-    )
+    retrieval_threshold_policy_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     retrieval_threshold_qualified: bool | None = None
     retrieval_qualification_reason: str | None = Field(
         default=None, pattern=r"^[a-z0-9][a-z0-9._:-]{0,127}$"

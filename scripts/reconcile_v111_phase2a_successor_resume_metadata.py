@@ -24,18 +24,12 @@ EXPECTED_PREFIX_SOURCE_COUNT = 40
 EXPECTED_SUFFIX_SOURCE_COUNT = 212
 EXPECTED_PREFIX_SUFFIX_OVERLAP = 1
 EXPECTED_OMITTED_SOURCE_COUNT = 39
-EXPECTED_SOURCE_MANIFEST_SHA256 = (
-    "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
-)
+EXPECTED_SOURCE_MANIFEST_SHA256 = "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
 EXPECTED_SOURCE_MANIFEST_FILE_SHA256 = (
     "0bbb1edb169c84a26e5f1d42e367f9e2f83fcdd9c652a9061980652f15979b21"
 )
-EXPECTED_SEAL_FILE_SHA256 = (
-    "b7a8dfabcd5b91c4bebe81cba5817ca35a4366dd8855acd24a2aeda7f7d91b13"
-)
-EXPECTED_LANCE_TREE_SHA256 = (
-    "2f561a0ec55743ad2897ddd59789e0d41eecb465c4c0c4b6e23b7bf304010da3"
-)
+EXPECTED_SEAL_FILE_SHA256 = "b7a8dfabcd5b91c4bebe81cba5817ca35a4366dd8855acd24a2aeda7f7d91b13"
+EXPECTED_LANCE_TREE_SHA256 = "2f561a0ec55743ad2897ddd59789e0d41eecb465c4c0c4b6e23b7bf304010da3"
 EXPECTED_RECOVERY_PACKAGE_SHA256 = (
     "dff790782f5ca2dc880a5fde27f5b5ba7e7cec555b44ad5a031513a1fa7f5c40"
 )
@@ -43,8 +37,7 @@ EXPECTED_RECOVERY_PACKAGE_SHA256 = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -189,9 +182,7 @@ def _candidate_snapshot(build_path: Path) -> dict[str, Any]:
             "source_manifest_sha256"
         ),
         "answer_release_eligible": source_manifest.get("answer_release_eligible"),
-        "successor_must_remain_non_active": source_manifest.get(
-            "successor_must_remain_non_active"
-        ),
+        "successor_must_remain_non_active": source_manifest.get("successor_must_remain_non_active"),
     }
 
 
@@ -220,27 +211,21 @@ def _validate_before(
     )
     expected_candidate = (
         candidate["seal_file_sha256"] == EXPECTED_SEAL_FILE_SHA256
-        and candidate["source_manifest_file_sha256"]
-        == EXPECTED_SOURCE_MANIFEST_FILE_SHA256
+        and candidate["source_manifest_file_sha256"] == EXPECTED_SOURCE_MANIFEST_FILE_SHA256
         and candidate["source_manifest_sha256"] == EXPECTED_SOURCE_MANIFEST_SHA256
         and candidate["source_manifest_source_count"] == EXPECTED_SOURCE_COUNT
         and candidate["source_manifest_chunk_count"] == EXPECTED_CHUNK_COUNT
-        and candidate["source_manifest_unique_source_version_count"]
-        == EXPECTED_SOURCE_COUNT
+        and candidate["source_manifest_unique_source_version_count"] == EXPECTED_SOURCE_COUNT
         and candidate["source_manifest_unique_document_count"] == EXPECTED_SOURCE_COUNT
         and candidate["lance_row_count"] == EXPECTED_CHUNK_COUNT
         and candidate["lance_unique_source_version_count"] == EXPECTED_SOURCE_COUNT
         and candidate["lance_source_ids_match_manifest"] is True
-        and candidate["resume_prefix_unique_source_count"]
-        == EXPECTED_PREFIX_SOURCE_COUNT
-        and candidate["resume_suffix_unique_source_count"]
-        == EXPECTED_SUFFIX_SOURCE_COUNT
-        and candidate["resume_prefix_suffix_overlap_source_count"]
-        == EXPECTED_PREFIX_SUFFIX_OVERLAP
+        and candidate["resume_prefix_unique_source_count"] == EXPECTED_PREFIX_SOURCE_COUNT
+        and candidate["resume_suffix_unique_source_count"] == EXPECTED_SUFFIX_SOURCE_COUNT
+        and candidate["resume_prefix_suffix_overlap_source_count"] == EXPECTED_PREFIX_SUFFIX_OVERLAP
         and candidate["resume_omitted_source_count"] == EXPECTED_OMITTED_SOURCE_COUNT
         and candidate["lance_tree_sha256"] == EXPECTED_LANCE_TREE_SHA256
-        and candidate["evaluation_source_manifest_sha256"]
-        == EXPECTED_SOURCE_MANIFEST_SHA256
+        and candidate["evaluation_source_manifest_sha256"] == EXPECTED_SOURCE_MANIFEST_SHA256
         and candidate["answer_release_eligible"] is False
         and candidate["successor_must_remain_non_active"] is True
     )

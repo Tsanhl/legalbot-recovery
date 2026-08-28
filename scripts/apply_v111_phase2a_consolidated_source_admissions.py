@@ -29,9 +29,7 @@ from backend.app.retrieval.source_manifest import approved_source_manifest_sha25
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 CATALOGUE_PATH = PROJECT_ROOT / "data/catalog.sqlite3"
-STAGING_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-consolidated-source-staging"
-)
+STAGING_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-consolidated-source-staging"
 STAGING_PATH = STAGING_ROOT / "CONSOLIDATED-SOURCE-STAGING.json"
 STAGING_PACKAGE_PATH = STAGING_ROOT / "PACKAGE-INDEX.json"
 SEMINAR_BATCH_PATH = (
@@ -39,42 +37,29 @@ SEMINAR_BATCH_PATH = (
     / "LegalBot-Phase2A-2026-08-27-seminar-source-owner-packet"
     / "SEMINAR-SOURCE-OWNER-DECISION-BATCH.json"
 )
-PREDECESSOR_ROOT = (
-    PROJECT_ROOT
-    / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
-)
+PREDECESSOR_ROOT = PROJECT_ROOT / "data/indexes/builds/current-law-ew-full-fp16-v111-20260818-a"
 PREDECESSOR_MANIFEST_PATH = PREDECESSOR_ROOT / "approved-source-manifest.json"
-OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-consolidated-source-admission"
-)
+OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2A-2026-08-27-consolidated-source-admission"
 SCOPE_FILENAME = "FROZEN-SUCCESSOR-SOURCE-SCOPE.json"
 
 CORPUS_ID = "current-law-ew-full-phase2a-held-20260827-v1"
 EXPECTED_STAGING_ARTIFACT_SHA256 = (
     "edd0c6e6a0e26ee776193ceb9256a8a2f5dbc92520dc5ad2346e012e0941e68c"
 )
-EXPECTED_STAGING_PACKAGE_SHA256 = (
-    "27878c829734d9244555f2b8177a82dc8fbe61dd2a12fe9d7cad8255104c7a21"
-)
-EXPECTED_SEMINAR_BATCH_SHA256 = (
-    "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
-)
+EXPECTED_STAGING_PACKAGE_SHA256 = "27878c829734d9244555f2b8177a82dc8fbe61dd2a12fe9d7cad8255104c7a21"
+EXPECTED_SEMINAR_BATCH_SHA256 = "6b2fc70e2c15e706bc26034aed7c6940b28b4220f66a7b0fbd28b97a0f53c8b6"
 EXPECTED_SEMINAR_OWNER_PAYLOAD_SHA256 = (
     "20e21e43aefc6348db5344782ddc3ab9d41a05c2c19aeb24b58a3fcd02371c73"
 )
 EXPECTED_SEMINAR_OWNER_RECEIPT_SHA256 = (
     "878a1d2582a07c40dda7b5311aa22970885f78437e5f3d39109e667b9a6be7f9"
 )
-EXPECTED_PRIOR_25_SHA256 = (
-    "667fa9cb36188740fa28b0d4e0970ec71c82dcb123505f07584ea678bae9c32d"
-)
+EXPECTED_PRIOR_25_SHA256 = "667fa9cb36188740fa28b0d4e0970ec71c82dcb123505f07584ea678bae9c32d"
 EXPECTED_PREDECESSOR_MANIFEST_SHA256 = (
     "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0"
 )
 EXPECTED_SCAN_ID = "18dded91dadf9fa0"
-EXPECTED_SCAN_MANIFEST_SHA256 = (
-    "fb6e0d82ff205e74052aa0f536049702e84c8af86624305f5fa03e19eb6e820d"
-)
+EXPECTED_SCAN_MANIFEST_SHA256 = "fb6e0d82ff205e74052aa0f536049702e84c8af86624305f5fa03e19eb6e820d"
 EXPECTED_ADMITTED_COUNT = 166
 EXPECTED_PREDECESSOR_COUNT = 85
 EXPECTED_SCOPE_COUNT = 251
@@ -96,9 +81,7 @@ def _canonical_json(value: Any, *, newline: bool = True) -> bytes:
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256_bytes(raw: bytes) -> str:
@@ -143,9 +126,7 @@ def _source_family(authority_identity_id: str) -> str:
     raise ValueError(f"unsupported authority identity: {authority_identity_id}")
 
 
-def _stable_identifier(
-    authority_identity_id: str, seminar_record: Mapping[str, Any] | None
-) -> str:
+def _stable_identifier(authority_identity_id: str, seminar_record: Mapping[str, Any] | None) -> str:
     if seminar_record is None:
         return authority_identity_id
     proposed = str(seminar_record.get("proposed_stable_identifier") or "")
@@ -242,8 +223,7 @@ def _load_staging() -> dict[str, Any]:
 def _load_predecessor() -> dict[str, Any]:
     manifest = _load_object(PREDECESSOR_MANIFEST_PATH)
     if (
-        approved_source_manifest_sha256(manifest)
-        != EXPECTED_PREDECESSOR_MANIFEST_SHA256
+        approved_source_manifest_sha256(manifest) != EXPECTED_PREDECESSOR_MANIFEST_SHA256
         or manifest.get("manifest_sha256") != EXPECTED_PREDECESSOR_MANIFEST_SHA256
         or manifest.get("source_count") != EXPECTED_PREDECESSOR_COUNT
         or len(manifest.get("sources", [])) != EXPECTED_PREDECESSOR_COUNT
@@ -310,7 +290,9 @@ def _choose_source_version(
         (content_sha256, EXPECTED_SCAN_ID),
     ).fetchall()
     if not rows:
-        raise ValueError(f"approved authority has no current source version: {authority_identity_id}")
+        raise ValueError(
+            f"approved authority has no current source version: {authority_identity_id}"
+        )
     selected = rows[0]
     if (
         selected["review_status"] != "staged"
@@ -319,7 +301,9 @@ def _choose_source_version(
         or str(selected["lane"] or "") != "primary_authority"
         or selected["version_sha256"] != content_sha256
     ):
-        raise ValueError(f"approved authority is not mechanically admissible: {authority_identity_id}")
+        raise ValueError(
+            f"approved authority is not mechanically admissible: {authority_identity_id}"
+        )
     markdown_path = PROJECT_ROOT / str(selected["canonical_markdown_path"] or "")
     if not markdown_path.is_file() or markdown_path.stat().st_size < 1:
         raise ValueError(f"approved authority lacks canonical Markdown: {authority_identity_id}")
@@ -431,13 +415,9 @@ def build_plan() -> dict[str, Any]:
                     "licence_url": licence_url,
                     "rights_basis": rights_basis,
                     "approval_origins": sorted(set(record.get("approval_origins") or [])),
-                    "retained_hold_codes": sorted(
-                        set(record.get("retained_hold_codes") or [])
-                    ),
+                    "retained_hold_codes": sorted(set(record.get("retained_hold_codes") or [])),
                     "pre_admission_document_status": str(source["document_status"]),
-                    "pre_admission_retrieval_canonical": bool(
-                        source["retrieval_canonical"]
-                    ),
+                    "pre_admission_retrieval_canonical": bool(source["retrieval_canonical"]),
                     "pre_admission_review_status": str(source["review_status"]),
                     "requires_canonical_switch": not (
                         source["document_status"] == "citable"
@@ -461,8 +441,7 @@ def build_plan() -> dict[str, Any]:
         scope_family_counts = dict(
             sorted(
                 Counter(
-                    _source_family(str(item["authority_identity_id"]))
-                    for item in scope_sources
+                    _source_family(str(item["authority_identity_id"])) for item in scope_sources
                 ).items()
             )
         )
@@ -476,27 +455,19 @@ def build_plan() -> dict[str, Any]:
             "source_scan_manifest_sha256": scan["manifest_sha256"],
             "staging_artifact_content_sha256": EXPECTED_STAGING_ARTIFACT_SHA256,
             "staging_package_content_sha256": EXPECTED_STAGING_PACKAGE_SHA256,
-            "seminar_owner_payload_content_sha256": (
-                EXPECTED_SEMINAR_OWNER_PAYLOAD_SHA256
-            ),
+            "seminar_owner_payload_content_sha256": (EXPECTED_SEMINAR_OWNER_PAYLOAD_SHA256),
             "seminar_owner_approval_receipt_content_sha256": (
                 EXPECTED_SEMINAR_OWNER_RECEIPT_SHA256
             ),
-            "seminar_owner_decision_batch_content_sha256": (
-                EXPECTED_SEMINAR_BATCH_SHA256
-            ),
+            "seminar_owner_decision_batch_content_sha256": (EXPECTED_SEMINAR_BATCH_SHA256),
             "prior_25_source_approval_content_sha256": EXPECTED_PRIOR_25_SHA256,
-            "predecessor_source_manifest_sha256": (
-                EXPECTED_PREDECESSOR_MANIFEST_SHA256
-            ),
+            "predecessor_source_manifest_sha256": (EXPECTED_PREDECESSOR_MANIFEST_SHA256),
             "predecessor_source_count": len(predecessor_records),
             "admitted_source_count": len(admitted),
             "successor_source_count": len(scope_sources),
             "admitted_source_family_counts": family_counts,
             "successor_source_family_counts": scope_family_counts,
-            "canonical_switch_count": sum(
-                item["requires_canonical_switch"] for item in admitted
-            ),
+            "canonical_switch_count": sum(item["requires_canonical_switch"] for item in admitted),
             "successor_body_chunk_count": sum(
                 int(item["body_chunk_count"]) for item in scope_sources
             ),
@@ -565,8 +536,7 @@ def _owner_metadata(item: Mapping[str, Any], current: str) -> str:
             "eligible_for_model_use": True,
             "ai_use_policy": "owner_private_research_only",
             "answer_release_eligible": False,
-            "subsequent_treatment_check_required": source_family
-            == "official_judgment",
+            "subsequent_treatment_check_required": source_family == "official_judgment",
             "subsequent_treatment_verified": False,
             "provision_extent_status": (
                 "unverified" if source_family == "legislation" else "not_applicable"
@@ -683,9 +653,12 @@ def _apply_catalogue(connection: sqlite3.Connection, plan: Mapping[str, Any]) ->
                     (reason, decided_at, pending[0]["id"]),
                 )
             else:
-                review_id = "review-phase2a-held-" + _sha256_bytes(
-                    f"{source_version_id}\0{EXPECTED_STAGING_ARTIFACT_SHA256}".encode()
-                )[:32]
+                review_id = (
+                    "review-phase2a-held-"
+                    + _sha256_bytes(
+                        f"{source_version_id}\0{EXPECTED_STAGING_ARTIFACT_SHA256}".encode()
+                    )[:32]
+                )
                 connection.execute(
                     """
                     INSERT INTO reviews(
@@ -763,15 +736,14 @@ def _scope(
         material["record_content_sha256"] = _sha256_bytes(_canonical_json(material))
         records.append(material)
     records.extend(sorted(admitted_records, key=lambda item: item["authority_identity_id"]))
-    if len(records) != EXPECTED_SCOPE_COUNT or len(
-        {item["source_version_id"] for item in records}
-    ) != EXPECTED_SCOPE_COUNT:
+    if (
+        len(records) != EXPECTED_SCOPE_COUNT
+        or len({item["source_version_id"] for item in records}) != EXPECTED_SCOPE_COUNT
+    ):
         raise ValueError("frozen successor source scope is not exact")
     family_counts = dict(
         sorted(
-            Counter(
-                _source_family(str(item["authority_identity_id"])) for item in records
-            ).items()
+            Counter(_source_family(str(item["authority_identity_id"])) for item in records).items()
         )
     )
     if family_counts != EXPECTED_SCOPE_FAMILY_COUNTS:
@@ -785,12 +757,8 @@ def _scope(
         "staging_artifact_content_sha256": EXPECTED_STAGING_ARTIFACT_SHA256,
         "staging_package_content_sha256": EXPECTED_STAGING_PACKAGE_SHA256,
         "seminar_owner_payload_content_sha256": EXPECTED_SEMINAR_OWNER_PAYLOAD_SHA256,
-        "seminar_owner_approval_receipt_content_sha256": (
-            EXPECTED_SEMINAR_OWNER_RECEIPT_SHA256
-        ),
-        "seminar_owner_decision_batch_content_sha256": (
-            EXPECTED_SEMINAR_BATCH_SHA256
-        ),
+        "seminar_owner_approval_receipt_content_sha256": (EXPECTED_SEMINAR_OWNER_RECEIPT_SHA256),
+        "seminar_owner_decision_batch_content_sha256": (EXPECTED_SEMINAR_BATCH_SHA256),
         "prior_25_source_approval_content_sha256": EXPECTED_PRIOR_25_SHA256,
         "predecessor_build_id": PREDECESSOR_ROOT.name,
         "predecessor_source_manifest_sha256": EXPECTED_PREDECESSOR_MANIFEST_SHA256,
@@ -836,9 +804,7 @@ def apply_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
     connection = sqlite3.connect(CATALOGUE_PATH)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA busy_timeout=10000")
-    temporary = Path(
-        tempfile.mkdtemp(prefix=".phase2a-source-admission-", dir=OUTPUT_ROOT.parent)
-    )
+    temporary = Path(tempfile.mkdtemp(prefix=".phase2a-source-admission-", dir=OUTPUT_ROOT.parent))
     try:
         prestate = _prestate(connection, plan)
         _write_exclusive(temporary / "SOURCE-ADMISSION-PLAN.json", _pretty_json(dict(plan)))

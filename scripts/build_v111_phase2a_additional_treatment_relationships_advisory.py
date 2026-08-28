@@ -25,19 +25,14 @@ from pypdf import PdfReader
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SEQUANA_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-25/phase2a-targeted-later-treatment-sequana-r56"
+    PROJECT_ROOT / "data/quarantine/2026-08-25/phase2a-targeted-later-treatment-sequana-r56"
 )
 SEQUANA_MANIFEST = SEQUANA_ROOT / "SEQUANA-LATER-TREATMENT-LEAD.json"
 ADDITIONAL_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-25/phase2a-targeted-later-treatment-additional-r57"
+    PROJECT_ROOT / "data/quarantine/2026-08-25/phase2a-targeted-later-treatment-additional-r57"
 )
 ADDITIONAL_MANIFEST = ADDITIONAL_ROOT / "TARGETED-LATER-TREATMENT-LEADS-3.json"
-ORIGINAL_ROOT = (
-    PROJECT_ROOT
-    / "data/quarantine/2026-08-24/phase2a-targeted-later-treatment-r42"
-)
+ORIGINAL_ROOT = PROJECT_ROOT / "data/quarantine/2026-08-24/phase2a-targeted-later-treatment-r42"
 ORIGINAL_MANIFEST = ORIGINAL_ROOT / "TARGETED-LATER-TREATMENT-LEADS-9.json"
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
@@ -45,30 +40,21 @@ DEFAULT_OUTPUT = (
     / "LegalBot-Phase2AB-2026-08-25-r58-additional-treatment-advisory"
 )
 
-EXPECTED_SEQUANA_SHA256 = (
-    "453acccb05c3c8f87c91ce06357b6b5c13eae4e8d4fc8347ab9d8f0fa041980a"
-)
-EXPECTED_ADDITIONAL_SHA256 = (
-    "f3fd36654c391c74c5167ce40a5681c562d42abaf916198c382a0c4b533169cc"
-)
-EXPECTED_ORIGINAL_SHA256 = (
-    "ad887ac1d18b06ed459b05471188cd6f999fa6b0580589edc4bbacc46cd902a9"
-)
+EXPECTED_SEQUANA_SHA256 = "453acccb05c3c8f87c91ce06357b6b5c13eae4e8d4fc8347ab9d8f0fa041980a"
+EXPECTED_ADDITIONAL_SHA256 = "f3fd36654c391c74c5167ce40a5681c562d42abaf916198c382a0c4b533169cc"
+EXPECTED_ORIGINAL_SHA256 = "ad887ac1d18b06ed459b05471188cd6f999fa6b0580589edc4bbacc46cd902a9"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _PARAGRAPH_MARKER = re.compile(r"(?<!\d)(?P<number>\d{1,3})\.\s")
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -256,9 +242,7 @@ def _advisory_row(
         "advisory_relationship": relationship,
         "recommended_owner_outcome": owner_recommendation,
         "advisory_note": note,
-        "advisory_method": (
-            "DETERMINISTIC_EXPLICIT_TREATMENT_PHRASE_SCREEN_NOT_LEGAL_DECISION"
-        ),
+        "advisory_method": ("DETERMINISTIC_EXPLICIT_TREATMENT_PHRASE_SCREEN_NOT_LEGAL_DECISION"),
         "targeted_search_is_exhaustive": False,
         "absence_of_other_hits_proves_no_later_treatment": False,
         "final_relationship_depends_on_exact_proposition_scope": True,
@@ -328,20 +312,14 @@ def build_additional_relationships(
     sequana_spans_path = (
         PROJECT_ROOT / str(sequana_spans_record.get("relative_path") or "")
     ).resolve(strict=True)
-    if (
-        not sequana_spans_path.is_relative_to(SEQUANA_ROOT)
-        or sequana_spans_path.is_symlink()
-    ):
+    if not sequana_spans_path.is_relative_to(SEQUANA_ROOT) or sequana_spans_path.is_symlink():
         raise ValueError("phase2a_additional_treatment_sequana_spans_path_invalid")
     sequana_spans = _load_object(sequana_spans_path)
-    if (
-        _verify_seal(
-            sequana_spans,
-            "artifact_content_sha256",
-            "phase2a_additional_treatment_sequana_spans_seal_invalid",
-        )
-        != sequana_spans_record.get("artifact_content_sha256")
-    ):
+    if _verify_seal(
+        sequana_spans,
+        "artifact_content_sha256",
+        "phase2a_additional_treatment_sequana_spans_seal_invalid",
+    ) != sequana_spans_record.get("artifact_content_sha256"):
         raise ValueError("phase2a_additional_treatment_sequana_spans_identity_invalid")
     exact_paragraphs = sequana_spans.get("exact_paragraphs")
     if not isinstance(exact_paragraphs, list) or len(exact_paragraphs) != 1:
@@ -590,8 +568,7 @@ def build_additional_relationships(
     )
     _write_exclusive(output_root / "OUTCOME.txt", outcome.encode())
     sums = "".join(
-        f"{_sha256_file(output_root / item)}  {item}\n"
-        for item in (name, "OUTCOME.txt")
+        f"{_sha256_file(output_root / item)}  {item}\n" for item in (name, "OUTCOME.txt")
     )
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode())
     return artifact

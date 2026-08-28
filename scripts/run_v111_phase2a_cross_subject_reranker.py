@@ -37,9 +37,7 @@ from scripts.run_v111_phase2a_independent_reranker_advisory import (  # noqa: E4
     _write_exclusive,
 )
 
-EXPECTED_SOURCE_DIGEST = (
-    "a79b09a0a19b1f674ec6b600f98cfb9b3decbcc22907ca9356b804c3e47c5559"
-)
+EXPECTED_SOURCE_DIGEST = "a79b09a0a19b1f674ec6b600f98cfb9b3decbcc22907ca9356b804c3e47c5559"
 EXPECTED_ROW_COUNT = 37
 OUTPUT_NAME = "INDEPENDENT-RERANKER-CROSS-SUBJECT-37.json"
 
@@ -79,8 +77,7 @@ def run_cross_subject_review(
         or source.get("phase2b_authorized") is not False
         or source.get("development30_authorized") is not False
         or any(
-            not isinstance(row, dict)
-            or row.get("technical_qualification_assigned") is not False
+            not isinstance(row, dict) or row.get("technical_qualification_assigned") is not False
             for row in rows
         )
     ):
@@ -194,9 +191,7 @@ def run_cross_subject_review(
                     "status": "CROSS_SUBJECT_ADVISORY_RANKING_READY_OWNER_DECISION_REQUIRED",
                     "recommendation": result["advisory_recommendation"],
                     "ranked_candidates": result["ranked_candidates"],
-                    "checkpoint_content_sha256": result[
-                        "checkpoint_content_sha256"
-                    ],
+                    "checkpoint_content_sha256": result["checkpoint_content_sha256"],
                     "score_threshold_applied": False,
                     "candidate_relevance_qualified": False,
                     "owner_decision_required": True,
@@ -237,9 +232,7 @@ def run_cross_subject_review(
         b"PHASE 2A CROSS-SUBJECT ADVISORY COMPLETE - OWNER DECISIONS REQUIRED; NO PHASE 2B\n",
     )
     files = sorted(
-        path
-        for path in output_root.iterdir()
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.iterdir() if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",

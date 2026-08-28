@@ -24,21 +24,12 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 DEFAULT_SOURCE_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r94-consolidated-substantive-owner-batch"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r94-consolidated-substantive-owner-batch"
 )
-DEFAULT_PREDECESSOR_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r49-safe-subset-approved"
-)
-DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved"
-)
-EXPECTED_BATCH_DIGEST = (
-    "496c36b665b8114f6ba44169d23f911ec31fc2718aecb1747b2e26962bd889f7"
-)
-EXPECTED_PACKAGE_DIGEST = (
-    "f64df56bad4a155b66b023ccdb90ecff8bcb639fa4c80e93757a8f5a72434c7c"
-)
+DEFAULT_PREDECESSOR_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r49-safe-subset-approved"
+DEFAULT_OUTPUT_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved"
+EXPECTED_BATCH_DIGEST = "496c36b665b8114f6ba44169d23f911ec31fc2718aecb1747b2e26962bd889f7"
+EXPECTED_PACKAGE_DIGEST = "f64df56bad4a155b66b023ccdb90ecff8bcb639fa4c80e93757a8f5a72434c7c"
 EXPECTED_PREDECESSOR_PACKAGE_DIGEST = (
     "ef6d4fff911ba6320fa0e7adfadc7af934179432b2c6889c498a76f6ecc1eeba"
 )
@@ -60,8 +51,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -135,9 +125,7 @@ def _verify_decision_seal(item: Mapping[str, Any]) -> None:
     )
 
 
-def _verify_source_package(
-    source_root: Path, predecessor_root: Path
-) -> tuple[dict[str, Any], str]:
+def _verify_source_package(source_root: Path, predecessor_root: Path) -> tuple[dict[str, Any], str]:
     package = _load_object(source_root / "PACKAGE-MANIFEST.json")
     _verify_seal(
         package,
@@ -167,8 +155,7 @@ def _verify_source_package(
         EXPECTED_BATCH_DIGEST,
     )
     if (
-        batch.get("schema")
-        != "legalbot.v111.phase2a.consolidated-substantive-owner-batch.v1"
+        batch.get("schema") != "legalbot.v111.phase2a.consolidated-substantive-owner-batch.v1"
         or batch.get("decision_summary") != EXPECTED_COUNTS
         or batch.get("owner") != "Agnes"
         or batch.get("decision_date") != "2026-08-25"
@@ -282,9 +269,7 @@ def _source_admissions(batch: Mapping[str, Any]) -> list[dict[str, Any]]:
                     "source_key": f"uksc:{item['neutral_citation']}",
                     "source_group": "UKSC_JUDGMENT",
                     "source_identity": item["neutral_citation"],
-                    "proposition_level_uses": item[
-                        "supported_claim_binding_content_sha256s"
-                    ],
+                    "proposition_level_uses": item["supported_claim_binding_content_sha256s"],
                     "source_decision_content_sha256s": [_sealed(item)],
                 }
             )
@@ -305,9 +290,7 @@ def _source_admissions(batch: Mapping[str, Any]) -> list[dict[str, Any]]:
             "phase2b_authorized": False,
             "development30_authorized": False,
         }
-        sealed_records.append(
-            {**material, "source_admission_content_sha256": _sealed(material)}
-        )
+        sealed_records.append({**material, "source_admission_content_sha256": _sealed(material)})
     return sealed_records
 
 
@@ -315,8 +298,7 @@ def _write_package(output_root: Path, files: Mapping[str, bytes]) -> str:
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
     entries = {
-        name: {"sha256": _sha256(raw), "bytes": len(raw)}
-        for name, raw in sorted(files.items())
+        name: {"sha256": _sha256(raw), "bytes": len(raw)} for name, raw in sorted(files.items())
     }
     material = {
         "schema": "legalbot.v111.phase2a.r94-owner-approved-package.v1",
@@ -325,9 +307,7 @@ def _write_package(output_root: Path, files: Mapping[str, bytes]) -> str:
         "files": entries,
         "source_r94_batch_content_sha256": EXPECTED_BATCH_DIGEST,
         "source_r94_package_content_sha256": EXPECTED_PACKAGE_DIGEST,
-        "predecessor_safe_subset_package_content_sha256": (
-            EXPECTED_PREDECESSOR_PACKAGE_DIGEST
-        ),
+        "predecessor_safe_subset_package_content_sha256": (EXPECTED_PREDECESSOR_PACKAGE_DIGEST),
         "approved_candidate_binding_count": 84,
         "approved_judgment_disposition_count": 20,
         "approved_source_admission_count": 20,
@@ -422,7 +402,11 @@ def apply_approval(
         ),
         "APPROVED-SUPPLEMENTAL-BINDINGS-13.json": _sealed_artifact(
             "legalbot.v111.phase2a.owner-approved-supplemental-bindings-13.v1",
-            {"record_count": 13, "records": supplemental, "technical_qualification_assigned": False},
+            {
+                "record_count": 13,
+                "records": supplemental,
+                "technical_qualification_assigned": False,
+            },
         ),
         "APPROVED-UKSC-SOURCE-REVIEWS-5.json": _sealed_artifact(
             "legalbot.v111.phase2a.owner-approved-uksc-source-reviews-5.v1",
@@ -552,9 +536,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     output_root = args.output_root.resolve()
     try:
         source_root = args.source_root.resolve(strict=True)
-        expected_reply = (source_root / "OWNER-APPROVAL-PROMPT.txt").read_text(
-            encoding="utf-8"
-        ).strip()
+        expected_reply = (
+            (source_root / "OWNER-APPROVAL-PROMPT.txt").read_text(encoding="utf-8").strip()
+        )
         result = apply_approval(
             source_root=source_root,
             predecessor_root=args.predecessor_root.resolve(strict=True),

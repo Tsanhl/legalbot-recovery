@@ -132,9 +132,7 @@ def _candidate_judgment_url(source: Mapping[str, Any], citation: str) -> str:
             )
             if replacement_count != 1:
                 raise ValueError("phase2a_parliament_judgment_part_url_invalid")
-            return _safe_url(
-                urlunsplit(("https", parsed.netloc, path, parsed.query, ""))
-            )
+            return _safe_url(urlunsplit(("https", parsed.netloc, path, parsed.query, "")))
     return _judgment_url(citation)
 
 
@@ -336,7 +334,9 @@ def _member_name(target: Mapping[str, Any], raw: bytes) -> str:
     target_type = re.sub(r"[^a-z0-9]+", "-", str(target["target_type"]).casefold()).strip("-")
     identity = hashlib.sha256(str(target["target_id"]).encode("utf-8")).hexdigest()[:16]
     page = f"-p{int(target['page']):03d}" if target.get("page") else ""
-    extension = "html" if str(target.get("url") or "").casefold().endswith((".htm", ".html")) else "xml"
+    extension = (
+        "html" if str(target.get("url") or "").casefold().endswith((".htm", ".html")) else "xml"
+    )
     return f"{target_type}-{identity}{page}-{_sha256(raw)[:16]}.{extension}"
 
 
@@ -472,9 +472,7 @@ def collect(
             "separate_licence_required": True,
             "licence_evidence_sha256": licence_digest or None,
             "bulk_later_treatment_search_authorized": bool(licence_digest),
-            "bulk_later_treatment_search_omitted_when_unlicensed": not bool(
-                licence_digest
-            ),
+            "bulk_later_treatment_search_omitted_when_unlicensed": not bool(licence_digest),
         },
         "record_count": len(records),
         "records": records,

@@ -46,10 +46,10 @@ def test_direct_ready_advisory_reuses_exact_approved_dependencies(tmp_path: Path
 
     for row_id in ("live30-q05:issue-02", "live60-q36:issue-07"):
         manchester = by_id[row_id]
-        assert manchester["advisory_status"] == (
-            "TARGETED_LATER_TREATMENT_EVIDENCE_AVAILABLE"
-        )
-        assert {item["advisory_relationship"] for item in manchester["supporting_advisory_dependencies"]} == {
+        assert manchester["advisory_status"] == ("TARGETED_LATER_TREATMENT_EVIDENCE_AVAILABLE")
+        assert {
+            item["advisory_relationship"] for item in manchester["supporting_advisory_dependencies"]
+        } == {
             "AFFIRMED_OR_APPLIED",
             "LIMITED_CHECKLIST_USE_OUTSIDE_SCOPE_OF_DUTY_CONTEXT",
         }

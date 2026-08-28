@@ -23,9 +23,7 @@ def _decision(row_number: int) -> dict[str, object]:
         "row_id": f"row-{row_number:02d}",
         "canonical_issue_id": f"issue-{row_number:02d}",
         "canonical_issue_label_sha256": "a" * 64,
-        "proposed_owner_outcome": (
-            "APPROVE_INTERNAL_PROPOSITION_AND_EXACT_SPAN_BINDING"
-        ),
+        "proposed_owner_outcome": ("APPROVE_INTERNAL_PROPOSITION_AND_EXACT_SPAN_BINDING"),
         "internal_research_tool_only": True,
         "professional_legal_certification": False,
         "legal_advice": False,
@@ -34,9 +32,7 @@ def _decision(row_number: int) -> dict[str, object]:
         "official_source_type": "legislation_or_procedural_instrument",
         "official_citation": "2020 c 1",
         "official_legal_locator": "s 1",
-        "official_source_url": (
-            "https://www.legislation.gov.uk/ukpga/2020/1/section/1"
-        ),
+        "official_source_url": ("https://www.legislation.gov.uk/ukpga/2020/1/section/1"),
         "exact_candidate_span_bindings": [
             {
                 "chunk_id": f"chunk-{row_number:02d}",

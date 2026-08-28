@@ -43,15 +43,11 @@ def _body(
 
 def test_review_pool_preserves_top_eight_and_getty_paragraph_90() -> None:
     source = review._load_sources()
-    ranking = next(
-        row for row in source.ranking_rows if row["row_id"] == "live30-q30:issue-16"
-    )
+    ranking = next(row for row in source.ranking_rows if row["row_id"] == "live30-q30:issue-16")
     packet = source.packet_by_link[str(ranking["row_source_link_id"])]
     pool = review._review_pool(ranking_row=ranking, packet_row=packet)
     ids = {item["block_id"] for item in pool}
-    top_ids = {
-        item["candidate_block_id"] for item in ranking["all_ranked_candidates"][:8]
-    }
+    top_ids = {item["candidate_block_id"] for item in ranking["all_ranked_candidates"][:8]}
     paragraph_90 = next(
         item for item in packet["candidate_blocks"] if item["locator"] == "paragraph 90"
     )
@@ -59,9 +55,7 @@ def test_review_pool_preserves_top_eight_and_getty_paragraph_90() -> None:
     assert len(pool) <= review.MAX_REVIEW_CANDIDATES
     assert top_ids.issubset(ids)
     assert paragraph_90["block_id"] in ids
-    projected_90 = next(
-        item for item in pool if item["block_id"] == paragraph_90["block_id"]
-    )
+    projected_90 = next(item for item in pool if item["block_id"] == paragraph_90["block_id"])
     assert "output from Stable Diffusion" in projected_90["text"]
 
 
@@ -72,13 +66,9 @@ def test_model_projection_stays_bounded_without_dropping_validation_hashes() -> 
         packet = source.packet_by_link[str(ranking["row_source_link_id"])]
         row_input = review._row_input(ranking_row=ranking, packet_row=packet)
         projection = review._model_input(row_input)
-        projections.append(
-            review.json.dumps(projection, ensure_ascii=False, separators=(",", ":"))
-        )
+        projections.append(review.json.dumps(projection, ensure_ascii=False, separators=(",", ":")))
         assert all("full_text_sha256" in item for item in row_input["candidates"])
-        assert all(
-            "full_text_sha256" not in item for item in projection["candidates"]
-        )
+        assert all("full_text_sha256" not in item for item in projection["candidates"])
 
     assert max(map(len, projections)) < 24_000
     budget = review._token_budget_evidence(source)
@@ -89,13 +79,9 @@ def test_model_projection_stays_bounded_without_dropping_validation_hashes() -> 
 def test_changed_plan_binds_the_exact_prior_debug_stop() -> None:
     prior = review._load_prior_debug_stop()
 
-    assert prior["debug_stop_content_sha256"] == (
-        review.EXPECTED_PRIOR_DEBUG_STOP_CONTENT_SHA256
-    )
+    assert prior["debug_stop_content_sha256"] == (review.EXPECTED_PRIOR_DEBUG_STOP_CONTENT_SHA256)
     assert prior["failure_fingerprint"] == review.EXPECTED_PRIOR_FAILURE_FINGERPRINT
-    assert prior["required_execution_plan_change"][
-        "remove_model_authored_reason_codes"
-    ] is True
+    assert prior["required_execution_plan_change"]["remove_model_authored_reason_codes"] is True
 
 
 def test_structural_diagnostics_persist_no_model_prose() -> None:
@@ -130,9 +116,7 @@ def test_exact_quote_and_atomic_material_fact_validation() -> None:
     row_input = review._row_input(ranking_row=ranking, packet_row=packet)
     candidate = row_input["candidates"][0]
     quote = candidate["text"]
-    proposition = (
-        "Disadvantage to the donor is not a necessary ingredient of undue influence."
-    )
+    proposition = "Disadvantage to the donor is not a necessary ingredient of undue influence."
     request_id = "fixture-request"
     body = _body(
         request_id=request_id,
@@ -212,9 +196,7 @@ def test_same_invalid_response_twice_holds_before_third_attempt(tmp_path: Path) 
     )
 
     assert calls == 2
-    assert checkpoint["finding"]["assessment"] == (
-        "HELD_FOR_DEBUG_BEFORE_ANY_THIRD_ATTEMPT"
-    )
+    assert checkpoint["finding"]["assessment"] == ("HELD_FOR_DEBUG_BEFORE_ANY_THIRD_ATTEMPT")
     assert checkpoint["same_failure_fingerprint_twice"] is True
     assert checkpoint["debug_required_before_any_third_attempt"] is True
     assert checkpoint["prior_attempt_count_under_superseded_plan"] == 2

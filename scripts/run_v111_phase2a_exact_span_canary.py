@@ -20,40 +20,23 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts import verify_v111_phase2a_exact_semantic_spans_advisory as verifier  # noqa: E402
 
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data" / "evaluations" / "phase2a-owner-review"
-DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r66c-context-bound-safety-canary"
-)
-PRIOR_HELD_CANARY = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61b-exact-span-canary"
-)
-PRIOR_FAILURE_FINGERPRINT = (
-    "a708c6b984ba6a3ad005588095da70c8e689785c5eee71475c81c5f457e855fd"
-)
-PRIOR_GAP_CANARY = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61c-exact-span-canary"
-)
-PRIOR_REPEAT_GAP_CANARY = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61d-exact-span-canary"
-)
-REPEAT_GAP_DEBUG_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61e-repeat-gap-debug"
-)
+DEFAULT_OUTPUT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r66c-context-bound-safety-canary"
+PRIOR_HELD_CANARY = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61b-exact-span-canary"
+PRIOR_FAILURE_FINGERPRINT = "a708c6b984ba6a3ad005588095da70c8e689785c5eee71475c81c5f457e855fd"
+PRIOR_GAP_CANARY = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61c-exact-span-canary"
+PRIOR_REPEAT_GAP_CANARY = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61d-exact-span-canary"
+REPEAT_GAP_DEBUG_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r61e-repeat-gap-debug"
 QUOTE_COPY_DEBUG_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r63-singleton-exact-semantic-span-advisory"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r63-singleton-exact-semantic-span-advisory"
 )
 SOURCE_IDENTITY_DEBUG_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r65-span-id-exact-semantic-span-advisory"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r65-span-id-exact-semantic-span-advisory"
 )
 PRIOR_CANDIDATE_BOUND_CANARY = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r66-candidate-bound-span-id-canary"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r66-candidate-bound-span-id-canary"
 )
 PRIOR_CONTEXT_BOUND_CANARY = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r66b-context-bound-span-id-canary"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r66b-context-bound-span-id-canary"
 )
 PRIOR_GAP_ROW_ID = "live30-q02:issue-03"
 CANARY_ROW_IDS = (
@@ -90,15 +73,12 @@ ADVISORY_FLEX_ROW_IDS = (
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -133,9 +113,7 @@ def _write_exclusive(path: Path, raw: bytes) -> None:
         raise
 
 
-def run_canary(
-    *, output_root: Path, model_url: str, timeout_seconds: float
-) -> dict[str, Any]:
+def run_canary(*, output_root: Path, model_url: str, timeout_seconds: float) -> dict[str, Any]:
     if output_root.exists() or output_root.is_symlink():
         raise ValueError("phase2a_exact_span_canary_output_already_exists")
     issue_rows, _issues, cases, held, candidate_sources, hashes = verifier._load_inputs(
@@ -148,16 +126,12 @@ def run_canary(
     if held:
         raise ValueError("phase2a_exact_span_canary_upstream_held_rows")
     locator_artifact = verifier._load_object(verifier.DEFAULT_LOCATORS)
-    locators_by_id = {
-        str(record["row_id"]): record for record in locator_artifact["records"]
-    }
+    locators_by_id = {str(record["row_id"]): record for record in locator_artifact["records"]}
     issue_by_id = {str(row["item_id"]): row for row in issue_rows}
     if any(row_id not in issue_by_id for row_id in CANARY_ROW_IDS):
         raise ValueError("phase2a_exact_span_canary_row_missing")
     review_rows = [
-        verifier._review_row(
-            issue_by_id[row_id], locators_by_id[row_id], candidate_sources
-        )
+        verifier._review_row(issue_by_id[row_id], locators_by_id[row_id], candidate_sources)
         for row_id in CANARY_ROW_IDS
     ]
     if any(row is None for row in review_rows):
@@ -226,9 +200,7 @@ def run_canary(
         "prior_failure_fingerprint": PRIOR_FAILURE_FINGERPRINT,
         "prior_failed_multirow_batch_will_not_be_retried": True,
         "prior_gap_canary_path": str(PRIOR_GAP_CANARY.relative_to(PROJECT_ROOT)),
-        "prior_repeat_gap_canary_path": str(
-            PRIOR_REPEAT_GAP_CANARY.relative_to(PROJECT_ROOT)
-        ),
+        "prior_repeat_gap_canary_path": str(PRIOR_REPEAT_GAP_CANARY.relative_to(PROJECT_ROOT)),
         "repeat_gap_debug_report_path": str(
             (REPEAT_GAP_DEBUG_ROOT / "DEBUG-REPORT.json").relative_to(PROJECT_ROOT)
         ),
@@ -236,26 +208,21 @@ def run_canary(
             REPEAT_GAP_DEBUG_ROOT / "DEBUG-REPORT.json"
         ),
         "quote_copy_debug_report_path": str(
-            (QUOTE_COPY_DEBUG_ROOT / "DEBUG-STOP-REPORT.json").relative_to(
-                PROJECT_ROOT
-            )
+            (QUOTE_COPY_DEBUG_ROOT / "DEBUG-STOP-REPORT.json").relative_to(PROJECT_ROOT)
         ),
         "quote_copy_debug_report_file_sha256": _sha256_file(
             QUOTE_COPY_DEBUG_ROOT / "DEBUG-STOP-REPORT.json"
         ),
         "source_identity_debug_report_path": str(
-            (SOURCE_IDENTITY_DEBUG_ROOT / "DEBUG-STOP-REPORT.json").relative_to(
-                PROJECT_ROOT
-            )
+            (SOURCE_IDENTITY_DEBUG_ROOT / "DEBUG-STOP-REPORT.json").relative_to(PROJECT_ROOT)
         ),
         "source_identity_debug_report_file_sha256": _sha256_file(
             SOURCE_IDENTITY_DEBUG_ROOT / "DEBUG-STOP-REPORT.json"
         ),
         "exact_candidate_membership_audit_path": str(
-            (
-                SOURCE_IDENTITY_DEBUG_ROOT
-                / "EXACT-CANDIDATE-MEMBERSHIP-AUDIT.json"
-            ).relative_to(PROJECT_ROOT)
+            (SOURCE_IDENTITY_DEBUG_ROOT / "EXACT-CANDIDATE-MEMBERSHIP-AUDIT.json").relative_to(
+                PROJECT_ROOT
+            )
         ),
         "exact_candidate_membership_audit_file_sha256": _sha256_file(
             SOURCE_IDENTITY_DEBUG_ROOT / "EXACT-CANDIDATE-MEMBERSHIP-AUDIT.json"
@@ -267,9 +234,7 @@ def run_canary(
             PRIOR_CANDIDATE_BOUND_CANARY / "CANARY-EXACT-SPANS-9.json"
         ),
         "prior_candidate_bound_debug_correction_path": str(
-            (
-                PRIOR_CANDIDATE_BOUND_CANARY / "DEBUG-CORRECTION.json"
-            ).relative_to(PROJECT_ROOT)
+            (PRIOR_CANDIDATE_BOUND_CANARY / "DEBUG-CORRECTION.json").relative_to(PROJECT_ROOT)
         ),
         "prior_candidate_bound_debug_correction_file_sha256": _sha256_file(
             PRIOR_CANDIDATE_BOUND_CANARY / "DEBUG-CORRECTION.json"
@@ -281,21 +246,18 @@ def run_canary(
             PRIOR_CONTEXT_BOUND_CANARY / "CANARY-EXACT-SPANS-9.json"
         ),
         "prior_context_bound_acceptance_correction_path": str(
-            (
-                PRIOR_CONTEXT_BOUND_CANARY / "DEBUG-ACCEPTANCE-CORRECTION.json"
-            ).relative_to(PROJECT_ROOT)
+            (PRIOR_CONTEXT_BOUND_CANARY / "DEBUG-ACCEPTANCE-CORRECTION.json").relative_to(
+                PROJECT_ROOT
+            )
         ),
         "prior_context_bound_acceptance_correction_file_sha256": _sha256_file(
             PRIOR_CONTEXT_BOUND_CANARY / "DEBUG-ACCEPTANCE-CORRECTION.json"
         ),
         "prior_gap_row_id": PRIOR_GAP_ROW_ID,
         "prior_gap_root_cause": (
-            "ADVISORY_FALSE_NEGATIVE_WHILE_LESS_APPLICABLE_SECOND_CANDIDATE_"
-            "WAS_VISIBLE"
+            "ADVISORY_FALSE_NEGATIVE_WHILE_LESS_APPLICABLE_SECOND_CANDIDATE_WAS_VISIBLE"
         ),
-        "maximum_evidence_candidates_per_row": (
-            verifier.MAX_REVIEW_EVIDENCE_CANDIDATES_PER_ROW
-        ),
+        "maximum_evidence_candidates_per_row": (verifier.MAX_REVIEW_EVIDENCE_CANDIDATES_PER_ROW),
         "maximum_rows_per_batch": verifier.BATCH_SIZE,
         "model_output_schema": verifier.OUTPUT_SCHEMA,
         "model_selects_precomputed_exact_span_id": True,
@@ -304,9 +266,7 @@ def run_canary(
         "source_plans_content_sha256": hashes["plans"],
         "source_remaining_content_sha256": hashes["remaining"],
         "source_candidate_manifest_sha256": hashes["candidate_manifest"],
-        "source_candidate_manifest_file_sha256": hashes[
-            "candidate_manifest_file"
-        ],
+        "source_candidate_manifest_file_sha256": hashes["candidate_manifest_file"],
         "sealed_candidate_source_count": len(candidate_sources),
         "sealed_candidate_sources_only": True,
         "noncandidate_and_unadmitted_sources_excluded": True,
@@ -315,9 +275,7 @@ def run_canary(
         "scenario_aware_prior_selection_preferred_over_issue_label_only_recovery": True,
         "prompt_sha256": _sha256((verifier.SYSTEM_PROMPT + "\n").encode()),
         "verifier_code_file_sha256": _sha256_file(Path(verifier.__file__).resolve()),
-        "evidence_validator_code_file_sha256": _sha256_file(
-            verifier.EVIDENCE_VALIDATOR_CODE_PATH
-        ),
+        "evidence_validator_code_file_sha256": _sha256_file(verifier.EVIDENCE_VALIDATOR_CODE_PATH),
         "runtime_identity": runtime_identity,
         "runtime_identity_sha256": runtime_sha256,
         "model_independent_reviewer": False,
@@ -349,8 +307,7 @@ def run_canary(
     held_batches = [
         result
         for result in results
-        if result.get("schema")
-        == "legalbot.v111.phase2a.exact-span-held-batch.v1"
+        if result.get("schema") == "legalbot.v111.phase2a.exact-span-held-batch.v1"
     ]
     findings = [
         finding
@@ -393,9 +350,7 @@ def run_canary(
         "required_gap_row_ids": sorted(REQUIRED_GAP_ROW_IDS),
         "advisory_flex_row_ids": sorted(ADVISORY_FLEX_ROW_IDS),
         "observed_gap_row_ids": sorted(gaps),
-        "unexpected_row_ids": sorted(
-            set(CANARY_ROW_IDS) - supported - gaps
-        ),
+        "unexpected_row_ids": sorted(set(CANARY_ROW_IDS) - supported - gaps),
         "held_batch_count": len(held_batches),
         "findings": findings,
         "replacement_all_448_advisory_may_start": canary_passed,
@@ -416,9 +371,7 @@ def run_canary(
     _write_exclusive(output_root / "CANARY-EXACT-SPANS-9.json", artifact_raw)
     _write_exclusive(output_root / "OUTCOME.txt", outcome_raw)
     names = ["INTENT.json", "CANARY-EXACT-SPANS-9.json", "OUTCOME.txt"]
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in names).encode()
     _write_exclusive(output_root / "SHA256SUMS.txt", sums)
     return artifact
 

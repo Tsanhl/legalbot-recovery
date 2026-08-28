@@ -10,7 +10,7 @@ import re
 import sqlite3
 import stat
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -545,9 +545,7 @@ class IndexBuildRunner:
             )
         seal_hash = ctx.counts.get("candidate_manifest_hash")
         benchmark = ctx.counts.get("benchmark") or {}
-        must_remain_non_active = (
-            ctx.manifest.get("successor_must_remain_non_active") is True
-        )
+        must_remain_non_active = ctx.manifest.get("successor_must_remain_non_active") is True
         is_candidate = (
             not must_remain_non_active
             and benchmark.get("passed") is True
@@ -1160,7 +1158,7 @@ def _stage_chunking(ctx: IndexBuildContext) -> None:
 
 
 def _completed_prefix_source_ids(
-    expected_rows: list[Any], completed_row_count: int
+    expected_rows: Sequence[Any], completed_row_count: int
 ) -> set[str]:
     """Return every source represented by a durably completed ordered prefix."""
 

@@ -9,8 +9,7 @@ from scripts import collect_v111_phase2a_targeted_later_treatment as collector
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PLAN = PROJECT_ROOT / "config/phase2a_targeted_later_treatment_sources.v1.json"
 ADDITIONAL_PLAN = (
-    PROJECT_ROOT
-    / "config/phase2a_targeted_later_treatment_sources.2026-08-25.additional.v1.json"
+    PROJECT_ROOT / "config/phase2a_targeted_later_treatment_sources.2026-08-25.additional.v1.json"
 )
 
 
@@ -39,9 +38,7 @@ def test_plan_is_exact_targeted_non_admitting_scope() -> None:
 
 
 def test_official_later_treatment_allowlist_is_fail_closed() -> None:
-    assert collector._safe_url(
-        "https://www.supremecourt.uk/cases/judgments/uksc-2024-0130"
-    )
+    assert collector._safe_url("https://www.supremecourt.uk/cases/judgments/uksc-2024-0130")
     assert collector._safe_url("https://www.jcpc.uk/cases/judgments/jcpc-2023-0088")
     with pytest.raises(ValueError, match="outside_allowlist"):
         collector._safe_url("https://supremecourt.uk.evil.example/cases/a")
@@ -91,9 +88,11 @@ def test_additional_plan_pins_primeo_interim_pdf_and_remains_non_admitting() -> 
 
     assert len(items) == 3
     assert plan["expected_item_count"] == 3
-    assert {
-        target for item in items for target in item["target_neutral_citations"]
-    } == {"[2020] UKSC 31", "[2021] UKSC 20", "[2021] UKSC 29"}
+    assert {target for item in items for target in item["target_neutral_citations"]} == {
+        "[2020] UKSC 31",
+        "[2021] UKSC 20",
+        "[2021] UKSC 29",
+    }
     primeo = next(item for item in items if item["lead_id"] == "later-treatment-lead-012")
     assert primeo["official_judgment_url"].endswith(
         "jcpc_2019_0089_judgment_previous_f6a9fb479e.pdf"
@@ -105,9 +104,7 @@ def test_additional_plan_pins_primeo_interim_pdf_and_remains_non_admitting() -> 
 
 def test_pinned_judgment_must_be_allowlisted_pdf() -> None:
     plan = json.loads(ADDITIONAL_PLAN.read_bytes())
-    plan["items"][1]["official_judgment_url"] = (
-        "https://jcpc.uk/uploads/not-a-judgment.txt"
-    )
+    plan["items"][1]["official_judgment_url"] = "https://jcpc.uk/uploads/not-a-judgment.txt"
 
     with pytest.raises(ValueError, match="pinned_judgment_not_pdf"):
         collector._validate_plan(plan)

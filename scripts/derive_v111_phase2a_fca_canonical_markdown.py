@@ -70,12 +70,8 @@ DEFAULT_OUTPUT_ROOT = (
     REVIEW_ROOT / "LegalBot-Phase2A-2026-08-28-fca-canonical-markdown-quarantine-r1"
 )
 
-EXPECTED_DELTA_CONTENT_SHA256 = (
-    "01312e142dd084271aa005b3d2a5ba8b93564bf3a841e1f5a4ec68c06a604ac0"
-)
-EXPECTED_DELTA_FILE_SHA256 = (
-    "a3498ce36e0782d941b9c167dd9ab3e78da1a7df2537e590946b1ccea666ca3a"
-)
+EXPECTED_DELTA_CONTENT_SHA256 = "01312e142dd084271aa005b3d2a5ba8b93564bf3a841e1f5a4ec68c06a604ac0"
+EXPECTED_DELTA_FILE_SHA256 = "a3498ce36e0782d941b9c167dd9ab3e78da1a7df2537e590946b1ccea666ca3a"
 EXPECTED_R7_MANIFEST_CONTENT_SHA256 = (
     "8c6c7c926b8612208287ae1c15af4d64b7f47829e9a2ff988fd4a95e9879c817"
 )
@@ -85,9 +81,7 @@ EXPECTED_R7_MANIFEST_FILE_SHA256 = (
 EXPECTED_R7_PACKAGE_CONTENT_SHA256 = (
     "6b494e7d933d7f165e603a15934c7a1a0f2eda044897e8186f264eacbf02328c"
 )
-EXPECTED_R7_PACKAGE_FILE_SHA256 = (
-    "38d6b0f6dade2e8f96d0f486250b401e3e46924fdab3666a6a6ef225d74791bf"
-)
+EXPECTED_R7_PACKAGE_FILE_SHA256 = "38d6b0f6dade2e8f96d0f486250b401e3e46924fdab3666a6a6ef225d74791bf"
 
 TRANSFORM_SCHEMA = "legalbot.v111.phase2a.fca-json-canonical-markdown.v1"
 TRANSFORM_IDENTITY = "fca-official-json-full-object-to-canonical-markdown"
@@ -177,9 +171,7 @@ def _canonical_json(value: object) -> str:
 
 
 def _pretty_json(value: object) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _sealed(value: object) -> str:
@@ -215,11 +207,7 @@ def _verify_seal(
 
 
 def _verify_regular_file(path: Path, expected_sha256: str, *, error_code: str) -> bytes:
-    if (
-        path.is_symlink()
-        or not path.is_file()
-        or _SHA256.fullmatch(expected_sha256) is None
-    ):
+    if path.is_symlink() or not path.is_file() or _SHA256.fullmatch(expected_sha256) is None:
         raise ValueError(error_code)
     raw = path.read_bytes()
     if _sha256(raw) != expected_sha256:
@@ -253,9 +241,10 @@ def _verify_package_inventory(
         )
         if item.get("bytes") != len(raw):
             raise ValueError("phase2a_fca_markdown_r7_package_member_invalid")
-    expected_checksums = "".join(
-        f"{by_name[name]['sha256']}  {name}\n" for name in sorted(by_name)
-    ) + f"{EXPECTED_R7_PACKAGE_FILE_SHA256}  {R7_PACKAGE_NAME}\n"
+    expected_checksums = (
+        "".join(f"{by_name[name]['sha256']}  {name}\n" for name in sorted(by_name))
+        + f"{EXPECTED_R7_PACKAGE_FILE_SHA256}  {R7_PACKAGE_NAME}\n"
+    )
     if checksums != expected_checksums:
         raise ValueError("phase2a_fca_markdown_r7_checksums_invalid")
     return by_name
@@ -315,8 +304,7 @@ def _verify_inputs() -> list[tuple[dict[str, Any], dict[str, Any], bytes]]:
         or delta.get("new_exact_owner_adoption_required") is not True
         or delta.get("owner_adoption_recorded") is not False
         or delta.get("source_admission_authorized") is not False
-        or manifest.get("status")
-        != "EXACT_REPLACEMENTS_QUARANTINED_OWNER_DELTA_REQUIRED"
+        or manifest.get("status") != "EXACT_REPLACEMENTS_QUARANTINED_OWNER_DELTA_REQUIRED"
         or manifest.get("source_admitted") is not False
     ):
         raise ValueError("phase2a_fca_markdown_pre_owner_boundary_invalid")
@@ -355,8 +343,7 @@ def _verify_inputs() -> list[tuple[dict[str, Any], dict[str, Any], bytes]]:
             or decision.get("owner_decision_applied") is not False
             or decision.get("source_admission_authorized") is not False
             or decision.get("source_admitted") is not False
-            or decision.get("repair_record_content_sha256")
-            != record.get("record_content_sha256")
+            or decision.get("repair_record_content_sha256") != record.get("record_content_sha256")
             or decision.get("replacement_key") != record.get("replacement_key")
             or decision.get("raw_sha256") != raw_sha256
             or decision.get("quarantine_member") != member
@@ -364,8 +351,7 @@ def _verify_inputs() -> list[tuple[dict[str, Any], dict[str, Any], bytes]]:
             != record.get("proposed_source_version_id")
             or package_members[member].get("sha256") != raw_sha256
             or record.get("content_type") != "application/json"
-            or record.get("content_fitness_status")
-            != "SUBSTANTIVE_BODY_AND_LOCATORS_VERIFIED"
+            or record.get("content_fitness_status") != "SUBSTANTIVE_BODY_AND_LOCATORS_VERIFIED"
             or record.get("json_point_in_time_date_verified") != "14-08-2026"
         ):
             raise ValueError("phase2a_fca_markdown_delta_crosslink_invalid")
@@ -461,9 +447,7 @@ def _validate_fca_payload(
     return response, typed
 
 
-def _make_provenance(
-    payload: Mapping[str, Any], record: Mapping[str, Any]
-) -> Provenance:
+def _make_provenance(payload: Mapping[str, Any], record: Mapping[str, Any]) -> Provenance:
     response = payload["Result"]
     chapter_name = str(response.get("chapterName") or response.get("chapterId") or "FCA Handbook")
     return Provenance(
@@ -567,9 +551,7 @@ def _build_parse_result(
                     source_anchor=str(provision["entityId"]),
                     metadata={
                         "official_field": "contentText",
-                        "content_sha256": _sha256(
-                            str(provision["contentText"]).encode("utf-8")
-                        ),
+                        "content_sha256": _sha256(str(provision["contentText"]).encode("utf-8")),
                     },
                 ),
                 StructuralBlock(

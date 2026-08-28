@@ -24,7 +24,6 @@ import stat
 import sys
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -46,7 +45,6 @@ from app.evaluation.phase2a_research_packets import (  # noqa: E402
     _load_spans,
     _open_catalogue,
     _select_sources,
-    sealed_sha256,
     subject_routes,
 )
 from scripts import build_v111_phase2a_authority_plan_advisory as planner  # noqa: E402
@@ -66,10 +64,7 @@ DEFAULT_CANDIDATE_MANIFEST = (
     / "approved-source-manifest.json"
 )
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data" / "catalog.sqlite3"
-DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r60g-targeted-global-recovery"
-)
+DEFAULT_OUTPUT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r60g-targeted-global-recovery"
 
 EXPECTED_REMAINING_CONTENT_SHA256 = planner.EXPECTED_REMAINING_CONTENT_SHA256
 EXPECTED_CASES_FILE_SHA256 = planner.EXPECTED_CASES_FILE_SHA256
@@ -115,15 +110,12 @@ _STOP = frozenset(
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -304,9 +296,7 @@ def _rank_global_spans(
                 str(case.get("question") or ""),
             )
         )
-        lexical = np.asarray(
-            (matrix @ vectorizer.transform([query_text]).T).toarray()
-        ).reshape(-1)
+        lexical = np.asarray((matrix @ vectorizer.transform([query_text]).T).toarray()).reshape(-1)
         scored: list[tuple[float, float, float, float, float, float, int]] = []
         allowed_subjects = subject_routes(legal_domain)
         # Phrase and token coverage are deliberately evaluated only for a
@@ -334,9 +324,9 @@ def _rank_global_spans(
             phrase = 1.0 if _exact_label_present(issue_label, combined) else 0.0
             route = 1.0 if span.source.subject in allowed_subjects else 0.0
             direct_rule = 1.0 if _direct_rule_signal(span.text) else 0.0
-            cross_reference = 1.0 if _cross_reference_like(
-                span.source, span.text, bool(direct_rule)
-            ) else 0.0
+            cross_reference = (
+                1.0 if _cross_reference_like(span.source, span.text, bool(direct_rule)) else 0.0
+            )
             title_domain = _token_coverage(legal_domain, span.source.title)
             phrase_weight = 0.10 if cross_reference else 0.75
             score = (
@@ -421,9 +411,7 @@ def _rank_global_spans(
                 ),
                 "advisory_only_not_qualified": True,
             }
-            selected.append(
-                {**material, "candidate_record_content_sha256": _sealed(material)}
-            )
+            selected.append({**material, "candidate_record_content_sha256": _sealed(material)})
             positive_scores.append(score)
             if len(selected) == MAX_GLOBAL_CANDIDATES_RECORDED:
                 break
@@ -485,9 +473,7 @@ def _chunk_rows(
                 "text_sha256": supplied_sha256,
                 "token_count": int(row["token_count"]),
                 "stream": str(row["stream"] or ""),
-                "metadata_json_sha256": _sha256(
-                    str(row["metadata_json"] or "{}").encode()
-                ),
+                "metadata_json_sha256": _sha256(str(row["metadata_json"] or "{}").encode()),
             }
         )
     return exact
@@ -507,9 +493,7 @@ def _chunk_score(issue_label: str, chunk: Mapping[str, Any]) -> tuple[float, int
     return score, -len(str(chunk.get("text") or "")), -int(chunk.get("ordinal") or 0)
 
 
-def _label_linked_direct_rule(
-    issue_label: str, chunks: Sequence[Mapping[str, Any]]
-) -> bool:
+def _label_linked_direct_rule(issue_label: str, chunks: Sequence[Mapping[str, Any]]) -> bool:
     """Require label relevance and rule language inside the same whole chunk."""
 
     return any(
@@ -650,8 +634,8 @@ def build_targeted_recovery(
     if len(prior_by_row) != EXPECTED_ISSUE_COUNT:
         raise ValueError("phase2a_targeted_recovery_prior_locator_inventory_invalid")
 
-    manifest_sha256, candidate_authorities, candidate_versions = (
-        _candidate_manifest_authorities(candidate_manifest_path)
+    manifest_sha256, candidate_authorities, candidate_versions = _candidate_manifest_authorities(
+        candidate_manifest_path
     )
     if manifest_sha256 != EXPECTED_CANDIDATE_MANIFEST_SHA256:
         raise ValueError("phase2a_targeted_recovery_candidate_manifest_invalid")
@@ -729,9 +713,7 @@ def build_targeted_recovery(
                     "canonical_locator": prior_selection.get("canonical_locator"),
                     "resolution_status": "TARGETED_WHOLE_CHUNK_PROJECTION_FOUND",
                     "source_identity": source,
-                    "candidate_source_metadata": prior_selection.get(
-                        "candidate_source_metadata"
-                    ),
+                    "candidate_source_metadata": prior_selection.get("candidate_source_metadata"),
                     **projection,
                     "exact_chunks": projected,
                 }
@@ -742,9 +724,7 @@ def build_targeted_recovery(
                     }
                 )
                 projected_prior_count += 1
-                remaining_characters -= projection[
-                    "selected_exact_chunk_text_characters"
-                ]
+                remaining_characters -= projection["selected_exact_chunk_text_characters"]
                 remaining_chunks -= projection["selected_exact_chunk_count"]
 
             prepared_global: list[
@@ -788,10 +768,13 @@ def build_targeted_recovery(
                 reverse=True,
             )
             for candidate, source, span, chunks, label_linked_rule in prepared_global:
-                if sum(
-                    item.get("selection_origin") == "GLOBAL_ISSUE_LABEL_RECOVERY"
-                    for item in selections
-                ) >= MAX_GLOBAL_SELECTIONS_PER_ROW:
+                if (
+                    sum(
+                        item.get("selection_origin") == "GLOBAL_ISSUE_LABEL_RECOVERY"
+                        for item in selections
+                    )
+                    >= MAX_GLOBAL_SELECTIONS_PER_ROW
+                ):
                     break
                 source_version_id = str(candidate["source_version_id"])
                 identity = (source_version_id, str(candidate["locator"]))
@@ -812,19 +795,11 @@ def build_targeted_recovery(
                     "identity_verified": source.identity_verified,
                     "currentness_verified": source.currentness_verified,
                     "later_treatment_review_required": source.family == "case",
-                    "already_in_sealed_candidate": candidate[
-                        "already_in_sealed_candidate"
-                    ],
-                    "candidate_record_content_sha256": candidate[
-                        "candidate_record_content_sha256"
-                    ],
+                    "already_in_sealed_candidate": candidate["already_in_sealed_candidate"],
+                    "candidate_record_content_sha256": candidate["candidate_record_content_sha256"],
                     "span_bundle_sha256": candidate["span_bundle_sha256"],
-                    "combined_advisory_score": candidate[
-                        "combined_advisory_score"
-                    ],
-                    "label_linked_direct_rule_in_same_whole_chunk": (
-                        label_linked_rule
-                    ),
+                    "combined_advisory_score": candidate["combined_advisory_score"],
+                    "label_linked_direct_rule_in_same_whole_chunk": (label_linked_rule),
                 }
                 selection_material = {
                     "selection_origin": "GLOBAL_ISSUE_LABEL_RECOVERY",
@@ -845,9 +820,7 @@ def build_targeted_recovery(
                 )
                 seen.add(identity)
                 projected_global_count += 1
-                remaining_characters -= projection[
-                    "selected_exact_chunk_text_characters"
-                ]
+                remaining_characters -= projection["selected_exact_chunk_text_characters"]
                 remaining_chunks -= projection["selected_exact_chunk_count"]
                 if remaining_characters <= 0 or remaining_chunks <= 0:
                     break
@@ -856,9 +829,7 @@ def build_targeted_recovery(
             if any(item["omitted_chunk_count"] for item in selections):
                 rows_with_omissions += 1
             if any(
-                item.get("candidate_source_metadata", {}).get(
-                    "already_in_sealed_candidate"
-                )
+                item.get("candidate_source_metadata", {}).get("already_in_sealed_candidate")
                 is False
                 for item in selections
             ):
@@ -869,9 +840,7 @@ def build_targeted_recovery(
                 "row_id": row_id,
                 "issue_label": issue_label,
                 "legal_domain": issue["legal_domain"],
-                "issue_label_query_sha256": _sha256(
-                    (issue_label + "\n").encode("utf-8")
-                ),
+                "issue_label_query_sha256": _sha256((issue_label + "\n").encode("utf-8")),
                 "global_advisory_candidates": candidates,
                 "resolved_selections": selections,
                 "semantic_proposition_support_verified": False,
@@ -883,9 +852,7 @@ def build_targeted_recovery(
                 "phase2b_authorized": False,
                 "development30_authorized": False,
             }
-            records.append(
-                {**record_material, "record_content_sha256": _sealed(record_material)}
-            )
+            records.append({**record_material, "record_content_sha256": _sealed(record_material)})
 
     if len(records) != EXPECTED_ISSUE_COUNT:
         raise ValueError("phase2a_targeted_recovery_output_inventory_invalid")
@@ -921,15 +888,11 @@ def build_targeted_recovery(
             "projected_prior_selection_count": projected_prior_count,
             "projected_global_selection_count": projected_global_count,
             "rows_with_explicit_omitted_chunk_set": rows_with_omissions,
-            "rows_with_at_least_one_non_candidate_source": (
-                rows_with_non_candidate_source
-            ),
+            "rows_with_at_least_one_non_candidate_source": (rows_with_non_candidate_source),
         },
         "policy": {
             "issue_label_primary_query": True,
-            "maximum_lexical_candidate_pool_per_row": (
-                MAX_LEXICAL_CANDIDATE_POOL_PER_ROW
-            ),
+            "maximum_lexical_candidate_pool_per_row": (MAX_LEXICAL_CANDIDATE_POOL_PER_ROW),
             "scenario_text_used_for_first_stage_ranking": True,
             "scenario_text_used_once_beneath_tenfold_issue_label_weight": True,
             "catalogue_opened_immutable_read_only": True,
@@ -962,12 +925,10 @@ def build_targeted_recovery(
         raise ValueError("phase2a_targeted_recovery_output_mode_invalid")
     artifact_raw = _pretty_json(artifact)
     outcome_raw = (
-        "TARGETED GLOBAL WHOLE-CHUNK RECOVERY COMPLETE FOR 448 ISSUES. "
-        "SEMANTIC AND OWNER REVIEW REQUIRED; NO SOURCE ADMISSION OR GATE AUTHORIZATION.\n"
-    ).encode()
-    _write_exclusive(
-        output_root / "TARGETED-GLOBAL-RECOVERY-448.json", artifact_raw
+        b"TARGETED GLOBAL WHOLE-CHUNK RECOVERY COMPLETE FOR 448 ISSUES. "
+        b"SEMANTIC AND OWNER REVIEW REQUIRED; NO SOURCE ADMISSION OR GATE AUTHORIZATION.\n"
     )
+    _write_exclusive(output_root / "TARGETED-GLOBAL-RECOVERY-448.json", artifact_raw)
     _write_exclusive(output_root / "OUTCOME.txt", outcome_raw)
     sums = (
         f"{_sha256(artifact_raw)}  TARGETED-GLOBAL-RECOVERY-448.json\n"
@@ -982,9 +943,7 @@ def main() -> None:
     parser.add_argument("--remaining", type=Path, default=DEFAULT_REMAINING)
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     parser.add_argument("--prior-locators", type=Path, default=DEFAULT_PRIOR_LOCATORS)
-    parser.add_argument(
-        "--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST
-    )
+    parser.add_argument("--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST)
     parser.add_argument("--catalogue", type=Path, default=DEFAULT_CATALOGUE)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()

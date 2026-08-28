@@ -53,8 +53,7 @@ _JUSTICE_CANONICAL_PATHS = {
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -121,9 +120,7 @@ def _target_url(value: str, target_date: date) -> tuple[str, str]:
         # identities use three path components.
         identity_length = (
             4
-            if parts[0] == "ukpga"
-            and not re.fullmatch(r"\d{4}", parts[1])
-            and len(parts) >= 4
+            if parts[0] == "ukpga" and not re.fullmatch(r"\d{4}", parts[1]) and len(parts) >= 4
             else 3
         )
         base = "/".join(parts[:identity_length])
@@ -362,11 +359,7 @@ def collect(
         "allowlisted_hosts": sorted(ALLOWED_HOSTS),
         "quarantine_root_name": quarantine_root.name,
         "record_count": len(records),
-        "result_counts": dict(
-            sorted(
-                Counter(str(record["result"]) for record in records).items()
-            )
-        ),
+        "result_counts": dict(sorted(Counter(str(record["result"]) for record in records).items())),
         "covered_row_count": len(row_target_ids),
         "row_target_ids": {
             row_id: sorted(target_ids) for row_id, target_ids in sorted(row_target_ids.items())
@@ -384,9 +377,7 @@ def collect(
         **manifest_material,
         "manifest_content_sha256": _sealed(manifest_material),
     }
-    _write_exclusive(
-        quarantine_root / "QUARANTINE-MANIFEST.json", _canonical_json(manifest)
-    )
+    _write_exclusive(quarantine_root / "QUARANTINE-MANIFEST.json", _canonical_json(manifest))
     return manifest
 
 

@@ -70,8 +70,7 @@ class _RowLike(Protocol):
 
 def _canonical_sha256(value: Mapping[str, Any]) -> str:
     encoded = (
-        json.dumps(dict(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(dict(value), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
@@ -250,9 +249,7 @@ class KnowledgeFreshnessCoordinator:
                         else None
                     ),
                     query_sha256=(
-                        str(normalized["query_sha256"])
-                        if normalized["query_sha256"]
-                        else None
+                        str(normalized["query_sha256"]) if normalized["query_sha256"] else None
                     ),
                 )
             )

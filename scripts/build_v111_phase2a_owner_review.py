@@ -383,10 +383,19 @@ def _owner_review_companion_docx(
         document,
         ("Control", "Required treatment"),
         (
-            ("Execution mode", "Separate verification pass using the same configured model adapter"),
+            (
+                "Execution mode",
+                "Separate verification pass using the same configured model adapter",
+            ),
             ("Model-independent", "No"),
-            ("May do", "Recommend, organise, compare, flag discrepancies and cite frozen evidence IDs"),
-            ("Cannot do", "Decide, adopt, qualify, admit a source, rebuild, sign or authorize a gate"),
+            (
+                "May do",
+                "Recommend, organise, compare, flag discrepancies and cite frozen evidence IDs",
+            ),
+            (
+                "Cannot do",
+                "Decide, adopt, qualify, admit a source, rebuild, sign or authorize a gate",
+            ),
             ("Positive recommendation", "Never overrides deterministic checks or owner authority"),
             ("Concern or uncertainty", "May raise a fail-closed owner-review hold only"),
             ("Persisted content", "Concise findings and evidence references; no hidden reasoning"),
@@ -400,9 +409,17 @@ def _owner_review_companion_docx(
         ("Step", "Owner action", "Required record"),
         (
             ("1", "Open the matching JSON batch and locate the item ID", "Exact item SHA-256"),
-            ("2", "Check official source/version/span evidence first", "Evidence-reference SHA-256s"),
+            (
+                "2",
+                "Check official source/version/span evidence first",
+                "Evidence-reference SHA-256s",
+            ),
             ("3", "Read any advisory AI recommendation", "AI review SHA-256 or unavailable record"),
-            ("4", "Write your own conclusion and rationale", "Owner outcome, findings and comments"),
+            (
+                "4",
+                "Write your own conclusion and rationale",
+                "Owner outcome, findings and comments",
+            ),
             ("5", "Type your name and decision date", "Explicit owner decision record"),
             ("6", "Re-run package validation", "New receipt; no automatic next phase"),
         ),
@@ -1075,9 +1092,7 @@ def build(
             "advisory_ai_can_admit_source_or_rebuild": False,
             "advisory_ai_can_authorize_gate": False,
             "advisory_ai_may_raise_fail_closed_owner_review_hold": True,
-            "current_ai_reviewer_execution_mode": (
-                "separate_verification_pass_same_model_adapter"
-            ),
+            "current_ai_reviewer_execution_mode": ("separate_verification_pass_same_model_adapter"),
             "current_ai_reviewer_is_model_independent": False,
             "answer_generation_allowed": False,
             "automatic_source_admission": False,

@@ -36,14 +36,14 @@ def test_admission_plan_freezes_the_deduplicated_successor_scope(
     assert isinstance(records, list)
     assert len({record["source_version_id"] for record in records}) == 166
     assert all(record["body_chunk_count"] > 0 for record in records)
-    assert sum(
-        record["authority_identity_id"].startswith(("ukpga:", "uksi:"))
-        for record in records
-    ) == 51
-    assert sum(
-        record["authority_identity_id"].startswith("neutral-citation:")
-        for record in records
-    ) == 115
+    assert (
+        sum(record["authority_identity_id"].startswith(("ukpga:", "uksi:")) for record in records)
+        == 51
+    )
+    assert (
+        sum(record["authority_identity_id"].startswith("neutral-citation:") for record in records)
+        == 115
+    )
 
 
 def test_the_two_preidentified_canonical_switch_bindings_remain_exact(
@@ -70,9 +70,7 @@ def test_the_two_preidentified_canonical_switch_bindings_remain_exact(
 def test_planning_is_read_only_and_all_later_gates_remain_closed(
     plan: dict[str, object],
 ) -> None:
-    connection = sqlite3.connect(
-        f"file:{admissions.CATALOGUE_PATH}?mode=ro", uri=True
-    )
+    connection = sqlite3.connect(f"file:{admissions.CATALOGUE_PATH}?mode=ro", uri=True)
     try:
         admitted_versions = {
             row[0]
@@ -166,9 +164,7 @@ def test_canonical_switch_never_clears_an_unrelated_authority() -> None:
 
     admissions._apply_catalogue(connection, {"admitted_sources": [item]})
 
-    rows = connection.execute(
-        "SELECT id,retrieval_canonical FROM documents ORDER BY id"
-    ).fetchall()
+    rows = connection.execute("SELECT id,retrieval_canonical FROM documents ORDER BY id").fetchall()
     assert {row["id"]: row["retrieval_canonical"] for row in rows} == {
         "target-doc": 1,
         "unrelated-doc": 1,

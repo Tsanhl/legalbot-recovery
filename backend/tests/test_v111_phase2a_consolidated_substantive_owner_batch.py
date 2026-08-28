@@ -17,14 +17,15 @@ def test_consolidated_batch_is_exact_and_non_authorizing(tmp_path: Path) -> None
     assert result["owner_approved"] is False
     assert result["phase2b_authorized"] is False
 
-    owner_batch = batch._load(
-        tmp_path / "owner-batch/OWNER-SUBSTANTIVE-DECISION-BATCH.json"
+    owner_batch = batch._load(tmp_path / "owner-batch/OWNER-SUBSTANTIVE-DECISION-BATCH.json")
+    assert (
+        batch._verify_artifact(
+            "test",
+            owner_batch,
+            result["owner_batch_content_sha256"],
+        )
+        == result["owner_batch_content_sha256"]
     )
-    assert batch._verify_artifact(
-        "test",
-        owner_batch,
-        result["owner_batch_content_sha256"],
-    ) == result["owner_batch_content_sha256"]
     assert len(owner_batch["candidate_exact_binding_decisions"]) == 84
     assert len(owner_batch["unresolved_material_gap_rows"]) == 364
     assert owner_batch["source_admission_authorized"] is False
@@ -34,9 +35,7 @@ def test_consolidated_batch_is_exact_and_non_authorizing(tmp_path: Path) -> None
 
 def test_owner_prompt_binds_exact_digest(tmp_path: Path) -> None:
     result = batch.build(output_root=tmp_path / "owner-batch")
-    prompt = (tmp_path / "owner-batch/OWNER-APPROVAL-PROMPT.txt").read_text(
-        encoding="utf-8"
-    )
+    prompt = (tmp_path / "owner-batch/OWNER-APPROVAL-PROMPT.txt").read_text(encoding="utf-8")
 
     assert result["owner_batch_content_sha256"] in prompt
     assert "364 unresolved material-gap rows" in prompt

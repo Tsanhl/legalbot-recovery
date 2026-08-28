@@ -67,9 +67,7 @@ def test_semantic_retrieval_requires_a_frozen_threshold() -> None:
     ("score", "expected"),
     [(0.79, False), (0.8, True), (0.95, True)],
 )
-def test_semantic_threshold_is_inclusive_and_fail_closed(
-    score: float, expected: bool
-) -> None:
+def test_semantic_threshold_is_inclusive_and_fail_closed(score: float, expected: bool) -> None:
     decision = qualify_retrieval_score(
         route=SEMANTIC_ROUTE,
         score=score,
@@ -138,18 +136,14 @@ def test_development_authorization_cannot_bind_a_pending_threshold(
     settings = Settings(project_root=tmp_path, test_mode=False)
     settings.relevance_threshold_policy_path.parent.mkdir(parents=True)
     pending = _sealed_payload(threshold=None, pending=True)
-    settings.relevance_threshold_policy_path.write_text(
-        json.dumps(pending), encoding="utf-8"
-    )
+    settings.relevance_threshold_policy_path.write_text(json.dumps(pending), encoding="utf-8")
 
     with pytest.raises(OwnerDecisionRequired) as caught:
         owner_canary_policy_bindings(settings=settings)
     assert caught.value.reason_code == "relevance_threshold_policy_not_frozen"
 
     frozen = _sealed_payload(threshold=0.8)
-    settings.relevance_threshold_policy_path.write_text(
-        json.dumps(frozen), encoding="utf-8"
-    )
+    settings.relevance_threshold_policy_path.write_text(json.dumps(frozen), encoding="utf-8")
     bindings = owner_canary_policy_bindings(settings=settings)
 
     assert bindings.relevance_threshold_policy_sha256 == frozen["policy_sha256"]

@@ -22,23 +22,17 @@ from scripts import repair_v111_phase2a_held_exact_spans as repair  # noqa: E402
 from scripts import verify_v111_phase2a_exact_semantic_spans_advisory as verifier  # noqa: E402
 
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
-R68_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r68-debugged-held-row-repair"
-)
+R68_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r68-debugged-held-row-repair"
 R68_ARTIFACT_PATH = R68_ROOT / "DEBUGGED-HELD-REPAIRS-5.json"
 OUTPUT_ROOT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r69-deterministic-held-gap-resolution"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r69-deterministic-held-gap-resolution"
 )
 EXPECTED_R68_ARTIFACT_CONTENT_SHA256 = (
     "e7ffa28eb516b73732d4883a723615bc7fa229350decc2dda2807ae24e1540fb"
 )
 STATIC_GAPS = {
     "live30-q16:issue-06": {
-        "source_version_id": (
-            "source-version-f08689990adf41acb4bc811a881a066e4105ee04"
-        ),
+        "source_version_id": ("source-version-f08689990adf41acb4bc811a881a066e4105ee04"),
         "authority_identity_id": "ukpga:1975:63",
         "locator": "section 1",
         "required_text_markers": (
@@ -51,9 +45,7 @@ STATIC_GAPS = {
         ),
     },
     "live60-q51:issue-02": {
-        "source_version_id": (
-            "source-version-f1d2fba5d67d7ecbb060841435513960b9bb861c"
-        ),
+        "source_version_id": ("source-version-f1d2fba5d67d7ecbb060841435513960b9bb861c"),
         "authority_identity_id": "uksi:2018:597:made",
         "locator": "regulation 3",
         "required_text_markers": (
@@ -71,15 +63,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -185,25 +174,17 @@ def main() -> None:
     }
     deterministic_records: list[dict[str, Any]] = []
     for row_id, expectation in STATIC_GAPS.items():
-        projected = verifier._review_row(
-            issues[row_id], records[row_id], candidate_sources
-        )
+        projected = verifier._review_row(issues[row_id], records[row_id], candidate_sources)
         if projected is None or len(projected["evidence_candidates"]) != 1:
             raise ValueError("phase2a_held_gap_projection_missing")
         source = projected["evidence_candidates"][0]
         chunk = source["chunks"][0]
-        exact_text = "".join(
-            str(span["exact_text"]) for span in chunk["exact_span_options"]
-        )
+        exact_text = "".join(str(span["exact_text"]) for span in chunk["exact_span_options"])
         if (
             source.get("source_version_id") != expectation["source_version_id"]
-            or source.get("authority_identity_id")
-            != expectation["authority_identity_id"]
+            or source.get("authority_identity_id") != expectation["authority_identity_id"]
             or chunk.get("locator") != expectation["locator"]
-            or any(
-                marker not in exact_text
-                for marker in expectation["required_text_markers"]
-            )
+            or any(marker not in exact_text for marker in expectation["required_text_markers"])
         ):
             raise ValueError("phase2a_held_gap_projection_identity_changed")
         material = {
@@ -217,18 +198,14 @@ def main() -> None:
             "authority_identity_id_inspected": source["authority_identity_id"],
             "chunk_id_inspected": chunk["chunk_id"],
             "chunk_text_sha256_inspected": chunk["text_sha256"],
-            "r68_diagnostic_content_sha256": diagnostic_by_id[row_id][
-                "diagnostic_content_sha256"
-            ],
+            "r68_diagnostic_content_sha256": diagnostic_by_id[row_id]["diagnostic_content_sha256"],
             "conservative_no_support_outcome": True,
             "model_output_text_salvaged": False,
             "owner_outcome": None,
             "owner_decision_required": True,
             "technical_qualification_assigned": False,
         }
-        deterministic_records.append(
-            {**material, "record_content_sha256": _sealed(material)}
-        )
+        deterministic_records.append({**material, "record_content_sha256": _sealed(material)})
 
     resolved_findings = []
     replacements = {row["row_id"]: row for row in deterministic_records}
@@ -250,9 +227,7 @@ def main() -> None:
         "source_r68_artifact_content_sha256": r68_digest,
         "source_r68_artifact_file_sha256": _sha256_file(R68_ARTIFACT_PATH),
         "source_candidate_manifest_sha256": hashes["candidate_manifest"],
-        "source_candidate_manifest_file_sha256": hashes[
-            "candidate_manifest_file"
-        ],
+        "source_candidate_manifest_file_sha256": hashes["candidate_manifest_file"],
         "row_count": len(resolved_findings),
         "assessment_counts": dict(sorted(counts.items())),
         "deterministic_gap_row_ids": sorted(STATIC_GAPS),
@@ -270,17 +245,13 @@ def main() -> None:
     OUTPUT_ROOT.mkdir(parents=True, mode=0o700)
     if stat.S_IMODE(OUTPUT_ROOT.stat().st_mode) != 0o700:
         raise ValueError("phase2a_held_gap_output_mode_invalid")
-    _write_exclusive(
-        OUTPUT_ROOT / "RESOLVED-HELD-FINDINGS-5.json", _pretty_json(artifact)
-    )
+    _write_exclusive(OUTPUT_ROOT / "RESOLVED-HELD-FINDINGS-5.json", _pretty_json(artifact))
     _write_exclusive(
         OUTPUT_ROOT / "OUTCOME.txt",
         b"ALL FIVE R67 HELD ROWS RESOLVED FOR OWNER ADVISORY REVIEW.\n",
     )
     names = ["RESOLVED-HELD-FINDINGS-5.json", "OUTCOME.txt"]
-    sums = "".join(
-        f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names
-    ).encode()
+    sums = "".join(f"{_sha256_file(OUTPUT_ROOT / name)}  {name}\n" for name in names).encode()
     _write_exclusive(OUTPUT_ROOT / "SHA256SUMS.txt", sums)
     print(json.dumps(artifact, sort_keys=True))
 

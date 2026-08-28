@@ -28,7 +28,5 @@ def test_resolves_only_two_overlength_holds_without_model_or_gate_change(
     assert artifact["automatic_indexing"] is False
     assert artifact["phase2b_authorized"] is False
     assert artifact["development30_authorized"] is False
-    persisted = json.loads(
-        (tmp_path / "r108" / resolution.OUTPUT_NAME).read_bytes()
-    )
+    persisted = json.loads((tmp_path / "r108" / resolution.OUTPUT_NAME).read_bytes())
     assert persisted == artifact

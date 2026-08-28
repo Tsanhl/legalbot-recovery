@@ -46,12 +46,8 @@ FAILURE_REPORT_RELATIVE = Path(
     "LegalBot-Phase2A-2026-08-27-successor-build-runtime-debug-r1/"
     "FAILURE-REPORT.json"
 )
-EXPECTED_FAILURE_REPORT_SHA256 = (
-    "e66f8932da930621c1c28162bbe38105c8244240ebca32e8a86b4920092292fb"
-)
-EXPECTED_SOURCE_MANIFEST_SHA256 = (
-    "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
-)
+EXPECTED_FAILURE_REPORT_SHA256 = "e66f8932da930621c1c28162bbe38105c8244240ebca32e8a86b4920092292fb"
+EXPECTED_SOURCE_MANIFEST_SHA256 = "b304ab1223987bf9b57d3e2560413b2f325c16213ae0071a45dface2e10dc206"
 EXPECTED_OLD_CHECKPOINT_FILE_SHA256 = (
     "65279d6cf4302e7af65344f7fc5f10dcd3e3c212cfaabbc7dddefda6c32ba295"
 )
@@ -64,8 +60,7 @@ EXACT_RECOVERY_WORKFLOW_SECONDS = 86_400
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -173,9 +168,7 @@ def main() -> None:
             "expected_checkpointed_rows": EXPECTED_CHECKPOINTED_ROWS,
             "expected_observed_rows": EXPECTED_OBSERVED_ROWS,
             "expected_frozen_rows": EXPECTED_FROZEN_ROWS,
-            "corrected_environment_failure_sha256": (
-                EXPECTED_ENVIRONMENT_FAILURE_SHA256
-            ),
+            "corrected_environment_failure_sha256": (EXPECTED_ENVIRONMENT_FAILURE_SHA256),
             "same_build_only": True,
             "second_source_scan_authorized": False,
             "planner_or_answer_model_authorized": False,
@@ -359,9 +352,7 @@ def main() -> None:
                     "schema": "legalbot.v111.phase2a.successor-build-recovery-failure.v1",
                     "created_at": datetime.now(UTC).isoformat(),
                     **fingerprint_material,
-                    "failure_fingerprint": _sha256_bytes(
-                        _canonical_json(fingerprint_material)
-                    ),
+                    "failure_fingerprint": _sha256_bytes(_canonical_json(fingerprint_material)),
                     "unchanged_retry_authorized": False,
                     "source_scan_repeated": False,
                     "new_build_created": False,

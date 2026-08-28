@@ -74,9 +74,7 @@ EXPECTED_RECOVERY_R2_FILE_SHA256 = (
 EXPECTED_RECOVERY_R2_CONTENT_SHA256 = (
     "c6672a3f227b9a518ac628861bc1bcaf361d9c29968f20c490f27d3f34592145"
 )
-EXPECTED_GOODWIN_R2_RAW_SHA256 = (
-    "49074fe49a3280239806d86233f2a4be081777859467fa7df723adc1590d4441"
-)
+EXPECTED_GOODWIN_R2_RAW_SHA256 = "49074fe49a3280239806d86233f2a4be081777859467fa7df723adc1590d4441"
 EXPECTED_GOODWIN_R2_RECORD_SHA256 = (
     "be390e6a0f1def7c073f0fae329b56d3e7c4e6acf7610ce6fffef8d15b7da145"
 )
@@ -288,7 +286,18 @@ class _JudgmentParser(HTMLParser):
     """Extract visible HUDOC converter paragraphs without trusting CSS names."""
 
     _EXCLUDED = frozenset(
-        {"script", "style", "noscript", "template", "nav", "header", "footer", "aside", "form", "iframe"}
+        {
+            "script",
+            "style",
+            "noscript",
+            "template",
+            "nav",
+            "header",
+            "footer",
+            "aside",
+            "form",
+            "iframe",
+        }
     )
     _VOID = frozenset({"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta"})
 
@@ -363,7 +372,9 @@ class _JudgmentParser(HTMLParser):
 
 
 def _canonical_json(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode()
+    return (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+    ).encode()
 
 
 def _pretty_json(value: Any) -> bytes:
@@ -626,7 +637,9 @@ def _ordered_required_positions(
         match = next(
             (
                 (ordinal, index)
-                for ordinal, (index, number, _) in enumerate(numbered[search_from:], start=search_from)
+                for ordinal, (index, number, _) in enumerate(
+                    numbered[search_from:], start=search_from
+                )
                 if number == required
             ),
             None,
@@ -658,7 +671,9 @@ def _validate_html(plan: JudgmentPlan, raw: bytes) -> tuple[dict[str, Any], byte
         "JUDGMENT",
         "STRASBOURG",
     )
-    missing_identity = [marker for marker in identity_markers if _normalized(marker) not in normalized_front]
+    missing_identity = [
+        marker for marker in identity_markers if _normalized(marker) not in normalized_front
+    ]
     if missing_identity:
         raise ValueError("phase2a_echr_front_matter_identity_missing:" + ",".join(missing_identity))
     if len(parser.paragraphs) < plan.minimum_paragraph_count:
@@ -672,9 +687,7 @@ def _validate_html(plan: JudgmentPlan, raw: bytes) -> tuple[dict[str, Any], byte
     positions = _ordered_required_positions(numbered, plan.required_paragraphs)
     required_text = {
         number: next(
-            text
-            for index, candidate, text in numbered
-            if index == position and candidate == number
+            text for index, candidate, text in numbered if index == position and candidate == number
         )
         for number, position in zip(plan.required_paragraphs, positions, strict=True)
     }
@@ -728,7 +741,9 @@ def _validate_pdf(plan: JudgmentPlan, raw: bytes) -> tuple[dict[str, Any], bytes
         "JUDGMENT",
         "STRASBOURG",
     )
-    missing_identity = [marker for marker in identity_markers if _normalized(marker) not in normalized_front]
+    missing_identity = [
+        marker for marker in identity_markers if _normalized(marker) not in normalized_front
+    ]
     if missing_identity:
         raise ValueError("phase2a_echr_front_matter_identity_missing:" + ",".join(missing_identity))
     leading = re.compile(r"(?m)^\s*(?:\[\s*)?(\d{1,4})(?:\s*\])?\s*[.)]?\s+")
@@ -926,7 +941,8 @@ def collect(*, output_root: Path, retrieved_at: datetime, timeout_seconds: float
             "quarantine_member": raw_member,
             "canonical_markdown_member": canonical_member,
             "canonical_markdown_sha256": canonical_sha,
-            "proposed_source_version_id": "proposed-echr-repair-source-version-" + _sealed(identity_material)[:40],
+            "proposed_source_version_id": "proposed-echr-repair-source-version-"
+            + _sealed(identity_material)[:40],
             "source_version_mode": "OFFICIAL_FINAL_JUDGMENT_DOCUMENT_RETRIEVED_2026_08_28",
             "representation_mode": plan.representation_mode,
             "attempt_identity_sha256": _sealed(attempt_identity),

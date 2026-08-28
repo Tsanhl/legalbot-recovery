@@ -10,16 +10,13 @@ from scripts import validate_v111_phase2a_proposition_working_drafts as validato
 
 def _canonical_json(value: object) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _sealed_record(record: dict[str, object]) -> dict[str, object]:
     result = dict(record)
-    result["record_content_sha256"] = hashlib.sha256(
-        _canonical_json(result)
-    ).hexdigest()
+    result["record_content_sha256"] = hashlib.sha256(_canonical_json(result)).hexdigest()
     return result
 
 
@@ -44,9 +41,7 @@ def _draft_for_live30_q01() -> dict[str, object]:
                 "local_evidence_fit": "NONE",
                 "selected_local_evidence": [],
                 "rejected_candidate_reasons": [],
-                "required_research": [
-                    "Identify the controlling rule and exact authority."
-                ],
+                "required_research": ["Identify the controlling rule and exact authority."],
                 "proposition_version_conflicts": [],
                 "owner_outcome": None,
             }

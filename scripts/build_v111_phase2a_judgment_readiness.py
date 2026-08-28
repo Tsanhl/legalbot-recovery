@@ -22,18 +22,12 @@ from typing import Any
 
 from app.retrieval.source_manifest import approved_source_manifest_sha256
 
-EXPECTED_JUDGMENTS_DIGEST = (
-    "1a691e9799cd8636515b47a42a186a68ed47e6bd9511755a5029a139c21437b7"
-)
-EXPECTED_RESEARCH_DIGEST = (
-    "0718758e3bd9b0f938c4beab09eb3b603ffc5f419d68574399accc47c4a4015c"
-)
+EXPECTED_JUDGMENTS_DIGEST = "1a691e9799cd8636515b47a42a186a68ed47e6bd9511755a5029a139c21437b7"
+EXPECTED_RESEARCH_DIGEST = "0718758e3bd9b0f938c4beab09eb3b603ffc5f419d68574399accc47c4a4015c"
 EXPECTED_CANDIDATE_MANIFEST_DIGEST = (
     "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0"
 )
-EXPECTED_FRESH_MANIFEST_DIGEST = (
-    "5bd11e398bcf40a42b1dda5e3261a01bc2497fe9bd8fd41c886e1b8a18f502ff"
-)
+EXPECTED_FRESH_MANIFEST_DIGEST = "5bd11e398bcf40a42b1dda5e3261a01bc2497fe9bd8fd41c886e1b8a18f502ff"
 EXPECTED_QUISTCLOSE_DOWNLOAD_FILE_SHA256 = (
     "e9240e046ea3d38f6ed4fc9b53171b6570804a832205ab21914f3f7f7d418833"
 )
@@ -76,15 +70,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode()
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
 
 
 def _sha256(raw: bytes) -> str:
@@ -179,8 +170,7 @@ def _validated_judgments(path: Path) -> tuple[str, list[dict[str, Any]]]:
             not source_version_id
             or source_version_id in seen
             or not _SHA256.fullmatch(str(record.get("record_sha256") or ""))
-            or record.get("proposition_binding_status")
-            != "UNBOUND_IN_CANONICAL_REGISTRY"
+            or record.get("proposition_binding_status") != "UNBOUND_IN_CANONICAL_REGISTRY"
             or record.get("proposition_relied_upon") is not None
             or record.get("owner_decision_required") is not True
             or not isinstance(owner_review, dict)
@@ -190,7 +180,10 @@ def _validated_judgments(path: Path) -> tuple[str, list[dict[str, Any]]]:
         ):
             raise ValueError("phase2a_judgment_readiness_judgment_record_boundary_invalid")
         seen.add(source_version_id)
-    if len({str(record.get("neutral_citation")) for record in records}) != EXPECTED_UNIQUE_CITATIONS:
+    if (
+        len({str(record.get("neutral_citation")) for record in records})
+        != EXPECTED_UNIQUE_CITATIONS
+    ):
         raise ValueError("phase2a_judgment_readiness_citation_count_invalid")
     return digest, records
 
@@ -205,15 +198,12 @@ def _validated_candidate_sources(
     sources = {
         str(source.get("source_version_id") or ""): source
         for source in value.get("sources", [])
-        if isinstance(source, dict)
-        and str(source.get("source_version_id") or "") in judgment_ids
+        if isinstance(source, dict) and str(source.get("source_version_id") or "") in judgment_ids
     }
     if set(sources) != judgment_ids or any(
         source.get("subsequent_treatment_check_required") is not True
         or source.get("subsequent_treatment_verified") is not False
-        or not str(source.get("authority_identity_id") or "").startswith(
-            "neutral-citation:"
-        )
+        or not str(source.get("authority_identity_id") or "").startswith("neutral-citation:")
         for source in sources.values()
     ):
         raise ValueError("phase2a_judgment_readiness_candidate_source_boundary_invalid")
@@ -234,8 +224,7 @@ def _validated_fresh_records(
     licence = manifest.get("find_case_law_computational_analysis")
     if (
         digest != EXPECTED_FRESH_MANIFEST_DIGEST
-        or manifest.get("schema")
-        != "legalbot.v111-phase2a-official-source-quarantine.v1"
+        or manifest.get("schema") != "legalbot.v111-phase2a-official-source-quarantine.v1"
         or not isinstance(licence, dict)
         or licence.get("separate_licence_required") is not True
         or licence.get("licence_evidence_sha256") is not None
@@ -251,8 +240,7 @@ def _validated_fresh_records(
     records = {
         str(record.get("target_id") or ""): record
         for record in manifest.get("records", [])
-        if isinstance(record, dict)
-        and record.get("target_type") == "candidate_judgment_source"
+        if isinstance(record, dict) and record.get("target_type") == "candidate_judgment_source"
     }
     if set(records) != judgment_ids:
         raise ValueError("phase2a_judgment_readiness_fresh_record_set_invalid")
@@ -274,9 +262,7 @@ def _validated_fresh_records(
             or member.stat().st_size != record.get("bytes")
         ):
             raise ValueError("phase2a_judgment_readiness_fresh_member_integrity_failed")
-        citation = str(record.get("authority_identity") or "").removeprefix(
-            "neutral-citation:"
-        )
+        citation = str(record.get("authority_identity") or "").removeprefix("neutral-citation:")
         if citation.encode() not in member.read_bytes():
             raise ValueError("phase2a_judgment_readiness_fresh_identity_not_found")
     return digest, records
@@ -318,9 +304,7 @@ def _validated_research(
             if source_version_id not in judgment_ids:
                 continue
             candidate_material = dict(candidate)
-            candidate_seal = str(
-                candidate_material.pop("candidate_record_content_sha256", "")
-            )
+            candidate_seal = str(candidate_material.pop("candidate_record_content_sha256", ""))
             if candidate_seal != _sealed(candidate_material):
                 raise ValueError("phase2a_judgment_readiness_candidate_seal_invalid")
             references[source_version_id].append(
@@ -383,8 +367,7 @@ def _validated_quistclose(
     items = {
         str(item.get("representation_id") or ""): item
         for item in download.get("items", [])
-        if isinstance(item, dict)
-        and item.get("authority_id") == "neutral-citation:[2002] UKHL 12"
+        if isinstance(item, dict) and item.get("authority_id") == "neutral-citation:[2002] UKHL 12"
     }
     required = {
         "ukhl-2002-12-part-1",
@@ -418,17 +401,13 @@ def build_judgment_readiness(
         raise ValueError("phase2a_judgment_readiness_output_already_exists")
     judgments_digest, judgments = _validated_judgments(judgments_path)
     judgment_ids = {str(record["source_version_id"]) for record in judgments}
-    candidate_digest, sources = _validated_candidate_sources(
-        candidate_manifest_path, judgment_ids
-    )
+    candidate_digest, sources = _validated_candidate_sources(candidate_manifest_path, judgment_ids)
     fresh_digest, fresh = _validated_fresh_records(
         fresh_quarantine_root / "QUARANTINE-MANIFEST.json",
         fresh_quarantine_root,
         judgment_ids,
     )
-    research_digest, references = _validated_research(
-        research_packets_path, judgment_ids
-    )
+    research_digest, references = _validated_research(research_packets_path, judgment_ids)
     prior_digests = _validate_prior_approvals(prior_approval_paths, judgment_ids)
     quistclose, quistclose_provenance = _validated_quistclose(
         quistclose_download_path, quistclose_approval_path
@@ -473,9 +452,7 @@ def build_judgment_readiness(
             local_provenance = {
                 **quistclose_provenance,
                 "representation_id": representation,
-                "official_representation_url": item.get(
-                    "official_representation_url"
-                ),
+                "official_representation_url": item.get("official_representation_url"),
                 "snapshot_sha256": item.get("sha256"),
                 "snapshot_bytes": item.get("bytes"),
                 "historical_identity_approved": True,
@@ -485,13 +462,11 @@ def build_judgment_readiness(
         row_ids = sorted({str(item["row_id"]) for item in source_references})
         if row_ids:
             recommendation = (
-                "BIND_EXACT_PROPOSITIONS_THEN_COMPLETE_LICENCE_COMPLIANT_"
-                "LATER_TREATMENT_REVIEW"
+                "BIND_EXACT_PROPOSITIONS_THEN_COMPLETE_LICENCE_COMPLIANT_LATER_TREATMENT_REVIEW"
             )
         else:
             recommendation = (
-                "OWNER_CONFIRM_NO_585_PROPOSITION_RELIANCE_AND_EXCLUDE_FROM_"
-                "SUCCESSOR_IF_NOT_NEEDED"
+                "OWNER_CONFIRM_NO_585_PROPOSITION_RELIANCE_AND_EXCLUDE_FROM_SUCCESSOR_IF_NOT_NEEDED"
             )
         material: dict[str, Any] = {
             "schema": "legalbot.v111.phase2a.judgment-readiness-row.v1",
@@ -542,9 +517,7 @@ def build_judgment_readiness(
                 "conclusions and may contain unrelated full-text results."
             ),
             "later_treatment_status": "BLOCKED_PENDING_PROPOSITION_SCOPE_AND_LICENCE",
-            "affirmed_limited_distinguished_displaced_status": (
-                "OWNER_DECISION_REQUIRED"
-            ),
+            "affirmed_limited_distinguished_displaced_status": ("OWNER_DECISION_REQUIRED"),
             "advisory_recommendation": recommendation,
             "owner_decision_required": True,
             "owner_decision_recorded": False,
@@ -563,21 +536,16 @@ def build_judgment_readiness(
         for packet in packets
         if packet["unresolved_502_row_reference_count"] > 0
     }
-    referenced_rows = {
-        row_id for packet in packets for row_id in packet["unresolved_502_row_ids"]
-    }
+    referenced_rows = {row_id for packet in packets for row_id in packet["unresolved_502_row_ids"]}
     candidate_reference_count = sum(
-        int(packet["unresolved_502_candidate_reference_count"])
-        for packet in packets
+        int(packet["unresolved_502_candidate_reference_count"]) for packet in packets
     )
     fresh_downloads = sum(
-        packet["fresh_official_retrieval"]["result"]
-        == "DOWNLOADED_QUARANTINED"
+        packet["fresh_official_retrieval"]["result"] == "DOWNLOADED_QUARANTINED"
         for packet in packets
     )
     local_recoveries = sum(
-        packet["historical_local_recovery_provenance"] is not None
-        for packet in packets
+        packet["historical_local_recovery_provenance"] is not None for packet in packets
     )
     if (
         len(referenced_ids) != EXPECTED_REFERENCED_SOURCE_VERSIONS
@@ -653,8 +621,7 @@ def build_judgment_readiness(
     _write_exclusive(
         output_root / "SHA256SUMS",
         (
-            f"{_sha256(artifact_raw)}  {OUTPUT_NAME}\n"
-            f"{_sha256(progress_raw)}  {PROGRESS_NAME}\n"
+            f"{_sha256(artifact_raw)}  {OUTPUT_NAME}\n{_sha256(progress_raw)}  {PROGRESS_NAME}\n"
         ).encode(),
     )
     return progress

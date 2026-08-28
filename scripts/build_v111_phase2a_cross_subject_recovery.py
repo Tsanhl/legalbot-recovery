@@ -36,18 +36,12 @@ from app.evaluation.phase2a_research_packets import (
     subject_routes,
 )
 
-EXPECTED_REMAINDER_DIGEST = (
-    "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
-)
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+EXPECTED_REMAINDER_DIGEST = "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 EXPECTED_CANDIDATE_MANIFEST_DIGEST = (
     "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0"
 )
-EXPECTED_CATALOGUE_FILE_SHA256 = (
-    "8c700c3e8f9cc77abe4b03cf5011624db9ff14a74f02f3a37b59c1fcf595a10d"
-)
+EXPECTED_CATALOGUE_FILE_SHA256 = "8c700c3e8f9cc77abe4b03cf5011624db9ff14a74f02f3a37b59c1fcf595a10d"
 EXPECTED_REMAINDER_ROWS = 448
 EXPECTED_TARGET_ROWS = 37
 DEFAULT_LIMIT = 12
@@ -57,8 +51,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -262,9 +255,7 @@ def _rank_rows(
             "owner_or_qualified_reviewer_decision_required": True,
             "technical_qualification_assigned": False,
         }
-        packets.append(
-            {**row_material, "row_packet_content_sha256": sealed_sha256(row_material)}
-        )
+        packets.append({**row_material, "row_packet_content_sha256": sealed_sha256(row_material)})
     metrics = {
         "eligible_current_noncase_span_count": len(eligible),
         "candidate_record_count": sum(len(packet["candidates"]) for packet in packets),
@@ -314,8 +305,8 @@ def build_cross_subject_recovery(
         raise ValueError("phase2a_cross_subject_catalogue_identity_invalid")
     rows = _target_rows(remainder)
     cases = _load_cases(cases_path)
-    manifest_digest, candidate_authorities, candidate_versions = (
-        _candidate_manifest_authorities(candidate_manifest_path)
+    manifest_digest, candidate_authorities, candidate_versions = _candidate_manifest_authorities(
+        candidate_manifest_path
     )
     if manifest_digest != EXPECTED_CANDIDATE_MANIFEST_DIGEST:
         raise ValueError("phase2a_cross_subject_candidate_manifest_identity_invalid")

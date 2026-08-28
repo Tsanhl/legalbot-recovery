@@ -17,12 +17,10 @@ DEFAULT_MANIFEST = (
 )
 DEFAULT_AUDIT = PROJECT_ROOT / "data/reports/seminar-authority-coverage-2026-08-26-v5.json"
 DEFAULT_VERIFICATION = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-uk-judgments-round2-2026-08-26-verification.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-uk-judgments-round2-2026-08-26-verification.json"
 )
 DEFAULT_LEGISLATION_RESOLUTION = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
 )
 DEFAULT_LEGISLATION_VERIFICATION = (
     PROJECT_ROOT
@@ -33,16 +31,13 @@ DEFAULT_EWHC_VERIFICATION = (
     / "data/review_queue/seminar-gap-official-ewhc-divisions-2026-08-26-verification.json"
 )
 DEFAULT_ALIAS_RECONCILIATION = (
-    PROJECT_ROOT
-    / "data/review_queue/seminar-gap-legislation-alias-reconciliation-2026-08-26.json"
+    PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-alias-reconciliation-2026-08-26.json"
 )
 DEFAULT_FCL_SEARCH_RECOVERY = (
     PROJECT_ROOT / "config/seminar_gap_official_fcl_search_recovery.2026-08-26.v1.json"
 )
 DEFAULT_JSON = PROJECT_ROOT / "data/reports/seminar-gap-priority-queue-2026-08-26-v4.json"
-DEFAULT_MARKDOWN = (
-    PROJECT_ROOT / "docs/reports/seminar-gap-priority-queue-2026-08-26-v4.md"
-)
+DEFAULT_MARKDOWN = PROJECT_ROOT / "docs/reports/seminar-gap-priority-queue-2026-08-26-v4.md"
 SCHEMA = "legalbot.seminar-gap-priority-queue.v4"
 
 
@@ -123,10 +118,7 @@ def build_report(
         != "legalbot.seminar-gap-legislation-alias-reconciliation.v1"
     ):
         raise ValueError("priority_queue_alias_reconciliation_schema_invalid")
-    if (
-        fcl_search_recovery.get("schema")
-        != "legalbot.seminar-gap-official-fcl-search-recovery.v1"
-    ):
+    if fcl_search_recovery.get("schema") != "legalbot.seminar-gap-official-fcl-search-recovery.v1":
         raise ValueError("priority_queue_fcl_search_recovery_schema_invalid")
 
     unresolved_by_reason: Counter[str] = Counter()
@@ -146,9 +138,7 @@ def build_report(
             }
         )
 
-    unresolved = [
-        item for item in unresolved if item["reason_code"] != "ewhc_division_missing"
-    ]
+    unresolved = [item for item in unresolved if item["reason_code"] != "ewhc_division_missing"]
     unresolved.extend(
         {
             "authority_identity": str(item["authority_identity"]),
@@ -195,9 +185,7 @@ def build_report(
                 "content_sha256": str(target["content_sha256"]),
                 "official_url": str(target["official_url"]),
                 "subjects": subjects,
-                "technical_verification_passed": bool(
-                    record["technical_verification_passed"]
-                ),
+                "technical_verification_passed": bool(record["technical_verification_passed"]),
                 "metadata_holds": sorted(str(value) for value in record["metadata_holds"]),
                 "source_admission_gate": "OWNER_REVIEW_REQUIRED",
                 "currentness_gate": "OWNER_REVIEW_REQUIRED",
@@ -227,9 +215,7 @@ def build_report(
             "legislation_resolution_sha256": _sha256(legislation_resolution_path),
             "legislation_verification_sha256": _sha256(legislation_verification_path),
             "ewhc_division_verification_sha256": _sha256(ewhc_verification_path),
-            "legislation_alias_reconciliation_sha256": _sha256(
-                alias_reconciliation_path
-            ),
+            "legislation_alias_reconciliation_sha256": _sha256(alias_reconciliation_path),
             "fcl_search_recovery_sha256": _sha256(fcl_search_recovery_path),
         },
         "summary": {
@@ -246,18 +232,16 @@ def build_report(
             "ewhc_division_identity_incomplete": ewhc_verification["summary"][
                 "still_unresolved_count"
             ],
-            "ewhc_division_newly_staged": ewhc_verification["summary"][
-                "staged_target_count"
-            ],
+            "ewhc_division_newly_staged": ewhc_verification["summary"]["staged_target_count"],
             "ewhc_division_already_catalogued": ewhc_verification["summary"][
                 "already_catalogued_count"
             ],
             "presentation_legislation_titles_requiring_normalisation": (
                 presentation_legislation_missing
             ),
-            "legislation_reference_rows_exact_resolved": legislation_resolution[
-                "summary"
-            ]["official_identity_resolved_count"],
+            "legislation_reference_rows_exact_resolved": legislation_resolution["summary"][
+                "official_identity_resolved_count"
+            ],
             "legislation_reference_rows_unresolved": legislation_resolution["summary"][
                 "unresolved_count"
             ],
@@ -268,9 +252,7 @@ def build_report(
                 alias_reconciliation["summary"]["parent_unresolved_count"]
                 - alias_reconciliation["summary"]["official_alias_exact_match_count"]
             ),
-            "additional_unique_official_alias_candidates": len(
-                alias_urls - legislation_urls
-            ),
+            "additional_unique_official_alias_candidates": len(alias_urls - legislation_urls),
             "official_alias_candidates_marked_repealed": sum(
                 match.get("official_status_annotation") == "repealed"
                 for record in alias_reconciliation["records"]
@@ -299,9 +281,7 @@ def build_report(
             subject: dict(sorted(counts.items()))
             for subject, counts in sorted(unresolved_by_subject.items())
         },
-        "legislation_normalisation_queue_by_subject": dict(
-            sorted(legislation_by_subject.items())
-        ),
+        "legislation_normalisation_queue_by_subject": dict(sorted(legislation_by_subject.items())),
         "legislation_ocr_holds": [
             authority["authority_identity"]
             for authority in legislation_verification["authorities"]
@@ -329,9 +309,9 @@ def build_report(
             "live_activation_authorized": False,
         },
     }
-    encoded = json.dumps(
-        report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    encoded = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     report["report_content_sha256"] = hashlib.sha256(encoded).hexdigest()
     return report
 
@@ -347,8 +327,7 @@ def _markdown(report: dict[str, Any]) -> str:
         "## Current result",
         "",
         f"- Official UK judgments staged: {summary['official_uk_judgments_staged']}",
-        "- Technical verification passed: "
-        f"{summary['official_uk_judgments_technical_passed']}",
+        f"- Technical verification passed: {summary['official_uk_judgments_technical_passed']}",
         "- Already staged in the existing official pensions pack: "
         f"{summary['already_staged_in_existing_official_pack']}",
         "- Exact Find Case Law endpoint unresolved: "
@@ -406,12 +385,8 @@ def main() -> int:
         "--legislation-verification", type=Path, default=DEFAULT_LEGISLATION_VERIFICATION
     )
     parser.add_argument("--ewhc-verification", type=Path, default=DEFAULT_EWHC_VERIFICATION)
-    parser.add_argument(
-        "--alias-reconciliation", type=Path, default=DEFAULT_ALIAS_RECONCILIATION
-    )
-    parser.add_argument(
-        "--fcl-search-recovery", type=Path, default=DEFAULT_FCL_SEARCH_RECOVERY
-    )
+    parser.add_argument("--alias-reconciliation", type=Path, default=DEFAULT_ALIAS_RECONCILIATION)
+    parser.add_argument("--fcl-search-recovery", type=Path, default=DEFAULT_FCL_SEARCH_RECOVERY)
     parser.add_argument("--json-output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--markdown-output", type=Path, default=DEFAULT_MARKDOWN)
     args = parser.parse_args()

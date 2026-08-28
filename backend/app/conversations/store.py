@@ -129,9 +129,9 @@ class InMemoryConversationCache:
             raise ValueError("conversation cache limits must be positive")
         self._ttl_seconds = ttl_seconds
         self._max_sessions = max_sessions
-        self._values: OrderedDict[
-            tuple[str, int, int, str], tuple[float, ConversationWindow]
-        ] = OrderedDict()
+        self._values: OrderedDict[tuple[str, int, int, str], tuple[float, ConversationWindow]] = (
+            OrderedDict()
+        )
         self._lock = threading.RLock()
 
     def get(self, key: tuple[str, int, int, str]) -> ConversationWindow | None:
@@ -218,9 +218,10 @@ class ConversationStore:
                 (identifier,),
             ).fetchone()
             if existing is not None:
-                if str(existing["status"]) != "active" or _parse_utc(
-                    existing["expires_at"]
-                ) <= stamp:
+                if (
+                    str(existing["status"]) != "active"
+                    or _parse_utc(existing["expires_at"]) <= stamp
+                ):
                     raise ConversationExpiredError(identifier)
                 return identifier
             connection.execute(
@@ -230,7 +231,13 @@ class ConversationStore:
                   last_accessed_at,expires_at
                 ) VALUES (?, 'active', 0, 0, ?, ?, ?, ?)
                 """,
-                (identifier, stamp.isoformat(), stamp.isoformat(), stamp.isoformat(), expires.isoformat()),
+                (
+                    identifier,
+                    stamp.isoformat(),
+                    stamp.isoformat(),
+                    stamp.isoformat(),
+                    expires.isoformat(),
+                ),
             )
         return identifier
 
@@ -487,9 +494,7 @@ class ConversationStore:
                     content_sha256=str(row["content_sha256"]),
                     estimated_tokens=tokens,
                     job_id=str(row["job_id"]) if row["job_id"] is not None else None,
-                    answer_id=(
-                        str(row["answer_id"]) if row["answer_id"] is not None else None
-                    ),
+                    answer_id=(str(row["answer_id"]) if row["answer_id"] is not None else None),
                     created_at=str(row["created_at"]),
                 )
             )
@@ -528,9 +533,13 @@ class ConversationStore:
             """,
             (_utc(now).isoformat(), identifier),
         )
-        if changed.rowcount == 0 and self.database.fetchone(
-            "SELECT id FROM conversation_sessions WHERE id=?", (identifier,)
-        ) is None:
+        if (
+            changed.rowcount == 0
+            and self.database.fetchone(
+                "SELECT id FROM conversation_sessions WHERE id=?", (identifier,)
+            )
+            is None
+        ):
             raise ConversationNotFoundError(identifier)
         self.cache.invalidate(identifier)
 

@@ -31,18 +31,12 @@ def test_exact_partition_is_exhaustive_and_locator_matching_is_token_safe() -> N
         text_sha256=packets._sha256(text.encode("utf-8")),
     )
 
-    assert "".join(
-        span["exact_text"] for span in partition["exact_span_options"]
-    ) == text
+    assert "".join(span["exact_text"] for span in partition["exact_span_options"]) == text
     assert partition["source_text_reproduced_by_partition_sha256"] == packets._sha256(
         text.encode("utf-8")
     )
-    assert packets._locator_match("section 10A", ["section 1"]) == (
-        "NO_EXACT_LOCATOR_MATCH"
-    )
-    assert packets._locator_match("p 37", ["[37]"]) == (
-        "EXACT_CANONICAL_LOCATOR_REFERENCE"
-    )
+    assert packets._locator_match("section 10A", ["section 1"]) == ("NO_EXACT_LOCATOR_MATCH")
+    assert packets._locator_match("p 37", ["[37]"]) == ("EXACT_CANONICAL_LOCATOR_REFERENCE")
 
 
 def test_packet_covers_all_rows_without_model_or_gate_authority(
@@ -79,19 +73,17 @@ def test_source_corpus_records_sealed_projection_and_catalogue_distinction(
         "EXACT_CATALOGUE_AND_SEALED_LANCE_TEXT_MATCH": 1126,
         "LEGACY_FALSE_PHONE_REDACTION_FIXED_FOR_SUCCESSOR_REBUILD": 6,
     }
-    assert corpus["projection_reference_status_counts"][
-        "LEGACY_FALSE_PHONE_REDACTION_FIXED_FOR_SUCCESSOR_REBUILD"
-    ] == 11
-    repaired = [
-        record for record in corpus["records"] if record["successor_rebuild_required"]
-    ]
+    assert (
+        corpus["projection_reference_status_counts"][
+            "LEGACY_FALSE_PHONE_REDACTION_FIXED_FOR_SUCCESSOR_REBUILD"
+        ]
+        == 11
+    )
+    repaired = [record for record in corpus["records"] if record["successor_rebuild_required"]]
     assert len(repaired) == 6
     assert all(record["exact_source_evidence_eligible"] is True for record in repaired)
     assert all(
-        "[PHONE]"
-        not in "".join(
-            span["exact_text"] for span in record["exact_span_options"]
-        )
+        "[PHONE]" not in "".join(span["exact_text"] for span in record["exact_span_options"])
         for record in repaired
     )
 

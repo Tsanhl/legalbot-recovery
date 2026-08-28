@@ -33,12 +33,8 @@ R107_PATH = R107_ROOT / review.OUTPUT_NAME
 DEFAULT_OUTPUT_ROOT = (
     REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r108-deterministic-held-source-resolution"
 )
-EXPECTED_R107_CONTENT_SHA256 = (
-    "6706f5b1d34e81095c5c75a6c3a918a5f8b8f8ba6d5f5ae1afd595e6bbb7f2c2"
-)
-EXPECTED_R107_FILE_SHA256 = (
-    "5194fc42e41a33102b6f64fe51cde191bced45acc98f19b8c61de8e17d5d2729"
-)
+EXPECTED_R107_CONTENT_SHA256 = "6706f5b1d34e81095c5c75a6c3a918a5f8b8f8ba6d5f5ae1afd595e6bbb7f2c2"
+EXPECTED_R107_FILE_SHA256 = "5194fc42e41a33102b6f64fe51cde191bced45acc98f19b8c61de8e17d5d2729"
 HELD_ROWS = {
     "live60-q33:issue-02": "PARTIAL",
     "live60-q33:issue-03": "UNRELATED",
@@ -48,23 +44,18 @@ DELIVERY_QUOTE = (
     "the same (subject to subsection (4) of this section) as the persons who "
     "would at common law be treated as an occupier and as his invitees or licensees."
 )
-DELIVERY_PROPOSITION = (
-    "Visitor status follows the common-law categories of invitees and licensees."
-)
+DELIVERY_PROPOSITION = "Visitor status follows the common-law categories of invitees and licensees."
 OUTPUT_NAME = "DETERMINISTIC-HELD-SOURCE-RESOLUTION-26.json"
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -183,24 +174,17 @@ def _load_r107() -> dict[str, Any]:
 
 def _delivery_resolution(packet: Mapping[str, Any]) -> dict[str, Any]:
     block = next(
-        item
-        for item in packet["candidate_blocks"]
-        if item.get("locator") == "section 1 2"
+        item for item in packet["candidate_blocks"] if item.get("locator") == "section 1 2"
     )
     text = str(block["exact_text"])
     start = text.find(DELIVERY_QUOTE)
     if start < 0 or non_atomic_material_claim_reasons(DELIVERY_PROPOSITION):
         raise ValueError("phase2a_r108_delivery_binding_invalid")
-    proposition_facts = {
-        fact.identity for fact in extract_material_facts(DELIVERY_PROPOSITION)
-    }
+    proposition_facts = {fact.identity for fact in extract_material_facts(DELIVERY_PROPOSITION)}
     span_facts = {
-        fact.identity
-        for fact in extract_material_facts(f"{DELIVERY_QUOTE}\nsection 1 2")
+        fact.identity for fact in extract_material_facts(f"{DELIVERY_QUOTE}\nsection 1 2")
     }
-    shared = set(substantive_tokens(DELIVERY_PROPOSITION)) & set(
-        substantive_tokens(DELIVERY_QUOTE)
-    )
+    shared = set(substantive_tokens(DELIVERY_PROPOSITION)) & set(substantive_tokens(DELIVERY_QUOTE))
     if proposition_facts - span_facts or len(shared) < 2:
         raise ValueError("phase2a_r108_delivery_validation_invalid")
     return {
@@ -221,14 +205,10 @@ def _delivery_resolution(packet: Mapping[str, Any]) -> dict[str, Any]:
                     "normalized_value": fact.normalized_value,
                     "matched_text": fact.matched_text,
                 }
-                for fact in extract_material_facts(
-                    f"{DELIVERY_QUOTE}\nsection 1 2"
-                )
+                for fact in extract_material_facts(f"{DELIVERY_QUOTE}\nsection 1 2")
             ],
         },
-        "finding_codes": [
-            "deterministic_partial_delivery_driver_visitor_status"
-        ],
+        "finding_codes": ["deterministic_partial_delivery_driver_visitor_status"],
         "resolution_basis": (
             "The exact statutory text identifies the common-law visitor categories "
             "but does not decide the delivery driver's status on the scenario facts."
@@ -259,9 +239,7 @@ def build_resolution(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
     source = review._load_sources()
     replacements: dict[str, dict[str, Any]] = {}
     for row_id, assessment in HELD_ROWS.items():
-        packet = next(
-            item for item in source.packets["rows"] if item["row_id"] == row_id
-        )
+        packet = next(item for item in source.packets["rows"] if item["row_id"] == row_id)
         resolution = (
             _delivery_resolution(packet)
             if row_id == "live60-q33:issue-02"
@@ -274,9 +252,7 @@ def build_resolution(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
             "row_id": row_id,
             "row_source_link_id": packet["row_source_link_id"],
             "authority_identity_id": packet["authority_identity_id"],
-            "canonical_authority_identity_id": packet[
-                "canonical_authority_identity_id"
-            ],
+            "canonical_authority_identity_id": packet["canonical_authority_identity_id"],
             "source_is_existing_candidate_alias": True,
             "prior_attempt_count": 2,
             "prior_repeated_failure": "atomic_proposition_too_long",
@@ -343,9 +319,7 @@ def build_resolution(output_root: Path = DEFAULT_OUTPUT_ROOT) -> dict[str, Any]:
     }
     for name, raw in files.items():
         _write_exclusive(output_root / name, raw)
-    sums = "".join(
-        f"{_sha256_file(output_root / name)}  {name}\n" for name in sorted(files)
-    )
+    sums = "".join(f"{_sha256_file(output_root / name)}  {name}\n" for name in sorted(files))
     _write_exclusive(output_root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return artifact
 

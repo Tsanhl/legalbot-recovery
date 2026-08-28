@@ -46,9 +46,7 @@ def test_applies_exact_owner_decision_without_expanding_authority() -> None:
 
     assert applied[0]["disposition"] == "NOT_YET_COMMENCED"
     assert applied[0]["owner_decision_required"] is False
-    assert applied[0]["owner_review"]["status"] == (
-        "OWNER_APPROVED_RECORDED_DISPOSITION"
-    )
+    assert applied[0]["owner_review"]["status"] == ("OWNER_APPROVED_RECORDED_DISPOSITION")
     assert applied[0]["owner_review"]["does_not_admit_index_or_embed_source"] is True
     assert applied[0]["owner_review"]["does_not_authorize_phase2b_or_development30"] is True
 

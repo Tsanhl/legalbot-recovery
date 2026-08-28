@@ -20,12 +20,8 @@ from pathlib import Path
 from typing import Any
 
 MATRIX_SCHEMA = "legalbot.v111-phase2a-remediation-matrix.v1"
-RECONCILIATION_SCHEMA = (
-    "legalbot.v111.phase2a.historical-candidate-span-reconciliation.v1"
-)
-APPROVED_SCHEMA = (
-    "legalbot.v111.phase2a.internal-proposition-span-approved-package.v1"
-)
+RECONCILIATION_SCHEMA = "legalbot.v111.phase2a.historical-candidate-span-reconciliation.v1"
+APPROVED_SCHEMA = "legalbot.v111.phase2a.internal-proposition-span-approved-package.v1"
 OWNER_REVIEWED_SCHEMA = "legalbot.v111.phase2a.owner-reviewed-issues.v1"
 HISTORICAL_SCHEMA = "legalbot.live60.owner-reviewed-search-answers.v1"
 
@@ -36,13 +32,9 @@ EXPECTED_REMAINING_COUNT = 537
 EXPECTED_CORRECTION_QUEUE_COUNT = 89
 EXPECTED_KEEP_GAP_COUNT = 156
 EXPECTED_NO_HISTORICAL_COUNT = 292
-EXPECTED_HISTORICAL_FILE_SHA256 = (
-    "e06d7f1179d58824c16ce2e45cbf46dcdce64365d69652729255738b9ddb1d2d"
-)
+EXPECTED_HISTORICAL_FILE_SHA256 = "e06d7f1179d58824c16ce2e45cbf46dcdce64365d69652729255738b9ddb1d2d"
 
-DETERMINISTIC_STATUS = (
-    "DETERMINISTIC_CANDIDATE_COMPONENTS_LOCATED_OWNER_REVIEW_REQUIRED"
-)
+DETERMINISTIC_STATUS = "DETERMINISTIC_CANDIDATE_COMPONENTS_LOCATED_OWNER_REVIEW_REQUIRED"
 KEEP_GAP_STATUS = "NO_OPERATIVE_TEXT_KEEP_GAP"
 CORRECTION_QUEUE_STATUSES = frozenset(
     {
@@ -56,8 +48,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -212,9 +203,7 @@ def build_inventory(
         raise ValueError("phase2a_remaining_inventory_input_boundary_invalid")
 
     historical_file_sha256 = _sha256_file(historical_path)
-    historical_is_authoritative = (
-        historical_file_sha256 == EXPECTED_HISTORICAL_FILE_SHA256
-    )
+    historical_is_authoritative = historical_file_sha256 == EXPECTED_HISTORICAL_FILE_SHA256
     matrix_by_row = _index_unique(
         matrix_rows, key="row_id", code="phase2a_remaining_inventory_matrix_duplicate"
     )
@@ -332,9 +321,7 @@ def build_inventory(
                 "official_citation": historical_record.get("citation"),
                 "official_legal_locator": historical_record.get("legal_locator"),
                 "official_source_url": historical_record.get("official_source_url"),
-                "candidate_spans_already_located": reconciliation_record.get(
-                    "candidate_spans", []
-                ),
+                "candidate_spans_already_located": reconciliation_record.get("candidate_spans", []),
                 "required_action": correction_path,
                 "staging_is_authoritative": False,
                 "owner_decision_required_after_deterministic_verification": True,
@@ -351,12 +338,9 @@ def build_inventory(
     if (
         len(rows) != EXPECTED_REMAINING_COUNT
         or len(correction_queue) != EXPECTED_CORRECTION_QUEUE_COUNT
-        or evidence_state_counts[
-            "HISTORICAL_REVIEW_KEPT_GAP_NO_SAFE_OPERATIVE_SPAN"
-        ]
+        or evidence_state_counts["HISTORICAL_REVIEW_KEPT_GAP_NO_SAFE_OPERATIVE_SPAN"]
         != EXPECTED_KEEP_GAP_COUNT
-        or evidence_state_counts["NO_HISTORICAL_PROPOSITION_PACKET"]
-        != EXPECTED_NO_HISTORICAL_COUNT
+        or evidence_state_counts["NO_HISTORICAL_PROPOSITION_PACKET"] != EXPECTED_NO_HISTORICAL_COUNT
         or baseline_status_counts
         != Counter({"GOLD_OR_CASE_DEFECT": 467, "MATERIAL_CANDIDATE_COVERAGE_GAP": 70})
     ):
@@ -375,9 +359,7 @@ def build_inventory(
         "row_count": len(rows),
         "evidence_state_counts": dict(sorted(evidence_state_counts.items())),
         "baseline_status_counts": dict(sorted(baseline_status_counts.items())),
-        "historical_match_status_counts": dict(
-            sorted(historical_match_status_counts.items())
-        ),
+        "historical_match_status_counts": dict(sorted(historical_match_status_counts.items())),
         "rows": rows,
         "owner_approval_required_after_evidence_prepared": True,
         "source_admission_authorized": False,
@@ -392,9 +374,7 @@ def build_inventory(
     queue_material = {
         "schema": "legalbot.v111.phase2a.official-rebinding-queue.v1",
         "status": "DETERMINISTIC_VERIFICATION_REQUIRED_NOT_OWNER_DECISIONS",
-        "source_remaining_inventory_content_sha256": inventory[
-            "artifact_content_sha256"
-        ],
+        "source_remaining_inventory_content_sha256": inventory["artifact_content_sha256"],
         "item_count": len(correction_queue),
         "items": correction_queue,
         "official_primary_sources_only": True,

@@ -27,12 +27,8 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_REMAINDER_DIGEST = (
-    "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
-)
-EXPECTED_CASES_FILE_SHA256 = (
-    "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
-)
+EXPECTED_REMAINDER_DIGEST = "a7f7359c3ff12da02ee4056532198d39417459c9e20aac602f64437fb7cf5aa6"
+EXPECTED_CASES_FILE_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
 PINNED_MODEL_REPO = "Qwen/Qwen3-Reranker-0.6B"
 PINNED_MODEL_REVISION = "e61197ed45024b0ed8a2d74b80b4d909f1255473"
 PINNED_MODEL_FILE_MANIFEST_SHA256 = (
@@ -45,9 +41,7 @@ ADVISORY_BATCH_SIZE = 8
 MAX_PEAK_MEMORY_GB = 12.0
 OUTPUT_NAME = "INDEPENDENT-RERANKER-ADVISORY-448.json"
 PARTIAL_STOP_NAME = "PARTIAL-COMPARISON-STOP.json"
-REVIEWER_EXECUTION_MODE = (
-    "independent_pinned_reranker_model_separate_from_drafting_adapter"
-)
+REVIEWER_EXECUTION_MODE = "independent_pinned_reranker_model_separate_from_drafting_adapter"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ROW_ID = re.compile(r"^(?:live30|live60)-q[0-9]{2}:issue-[0-9]{2}$")
 _WORD = re.compile(r"[A-Za-z][A-Za-z'-]{3,}")
@@ -93,8 +87,7 @@ ScoreRow = Callable[
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -214,9 +207,7 @@ def _validate_row(row: Mapping[str, Any]) -> None:
         if not isinstance(candidate, dict):
             raise ValueError("phase2a_independent_advisory_candidate_invalid")
         candidate_material = dict(candidate)
-        candidate_seal = str(
-            candidate_material.pop("candidate_record_content_sha256", "")
-        )
+        candidate_seal = str(candidate_material.pop("candidate_record_content_sha256", ""))
         rank = candidate.get("rank")
         if (
             candidate_seal != _sealed(candidate_material)
@@ -256,17 +247,11 @@ def _row_projection(
                 "canonical_citation": candidate.get("canonical_citation"),
                 "locator": candidate.get("locator"),
                 "span_bundle_sha256": candidate.get("span_bundle_sha256"),
-                "candidate_record_content_sha256": candidate.get(
-                    "candidate_record_content_sha256"
-                ),
+                "candidate_record_content_sha256": candidate.get("candidate_record_content_sha256"),
                 "identity_verified": candidate.get("identity_verified"),
                 "currentness_verified": candidate.get("currentness_verified"),
-                "later_treatment_review_required": candidate.get(
-                    "later_treatment_review_required"
-                ),
-                "already_in_sealed_candidate": candidate.get(
-                    "already_in_sealed_candidate"
-                ),
+                "later_treatment_review_required": candidate.get("later_treatment_review_required"),
+                "already_in_sealed_candidate": candidate.get("already_in_sealed_candidate"),
                 "lexical_tfidf_score": candidate.get("lexical_tfidf_score"),
                 "full_span_text_sha256": _sha256((text + "\n").encode()),
                 "full_span_character_count": len(text),
@@ -405,7 +390,9 @@ def _error_code(exc: BaseException) -> str:
         if _SAFE_REASON.fullmatch(value):
             return value
     value = re.sub(r"(?<!^)(?=[A-Z])", "_", type(exc).__name__).casefold()
-    return value if _SAFE_REASON.fullmatch(value) else "phase2a_independent_advisory_unknown_failure"
+    return (
+        value if _SAFE_REASON.fullmatch(value) else "phase2a_independent_advisory_unknown_failure"
+    )
 
 
 def _checkpoint_name(ordinal: int, row_id: str) -> str:
@@ -453,15 +440,12 @@ def _review_one(
         try:
             raw_scores, metrics = scorer(query, candidates)
             scores = list(raw_scores)
-            if (
-                len(scores) != len(candidates)
-                or any(
-                    isinstance(score, bool)
-                    or not isinstance(score, int | float)
-                    or not math.isfinite(float(score))
-                    or not 0.0 <= float(score) <= 1.0
-                    for score in scores
-                )
+            if len(scores) != len(candidates) or any(
+                isinstance(score, bool)
+                or not isinstance(score, int | float)
+                or not math.isfinite(float(score))
+                or not 0.0 <= float(score) <= 1.0
+                for score in scores
             ):
                 raise ValueError("phase2a_independent_advisory_scores_invalid")
             if not isinstance(metrics, Mapping):
@@ -827,9 +811,7 @@ def run_review(
         if result.get("schema") == "legalbot.phase2a.independent-advisory-held-row.v1"
     ]
     passed = [result for result in results if result not in held]
-    recommendation_counts = Counter(
-        str(result["advisory_recommendation"]) for result in passed
-    )
+    recommendation_counts = Counter(str(result["advisory_recommendation"]) for result in passed)
     final_rows = []
     for result in results:
         if result in held:
@@ -852,9 +834,7 @@ def run_review(
                     "ranked_candidates": result["ranked_candidates"],
                     "omitted_candidate_ranks": result["omitted_candidate_ranks"],
                     "model_metrics": result["model_metrics"],
-                    "checkpoint_content_sha256": result[
-                        "checkpoint_content_sha256"
-                    ],
+                    "checkpoint_content_sha256": result["checkpoint_content_sha256"],
                     "score_threshold_applied": False,
                     "candidate_relevance_qualified": False,
                     "owner_decision_required": True,
@@ -897,9 +877,7 @@ def run_review(
     )
     _write_exclusive(output_root / "OUTCOME.txt", outcome.encode())
     files = sorted(
-        path
-        for path in output_root.iterdir()
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in output_root.iterdir() if path.is_file() and path.name != "SHA256SUMS.txt"
     )
     _write_exclusive(
         output_root / "SHA256SUMS.txt",

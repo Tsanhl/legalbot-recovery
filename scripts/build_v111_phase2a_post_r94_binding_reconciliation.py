@@ -28,9 +28,7 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
-DEFAULT_R95_ROOT = (
-    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved"
-)
+DEFAULT_R95_ROOT = REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r95-substantive-owner-approved"
 DEFAULT_R83_BATCH = (
     REVIEW_ROOT
     / "LegalBot-Phase2AB-2026-08-25-r83-supplemental-proposition-verification"
@@ -52,22 +50,15 @@ DEFAULT_R86_BATCH = (
     / "OWNER-ISSUE-SOURCE-ADMISSION-BATCH.json"
 )
 DEFAULT_OUTPUT_ROOT = (
-    REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-26-r96-approved-binding-reconciliation"
+    REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-26-r96-approved-binding-reconciliation"
 )
 
-EXPECTED_R95_PACKAGE_DIGEST = (
-    "a2df2408785defdefa9622fb7e6df33be3306b2e8d4053b9015ef49a80091f53"
-)
-EXPECTED_R95_GAPS_DIGEST = (
-    "513c58f6eac13d9c51c99efe657d7809158392687143edd67a6b9832e4ecbb34"
-)
+EXPECTED_R95_PACKAGE_DIGEST = "a2df2408785defdefa9622fb7e6df33be3306b2e8d4053b9015ef49a80091f53"
+EXPECTED_R95_GAPS_DIGEST = "513c58f6eac13d9c51c99efe657d7809158392687143edd67a6b9832e4ecbb34"
 EXPECTED_R95_SUPPLEMENTAL_DIGEST = (
     "e29d8af0463d19ec7ff83640d796af90b4c460e193b17fa69293341ac19edddd"
 )
-EXPECTED_R95_UKSC_DIGEST = (
-    "3fb57743fa655344de0c233320d042a5e4428f28f6034500920d5f3fedabffc5"
-)
+EXPECTED_R95_UKSC_DIGEST = "3fb57743fa655344de0c233320d042a5e4428f28f6034500920d5f3fedabffc5"
 EXPECTED_SOURCE_BATCH_DIGESTS = frozenset(
     {
         "5410b7888ac72224a0828d43d0ddbc36768a636ea54ecb1687e576958108b28d",
@@ -75,9 +66,7 @@ EXPECTED_SOURCE_BATCH_DIGESTS = frozenset(
         "0ead28488b0fa6fc8c18cdfe532092b0ce397613361426b1991cbfe66ceb9fb6",
     }
 )
-EXPECTED_R86_DIGEST = (
-    "623836f3882d6c921920adb8af32bb8bd9cf3836bfb9ed20cdd4095fc627d9b3"
-)
+EXPECTED_R86_DIGEST = "623836f3882d6c921920adb8af32bb8bd9cf3836bfb9ed20cdd4095fc627d9b3"
 
 EXPECTED_TARGET_DATE_READY_ROWS = frozenset(
     {
@@ -104,8 +93,7 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -181,9 +169,9 @@ def _records(value: Mapping[str, Any], *, expected: int, code: str) -> list[dict
     return [dict(item) for item in records]
 
 
-def _verify_r95(root: Path) -> tuple[
-    list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]
-]:
+def _verify_r95(
+    root: Path,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     package = _load_object(root / "PACKAGE-INDEX.json")
     _verify_seal(
         package,
@@ -383,8 +371,7 @@ def _reconcile(
         str(item.get("source_decision", {}).get("source_review_content_sha256") or "")
         for item in approved_uksc
         if isinstance(item.get("source_decision"), dict)
-        and item.get("owner_outcome")
-        == "APPROVE_PROPOSITION_BINDINGS_AND_SOURCE_ADMISSION"
+        and item.get("owner_outcome") == "APPROVE_PROPOSITION_BINDINGS_AND_SOURCE_ADMISSION"
     }
     for digest in approved_review_digests:
         review = uksc_reviews.get(digest)
@@ -406,9 +393,7 @@ def _reconcile(
                     "official_file_sha256": claim["official_judgment_pdf_sha256"],
                     "proposition": claim["proposition"],
                     "exact_normalized_span_text": claim["exact_normalized_span_text"],
-                    "exact_normalized_span_sha256": claim[
-                        "exact_normalized_span_sha256"
-                    ],
+                    "exact_normalized_span_sha256": claim["exact_normalized_span_sha256"],
                     "paragraph_locator": claim["paragraph_locator"],
                     "source_review_content_sha256": digest,
                     "later_treatment_review_required": True,
@@ -438,9 +423,12 @@ def _reconcile(
         | EXPECTED_UKSC_CURRENTNESS_PENDING_ROWS
         | EXPECTED_PARTIAL_ROWS
     )
-    if observed != expected or frozenset(direct) != (
-        EXPECTED_TARGET_DATE_READY_ROWS | EXPECTED_UKSC_CURRENTNESS_PENDING_ROWS
-    ) or frozenset(partial) != EXPECTED_PARTIAL_ROWS:
+    if (
+        observed != expected
+        or frozenset(direct)
+        != (EXPECTED_TARGET_DATE_READY_ROWS | EXPECTED_UKSC_CURRENTNESS_PENDING_ROWS)
+        or frozenset(partial) != EXPECTED_PARTIAL_ROWS
+    ):
         raise ValueError("phase2a_post_r94_binding_row_inventory_invalid")
 
     resolved: list[dict[str, Any]] = []

@@ -17,23 +17,18 @@ ROOT = (
     / "LegalBot-Phase2AB-2026-08-26-r106-source-link-exact-span-advisory"
 )
 TARGET = ROOT / "DEBUG-STOP.json"
-EXPECTED_FINGERPRINT = (
-    "e846bdf51b25a9948494b8e2e0f9884e384d018f6a5a4c9999292fdc2902c283"
-)
+EXPECTED_FINGERPRINT = "e846bdf51b25a9948494b8e2e0f9884e384d018f6a5a4c9999292fdc2902c283"
 EXPECTED_ERROR = "structured_output_contract_invalid"
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -117,13 +112,11 @@ def seal_stop(root: Path = ROOT) -> dict[str, Any]:
     epoch = _load(epochs[0])
     epoch_digest = _verify(epoch, "epoch_content_sha256")
     if (
-        checkpoint.get("finding", {}).get("assessment")
-        != "HELD_FOR_DEBUG_BEFORE_ANY_THIRD_ATTEMPT"
+        checkpoint.get("finding", {}).get("assessment") != "HELD_FOR_DEBUG_BEFORE_ANY_THIRD_ATTEMPT"
         or checkpoint.get("same_failure_fingerprint_twice") is not True
         or [row["attempt"] for row in diagnostic_rows] != [1, 2]
         or {row["error_code"] for row in diagnostic_rows} != {EXPECTED_ERROR}
-        or {row["failure_fingerprint"] for row in diagnostic_rows}
-        != {EXPECTED_FINGERPRINT}
+        or {row["failure_fingerprint"] for row in diagnostic_rows} != {EXPECTED_FINGERPRINT}
         or epoch.get("epoch_error_code") != "keyboard_interrupt"
         or epoch.get("processed_count") != 1
     ):
@@ -175,13 +168,9 @@ def seal_stop(root: Path = ROOT) -> dict[str, Any]:
     artifact = {**material, "debug_stop_content_sha256": _sealed(material)}
     _write(target, _pretty_json(artifact))
     files = sorted(
-        path
-        for path in root.rglob("*")
-        if path.is_file() and path.name != "SHA256SUMS.txt"
+        path for path in root.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt"
     )
-    sums = "".join(
-        f"{_sha256_file(path)}  {path.relative_to(root)}\n" for path in files
-    )
+    sums = "".join(f"{_sha256_file(path)}  {path.relative_to(root)}\n" for path in files)
     _write(root / "SHA256SUMS.txt", sums.encode("utf-8"))
     return artifact
 
@@ -191,9 +180,7 @@ def main() -> None:
     print(
         json.dumps(
             {
-                "debug_stop_content_sha256": result[
-                    "debug_stop_content_sha256"
-                ],
+                "debug_stop_content_sha256": result["debug_stop_content_sha256"],
                 "failure_fingerprint": result["failure_fingerprint"],
                 "status": result["status"],
                 "phase2b_authorized": False,

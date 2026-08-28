@@ -21,22 +21,17 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OWNER_REVIEW_ROOT = PROJECT_ROOT / "data" / "evaluations" / "phase2a-owner-review"
-SOURCE_ROOT = (
-    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-24-r47-consolidated-owner-gate"
-)
+SOURCE_ROOT = OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-24-r47-consolidated-owner-gate"
 DEFAULT_JUDGMENTS = SOURCE_ROOT / "COMPLETE-JUDGMENT-LATER-TREATMENT-REGISTER-20.json"
 DEFAULT_SOURCES = SOURCE_ROOT / "SOURCE-CUSTODY-AND-ADMISSION-REGISTER.json"
 DEFAULT_OUTPUT = (
-    OWNER_REVIEW_ROOT
-    / "LegalBot-Phase2AB-2026-08-25-r54-no-reliance-judgment-advisory"
+    OWNER_REVIEW_ROOT / "LegalBot-Phase2AB-2026-08-25-r54-no-reliance-judgment-advisory"
 )
 
 EXPECTED_JUDGMENTS_CONTENT_SHA256 = (
     "f59c682b1162300fed741a226758d04492a9d39f796e336fca1788e019c336a4"
 )
-EXPECTED_SOURCES_CONTENT_SHA256 = (
-    "3439b5f84ac6f0572fb74f5215f063582efe5c550b0fc4d521a4d7979435d384"
-)
+EXPECTED_SOURCES_CONTENT_SHA256 = "3439b5f84ac6f0572fb74f5215f063582efe5c550b0fc4d521a4d7979435d384"
 EXPECTED_NO_RELIANCE_SOURCE_VERSION_IDS = frozenset(
     {
         "source-version-17d7f9e7b7a587e6db6958328ed9ec16b827b40a",
@@ -63,15 +58,12 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
 def _pretty_json(value: Any) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def _sha256(raw: bytes) -> str:
@@ -152,12 +144,11 @@ def _no_reliance_records(judgments: Mapping[str, Any]) -> list[dict[str, Any]]:
             ):
                 raise ValueError("phase2a_no_reliance_zero_reference_boundary_invalid")
             selected.append(row)
-    if (
-        {row["judgment_record"]["source_version_id"] for row in selected}
-        != EXPECTED_NO_RELIANCE_SOURCE_VERSION_IDS
-        or {row["judgment_record"]["neutral_citation"] for row in selected}
-        != EXPECTED_NO_RELIANCE_CITATIONS
-    ):
+    if {
+        row["judgment_record"]["source_version_id"] for row in selected
+    } != EXPECTED_NO_RELIANCE_SOURCE_VERSION_IDS or {
+        row["judgment_record"]["neutral_citation"] for row in selected
+    } != EXPECTED_NO_RELIANCE_CITATIONS:
         raise ValueError("phase2a_no_reliance_inventory_fingerprint_invalid")
     return selected
 
@@ -261,9 +252,7 @@ def build_no_reliance_advisory(
             "phase2b_authorized": False,
             "development30_authorized": False,
         }
-        judgment_recommendations.append(
-            {**material, "record_content_sha256": _sealed(material)}
-        )
+        judgment_recommendations.append({**material, "record_content_sha256": _sealed(material)})
 
     lead_recommendations: list[dict[str, Any]] = []
     for lead in quarantined_leads:
@@ -295,9 +284,7 @@ def build_no_reliance_advisory(
             "phase2b_authorized": False,
             "development30_authorized": False,
         }
-        lead_recommendations.append(
-            {**material, "record_content_sha256": _sealed(material)}
-        )
+        lead_recommendations.append({**material, "record_content_sha256": _sealed(material)})
 
     material = {
         "schema": "legalbot.v111.phase2a.no-reliance-judgment-advisory.v1",
@@ -361,9 +348,7 @@ def main() -> None:
             {
                 "output_root": str(args.output_root),
                 "status": result["status"],
-                "judgment_recommendation_count": result[
-                    "judgment_recommendation_count"
-                ],
+                "judgment_recommendation_count": result["judgment_recommendation_count"],
                 "dependent_quarantine_lead_recommendation_count": result[
                     "dependent_quarantine_lead_recommendation_count"
                 ],

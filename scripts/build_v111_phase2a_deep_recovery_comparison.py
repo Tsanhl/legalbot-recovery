@@ -34,23 +34,16 @@ DEFAULT_OUTPUT_ROOT = (
     PROJECT_ROOT
     / "data/evaluations/phase2a-owner-review/LegalBot-Phase2AB-2026-08-24-r43-deep-comparison"
 )
-EXPECTED_ORIGINAL_DIGEST = (
-    "3f7ad672f0e35068919ca1d27483d5aa1e885ba1533800402b718cfafd6d670f"
-)
-EXPECTED_DEEP_SOURCE_DIGEST = (
-    "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
-)
-EXPECTED_DEEP_RANKING_DIGEST = (
-    "74e4b7c0cdda942d7da20db5360150a5e3b3fbcfa2030ca9930db7199175e680"
-)
+EXPECTED_ORIGINAL_DIGEST = "3f7ad672f0e35068919ca1d27483d5aa1e885ba1533800402b718cfafd6d670f"
+EXPECTED_DEEP_SOURCE_DIGEST = "692cdafd0e10f8b864a96cc35165cb20441dc099b52a2f2cad90b38befcbbbf1"
+EXPECTED_DEEP_RANKING_DIGEST = "74e4b7c0cdda942d7da20db5360150a5e3b3fbcfa2030ca9930db7199175e680"
 EXPECTED_ROW_COUNT = 176
 DIAGNOSTIC_TRIAGE_FLOOR = 0.5
 
 
 def _canonical_json(value: Any) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode()
 
 
@@ -113,9 +106,7 @@ def _candidate_summary(candidate: Mapping[str, Any]) -> dict[str, Any]:
         "reranker_score": candidate.get("reranker_score"),
         "identity_verified": candidate.get("identity_verified"),
         "currentness_verified": candidate.get("currentness_verified"),
-        "later_treatment_review_required": candidate.get(
-            "later_treatment_review_required"
-        ),
+        "later_treatment_review_required": candidate.get("later_treatment_review_required"),
         "already_in_sealed_candidate": candidate.get("already_in_sealed_candidate"),
     }
 
@@ -169,12 +160,10 @@ def build_comparison(
     deep_source_rows = deep_source.get("rows")
     deep_rows = deep_ranking.get("rows")
     if (
-        original.get("schema")
-        != "legalbot.phase2a.independent-reranker-advisory-448.v1"
+        original.get("schema") != "legalbot.phase2a.independent-reranker-advisory-448.v1"
         or original.get("row_count") != 448
         or original.get("held_for_debug_count") != 0
-        or deep_source.get("schema")
-        != "legalbot.v111.phase2a.deep-current-source-recovery-176.v1"
+        or deep_source.get("schema") != "legalbot.v111.phase2a.deep-current-source-recovery-176.v1"
         or deep_source.get("row_count") != EXPECTED_ROW_COUNT
         or deep_ranking.get("schema")
         != "legalbot.phase2a.independent-reranker-deep-recovery-176.v1"
@@ -185,8 +174,7 @@ def build_comparison(
         or not isinstance(deep_rows, list)
         or len(deep_source_rows) != EXPECTED_ROW_COUNT
         or len(deep_rows) != EXPECTED_ROW_COUNT
-        or original.get("runtime_identity_sha256")
-        != deep_ranking.get("runtime_identity_sha256")
+        or original.get("runtime_identity_sha256") != deep_ranking.get("runtime_identity_sha256")
     ):
         raise ValueError("phase2a_deep_comparison_source_boundary_invalid")
     original_by_id = {
@@ -194,12 +182,8 @@ def build_comparison(
         for row in original_rows
         if isinstance(row, Mapping) and row.get("status") != "HELD_FOR_DEBUG"
     }
-    source_by_id = {
-        str(row["row_id"]): row for row in deep_source_rows if isinstance(row, Mapping)
-    }
-    deep_by_id = {
-        str(row["row_id"]): row for row in deep_rows if isinstance(row, Mapping)
-    }
+    source_by_id = {str(row["row_id"]): row for row in deep_source_rows if isinstance(row, Mapping)}
+    deep_by_id = {str(row["row_id"]): row for row in deep_rows if isinstance(row, Mapping)}
     if set(source_by_id) != set(deep_by_id) or len(deep_by_id) != EXPECTED_ROW_COUNT:
         raise ValueError("phase2a_deep_comparison_row_set_mismatch")
 
@@ -242,10 +226,8 @@ def build_comparison(
             != deep_top.get("source_version_id"),
             "span_changed": original_top.get("span_bundle_sha256")
             != deep_top.get("span_bundle_sha256"),
-            "original_below_diagnostic_triage_floor": original_score
-            < DIAGNOSTIC_TRIAGE_FLOOR,
-            "deep_below_diagnostic_triage_floor": deep_score
-            < DIAGNOSTIC_TRIAGE_FLOOR,
+            "original_below_diagnostic_triage_floor": original_score < DIAGNOSTIC_TRIAGE_FLOOR,
+            "deep_below_diagnostic_triage_floor": deep_score < DIAGNOSTIC_TRIAGE_FLOOR,
             "advisory_review_track": track,
             "scores_are_advisory_not_qualification": True,
             "owner_decision_required": True,
@@ -263,9 +245,7 @@ def build_comparison(
     metrics = {
         "row_count": len(rows),
         "score_movement_counts": dict(sorted(score_movements.items())),
-        "authority_identity_changed_count": sum(
-            row["authority_identity_changed"] for row in rows
-        ),
+        "authority_identity_changed_count": sum(row["authority_identity_changed"] for row in rows),
         "source_version_changed_count": sum(row["source_version_changed"] for row in rows),
         "span_changed_count": sum(row["span_changed"] for row in rows),
         "original_below_diagnostic_triage_floor_count": sum(
@@ -315,8 +295,7 @@ def build_comparison(
     checksum_path = output_root / "SHA256SUMS.txt"
     checksum_path.write_text(
         "".join(
-            f"{_sha256_file(path)}  {path.name}\n"
-            for path in sorted((artifact_path, outcome_path))
+            f"{_sha256_file(path)}  {path.name}\n" for path in sorted((artifact_path, outcome_path))
         )
     )
     os.chmod(checksum_path, 0o600)

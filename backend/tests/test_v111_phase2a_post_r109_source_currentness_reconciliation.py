@@ -24,8 +24,7 @@ def test_reconciliation_is_complete_atomic_and_gate_closed(tmp_path: Path) -> No
     assert artifact["same_adapter_false_negative_count"] == 4
     assert artifact["source_admission_proposal_count"] == 5
     assert {
-        proposal["authority_identity_id"]
-        for proposal in artifact["source_admission_proposals"]
+        proposal["authority_identity_id"] for proposal in artifact["source_admission_proposals"]
     } == {
         "neutral-citation:[2021] UKSC 3",
         "neutral-citation:[2025] UKSC 22",
@@ -62,16 +61,13 @@ def test_every_positive_binding_is_exact_and_material_facts_are_supported(
     for proposal in artifact["source_admission_proposals"]:
         assert proposal["exact_proposition_bindings"]
         for binding in proposal["exact_proposition_bindings"]:
-            assert not builder.non_atomic_material_claim_reasons(
-                binding["atomic_proposition"]
-            )
+            assert not builder.non_atomic_material_claim_reasons(binding["atomic_proposition"])
             proposition_facts = {
                 (fact["kind"], fact["normalized_value"])
                 for fact in binding["proposition_material_facts"]
             }
             span_facts = {
-                (fact["kind"], fact["normalized_value"])
-                for fact in binding["span_material_facts"]
+                (fact["kind"], fact["normalized_value"]) for fact in binding["span_material_facts"]
             }
             assert proposition_facts <= span_facts
             assert binding["quote_end"] > binding["quote_start"]
@@ -123,9 +119,7 @@ def test_main_persists_failure_before_reraising(
         builder.main(["--output-root", str(output)])
 
     failure = json.loads((output / "FAILURE.json").read_bytes())
-    assert failure["affected_stage"] == (
-        "PHASE2A_POST_R109_SOURCE_CURRENTNESS_RECONCILIATION"
-    )
+    assert failure["affected_stage"] == ("PHASE2A_POST_R109_SOURCE_CURRENTNESS_RECONCILIATION")
     assert failure["root_cause_status"] == "DEBUG_REQUIRED"
     assert failure["source_admission_authorized"] is False
     assert failure["phase2b_authorized"] is False

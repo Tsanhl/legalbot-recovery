@@ -82,11 +82,7 @@ def _authority_identity(*, url: str, title: str, citation: str) -> str | None:
         and parts[0] in {"ukpga", "uksi", "eur"}
     ):
         end = next(
-            (
-                index
-                for index, part in enumerate(parts)
-                if re.fullmatch(r"\d{4}-\d{2}-\d{2}", part)
-            ),
+            (index for index, part in enumerate(parts) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", part)),
             len(parts),
         )
         identity_parts = parts[:end]
@@ -135,9 +131,7 @@ def _candidate_assessment(
     }
 
 
-def _exact_component_evidence(
-    *, component: str, check: Mapping[str, Any]
-) -> dict[str, Any]:
+def _exact_component_evidence(*, component: str, check: Mapping[str, Any]) -> dict[str, Any]:
     anchors = list(check.get("exact_anchor_hits") or [])
     anchors.sort(
         key=lambda item: (
@@ -150,8 +144,7 @@ def _exact_component_evidence(
         raise ValueError("phase2a_materiality_exact_component_anchor_missing")
     anchor = anchors[0]
     documents = {
-        str(item.get("target_id") or ""): item
-        for item in check.get("document_hits") or []
+        str(item.get("target_id") or ""): item for item in check.get("document_hits") or []
     }
     document = documents.get(str(anchor.get("target_id") or ""))
     if document is None:
@@ -171,9 +164,7 @@ def _exact_component_evidence(
     }
 
 
-def _corrected_component_evidence(
-    *, component: str, check: Mapping[str, Any]
-) -> dict[str, Any]:
+def _corrected_component_evidence(*, component: str, check: Mapping[str, Any]) -> dict[str, Any]:
     corrections = list(check.get("stated_locator_anchor_corrections_if_not_exact") or [])
     if not corrections:
         raise ValueError("phase2a_materiality_corrected_component_span_missing")
@@ -213,9 +204,7 @@ def _corrected_rows(
             continue
         if row_id in SUPPLEMENTAL_ROW_IDS:
             continue
-        components = rebinding._components(
-            str(record.get("proposed_exact_proposition_text") or "")
-        )
+        components = rebinding._components(str(record.get("proposed_exact_proposition_text") or ""))
         checks = list(record.get("component_checks") or [])
         if len(components) != len(checks):
             raise ValueError("phase2a_materiality_component_inventory_mismatch")
@@ -243,17 +232,14 @@ def _corrected_rows(
                 }
             )
         source_admission_required = any(
-            item["candidate_coverage"]["owner_source_admission_required"]
-            for item in evidence
+            item["candidate_coverage"]["owner_source_admission_required"] for item in evidence
         )
         material = {
             "row_id": row_id,
             "official_source_title": record.get("official_source_title"),
             "official_citation": record.get("official_citation"),
             "stated_official_legal_locator": record.get("stated_official_legal_locator"),
-            "prior_proposed_proposition_text": record.get(
-                "proposed_exact_proposition_text"
-            ),
+            "prior_proposed_proposition_text": record.get("proposed_exact_proposition_text"),
             "component_count": len(evidence),
             "component_evidence": evidence,
             "advisory_recommendation": (
@@ -299,27 +285,17 @@ def _supplemental_rows(batch: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "candidate_coverage": {
                     "authority_identity": proposal["authority_identity"],
                     "assessment": proposal["candidate_coverage_assessment"],
-                    "candidate_source_version_id": proposal[
-                        "candidate_source_version_id"
-                    ],
-                    "candidate_source_as_of_date": proposal[
-                        "candidate_source_as_of_date"
-                    ],
+                    "candidate_source_version_id": proposal["candidate_source_version_id"],
+                    "candidate_source_as_of_date": proposal["candidate_source_as_of_date"],
                     "candidate_source_currentness_verified": proposal[
                         "candidate_source_currentness_verified"
                     ],
-                    "owner_source_admission_required": proposal[
-                        "owner_source_admission_required"
-                    ],
+                    "owner_source_admission_required": proposal["owner_source_admission_required"],
                 },
                 "advisory_recommendation": proposal["advisory_recommendation"],
                 "owner_materiality_decision": None,
-                "owner_source_admission_required": proposal[
-                    "owner_source_admission_required"
-                ],
-                "owner_source_admission_decision": proposal[
-                    "owner_source_admission_decision"
-                ],
+                "owner_source_admission_required": proposal["owner_source_admission_required"],
+                "owner_source_admission_decision": proposal["owner_source_admission_decision"],
                 "owner_comments": None,
                 "gold_change_authorized": False,
                 "source_admission_authorized": False,
@@ -391,9 +367,7 @@ def build(
             and coverage.get("authority_identity")
         }
     )
-    recommendation_counts = Counter(
-        str(item["advisory_recommendation"]) for item in rows
-    )
+    recommendation_counts = Counter(str(item["advisory_recommendation"]) for item in rows)
     material = {
         "schema": "legalbot.v111.phase2a.owner-materiality-batch-54.v1",
         "status": "OWNER_ROW_MATERIALITY_DECISIONS_REQUIRED_NOT_APPLIED",
@@ -462,12 +436,15 @@ def _persist_failure(output_root: Path, exc: BaseException) -> None:
         }
         _write_exclusive(
             path,
-            (json.dumps(
-                {**material, "failure_content_sha256": _sealed(material)},
-                ensure_ascii=False,
-                sort_keys=True,
-                indent=2,
-            ) + "\n").encode(),
+            (
+                json.dumps(
+                    {**material, "failure_content_sha256": _sealed(material)},
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    indent=2,
+                )
+                + "\n"
+            ).encode(),
         )
     except Exception:
         return
