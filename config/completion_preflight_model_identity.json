@@ -1,0 +1,10 @@
+{
+  "file_manifest_sha256": "17c7421bc514d5e9eef293aeedc7ec3e8c4712391aac1eec44eec4add6b97470",
+  "model_id": "mlx-community/Qwen3.5-9B-4bit",
+  "model_revision": "8b2b98c00a6b4d291155e4890773ca8f769aee53",
+  "post_trained": true,
+  "quantization_bits": 4,
+  "runtime_model_sha256": "1d4172150e0b972bbf600bb42e1dc0f293cf4878a6abe221fe664ad353a5ed1b",
+  "schema": "legalbot.completion-trusted-model-identity.v1",
+  "seal_sha256": "4bb625aeb1ad76cf1a15508c339a421402b0f6fbf5363b8593668fa38a71bf05"
+}

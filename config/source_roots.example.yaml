@@ -1,0 +1,8 @@
+# Copy this file to source_roots.local.yaml if the default locations change.
+# It is deliberately excluded from prompts and logs.
+roots:
+  - ${HOME}/Desktop/Law
+  - ${LEGALBOT_PROJECT_ROOT}/sources/materials-2026-08-12
+import_policy:
+  content_only: true
+  old_projects: forbidden_without_explicit_owner_authorization

@@ -1,0 +1,10 @@
+{
+  "schema": "legalbot.live60-independent-review-records.v1",
+  "as_of_date": "2026-08-16",
+  "independent_second_review_status": "not_required",
+  "independent_second_reviewer_role": null,
+  "ai_second_reviewer_forbidden": true,
+  "adjudication_records": [],
+  "seals_expert_gold": false,
+  "note": "Owner is the one primary England-and-Wales reviewer. No second-reviewer identity was invented."
+}

@@ -1,0 +1,250 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "answer_artifact_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer Artifact Id"
+    },
+    "answer_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer Sha256"
+    },
+    "case_id": {
+      "pattern": "^(?:live30|live60)-q[0-9]{2}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "completion_duration_ms": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completion Duration Ms"
+    },
+    "citation_passed": {
+      "title": "Citation Passed",
+      "type": "boolean"
+    },
+    "currentness_passed": {
+      "title": "Currentness Passed",
+      "type": "boolean"
+    },
+    "evidence_passed": {
+      "title": "Evidence Passed",
+      "type": "boolean"
+    },
+    "expected_research_route": {
+      "enum": [
+        "sectioned",
+        "full_enquiry"
+      ],
+      "title": "Expected Research Route",
+      "type": "string"
+    },
+    "failure_codes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Failure Codes",
+      "type": "array"
+    },
+    "issue_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Issue Ids",
+      "type": "array"
+    },
+    "injection_passed": {
+      "title": "Injection Passed",
+      "type": "boolean"
+    },
+    "jurisdiction_passed": {
+      "title": "Jurisdiction Passed",
+      "type": "boolean"
+    },
+    "job_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Job Id"
+    },
+    "knowledge_gap_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Knowledge Gap Ids",
+      "type": "array"
+    },
+    "outcome_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Outcome Id",
+      "type": "string"
+    },
+    "oscola_passed": {
+      "title": "Oscola Passed",
+      "type": "boolean"
+    },
+    "pass_number": {
+      "const": 1,
+      "title": "Pass Number",
+      "type": "integer"
+    },
+    "released": {
+      "title": "Released",
+      "type": "boolean"
+    },
+    "release_gate_report_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Release Gate Report Sha256"
+    },
+    "runtime_release_state": {
+      "anyOf": [
+        {
+          "enum": [
+            "verified_full",
+            "verified_concise",
+            "verified_limited"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runtime Release State"
+    },
+    "requested_word_target": {
+      "maximum": 10000,
+      "minimum": 1000,
+      "title": "Requested Word Target",
+      "type": "integer"
+    },
+    "run_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "run_plan_disposition": {
+      "const": "generate_once",
+      "title": "Run Plan Disposition",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.live60-execution-outcome.v1",
+      "default": "legalbot.live60-execution-outcome.v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "terminal_state": {
+      "enum": [
+        "released",
+        "verified_limited",
+        "held",
+        "system_error"
+      ],
+      "title": "Terminal State",
+      "type": "string"
+    },
+    "trace_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Trace Id"
+    },
+    "privacy_passed": {
+      "title": "Privacy Passed",
+      "type": "boolean"
+    },
+    "word_count": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Word Count"
+    }
+  },
+  "required": [
+    "outcome_id",
+    "run_id",
+    "case_id",
+    "pass_number",
+    "run_plan_disposition",
+    "requested_word_target",
+    "expected_research_route",
+    "terminal_state",
+    "released",
+    "privacy_passed",
+    "evidence_passed",
+    "currentness_passed",
+    "jurisdiction_passed",
+    "citation_passed",
+    "injection_passed",
+    "oscola_passed",
+    "completed_at"
+  ],
+  "title": "Live60ExecutionOutcome",
+  "type": "object"
+}

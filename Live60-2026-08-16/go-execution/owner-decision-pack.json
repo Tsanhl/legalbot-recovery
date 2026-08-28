@@ -1,0 +1,41 @@
+{
+  "schema": "legalbot.live60-owner-decision-pack.v1",
+  "as_of_date": "2026-08-16",
+  "terminal_state": "HOLD — IRREDUCIBLE BLOCKERS",
+  "ai_cannot_sign_o04": true,
+  "ai_cannot_seal_expert_gold": true,
+  "ai_cannot_promote_active": true,
+  "optional_selected_30_fallback_prepared": false,
+  "optional_selected_30_fallback_note": "Not applied. Full 585 remains the contract until you explicitly amend it.",
+  "decisions_required_from_owner": [
+    {
+      "id": "D-01",
+      "action": "Tick exact catalogue or repair spans for each issue in final-reviewer-workbook.xlsx using validate_live60_issue_tick.py. Mechanical exact-match only after you bind the span.",
+      "smallest_close": "Start with the 7 selected cases that already have a catalogue span on every issue: live30-q02, q06, q07, q15, q16, q17, live60-q53.",
+      "cannot_be_done_by_ai": true
+    },
+    {
+      "id": "D-02",
+      "action": "Qualify or hold the four statutes after reading four-statute-pack.json. Official XML was fetched; local hashes are self-consistent; s 14A(10) and IPFDA s 1 repairs exist as repair-span-* identities. Do not treat mechanical hash recompute as qualified.",
+      "smallest_close": "Owner tick of contiguous repair spans plus extent/commencement/effects.",
+      "cannot_be_done_by_ai": true
+    },
+    {
+      "id": "D-03",
+      "action": "Proposition-level later-treatment review for every relied-on case-law span. Owner baseline 'no contrary authority' is not a citator result.",
+      "smallest_close": "For each proposed judgment paragraph: holding/obiter, hierarchy, later treatment through run date, contrary/limiting IDs.",
+      "cannot_be_done_by_ai": true
+    },
+    {
+      "id": "D-04",
+      "action": "After overlay is genuinely sealable, accept a run-date candidate, then explicitly authorise ACTIVE promotion, rollback proof, browser recovery, and O-04.",
+      "smallest_close": "Do not ask the agent to write ACTIVE.json or O-04.",
+      "cannot_be_done_by_ai": true
+    }
+  ],
+  "no_decision_needed": [
+    "Which run-plan SHA is authoritative: record both. File SHA 3c03c07a… and object seal 2bfccfc1… are the same frozen plan.",
+    "Whether to coerce routes to sectioned: no. Pack uses expected_research_route.",
+    "Whether to ingest the Desktop Law folder as a parallel tree: no. 3005 files compared to the live catalogue; 0 Live60-relevant files were unindexed. Two zip archives are private-teaching and correctly out of the authority lane."
+  ]
+}

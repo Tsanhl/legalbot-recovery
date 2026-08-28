@@ -1,0 +1,17 @@
+{
+  "fixture_search_hits_count": 0,
+  "phase4b_ids": [
+    "ocr-014",
+    "ocr-019"
+  ],
+  "rows": [
+    {
+      "id": "ocr-014",
+      "outcome": "outcome_3_fixture_unavailable"
+    },
+    {
+      "id": "ocr-019",
+      "outcome": "outcome_3_fixture_unavailable"
+    }
+  ]
+}

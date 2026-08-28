@@ -1,0 +1,113 @@
+{
+  "authorizing": false,
+  "captured_at": "2026-08-22T08:17:02Z",
+  "checkpoint": {
+    "commit": "6f6cb45ee46d6bfabe937dfaa5bb6deb13960bdb",
+    "tag": "v1.11-integration-baseline-20260822-r6",
+    "tree": "2b2c36a75be984a6bf5995cd9940edcc54920242"
+  },
+  "diagnostic_method": {
+    "answer_model_invoked": false,
+    "candidate_mutated": false,
+    "full_r6_reattestation_repeated": false,
+    "gold_or_threshold_changed": false,
+    "method": "Read the immutable r6 attempt and perform one non-authorizing prepare-only replay for dev-trustee-act-s1 against the exact sealed candidate/date/models. The replay stopped before Qwen and recorded lexical/vector fusion and admission. A second prepare-only check exercised the generic candidate-manifest title/section route and also stopped before Qwen.",
+    "ranking_depth_changed": false
+  },
+  "failed_attempt": {
+    "attempt_id": "ae8e36844034bd91a8b29715996066b3",
+    "candidate_build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "completed_query_count": 24,
+    "failed_gates": [
+      "aggregate.primary_must_hit_recall_at_5",
+      "split.development.positive_recall_at_10",
+      "split.development.primary_must_hit_recall_at_5"
+    ],
+    "metrics": {
+      "development": {
+        "mrr": 0.890625,
+        "primary_must_hit_recall_at_5": 0.9375,
+        "recall_at_10": 0.9375,
+        "recall_at_5": 0.9375
+      },
+      "overall": {
+        "hit_at_10_count": 23,
+        "hit_at_5_count": 23,
+        "mrr": 0.90625,
+        "positive_count": 24,
+        "primary_must_hit_recall_at_5": 0.9583333333333334,
+        "recall_at_10": 0.9583333333333334,
+        "recall_at_5": 0.9583333333333334
+      },
+      "promotion": {
+        "go": true,
+        "mrr": 0.9375,
+        "primary_must_hit_recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_5": 1.0
+      }
+    },
+    "report_file_sha256": "2385c4fb4f4dca90460640613535d5ced1960fbb7fadb2567f249b6036e316d9",
+    "report_path": "data/evaluations/retrieval/current-law-ew-full-fp16-v111-20260818-a/v1.1-reattest-attempt-6f6cb45ee46d6bfa-ae8e36844034bd91a8b29715996066b3-result.json",
+    "report_payload_sha256": "a50b1c4d028f84623dd179ad5aad008a29d2292b6e9c93cdafd8f09bcdca6289",
+    "report_self_seal_sha256": "a4ca86fd2ef0abf98eb4aaf51c949bb60b327a360b732016c642feddfcc5cfc1",
+    "retrieval_call_count": 24,
+    "start_receipt_file_sha256": "3ea861198e3bf5b75da2f2a2fc2d2d69791ddbe951a8a4c037dc79eed4ab1c18"
+  },
+  "findings": {
+    "candidate_bound_date_applied": "2026-08-14",
+    "contamination": {
+      "private_path_hits": 0,
+      "teaching_or_assessment_hits": 0,
+      "wrong_version_hits": 0
+    },
+    "miss": {
+      "case_id": "dev-trustee-act-s1",
+      "expected_locator": "section 1",
+      "expected_source_identity": "ukpga:2000:29:latest-available@2026-08-14",
+      "fused_gold_chunk_id": "chunk-c27e417b3d13e833d147fa27a0317363a1742f64",
+      "fused_gold_content_sha256": "963e01fe187867c5856da1cbe0ac67e233e518831738290d19016f34faea5cc2",
+      "fused_gold_locator": "s 1(1) chapeau",
+      "fused_gold_rank": 18,
+      "gold_admitted_to_reranker": false,
+      "r6_admitted_count": 24,
+      "r6_fused_count": 32,
+      "same_source_chunks_admitted_before_gold": 8
+    },
+    "root_cause": "The query explicitly named Trustee Act 2000 section 1, but the generic hybrid path did not use the sealed candidate's statute title and locator metadata as a structured retrieval coordinate. Eight higher-fused off-locator chunks from the same Act filled the unchanged per-source admission cap before the section 1 gold at fused rank 18, so Qwen never saw the required provision.",
+    "stage": "pre-rerank explicit source/locator routing and admission"
+  },
+  "invariants_after_failure": {
+    "active_index_build_count": 0,
+    "active_pointer_absent": true,
+    "catalogue_sha256": "206932a63a647f59fa448beacc3c2b80022ebcde074a4e5fe370d6307ca73fcf",
+    "candidate_row_count": 1,
+    "passing_attestation_history_count": 0,
+    "previous_pointer_absent": true,
+    "queued_or_running_job_count": 0,
+    "selected_attestation_count": 0
+  },
+  "r7_correction": {
+    "benchmark_case_ids_or_gold_used_for_resolution": false,
+    "candidate_rebuild_required": false,
+    "description": "For an unambiguous query that names one legislation title and one section, resolve the title only from the cryptographically validated approved-source manifest, read only that sealed source, retain only the named section and descendants, then run the unchanged Qwen reranker within the existing 40-candidate ceiling. Ambiguous, unknown or missing references fail closed or use the unchanged generic hybrid path as applicable.",
+    "diagnostic_result": {
+      "all_explicit_legislation_cases_resolved": 18,
+      "all_four_frozen_section_1_spans_present": true,
+      "generic_candidate_depth_changed": false,
+      "matched_chunk_count": 4,
+      "rerank_candidate_limit": 40,
+      "route": "exact_legislation_reference",
+      "source_manifest_body_chunk_count": 471
+    },
+    "embedding_changed": false,
+    "generic_per_source_cap_changed": false,
+    "gold_changed": false,
+    "query_changed": false,
+    "reranker_changed": false,
+    "thresholds_changed": false,
+    "top_k_changed": false
+  },
+  "schema": "legalbot.v111-phase1c-r6-retrieval-diagnosis.v1",
+  "status": "diagnosed_for_new_checkpoint"
+}

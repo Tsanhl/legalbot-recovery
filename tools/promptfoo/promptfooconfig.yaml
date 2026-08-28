@@ -1,0 +1,7 @@
+# Isolated Promptfoo stub. Output stays under the ignored evaluation tree.
+outputPath: ../../data/evaluations/tools/promptfoo/results.json
+prompts: []
+providers: []
+tests: []
+evaluateOptions:
+  maxConcurrency: 1

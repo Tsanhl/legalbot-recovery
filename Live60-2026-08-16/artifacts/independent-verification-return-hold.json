@@ -1,0 +1,76 @@
+{
+  "active_promoted": false,
+  "decision": "return_hold",
+  "eligible_for_training": false,
+  "expert_approved": false,
+  "explicit_knowledge_gap_issues": 585,
+  "explicit_limited_issues": 0,
+  "explicit_qualified_issues": 0,
+  "held_provision_summary": [
+    {
+      "difference_class": "fetch_disabled",
+      "disposition": "hold",
+      "held_id": "held-provision-01",
+      "structural_defect_count": 0,
+      "title": "Limitation Act 1980 section 2"
+    },
+    {
+      "difference_class": "fetch_disabled",
+      "disposition": "return_hold_non_contiguous_or_editorial",
+      "held_id": "held-provision-02",
+      "structural_defect_count": 1,
+      "title": "Limitation Act 1980 section 14A"
+    },
+    {
+      "difference_class": "fetch_disabled",
+      "disposition": "hold",
+      "held_id": "held-provision-03",
+      "structural_defect_count": 0,
+      "title": "Trustee Act 2000 section 1"
+    },
+    {
+      "difference_class": "fetch_disabled",
+      "disposition": "return_hold_non_contiguous_or_editorial",
+      "held_id": "held-provision-04",
+      "structural_defect_count": 3,
+      "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+    }
+  ],
+  "issue_identity_pass": "585/585",
+  "local_chunk_hash_pass": "41/41",
+  "missing_before_overlay": [
+    "reconciled_run_identity_already_bound_in_corrected_pack",
+    "official_page_ticks_1_to_4_recorded_not_overlay_seal",
+    "585_issue_evidence_fields_owner_reviewing",
+    "case_law_proposition_currentness",
+    "qualified_reviewer_seal_on_overlay",
+    "machine_readable_expert_qualification_json",
+    "candidate_stage_a_active_rollback_browser_readiness_o04"
+  ],
+  "o04_authorised": false,
+  "routing_integrity": {
+    "all_cases": {
+      "full_enquiry": 27,
+      "sectioned": 33
+    },
+    "prior_defect": "expected_drafting_route_was_wrongly_shown_as_execution_route",
+    "route_field": "expected_research_route",
+    "selected_cases": {
+      "full_enquiry": 15,
+      "sectioned": 15
+    },
+    "status": "corrected_in_regenerated_pack"
+  },
+  "run_identity": {
+    "registry_canonical_sha256": "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a",
+    "run_plan_file_sha256": "3c03c07a4fdd3a7767472f83c98b079334b302550efb949c79c120eca37a21f1",
+    "run_plan_object_seal_sha256": "2bfccfc1e9b4638f33381ef82982e7683ed352246ade6e97e19e1369214f6d83",
+    "run_plan_sha_explanation_code": "workbook_uses_run_plan_file_digest_checklist_uses_object_seal",
+    "run_plan_sha_mismatch_is_false_positive": true,
+    "suite_id": "live-evaluation-60-v1",
+    "suite_manifest_seal_sha256": "50d967c4d490a05527fb5610b2eae19014005c22092210ec6b23f92582e41241"
+  },
+  "schema": "legalbot.live60-independent-verification-return-hold.v1",
+  "structural_defect_count": 4,
+  "training_export_allowed": false
+}

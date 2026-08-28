@@ -1,0 +1,80 @@
+{
+  "as_of_date": "2026-08-14",
+  "automatic_embedding": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "bulk_search": false,
+  "candidate_mutated": false,
+  "owner_outcomes_applied": false,
+  "phase2b_authorized": false,
+  "purpose": "TARGETED_NON_BULK_EXACT_CITATION_LATER_TREATMENT_FOR_UBER_AND_UNISON_DIRECT_ROWS",
+  "schema": "legalbot.v111.phase2a.uber-unison-later-treatment-plan.v1",
+  "source_ceiling_date": "2026-08-14",
+  "targets": [
+    {
+      "candidates": [
+        {
+          "advisory_relationship": "NEAR_MISS_DIFFERENT_UBER_PARAGRAPH_NO_MATERIAL_TREATMENT_OF_PARAGRAPH_53_AGENCY_TESTS",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_5"
+          ],
+          "neutral_citation": "[2025] UKSC 31",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2025/31/data.xml",
+          "title": "D.E.L.T.A. Merseyside Ltd v Uber Britannia Ltd"
+        }
+      ],
+      "recommended_owner_outcome": "NO_MATERIAL_LATER_TREATMENT_LOCATED_FOR_UBER_PARAGRAPH_53_AGENCY_TESTS_IN_BOUNDED_REVIEW",
+      "row_ids": [
+        "live60-q31:issue-01",
+        "live60-q31:issue-02"
+      ],
+      "target_neutral_citation": "[2021] UKSC 5"
+    },
+    {
+      "candidates": [
+        {
+          "advisory_relationship": "BINDING_LATER_AFFIRMATION_WITH_SCOPE_CLARIFICATION",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_80",
+            "para_81",
+            "para_82",
+            "para_83"
+          ],
+          "neutral_citation": "[2021] UKSC 37",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2021/37/data.xml",
+          "title": "R (A) v Secretary of State for the Home Department"
+        },
+        {
+          "advisory_relationship": "BINDING_LATER_SCOPE_LIMIT_WITHOUT_DISPLACEMENT",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_68",
+            "para_69"
+          ],
+          "neutral_citation": "[2021] UKSC 38",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2021/38/data.xml",
+          "title": "R (BF (Eritrea)) v Secretary of State for the Home Department"
+        },
+        {
+          "advisory_relationship": "LATEST_REVIEWED_BINDING_APPLICATION_OF_CLEAR_WORDS_FOR_COURT_ACCESS",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_93"
+          ],
+          "neutral_citation": "[2026] UKSC 10",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2026/10/data.xml",
+          "title": "UniCredit Bank GmbH, London Branch v Constitution Aircraft Leasing (Ireland) 3 Ltd and another"
+        }
+      ],
+      "recommended_owner_outcome": "AFFIRMED_CORE_RULE_OF_LAW_AND_EFFECTIVE_COURT_ACCESS_PROPOSITIONS_WITH_LATER_SCOPE_CLARIFICATIONS",
+      "row_ids": [
+        "live30-q27:issue-02",
+        "live30-q27:issue-08"
+      ],
+      "target_neutral_citation": "[2017] UKSC 51"
+    }
+  ],
+  "technical_qualification_assigned": false
+}

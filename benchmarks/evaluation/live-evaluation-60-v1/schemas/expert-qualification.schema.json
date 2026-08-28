@@ -1,0 +1,617 @@
+{
+  "$defs": {
+    "CasePropositionReview": {
+      "additionalProperties": false,
+      "description": "Exact later-treatment review for one case-law proposition and span.\n\nSource-level case approval proves identity and rights only.  This separate,\nimmutable record is intentionally narrow: it binds a proposition to one\nsource version, locator, exact span hash, legal role and review date.\nReviewer references are opaque hashes, never names or owner identifiers.",
+      "properties": {
+        "chunk_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "title": "Chunk Id",
+          "type": "string"
+        },
+        "contrary_or_limiting_authority_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Contrary Or Limiting Authority Ids",
+          "type": "array"
+        },
+        "exact_span_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Exact Span Sha256",
+          "type": "string"
+        },
+        "later_treatment_reviewed_as_of_date": {
+          "format": "date",
+          "title": "Later Treatment Reviewed As Of Date",
+          "type": "string"
+        },
+        "later_treatment_status": {
+          "enum": [
+            "confirmed_current",
+            "qualified_current",
+            "not_current",
+            "uncertain_hold"
+          ],
+          "title": "Later Treatment Status",
+          "type": "string"
+        },
+        "legal_locator": {
+          "title": "Legal Locator",
+          "type": "string"
+        },
+        "legal_role": {
+          "enum": [
+            "holding_ratio",
+            "binding_legal_rule"
+          ],
+          "title": "Legal Role",
+          "type": "string"
+        },
+        "proposition_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Proposition Hash",
+          "type": "string"
+        },
+        "review_scope": {
+          "default": "ordinary",
+          "enum": [
+            "ordinary",
+            "critical",
+            "disputed"
+          ],
+          "title": "Review Scope",
+          "type": "string"
+        },
+        "reviewer_ref": {
+          "pattern": "^reviewer:[0-9a-f]{64}$",
+          "title": "Reviewer Ref",
+          "type": "string"
+        },
+        "reviewer_role": {
+          "enum": [
+            "england_wales_qualified_barrister",
+            "england_wales_qualified_legal_academic",
+            "england_wales_qualified_legal_expert",
+            "england_wales_qualified_solicitor",
+            "legal_reviewer"
+          ],
+          "title": "Reviewer Role",
+          "type": "string"
+        },
+        "schema": {
+          "default": "legalbot.case-proposition-currentness-review.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "seal_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Seal Sha256",
+          "type": "string"
+        },
+        "second_review_status": {
+          "default": "not_required",
+          "enum": [
+            "not_required",
+            "pending",
+            "confirmed",
+            "disagreed"
+          ],
+          "title": "Second Review Status",
+          "type": "string"
+        },
+        "second_reviewer_ref": {
+          "anyOf": [
+            {
+              "pattern": "^reviewer:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Second Reviewer Ref"
+        },
+        "source_version_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "title": "Source Version Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_version_id",
+        "chunk_id",
+        "legal_locator",
+        "exact_span_sha256",
+        "proposition_hash",
+        "legal_role",
+        "later_treatment_reviewed_as_of_date",
+        "later_treatment_status",
+        "contrary_or_limiting_authority_ids",
+        "reviewer_role",
+        "reviewer_ref",
+        "seal_sha256"
+      ],
+      "title": "CasePropositionReview",
+      "type": "object"
+    },
+    "LiveCaseQualification": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptable_source_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Acceptable Source Ids",
+          "type": "array"
+        },
+        "case_id": {
+          "pattern": "^(?:live30|live60)-q[0-9]{2}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "contrary_authority_status": {
+          "enum": [
+            "reviewed_none",
+            "reviewed_and_bound"
+          ],
+          "title": "Contrary Authority Status",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/LiveIssueQualification"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "question_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Question Sha256",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "schema": {
+          "const": "legalbot.live-case-qualification.v1",
+          "default": "legalbot.live-case-qualification.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "qualified",
+            "limited",
+            "knowledge_gap"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "question_sha256",
+        "record_sha256",
+        "status",
+        "contrary_authority_status",
+        "issues"
+      ],
+      "title": "LiveCaseQualification",
+      "type": "object"
+    },
+    "LiveGoldSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "case_currentness_review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CasePropositionReview"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "chunk_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "title": "Chunk Id",
+          "type": "string"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "contrary_or_limiting": {
+          "default": false,
+          "title": "Contrary Or Limiting",
+          "type": "boolean"
+        },
+        "gold_span_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "title": "Gold Span Id",
+          "type": "string"
+        },
+        "issue_id": {
+          "pattern": "^issue-[0-9]{2}$",
+          "title": "Issue Id",
+          "type": "string"
+        },
+        "legal_authority_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Legal Authority Id"
+        },
+        "legal_locator": {
+          "title": "Legal Locator",
+          "type": "string"
+        },
+        "legal_role": {
+          "title": "Legal Role",
+          "type": "string"
+        },
+        "proposition_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Proposition Hash"
+        },
+        "relevance_grade": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Relevance Grade",
+          "type": "integer"
+        },
+        "schema": {
+          "const": "legalbot.live-gold-span.v1",
+          "default": "legalbot.live-gold-span.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "source_type": {
+          "enum": [
+            "case",
+            "legislation",
+            "official_secondary",
+            "scholarship"
+          ],
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_version_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "title": "Source Version Id",
+          "type": "string"
+        },
+        "stable_source_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "title": "Stable Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gold_span_id",
+        "issue_id",
+        "stable_source_id",
+        "source_version_id",
+        "chunk_id",
+        "legal_locator",
+        "content_sha256",
+        "source_type",
+        "legal_role",
+        "relevance_grade"
+      ],
+      "title": "LiveGoldSpan",
+      "type": "object"
+    },
+    "LiveIssueQualification": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_gold_spans": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/LiveGoldSpan"
+          },
+          "title": "Exact Gold Spans",
+          "type": "array"
+        },
+        "issue_id": {
+          "pattern": "^issue-[0-9]{2}$",
+          "title": "Issue Id",
+          "type": "string"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason Code"
+        },
+        "schema": {
+          "const": "legalbot.live-issue-qualification.v1",
+          "default": "legalbot.live-issue-qualification.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "qualified",
+            "limited",
+            "knowledge_gap"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "issue_id",
+        "status"
+      ],
+      "title": "LiveIssueQualification",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Sealed owner overlay for one exact registry and candidate. The owner is the one primary qualified E&W reviewer. AI may only exact-match hashes and locators and cannot be a reviewer.",
+  "properties": {
+    "adjudication_ref": {
+      "anyOf": [
+        {
+          "pattern": "^adjudication:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Adjudication Ref"
+    },
+    "approval_reviewer_ref": {
+      "pattern": "^reviewer:[0-9a-f]{64}$",
+      "title": "Approval Reviewer Ref",
+      "type": "string"
+    },
+    "approval_reviewer_role": {
+      "title": "Approval Reviewer Role",
+      "type": "string"
+    },
+    "approval_role": {
+      "const": "legal_expert_owner",
+      "title": "Approval Role",
+      "type": "string"
+    },
+    "approval_status": {
+      "const": "expert_approved",
+      "title": "Approval Status",
+      "type": "string"
+    },
+    "as_of_date": {
+      "format": "date",
+      "title": "As Of Date",
+      "type": "string"
+    },
+    "ai_role": {
+      "const": "mechanical_accuracy_verifier_only",
+      "title": "Ai Role",
+      "type": "string"
+    },
+    "ai_second_reviewer_forbidden": {
+      "const": true,
+      "title": "Ai Second Reviewer Forbidden",
+      "type": "boolean"
+    },
+    "case_count": {
+      "const": 60,
+      "title": "Case Count",
+      "type": "integer"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/LiveCaseQualification"
+      },
+      "title": "Cases",
+      "type": "array"
+    },
+    "eligible_for_training": {
+      "const": false,
+      "title": "Eligible For Training",
+      "type": "boolean"
+    },
+    "independent_second_review_status": {
+      "enum": [
+        "needs_independent_review",
+        "confirmed",
+        "not_required"
+      ],
+      "default": "not_required",
+      "title": "Independent Second Review Status",
+      "type": "string"
+    },
+    "independent_second_reviewer_ref": {
+      "anyOf": [
+        {
+          "pattern": "^reviewer:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Independent Second Reviewer Ref"
+    },
+    "independent_second_reviewer_role": {
+      "title": "Independent Second Reviewer Role",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "index_build_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Index Build Id",
+      "type": "string"
+    },
+    "material_disagreement_status": {
+      "enum": [
+        "none",
+        "adjudicated"
+      ],
+      "title": "Material Disagreement Status",
+      "type": "string"
+    },
+    "owner_is_primary_reviewer": {
+      "const": true,
+      "title": "Owner Is Primary Reviewer",
+      "type": "boolean"
+    },
+    "purpose": {
+      "const": "evaluation_only",
+      "title": "Purpose",
+      "type": "string"
+    },
+    "run_plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Plan Sha256",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.live-expert-qualification.v1",
+      "default": "legalbot.live-expert-qualification.v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Seal Sha256",
+      "type": "string"
+    },
+    "suite_id": {
+      "const": "live-evaluation-60-v1",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_registry_canonical_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Suite Registry Canonical Sha256",
+      "type": "string"
+    },
+    "training_export_allowed": {
+      "const": false,
+      "title": "Training Export Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "suite_id",
+    "suite_registry_canonical_sha256",
+    "run_plan_sha256",
+    "index_build_id",
+    "as_of_date",
+    "purpose",
+    "eligible_for_training",
+    "training_export_allowed",
+    "approval_status",
+    "approval_role",
+    "approval_reviewer_role",
+    "approval_reviewer_ref",
+    "owner_is_primary_reviewer",
+    "independent_second_review_status",
+    "independent_second_reviewer_role",
+    "independent_second_reviewer_ref",
+    "ai_role",
+    "ai_second_reviewer_forbidden",
+    "material_disagreement_status",
+    "case_count",
+    "cases",
+    "seal_sha256"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "independent_second_review_status": {
+            "const": "confirmed"
+          }
+        },
+        "required": [
+          "independent_second_review_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "independent_second_reviewer_ref",
+          "independent_second_reviewer_role"
+        ],
+        "properties": {
+          "independent_second_reviewer_ref": {
+            "type": "string",
+            "pattern": "^reviewer:[0-9a-f]{64}$"
+          },
+          "independent_second_reviewer_role": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "independent_second_review_status": {
+            "enum": [
+              "needs_independent_review",
+              "not_required"
+            ]
+          }
+        },
+        "required": [
+          "independent_second_review_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "independent_second_reviewer_ref": {
+            "type": "null"
+          },
+          "independent_second_reviewer_role": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "title": "LiveSuiteExpertQualification",
+  "type": "object"
+}

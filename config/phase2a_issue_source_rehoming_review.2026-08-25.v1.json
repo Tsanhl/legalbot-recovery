@@ -1,0 +1,222 @@
+{
+  "schema": "legalbot.v111.phase2a.issue-source-rehoming-review-plan.v1",
+  "as_of_date": "2026-08-14",
+  "source_quarantine_artifact_content_sha256": "83f9e4489d21e4a2dd58295e8b8365f892a1b7772d8d7e3a7582e765515187dd",
+  "purpose": "VERIFY_EXACT_UKSC_PROPOSITION_BINDINGS_AND_REJECT_UNRELATED_SOURCE_ROW_MAPPINGS",
+  "owner_proposition_level_admission_required": true,
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "technical_qualification_assigned": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false,
+  "reviews": [
+    {
+      "proposal_id": "issue-source-rehome-001",
+      "expected_record_content_sha256": "2b5c93bfc67c5c9cfe9c674cf6422ed866c3b201f74de3c3da499d3cd404f739",
+      "source_recommendation": "PROPOSE_PROPOSITION_LEVEL_ADMISSION_OWNER_DECISION_REQUIRED",
+      "later_treatment_status": "POINT_IN_TIME_AUTHORITY_REQUIRES_FINAL_CURRENTNESS_REVIEW",
+      "supported_claims": [
+        {
+          "claim_id": "uksc-2013-67-consent-01",
+          "row_ids": [
+            "live30-q20:issue-02"
+          ],
+          "issue_label": "consent",
+          "binding_scope": "DIRECT",
+          "proposition": "A patient's consent generally makes invasive medical treatment lawful, and treating a capacitous patient who refuses is unlawful.",
+          "pdf_page_number": 9,
+          "printed_page_label": "Page 8",
+          "paragraph_locator": "para 19",
+          "exact_normalized_span_text": "Generally it is the patient’s consent which makes invasive medical treatment lawful. It is not lawful to treat a patient who has capacity and refuses that treatment."
+        }
+      ],
+      "rejected_mappings": []
+    },
+    {
+      "proposal_id": "issue-source-rehome-002",
+      "expected_record_content_sha256": "bc2d9a99f870edc7d269ea4a0c4b380c78f47cfe2d8cc80fbe786552ecc9de99",
+      "source_recommendation": "PROPOSE_PROPOSITION_LEVEL_ADMISSION_OWNER_DECISION_REQUIRED",
+      "later_treatment_status": "POINT_IN_TIME_AUTHORITY_REQUIRES_FINAL_CURRENTNESS_REVIEW",
+      "supported_claims": [
+        {
+          "claim_id": "uksc-2019-22-ouster-01",
+          "row_ids": [
+            "live30-q27:issue-08"
+          ],
+          "issue_label": "access to courts",
+          "binding_scope": "PARTIAL",
+          "proposition": "Nothing less than the clearest statutory wording will suffice to exclude judicial review altogether.",
+          "pdf_page_number": 45,
+          "printed_page_label": "Page 44",
+          "paragraph_locator": "para 99",
+          "exact_normalized_span_text": "I shall return below, under the second issue, to the question in what circumstances if any Parliament could exclude review altogether. There is no doubt that, if it is to be done, nothing less than the clearest wording will suffice (see De Smith para 1-027)."
+        }
+      ],
+      "rejected_mappings": [
+        {
+          "row_id": "live30-q09:issue-04",
+          "issue_label": "irrationality",
+          "reason_code": "NO_DIRECT_PROPOSITION_SUPPORT",
+          "rationale": "The judgment concerns the construction of an ouster clause and does not directly state the benchmark irrationality proposition."
+        },
+        {
+          "row_id": "live30-q12:issue-04",
+          "issue_label": "proportionality",
+          "reason_code": "NO_DIRECT_PROPOSITION_SUPPORT",
+          "rationale": "References to rationality or proportionality in the judgment do not supply the benchmark proportionality test."
+        },
+        {
+          "row_id": "live60-q56:issue-01",
+          "issue_label": "targeted and bulk interception",
+          "reason_code": "FACTUAL_CONTEXT_NOT_DOCTRINAL_SUPPORT",
+          "rationale": "The tribunal's surveillance jurisdiction is background context, not a holding on targeted or bulk interception powers."
+        },
+        {
+          "row_id": "live60-q56:issue-07",
+          "issue_label": "national security and closed material",
+          "reason_code": "FACTUAL_CONTEXT_NOT_DOCTRINAL_SUPPORT",
+          "rationale": "The case does not directly establish the benchmark closed-material proposition."
+        },
+        {
+          "row_id": "live60-q56:issue-09",
+          "issue_label": "judicial authorisation",
+          "reason_code": "NO_DIRECT_PROPOSITION_SUPPORT",
+          "rationale": "The judgment's review jurisdiction analysis is not authority for the benchmark judicial-authorisation requirement."
+        },
+        {
+          "row_id": "live60-q56:issue-11",
+          "issue_label": "open justice",
+          "reason_code": "NO_DIRECT_PROPOSITION_SUPPORT",
+          "rationale": "The judgment does not directly establish the benchmark open-justice proposition."
+        }
+      ]
+    },
+    {
+      "proposal_id": "issue-source-rehome-003",
+      "expected_record_content_sha256": "327dc51dec14c8383da51f8cdba8d7b8b4475b683031722b3fc71842dcec9415",
+      "source_recommendation": "PROPOSE_PROPOSITION_LEVEL_ADMISSION_OWNER_DECISION_REQUIRED",
+      "later_treatment_status": "POINT_IN_TIME_AUTHORITY_REQUIRES_FINAL_CURRENTNESS_REVIEW",
+      "supported_claims": [
+        {
+          "claim_id": "uksc-2023-51-mixed-fund-01",
+          "row_ids": [
+            "live30-q13:issue-07"
+          ],
+          "issue_label": "tracing mixed funds",
+          "binding_scope": "DIRECT",
+          "proposition": "Equitable tracing rules have traditionally permitted tracing into a mixed fund.",
+          "pdf_page_number": 55,
+          "printed_page_label": "Page 53",
+          "paragraph_locator": "para 160",
+          "exact_normalized_span_text": "The equitable tracing rules have traditionally been understood to be less restrictive than the common law tracing rules (eg in permitting tracing into a mixed fund)"
+        },
+        {
+          "claim_id": "uksc-2023-51-knowing-receipt-01",
+          "row_ids": [
+            "live30-q13:issue-09",
+            "live30-q18:issue-05"
+          ],
+          "issue_label": "third-party liability / knowing receipt",
+          "binding_scope": "DIRECT",
+          "proposition": "A knowing-receipt claim cannot succeed once the claimant's proprietary equitable interest in the property has been extinguished or overridden.",
+          "pdf_page_number": 3,
+          "printed_page_label": "Page 1",
+          "paragraph_locator": "para 1",
+          "exact_normalized_span_text": "They agree that a claim in knowing receipt cannot succeed once the claimant’s proprietary equitable interest in the property in question has been extinguished or overridden."
+        }
+      ],
+      "rejected_mappings": [
+        {
+          "row_id": "live30-q18:issue-01",
+          "issue_label": "payment authority",
+          "reason_code": "HYPOTHETICAL_OR_COLLATERAL_DISCUSSION_ONLY",
+          "rationale": "The judgment's discussion of want of authority and unjust enrichment is collateral and does not establish the benchmark payment-authority proposition."
+        }
+      ]
+    },
+    {
+      "proposal_id": "issue-source-rehome-004",
+      "expected_record_content_sha256": "3e67984f67f92370e822259c6c47929b5660a82a6f24be73660cee06e969a0e8",
+      "source_recommendation": "REJECT_SOURCE_FOR_PLANNED_BENCHMARK_ROWS",
+      "later_treatment_status": "NOT_APPLICABLE_SOURCE_REJECTED_FOR_ALL_PLANNED_ROWS",
+      "supported_claims": [],
+      "rejected_mappings": [
+        {
+          "row_id": "live30-q18:issue-03",
+          "issue_label": "unjust enrichment",
+          "reason_code": "UNRELATED_LEGAL_DOCTRINE",
+          "rationale": "The judgment concerns accessory liability for intellectual-property torts, not unjust enrichment."
+        },
+        {
+          "row_id": "live30-q18:issue-05",
+          "issue_label": "knowing receipt",
+          "reason_code": "UNRELATED_LEGAL_DOCTRINE",
+          "rationale": "The judgment concerns accessory liability for intellectual-property torts; Byers v Saudi National Bank is the direct knowing-receipt authority proposed for this row."
+        },
+        {
+          "row_id": "live30-q18:issue-06",
+          "issue_label": "tracing and proprietary claims",
+          "reason_code": "UNRELATED_LEGAL_DOCTRINE",
+          "rationale": "The judgment does not establish tracing or proprietary-claim doctrine."
+        }
+      ]
+    },
+    {
+      "proposal_id": "issue-source-rehome-005",
+      "expected_record_content_sha256": "45add814de6b7b93fdd71a116b8b1f775557a57dffadc1e03b09e4521463de65",
+      "source_recommendation": "PROPOSE_PROPOSITION_LEVEL_ADMISSION_OWNER_DECISION_REQUIRED",
+      "later_treatment_status": "POINT_IN_TIME_AUTHORITY_REQUIRES_FINAL_CURRENTNESS_REVIEW",
+      "supported_claims": [
+        {
+          "claim_id": "uksc-2024-30-anti-suit-power-01",
+          "row_ids": [
+            "live60-q43:issue-06"
+          ],
+          "issue_label": "anti-suit relief",
+          "binding_scope": "DIRECT",
+          "proposition": "The English court's power to grant an anti-suit injunction derives from its general equitable jurisdiction under section 37 of the Senior Courts Act 1981, not only from powers supporting an existing or intended arbitration.",
+          "pdf_page_number": 32,
+          "printed_page_label": "Page 32",
+          "paragraph_locator": "para 99",
+          "exact_normalized_span_text": "In English law, however, it has been authoritatively established in AES Ust-Kamenogorsk that the source of the court’s power to grant anti- suit injunctions is not its jurisdiction to grant interim measures in support of current or intended arbitration proceedings but its general equitable jurisdiction under section 37 of the 1981 Act."
+        },
+        {
+          "claim_id": "uksc-2024-30-anti-suit-purpose-02",
+          "row_ids": [
+            "live60-q43:issue-06"
+          ],
+          "issue_label": "anti-suit relief",
+          "binding_scope": "DIRECT",
+          "proposition": "An anti-suit injunction enforces the arbitration agreement's negative promise not to litigate, whether or not arbitration is on foot or proposed.",
+          "pdf_page_number": 32,
+          "printed_page_label": "Page 32",
+          "paragraph_locator": "para 99",
+          "exact_normalized_span_text": "The purpose of issuing such an injunction is to enforce the negative promise contained in the arbitration agreement not to bring court proceedings, which applies and is enforceable regardless of whether or not any arbitration proceedings are on foot or proposed which require support."
+        }
+      ],
+      "rejected_mappings": [
+        {
+          "row_id": "live30-q26:issue-08",
+          "issue_label": "insurance and bonds",
+          "reason_code": "FACTUAL_CONTEXT_NOT_DOCTRINAL_SUPPORT",
+          "rationale": "The on-demand bonds form part of the facts but the judgment does not establish the benchmark insurance-and-bonds proposition."
+        },
+        {
+          "row_id": "live30-q26:issue-09",
+          "issue_label": "adjudication",
+          "reason_code": "UNRELATED_LEGAL_DOCTRINE",
+          "rationale": "Arbitration and anti-suit relief are not authority for the benchmark construction-adjudication proposition."
+        },
+        {
+          "row_id": "live60-q58:issue-09",
+          "issue_label": "performance bonds",
+          "reason_code": "FACTUAL_CONTEXT_NOT_DOCTRINAL_SUPPORT",
+          "rationale": "The bonds are factual context; the holding concerns arbitration agreements and anti-suit relief, not general performance-bond doctrine."
+        }
+      ]
+    }
+  ]
+}

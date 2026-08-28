@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.log.provenance.v1",
+  "title": "LegalBot observability provenance (copied onto events; canonical store is jobs/index_builds)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "git_sha", "git_branch"],
+  "properties": {
+    "schema": { "const": "legalbot.observability-provenance.v1" },
+    "git_sha": { "type": "string" },
+    "git_branch": { "type": "string" },
+    "parser_version": { "type": "string" },
+    "chunker_version": { "type": "string" },
+    "canonical_markdown_version": { "type": "string" },
+    "index_schema_version": { "type": "string" },
+    "policy_version": { "type": "string" },
+    "embedding_model_version": { "type": "string" },
+    "source_manifest_hash": { "type": "string" },
+    "idempotency_key": { "type": "string" },
+    "config_hash": { "type": "string" }
+  }
+}

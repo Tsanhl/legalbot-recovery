@@ -1,0 +1,19 @@
+{
+  "schema": "legalbot.storage-capacity-policy.v1",
+  "authorizing": false,
+  "automatic_deletion_allowed": false,
+  "disk": {
+    "warning_free_bytes": 107374182400,
+    "critical_free_bytes": 42949672960
+  },
+  "backups": {
+    "warning_total_bytes": 25769803776,
+    "critical_total_bytes": 42949672960,
+    "warning_full_backup_count": 3,
+    "critical_full_backup_count": 5,
+    "warning_latest_age_seconds": 604800,
+    "critical_latest_age_seconds": 1209600,
+    "warning_restore_drill_age_seconds": 2592000,
+    "critical_restore_drill_age_seconds": 5184000
+  }
+}

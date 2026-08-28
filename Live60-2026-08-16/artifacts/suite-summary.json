@@ -1,0 +1,19 @@
+{
+  "baseline_status": "no_go",
+  "case_count": 60,
+  "eligible_for_training": false,
+  "expert_annotation_required": true,
+  "generation_case_count": 30,
+  "generation_total_word_target": 114000,
+  "required_runtime_identities": {
+    "assessment_rules_sha256": "9d5808d9275e8a91d18c9702d76ff8e5e6fbbf1388aa57e43ac4b788e96d8252",
+    "classifier_version": "legalbot-subject-classifier-v3",
+    "model_version": "mlx-community/Qwen3.5-9B-4bit",
+    "policy_sha256": "b6cdb92e64be227325fa39fb9c8bb45f7d19618f7dee3ce3c330e235dceda85e",
+    "prompt_version": "evidence-first-structured-json-v3",
+    "router_version": "legalbot-answer-router-v3"
+  },
+  "suite_id": "live-evaluation-60-v1",
+  "suite_total_word_target": 215000,
+  "training_export_allowed": false
+}

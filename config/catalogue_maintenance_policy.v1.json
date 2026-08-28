@@ -1,0 +1,33 @@
+{
+  "schema": "legalbot.catalogue-maintenance-policy.v1",
+  "authorizing": false,
+  "timezone": "Asia/Hong_Kong",
+  "weekly_window": {
+    "weekday": "Sunday",
+    "start_local": "02:00",
+    "end_local": "06:00"
+  },
+  "preconditions": {
+    "maximum_backup_restore_receipt_age_seconds": 86400,
+    "require_zero_open_catalogue_processes": true,
+    "require_zero_active_jobs": true,
+    "require_zero_active_builds": true,
+    "require_zero_active_scans": true,
+    "require_application_stopped": true
+  },
+  "classification": {
+    "online_full_table_aggregate_forbidden": true,
+    "primary_key_batch_size": 10000,
+    "per_batch_deadline_seconds": 5,
+    "maximum_operation_seconds": 7200,
+    "resume_checkpoint_every_batches": 10
+  },
+  "compaction": {
+    "in_place_vacuum_forbidden": true,
+    "method": "VACUUM_INTO_CREATE_NEW",
+    "require_integrity_check": true,
+    "require_foreign_key_check": true,
+    "require_logical_count_match": true,
+    "atomic_swap_requires_exact_owner_maintenance_execution_approval": true
+  }
+}

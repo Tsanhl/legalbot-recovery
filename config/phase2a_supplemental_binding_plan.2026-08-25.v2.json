@@ -1,0 +1,563 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-binding-plan.v1",
+  "source_quarantine_manifest_content_sha256": "f4cfa4a398873fc2f48080bce22b11746f0a587889bc537e578f87a4e7db83e5",
+  "source_plan_file_sha256": "083eb049c241b95952358f4a9e24e29cc10d66056d36a3ebfb8970056008b58d",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "bindings": [
+    {
+      "binding_id": "cogsa-1992-title-document-rights",
+      "source_target_id": "supplemental-carriage-of-goods-by-sea-act-1992",
+      "expected_source_file_sha256": "9ce442ab0665eebb6393582b9ab24243d3995ed074a1c06b23352a55ff82cadc",
+      "row_ids": [
+        "live60-q49:issue-01"
+      ],
+      "binding_scope": "PARTIAL",
+      "unresolved_scope_note": "This statutory rights-of-suit proposition does not by itself resolve sale-contract title transfer, bank security rights or priorities among all parties.",
+      "material_claims": [
+        {
+          "claim_id": "cogsa-s2-1-rights-of-suit",
+          "proposition": "A person within section 2(1), including the lawful holder of a bill of lading, has all rights of suit under the contract of carriage transferred to and vested in that person as if that person had been a party.",
+          "anchor_id": "section-2-1",
+          "exact_normalized_span_text": "subject to the following provisions of this section, a person who becomes- a the lawful holder of a bill of lading; b the person who (without being an original party to the contract of carriage) is the person to whom delivery of the goods to which a sea waybill relates is to be made by the carrier in accordance with that contract; or c the person to whom delivery of the goods to which a ship's delivery order relates is to be made in accordance with the undertaking contained in the order, shall (by virtue of becoming the holder of the bill or, as the case may be, the person to whom delivery is to be made) have transferred to and vested in him all rights of suit under the contract of carriage as if he had been a party to that contract."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "cogsa-wholly-in-force",
+          "proposition": "The Act was wholly in force on 16 September 1992.",
+          "anchor_id": "c860068",
+          "exact_normalized_span_text": "act wholly in force at 16. 9. 1992; see s.6(3)"
+        },
+        {
+          "claim_id": "cogsa-precommencement-document-transition",
+          "proposition": "The Act does not apply to a document issued before commencement.",
+          "anchor_id": "section-6-3",
+          "exact_normalized_span_text": "nothing in this act shall have effect in relation to any document issued before the coming into force of this act."
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve this partial proposition binding; retain a material gap for the remaining title-document relationships."
+    },
+    {
+      "binding_id": "cogsa-1992-contractual-liabilities",
+      "source_target_id": "supplemental-carriage-of-goods-by-sea-act-1992",
+      "expected_source_file_sha256": "9ce442ab0665eebb6393582b9ab24243d3995ed074a1c06b23352a55ff82cadc",
+      "row_ids": [
+        "live60-q49:issue-02"
+      ],
+      "binding_scope": "PARTIAL",
+      "unresolved_scope_note": "The statutory transfer of carriage-contract liabilities does not resolve every sale, charterparty, agency or bank relationship in the problem.",
+      "material_claims": [
+        {
+          "claim_id": "cogsa-s3-1-transferred-liabilities",
+          "proposition": "A person in whom section 2(1) rights vest becomes subject to the same contract-of-carriage liabilities as an original party when the statutory section 3(1) conditions are met.",
+          "anchor_id": "section-3-1",
+          "exact_normalized_span_text": "where subsection (1) of section 2 of this act operates in relation to any document to which this act applies and the person in whom rights are vested by virtue of that subsection- a takes or demands delivery from the carrier of any of the goods to which the document relates; b makes a claim under the contract of carriage against the carrier in respect of any of those goods; or c is a person who, at a time before those rights were vested in him, took or demanded delivery from the carrier of any of those goods, that person shall (by virtue of taking or demanding delivery or making the claim or, in a case falling within paragraph c above, of having the rights vested in him) become subject to the same liabilities under that contract as if he had been a party to that contract."
+        },
+        {
+          "claim_id": "cogsa-s3-3-original-party-liability-preserved",
+          "proposition": "Section 3 does not displace the contract liabilities of an original party.",
+          "anchor_id": "section-3-3",
+          "exact_normalized_span_text": "this section, so far as it imposes liabilities under any contract on any person, shall be without prejudice to the liabilities under the contract of any person as an original party to the contract."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "cogsa-wholly-in-force-for-liabilities",
+          "proposition": "The Act was wholly in force on 16 September 1992.",
+          "anchor_id": "c860068",
+          "exact_normalized_span_text": "act wholly in force at 16. 9. 1992; see s.6(3)"
+        },
+        {
+          "claim_id": "cogsa-transition-for-liabilities",
+          "proposition": "The Act does not apply to a document issued before commencement.",
+          "anchor_id": "section-6-3",
+          "exact_normalized_span_text": "nothing in this act shall have effect in relation to any document issued before the coming into force of this act."
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve this partial statutory contractual-liability binding; retain a material gap for other relationships."
+    },
+    {
+      "binding_id": "mental-capacity-act-capacity-test",
+      "source_target_id": "supplemental-mental-capacity-act-2005",
+      "expected_source_file_sha256": "144736714ee5ded24465f0422d55a9b40f1398db4672a8b6834941a239040d75",
+      "row_ids": [
+        "live30-q20:issue-01"
+      ],
+      "binding_scope": "DIRECT",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "mca-s1-2-capacity-presumption",
+          "proposition": "A person must be assumed to have capacity unless lack of capacity is established.",
+          "anchor_id": "section-1-2",
+          "exact_normalized_span_text": "a person must be assumed to have capacity unless it is established that he lacks capacity."
+        },
+        {
+          "claim_id": "mca-s1-3-practicable-support",
+          "proposition": "A person is not unable to decide unless all practicable decision-support steps have been taken without success.",
+          "anchor_id": "section-1-3",
+          "exact_normalized_span_text": "a person is not to be treated as unable to make a decision unless all practicable steps to help him to do so have been taken without success."
+        },
+        {
+          "claim_id": "mca-s2-1-time-and-matter-specific-test",
+          "proposition": "Capacity is matter- and time-specific and turns on inability caused by impairment or disturbance of mind or brain.",
+          "anchor_id": "section-2-1",
+          "exact_normalized_span_text": "for the purposes of this act, a person lacks capacity in relation to a matter if at the material time he is unable to make a decision for himself in relation to the matter because of an impairment of, or a disturbance in the functioning of, the mind or brain."
+        },
+        {
+          "claim_id": "mca-s2-2-temporary-impairment",
+          "proposition": "The impairment or disturbance may be permanent or temporary.",
+          "anchor_id": "section-2-2",
+          "exact_normalized_span_text": "it does not matter whether the impairment or disturbance is permanent or temporary."
+        },
+        {
+          "claim_id": "mca-s2-4-proof-standard",
+          "proposition": "Lack of capacity is decided on the balance of probabilities.",
+          "anchor_id": "section-2-4",
+          "exact_normalized_span_text": "in proceedings under this act or any other enactment, any question whether a person lacks capacity within the meaning of this act must be decided on the balance of probabilities."
+        },
+        {
+          "claim_id": "mca-s3-1-functional-test",
+          "proposition": "A person is unable to decide if unable to understand, retain, use or weigh relevant information, or communicate the decision.",
+          "anchor_id": "section-3-1",
+          "exact_normalized_span_text": "for the purposes of section 2, a person is unable to make a decision for himself if he is unable- a to understand the information relevant to the decision, b to retain that information, c to use or weigh that information as part of the process of making the decision, or d to communicate his decision (whether by talking, using sign language or any other means)."
+        },
+        {
+          "claim_id": "mca-s3-2-appropriate-explanation",
+          "proposition": "Understanding must be assessed after an explanation appropriate to the person's circumstances.",
+          "anchor_id": "section-3-2",
+          "exact_normalized_span_text": "a person is not to be regarded as unable to understand the information relevant to a decision if he is able to understand an explanation of it given to him in a way that is appropriate to his circumstances (using simple language, visual aids or any other means)."
+        },
+        {
+          "claim_id": "mca-s3-4-consequences-information",
+          "proposition": "Relevant information includes reasonably foreseeable consequences of deciding either way or failing to decide.",
+          "anchor_id": "section-3-4",
+          "exact_normalized_span_text": "the information relevant to a decision includes information about the reasonably foreseeable consequences of- a deciding one way or another, or b failing to make the decision."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "mca-s1-in-force",
+          "proposition": "Section 1 was wholly in force by 1 October 2007.",
+          "anchor_id": "c2090537",
+          "exact_normalized_span_text": "s. 1 wholly in force at 1.10.2007; s. 1 not in force at royal assent see s. 68(1)-(3); s. 1 in force for certain purposes at 1.4.2007 by s.i. 2007/563, arts. 1(2)(3), 2(2) a (3) and s. 1 in force otherwise at 1.10.2007 by s.i. 2007/1897, art. 2(2) a"
+        },
+        {
+          "claim_id": "mca-s2-in-force",
+          "proposition": "Section 2 was wholly in force by 1 October 2007.",
+          "anchor_id": "c2090547",
+          "exact_normalized_span_text": "s. 2 wholly in force at 1.10.2007; s. 2 not in force at royal assent see s. 68(1)-(3); s. 2 in force for certain purposes at 1.4.2007 by s.i. 2007/563, arts. 1(2)(3), 2(2) b (3) and s. 2 in force otherwise at 1.10.2007 by s.i. 2007/1897, art. 2(2) b"
+        },
+        {
+          "claim_id": "mca-s3-in-force",
+          "proposition": "Section 3 was wholly in force by 1 October 2007.",
+          "anchor_id": "c2090552",
+          "exact_normalized_span_text": "s. 3 wholly in force at 1.10.2007; s. 3 not in force at royal assent see s. 68(1)-(3); s. 3 in force for certain purposes at 1.4.2007 by s.i. 2007/563, arts. 1(2)(3), 2(2) c (3) and s. 3 in force otherwise at 1.10.2007 by s.i. 2007/1897, art. 2(2) c"
+        }
+      ],
+      "proposed_action": "Admit the exact target-date official Act and approve the atomic capacity-test proposition bindings."
+    },
+    {
+      "binding_id": "mental-capacity-act-best-interests-and-treatment",
+      "source_target_id": "supplemental-mental-capacity-act-2005",
+      "expected_source_file_sha256": "144736714ee5ded24465f0422d55a9b40f1398db4672a8b6834941a239040d75",
+      "row_ids": [
+        "live30-q20:issue-03"
+      ],
+      "binding_scope": "PARTIAL",
+      "unresolved_scope_note": "These provisions govern best interests and protection for care or treatment acts, but do not by themselves resolve every emergency-treatment, necessity or clinical-negligence question.",
+      "material_claims": [
+        {
+          "claim_id": "mca-s4-2-all-relevant-circumstances",
+          "proposition": "The decision-maker must consider all relevant circumstances when determining best interests.",
+          "anchor_id": "section-4-2",
+          "exact_normalized_span_text": "the person making the determination must consider all the relevant circumstances and, in particular, take the following steps."
+        },
+        {
+          "claim_id": "mca-s4-6-wishes-beliefs-factors",
+          "proposition": "Best-interests analysis must consider reasonably ascertainable past and present wishes, beliefs, values and other likely decision factors.",
+          "anchor_id": "section-4-6",
+          "exact_normalized_span_text": "he must consider, so far as is reasonably ascertainable- a the person's past and present wishes and feelings (and, in particular, any relevant written statement made by him when he had capacity), b the beliefs and values that would be likely to influence his decision if he had capacity, and c the other factors that he would be likely to consider if he were able to do so."
+        },
+        {
+          "claim_id": "mca-s4-7-consultation",
+          "proposition": "Where practicable and appropriate, specified carers, interested persons, attorneys and deputies must be consulted about best interests.",
+          "anchor_id": "section-4-7",
+          "exact_normalized_span_text": "he must take into account, if it is practicable and appropriate to consult them, the views of- a anyone named by the person as someone to be consulted on the matter in question or on matters of that kind, b anyone engaged in caring for the person or interested in his welfare, c any donee of a lasting power of attorney granted by the person, and d any deputy appointed for the person by the court, as to what would be in the person's best interests and, in particular, as to the matters mentioned in subsection (6)."
+        },
+        {
+          "claim_id": "mca-s5-1-care-treatment-conditions",
+          "proposition": "Section 5 applies to an act connected with care or treatment only where reasonable capacity-assessment steps are taken and the actor reasonably believes that capacity is lacking and the act is in the person's best interests.",
+          "anchor_id": "section-5-1",
+          "exact_normalized_span_text": "if a person (\"d\") does an act in connection with the care or treatment of another person (\"p\"), the act is one to which this section applies if- a before doing the act, d takes reasonable steps to establish whether p lacks capacity in relation to the matter in question, and b when doing the act, d reasonably believes- i that p lacks capacity in relation to the matter, and ii that it will be in p's best interests for the act to be done."
+        },
+        {
+          "claim_id": "mca-s5-2-liability-protection",
+          "proposition": "If section 5 applies, the actor does not incur liability that would not have arisen had the person possessed capacity and consented.",
+          "anchor_id": "section-5-2",
+          "exact_normalized_span_text": "d does not incur any liability in relation to the act that he would not have incurred if p- a had had capacity to consent in relation to the matter, and b had consented to d's doing the act."
+        },
+        {
+          "claim_id": "mca-s5-3-negligence-not-excluded",
+          "proposition": "Section 5 does not exclude civil or criminal liability resulting from negligence in doing the act.",
+          "anchor_id": "section-5-3",
+          "exact_normalized_span_text": "nothing in this section excludes a person's civil liability for loss or damage, or his criminal liability, resulting from his negligence in doing the act."
+        },
+        {
+          "claim_id": "mca-s5-4-advance-decisions-preserved",
+          "proposition": "Section 5 does not affect the operation of advance decisions to refuse treatment.",
+          "anchor_id": "section-5-4",
+          "exact_normalized_span_text": "nothing in this section affects the operation of sections 24 to 26 (advance decisions to refuse treatment)."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "mca-commencement-by-order",
+          "proposition": "The relevant provisions required commencement by Lord Chancellor order.",
+          "anchor_id": "section-68-1",
+          "exact_normalized_span_text": "this act, other than sections 30 to 41, comes into force in accordance with provision made by order by the lord chancellor."
+        },
+        {
+          "claim_id": "mca-england-wales-extent",
+          "proposition": "Subject to stated exceptions, the Act extends only to England and Wales.",
+          "anchor_id": "section-68-4",
+          "exact_normalized_span_text": "subject to subsections (5) and (6), this act extends to england and wales only."
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve these partial best-interests and treatment bindings, combined with the separately sealed commencement-order evidence."
+    },
+    {
+      "binding_id": "procurement-act-objectives-and-equal-treatment",
+      "source_target_id": "supplemental-procurement-act-2023",
+      "expected_source_file_sha256": "aebe99d1283d0e7c0d31e90f656e822979199fb0a1020635d6289f6554b7681d",
+      "row_ids": [
+        "live30-q21:issue-01"
+      ],
+      "binding_scope": "DIRECT",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "procurement-s12-1-objectives",
+          "proposition": "A contracting authority carrying out covered procurement must have regard to value for money, public benefit, transparency and integrity.",
+          "anchor_id": "section-12-1",
+          "exact_normalized_span_text": "in carrying out a covered procurement, a contracting authority must have regard to the importance of- a delivering value for money; b maximising public benefit; c sharing information for the purpose of allowing suppliers and others to understand the authority's procurement policies and decisions; d acting, and being seen to act, with integrity."
+        },
+        {
+          "claim_id": "procurement-s12-2-equal-treatment",
+          "proposition": "A contracting authority must treat suppliers the same unless a difference justifies different treatment.",
+          "anchor_id": "section-12-2",
+          "exact_normalized_span_text": "in carrying out a covered procurement, a contracting authority must treat suppliers the same unless a difference between the suppliers justifies different treatment."
+        },
+        {
+          "claim_id": "procurement-s12-3-unfair-advantage",
+          "proposition": "Where different treatment is justified, the authority must take reasonable steps to avoid unfair advantage or disadvantage.",
+          "anchor_id": "section-12-3",
+          "exact_normalized_span_text": "if a contracting authority considers that different treatment is justified in a particular case, the authority must take all reasonable steps to ensure it does not put a supplier at an unfair advantage or disadvantage."
+        },
+        {
+          "claim_id": "procurement-s12-4-sme-barriers",
+          "proposition": "A contracting authority must consider barriers faced by small and medium-sized enterprises and whether they can be reduced.",
+          "anchor_id": "section-12-4",
+          "exact_normalized_span_text": "in carrying out a covered procurement, a contracting authority must- a have regard to the fact that small and medium-sized enterprises may face particular barriers to participation, and b consider whether such barriers can be removed or reduced."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "procurement-s12-in-force",
+          "proposition": "Section 12 came into force on 24 February 2025.",
+          "anchor_id": "key-d223850f5be7f5e94b3d8eb973f867f1",
+          "exact_normalized_span_text": "s. 12 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve the atomic procurement-obligation bindings, subject to the separately verified transition boundary."
+    },
+    {
+      "binding_id": "procurement-act-standing-and-time-limits",
+      "source_target_id": "supplemental-procurement-act-2023",
+      "expected_source_file_sha256": "aebe99d1283d0e7c0d31e90f656e822979199fb0a1020635d6289f6554b7681d",
+      "row_ids": [
+        "live30-q21:issue-05"
+      ],
+      "binding_scope": "DIRECT",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "procurement-s100-2-duty-owed",
+          "proposition": "The statutory procurement duty is owed to United Kingdom and treaty-state suppliers.",
+          "anchor_id": "section-100-2",
+          "exact_normalized_span_text": "for the purposes of this part, the duty is owed to any supplier that is- a a united kingdom supplier, or b a treaty state supplier."
+        },
+        {
+          "claim_id": "procurement-s100-3-standing",
+          "proposition": "A United Kingdom or treaty-state supplier may bring proceedings where it suffered or risks loss or damage from breach of the duty.",
+          "anchor_id": "section-100-3",
+          "exact_normalized_span_text": "proceedings under this part may be brought in the court by a supplier that- a is a united kingdom or treaty state supplier, and b has suffered, or is at risk of suffering, loss or damage in consequence of a breach of the duty."
+        },
+        {
+          "claim_id": "procurement-s106-1-set-aside-time",
+          "proposition": "Specified set-aside proceedings must be commenced before the earlier of the knowledge-based 30-day period and the six-month longstop.",
+          "anchor_id": "section-106-1",
+          "exact_normalized_span_text": "a supplier must commence any specified set-aside proceedings before the earlier of- a the end of the period of 30 days beginning with the day on which the supplier first knew, or ought to have known, about the circumstances giving rise to the claim; b the end of the period of six months beginning with the day the contract was entered into or modified."
+        },
+        {
+          "claim_id": "procurement-s106-2-other-time",
+          "proposition": "Other statutory procurement proceedings must be commenced within 30 days of actual or constructive knowledge.",
+          "anchor_id": "section-106-2",
+          "exact_normalized_span_text": "a supplier must commence any other proceedings under this part before the end of the period of 30 days beginning with the day on which the supplier first knew, or ought to have known, about the circumstances giving rise to the claim."
+        },
+        {
+          "claim_id": "procurement-s106-3-extension",
+          "proposition": "The court may extend specified knowledge-based time limits for good reason.",
+          "anchor_id": "section-106-3",
+          "exact_normalized_span_text": "the court may make an order extending a time limit referred to in subsection (1) a or (2) if it considers there to be a good reason for doing so."
+        },
+        {
+          "claim_id": "procurement-s106-4-extension-longstop",
+          "proposition": "Any extension remains subject to the statutory six-month or three-month longstop, as applicable.",
+          "anchor_id": "section-106-4",
+          "exact_normalized_span_text": "an order under subsection (3) may not permit proceedings to be commenced after- a in the case of specified set-aside proceedings, the end of the period referred to in subsection (1) b, and b in any case, the end of the period of 3 months beginning with the day on which the supplier first knew, or ought to have known, about the circumstances giving rise to the claim."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "procurement-s100-in-force",
+          "proposition": "Section 100 came into force on 24 February 2025.",
+          "anchor_id": "key-5f3158fa0201a5a0e49e1f009c829e5c",
+          "exact_normalized_span_text": "s. 100 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        },
+        {
+          "claim_id": "procurement-s106-in-force",
+          "proposition": "Section 106 came into force on 24 February 2025.",
+          "anchor_id": "key-7903b72448d778e0618c8bbbd9f6047e",
+          "exact_normalized_span_text": "s. 106 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve the standing and time-limit bindings, subject to the separately verified transition boundary."
+    },
+    {
+      "binding_id": "procurement-act-interim-relief",
+      "source_target_id": "supplemental-procurement-act-2023",
+      "expected_source_file_sha256": "aebe99d1283d0e7c0d31e90f656e822979199fb0a1020635d6289f6554b7681d",
+      "row_ids": [
+        "live30-q21:issue-06"
+      ],
+      "binding_scope": "DIRECT",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "procurement-s101-1-automatic-suspension",
+          "proposition": "Once proceedings are commenced and notified during an applicable standstill period, the contracting authority may not enter into or modify the relevant contract.",
+          "anchor_id": "section-101-1",
+          "exact_normalized_span_text": "a contracting authority may not enter into a public contract, or modify a public contract or a convertible contract, if during any applicable standstill period- a proceedings under this part are commenced in relation to the contract, and b the contracting authority is notified of that fact."
+        },
+        {
+          "claim_id": "procurement-s101-2-lift-modify",
+          "proposition": "The court may lift or modify the automatic restriction under section 102.",
+          "anchor_id": "section-101-2",
+          "exact_normalized_span_text": "the court may lift or modify the restriction in subsection (1) by order under section 102."
+        },
+        {
+          "claim_id": "procurement-s102-1-orders",
+          "proposition": "The court may grant the listed interim orders, including suspending decisions, procurement, contract entry or contract performance.",
+          "anchor_id": "section-102-1",
+          "exact_normalized_span_text": "in proceedings under this part, the court may make one or more of the following orders- a an order lifting or modifying the restriction in section 101(1); b an order extending the restriction or imposing a similar restriction; c an order suspending the effect of any decision made or action taken by the contracting authority in carrying out the procurement; d an order suspending the procurement or any part of it; e an order suspending the entry into or performance of a contract; f an order suspending the making of a modification of a contract or performance of a contract as modified."
+        },
+        {
+          "claim_id": "procurement-s102-2-interim-factors",
+          "proposition": "The court must weigh legality and continuity public interests, supplier interests including adequacy of damages, and any other appropriate matters.",
+          "anchor_id": "section-102-2",
+          "exact_normalized_span_text": "in considering whether to make an order under subsection (1), the court must have regard to- a the public interest in, among other things- i upholding the principle that public contracts should be awarded, and contracts should be modified, in accordance with the law; ii avoiding delay in the supply of the goods, services or works provided for in the contract or modification (for example, in respect of defence or security interests or the continuing provision of public services); b the interests of suppliers, including whether damages are an adequate remedy for the claimant; c any other matters that the court considers appropriate."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "procurement-s101-in-force",
+          "proposition": "Section 101 came into force on 24 February 2025.",
+          "anchor_id": "key-6023de5f8e5968481833e7d7e21f0cb6",
+          "exact_normalized_span_text": "s. 101 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        },
+        {
+          "claim_id": "procurement-s102-in-force",
+          "proposition": "Section 102 came into force on 24 February 2025.",
+          "anchor_id": "key-eb96d1c5b9818add7d99cab9502d8503",
+          "exact_normalized_span_text": "s. 102 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve the statutory automatic-suspension and interim-order bindings, subject to the separately verified transition boundary."
+    },
+    {
+      "binding_id": "procurement-act-damages",
+      "source_target_id": "supplemental-procurement-act-2023",
+      "expected_source_file_sha256": "aebe99d1283d0e7c0d31e90f656e822979199fb0a1020635d6289f6554b7681d",
+      "row_ids": [
+        "live30-q21:issue-07"
+      ],
+      "binding_scope": "PARTIAL",
+      "unresolved_scope_note": "The provisions establish availability of damages but do not alone resolve measure, causation, remoteness or proof of loss.",
+      "material_claims": [
+        {
+          "claim_id": "procurement-s100-3-loss-standing",
+          "proposition": "Proceedings require suffered or threatened loss or damage caused by breach of the statutory duty.",
+          "anchor_id": "section-100-3",
+          "exact_normalized_span_text": "proceedings under this part may be brought in the court by a supplier that- a is a united kingdom or treaty state supplier, and b has suffered, or is at risk of suffering, loss or damage in consequence of a breach of the duty."
+        },
+        {
+          "claim_id": "procurement-s103-2-c-precontract-damages",
+          "proposition": "Before contract entry or modification, the court may award damages for a qualifying breach.",
+          "anchor_id": "section-103-2-c",
+          "exact_normalized_span_text": "an order for the award of damages;"
+        },
+        {
+          "claim_id": "procurement-s104-2-b-postcontract-damages",
+          "proposition": "After contract entry or modification, the court may award damages for a qualifying breach.",
+          "anchor_id": "section-104-2-b",
+          "exact_normalized_span_text": "may, in any case, make an order for the award of damages."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "procurement-s103-in-force",
+          "proposition": "Section 103 came into force on 24 February 2025.",
+          "anchor_id": "key-42509a4b87d379efffcf8b262ecd62cc",
+          "exact_normalized_span_text": "s. 103 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        },
+        {
+          "claim_id": "procurement-s104-in-force-for-damages",
+          "proposition": "Section 104 came into force on 24 February 2025.",
+          "anchor_id": "key-f31d3d861837eceff0da7d45b137785d",
+          "exact_normalized_span_text": "s. 104 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve the partial damages-availability bindings, retaining a gap for quantum and causation doctrine."
+    },
+    {
+      "binding_id": "procurement-act-operational-contract-consequences",
+      "source_target_id": "supplemental-procurement-act-2023",
+      "expected_source_file_sha256": "aebe99d1283d0e7c0d31e90f656e822979199fb0a1020635d6289f6554b7681d",
+      "row_ids": [
+        "live30-q21:issue-08"
+      ],
+      "binding_scope": "DIRECT",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "procurement-s104-1-postcontract-scope",
+          "proposition": "Section 104 applies to a qualifying breach after the contract was entered into or the modification made.",
+          "anchor_id": "section-104-1",
+          "exact_normalized_span_text": "this section applies if the court is satisfied that a decision made, or action taken, by a contracting authority breached the duty referred to in section 100(1) and- a the contract in relation to which the breach occurred has already been entered into, or b where the breach occurred in relation to a modification of a contract, the modification has already been made."
+        },
+        {
+          "claim_id": "procurement-s104-2-set-aside-and-damages",
+          "proposition": "The court must set aside where a section 105 condition is met and may award damages.",
+          "anchor_id": "section-104-2",
+          "exact_normalized_span_text": "the court- a must, if a set aside condition in section 105 is met, make an order setting aside the contract or modification, and b may, in any case, make an order for the award of damages."
+        },
+        {
+          "claim_id": "procurement-s104-3-public-interest-exception",
+          "proposition": "The set-aside duty does not apply where overriding public interest requires the contract or modification to remain.",
+          "anchor_id": "section-104-3",
+          "exact_normalized_span_text": "the duty in subsection (2) a does not apply if the court is satisfied that there is an overriding public interest in not setting aside the contract or modification (for example, in respect of defence or security interests or the continuing provision of public services)."
+        },
+        {
+          "claim_id": "procurement-s104-4-reduction-remedy",
+          "proposition": "Where the public-interest exception applies, the court may reduce contract term or supplies.",
+          "anchor_id": "section-104-4",
+          "exact_normalized_span_text": "in which case, the court may make an order reducing- a the term of the contract; b the goods, services or works to be supplied under the contract."
+        },
+        {
+          "claim_id": "procurement-s104-6-prospective-effect",
+          "proposition": "A set-aside order makes the contract or modification ineffective from the order date.",
+          "anchor_id": "section-104-6",
+          "exact_normalized_span_text": "if a contract or modification is set aside, it is to be treated as without effect from the date of the order."
+        },
+        {
+          "claim_id": "procurement-s104-8-consequential-orders",
+          "proposition": "A set-aside or reduction order may provide for restitution and consequential or supplementary matters.",
+          "anchor_id": "section-104-8",
+          "exact_normalized_span_text": "an order setting aside or reducing the term of, or supplies under, a contract may make provision for restitution and other consequential or supplementary matters."
+        },
+        {
+          "claim_id": "procurement-s105-1-set-aside-conditions",
+          "proposition": "Set-aside conditions include denial of a proper pre-contract remedy because of notice, standstill, suspension or late-discovery failures.",
+          "anchor_id": "section-105-1",
+          "exact_normalized_span_text": "a set aside condition is met if the court is satisfied that the claimant was denied a proper opportunity to seek a remedy under section 103 (pre-contractual remedies) because- a a required contract award notice was not published; b the contract was entered into or modified before the end of any applicable standstill period (see sections 51 and 76); c the contract was entered into or modified during a period of automatic suspension under section 101 or in breach of a court order; d in the case of a contract of a kind described in section 51(3) (exceptions to mandatory standstill), the breach became apparent only on publication of a contract award notice; e in the case of a modification under section 74, the breach became apparent only on publication of a contract change notice; f the breach became apparent only after the contract was entered into or modified."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "procurement-s104-in-force-for-operational-contract",
+          "proposition": "Section 104 came into force on 24 February 2025.",
+          "anchor_id": "key-f31d3d861837eceff0da7d45b137785d",
+          "exact_normalized_span_text": "s. 104 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        },
+        {
+          "claim_id": "procurement-s105-in-force",
+          "proposition": "Section 105 came into force on 24 February 2025.",
+          "anchor_id": "key-6782506b08bf4924e650f91dbfe936a9",
+          "exact_normalized_span_text": "s. 105 in force at 24.2.2025 by s.i. 2024/716, sch. (as amended by s.i. 2024/959, regs. 1(2), 2(7) a )"
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve the operational-contract-remedy bindings, subject to the separately verified transition boundary."
+    },
+    {
+      "binding_id": "data-use-access-act-automated-decisions",
+      "source_target_id": "supplemental-data-use-and-access-act-2025",
+      "expected_source_file_sha256": "c04c780aa20839962f65e466a655a7c52ec7f511a63b7db252061fbb3829abe7",
+      "row_ids": [
+        "live30-q23:issue-03"
+      ],
+      "binding_scope": "DIRECT",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "duaa-s80-article22a-solely-automated",
+          "proposition": "A decision is based solely on automated processing where there is no meaningful human involvement in taking it.",
+          "anchor_id": "section-80-1",
+          "exact_normalized_span_text": "a decision is based solely on automated processing if there is no meaningful human involvement in the taking of the decision"
+        },
+        {
+          "claim_id": "duaa-s80-article22a-significant",
+          "proposition": "A significant decision produces a legal or similarly significant effect for the data subject.",
+          "anchor_id": "section-80-1",
+          "exact_normalized_span_text": "a decision is a significant decision, in relation to a data subject, if- i it produces a legal effect for the data subject, or ii it has a similarly significant effect for the data subject."
+        },
+        {
+          "claim_id": "duaa-s80-article22a-profiling",
+          "proposition": "Whether human involvement is meaningful must be assessed with regard to the extent of profiling.",
+          "anchor_id": "section-80-1",
+          "exact_normalized_span_text": "when considering whether there is meaningful human involvement in the taking of a decision, a person must consider, among other things, the extent to which the decision is reached by means of profiling."
+        },
+        {
+          "claim_id": "duaa-s80-article22b-special-category-restriction",
+          "proposition": "A significant decision using special-category processing may not be solely automated unless a statutory condition is met.",
+          "anchor_id": "section-80-1",
+          "exact_normalized_span_text": "a significant decision based entirely or partly on processing described in article 9(1) (processing of special categories of personal data) may not be taken based solely on automated processing, unless one of the following conditions is met."
+        },
+        {
+          "claim_id": "duaa-s80-article22c-safeguards",
+          "proposition": "Required safeguards include information, representations, human intervention and the ability to contest the decision.",
+          "anchor_id": "section-80-1",
+          "exact_normalized_span_text": "the safeguards must consist of or include measures which- a provide the data subject with information about decisions described in paragraph 1 taken in relation to the data subject; b enable the data subject to make representations about such decisions; c enable the data subject to obtain human intervention on the part of the controller in relation to such decisions; d enable the data subject to contest such decisions."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "duaa-s80-in-force",
+          "proposition": "Section 80 was fully in force by 5 February 2026.",
+          "anchor_id": "key-771e00b67b80bba987df21569a39c1ec",
+          "exact_normalized_span_text": "s. 80 in force at 5.2.2026 in so far as not already in force by s.i. 2026/82, reg. 2 j (with reg. 5 )"
+        }
+      ],
+      "proposed_action": "Admit the target-date official Act and approve only the automated-decision proposition binding. Do not use section 80 to launder support for the other data-protection issue rows."
+    }
+  ],
+  "owner_materiality_decision_required": true,
+  "owner_source_admission_required": true,
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

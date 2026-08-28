@@ -1,0 +1,60 @@
+{
+  "as_of_date": "2026-08-14",
+  "contains_filesystem_paths": false,
+  "contains_source_text": false,
+  "exceptions": [
+    {
+      "authority_identity_id": "ukpga:1980:58",
+      "legal_locator": "section 2",
+      "new_official_version_sha256": "53c4002fc9486f7d6f32dda34e390af9e180e88ffdd359786b64057a94d1bc65",
+      "new_source_content_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "predecessor_official_version_sha256": "53c4002fc9486f7d6f32dda34e390af9e180e88ffdd359786b64057a94d1bc65",
+      "predecessor_source_content_sha256": "39d184eba98086e5f81b406d4bb1763a88205091b45c8f850208cf8fb128d83f",
+      "reason_codes": [
+        "official_source_bytes_changed"
+      ],
+      "review_action": "fresh_human_provision_review_required"
+    },
+    {
+      "authority_identity_id": "ukpga:1980:58",
+      "legal_locator": "section 14A",
+      "new_official_version_sha256": "53c4002fc9486f7d6f32dda34e390af9e180e88ffdd359786b64057a94d1bc65",
+      "new_source_content_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "predecessor_official_version_sha256": "53c4002fc9486f7d6f32dda34e390af9e180e88ffdd359786b64057a94d1bc65",
+      "predecessor_source_content_sha256": "39d184eba98086e5f81b406d4bb1763a88205091b45c8f850208cf8fb128d83f",
+      "reason_codes": [
+        "official_source_bytes_changed"
+      ],
+      "review_action": "fresh_human_provision_review_required"
+    },
+    {
+      "authority_identity_id": "ukpga:2000:29",
+      "legal_locator": "section 1",
+      "new_official_version_sha256": "6f8160a1c7c69ab2bdf0ea9debb623a69d229674af0730c804150227e53f93cf",
+      "new_source_content_sha256": "ebafb72d8bfbc8dfc0430d6f4b778cf31740c5c0c16f047a9ffef3b76073b612",
+      "predecessor_official_version_sha256": "6f8160a1c7c69ab2bdf0ea9debb623a69d229674af0730c804150227e53f93cf",
+      "predecessor_source_content_sha256": "89acb7e390250bb355cf3792787fe8fe2815504e282b7e987485bce64de1bff6",
+      "reason_codes": [
+        "official_source_bytes_changed"
+      ],
+      "review_action": "fresh_human_provision_review_required"
+    },
+    {
+      "authority_identity_id": "ukpga:1975:63",
+      "legal_locator": "section 1",
+      "new_official_version_sha256": "cf6eab520c960367a1b945eb846811ef2081ea8bfed55ab3a02a39142429e5f7",
+      "new_source_content_sha256": "1311476a3ec00bf00e1f6602f10520407785a8354d6d8fe5d86865270f66578a",
+      "predecessor_official_version_sha256": "cf6eab520c960367a1b945eb846811ef2081ea8bfed55ab3a02a39142429e5f7",
+      "predecessor_source_content_sha256": "31e54c0bb398de234109c7d005a3f768bbb8ad7bc7d1c658e0c55af08ef38394",
+      "reason_codes": [
+        "official_source_bytes_changed"
+      ],
+      "review_action": "fresh_human_provision_review_required"
+    }
+  ],
+  "excluded_record_count": 4,
+  "inherited_record_count": 14,
+  "policy": "inherit_only_identical_official_bytes_and_version_metadata",
+  "predecessor_as_of_date": "2026-08-12",
+  "schema": "legalbot.provision-verification-exceptions.v1"
+}

@@ -1,0 +1,85 @@
+[project]
+name = "legalbot-new"
+version = "0.1.0"
+description = "Owner-only, evidence-first local legal research assistant"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+license = { text = "Private owner-only application" }
+dependencies = [
+  "aiosqlite==0.21.0",
+  "beautifulsoup4==4.13.4",
+  "cryptography==45.0.6",
+  "fastapi==0.116.1",
+  "httpx==0.28.1",
+  "httpcore==1.0.9",
+  "keyring==25.6.0",
+  "lancedb==0.25.0",
+  "lxml==6.0.0",
+  "odfpy==1.4.1",
+  "orjson==3.11.1",
+  "pydantic==2.11.7",
+  "pypdf==5.9.0",
+  "python-docx==1.2.0",
+  "python-multipart==0.0.20",
+  "python-pptx==1.0.2",
+  "pyyaml==6.0.2",
+  "sse-starlette==3.0.2",
+  "uvicorn[standard]==0.35.0",
+  "grpcio==1.83.0",
+  "protobuf==7.35.1",
+]
+
+[project.optional-dependencies]
+models = [
+  "huggingface-hub==0.34.4",
+  "sentence-transformers==5.1.0",
+]
+dev = [
+  "grpcio-tools==1.83.0",
+  "hypothesis==6.136.9",
+  "mypy==1.17.1",
+  "pytest==8.4.1",
+  "pytest-asyncio==1.1.0",
+  "pytest-cov==6.2.1",
+  "ruff==0.12.8",
+  "schemathesis==4.1.4",
+]
+otel = [
+  "opentelemetry-api==1.36.0",
+  "opentelemetry-sdk==1.36.0",
+]
+
+[project.scripts]
+legalbot = "app.cli:main"
+
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/app"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = [".", "backend"]
+addopts = "-q --strict-markers"
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["backend"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501", "B008", "RUF001"]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/app/model_runtime/proto/legalbot_model_runtime_pb2.py" = ["ALL"]
+"backend/app/model_runtime/proto/legalbot_model_runtime_pb2.pyi" = ["ALL"]
+"backend/app/model_runtime/proto/legalbot_model_runtime_pb2_grpc.py" = ["ALL"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["backend.app"]

@@ -1,0 +1,317 @@
+{
+  "schema": "legalbot.v111-integration-state-snapshot.v1",
+  "captured_at": "2026-08-22T03:17:43Z",
+  "authorizing": false,
+  "purpose": "Read-only pre-mutation observation for the LegalBot v1.11 Integration Baseline",
+  "privacy": {
+    "absolute_worktree_paths_included": false,
+    "path_identity_method": "sha256(utf8 absolute path)",
+    "remote_url_included": false
+  },
+  "git": {
+    "branch": "codex/release-v111-integration",
+    "head": "ad70f0a687a7ae4993ae49c6df84abe36af06d56",
+    "tree": "b1b71f28728d3555ae07eba8e4eaff2591389a4f",
+    "upstream": "origin/codex/release-v111-integration",
+    "upstream_head": "ad70f0a687a7ae4993ae49c6df84abe36af06d56",
+    "remote_name": "origin",
+    "remote_url_sha256": "ba6760901d4d7ecc306a80c9c2b8e2974f79ee0910a61835813f84ccb4e4ce85",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cached_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tracked_file_list_sha256": "9f8f334d7f912bf04af57a6a87af95343f1df515a73a41c1f1eed9cab522ddd9",
+    "porcelain_v2_sha256": "bd9d24b600b0e0986ea8bd7e5cb613d89e55afd307fec0011335bc31f37e819b",
+    "tracked_clean": true,
+    "untracked_count": 4,
+    "history": {
+      "range": "372b86f89e09d4c100c3de7d45d0bc0fb22829a3..ad70f0a687a7ae4993ae49c6df84abe36af06d56",
+      "commit_count": 55,
+      "canonical_log_sha256": "4de35265cc5f410492c7134204a15dceef285e76eef73ed9417bfbd3979d2260"
+    },
+    "worktrees": [
+      {
+        "label": "main",
+        "path_sha256": "9e4314aee3cd14122279e08b430e40dc063222176b8e33ac2d6bf393ebfc4526",
+        "head": "21bc44cfcf17bac739884fc4fe61509c05f5e54d",
+        "branch": "main",
+        "state": "present"
+      },
+      {
+        "label": "first-live-fix",
+        "path_sha256": "d3ada2d590f4ea0de543b0da7f0844e0b637320cb6b89d25fc67b1920349d61f",
+        "head": "045a7ebbbbca50a8f5b3c404670c85cabbf6d195",
+        "branch": "fix/first-live-rerank-runtime",
+        "state": "prunable-missing"
+      },
+      {
+        "label": "index-recovery",
+        "path_sha256": "23cb3a6717ca2236d4858a918b4716ac9e3bff3d85b0e18ab493c36592f3b279",
+        "head": "3478e1d943f71eef6e9fb151c211e301bece9470",
+        "branch": "fix/frozen-v11-gold-binding",
+        "state": "prunable-missing"
+      },
+      {
+        "label": "v111-integration",
+        "path_sha256": "a413e3e6f4af4dc04eb56c2bc2622e4e499de5c426f583e0f07a191d9d9c138d",
+        "head": "ad70f0a687a7ae4993ae49c6df84abe36af06d56",
+        "branch": "codex/release-v111-integration",
+        "state": "present"
+      }
+    ]
+  },
+  "deferred_untracked_files": [
+    {
+      "path": "backend/app/evaluation/release_content_certification.py",
+      "size": 28538,
+      "mode": "100644",
+      "sha256": "4484fc1d31dce72b9342e37d670a81f1bd6f96bc7faff98e3780cbdff138ac5b"
+    },
+    {
+      "path": "backend/app/evaluation/owner_quality_v111_operational_evidence.py",
+      "size": 157754,
+      "mode": "100644",
+      "sha256": "c534d44c0561d5bdf1ed651fa6aed87b4a79b62d8a4589d9f3979f7922c09113"
+    },
+    {
+      "path": "backend/tests/test_owner_quality_v111_operational_evidence.py",
+      "size": 70695,
+      "mode": "100644",
+      "sha256": "67e3006b7c11c3d44408f308ba436ad4c103cc72b396fe97524628cca1b98c2b"
+    },
+    {
+      "path": "scripts/run_v111_operational_evidence.py",
+      "size": 4257,
+      "mode": "100644",
+      "sha256": "51e46f62a9f67410720ee7fb5ae0b3109432efe4f437b02d5831a31ce3bb1936"
+    }
+  ],
+  "candidate": {
+    "build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "schema": "legalbot.lance-build.v1",
+    "sealed": true,
+    "created_at": "2026-08-18T14:38:05.728100+00:00",
+    "source_scan_id": "a6200da832c587e7",
+    "source_count": 85,
+    "chunk_count": 149855,
+    "vector_count": 149855,
+    "vector_dimensions": 1024,
+    "embedding_model": "Qwen/Qwen3-Embedding-0.6B@97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3;dtype=float16;batch=8",
+    "reranker_model": "Qwen/Qwen3-Reranker-0.6B@e61197ed45024b0ed8a2d74b80b4d909f1255473",
+    "manifest_file_sha256": "e28a4138e87cfeb2502e746073208ab25a647de8082a3c7fe96a44ed7d5cc74a",
+    "seal_file_sha256": "d8009de258306cb13ae2b5d0c0d03dbf725d8c0e563bccde74cedaa9acdba04a",
+    "source_manifest_sha256": "d2c1434fd5fc44d4f2f7e4f7629293f646bb28ed9b8466687feb6c470ea53ac0",
+    "lance_tree_sha256": "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705",
+    "active_pointer": "absent",
+    "previous_pointer": "absent"
+  },
+  "catalogue": {
+    "access_for_snapshot": "filesystem-stat-only",
+    "catalogue": {
+      "size": 6204063744,
+      "mode": "0600",
+      "schema_version_last_verified": 19
+    },
+    "wal": {
+      "present": true,
+      "size": 0,
+      "persistent_content": false
+    },
+    "shm": {
+      "present": true,
+      "size": 32768,
+      "persistent_content": false
+    }
+  },
+  "historical_attestation": {
+    "selected_by": "single candidate-local v1.1 attestation present",
+    "path": "data/evaluations/retrieval/current-law-ew-full-fp16-v111-20260818-a/v1.1-attestation.json",
+    "file_sha256": "08ed703c5ee8ada811b1a81dbe4a6b92233af3f80cf27df7b41b788f3c3a8ebf",
+    "created_at": "2026-08-19T01:42:42.600856+00:00",
+    "passed": true,
+    "promotion_eligible_at_creation": true,
+    "scorer_implementation_sha256": "28888115210f8b2ab9ef27847070929a495e5034c1b9951d0901dc15f63bdb6c",
+    "closure_schema_bound": false,
+    "metrics": {
+      "binding": "24/24",
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr": 0.9270833333333334,
+      "teaching_hits": 0,
+      "private_path_hits": 0,
+      "wrong_version_count": 0
+    }
+  },
+  "runtime_and_locks": {
+    "python": "3.13.7",
+    "python_selector_sha256": "02e735b3dfe1c32833eb550b7ff8ffa17f5f2bc3fa1e7bae61a8f5a3883ce398",
+    "uv": "0.9.7",
+    "uv_lock_sha256": "dcd5e78024c386cccf95228db57f851601a613803100976c12a9e9e912df1ee0",
+    "model_runtime_uv_lock_sha256": "039f286b1fd62d6d00eb5422a14e7fa118737dd1824f5efda064dcad663d9472",
+    "node": "25.5.0",
+    "node_24_selector_present": false,
+    "npm": "11.8.0",
+    "web_package_lock_sha256": "15e2fd1a052f37b45187d0cba7e516fdb6cd1562f00cbaa7f305c533e25b6e38"
+  },
+  "owner_decision_inventory": [
+    {
+      "path": "data/evaluations/owner-decisions/completion-memory-envelope-v111-16g-20260820/request.json",
+      "sha256": "962b6f800e1083843ec8fa78872ff9661d6e5f1389bcc031d943e5ec71eb23b8",
+      "status": "historical-request-no-resolution"
+    },
+    {
+      "path": "data/evaluations/owner-decisions/v111-owner-canary-transport-b69c7566dd8e/request.json",
+      "sha256": "dfbafc214c68c65067bdb0c2a5b8fb8e9a1ae8a2be483c3e756a4d039a268cad",
+      "status": "historical-request-no-resolution"
+    },
+    {
+      "path": "data/evaluations/owner-decisions/v111-trusted-owner-signature-71c21cbe530a/request.json",
+      "sha256": "50b776b8429a7b5bd2b9ad48ac279c6483287eab36f1b75d4e5bfa3997391e73",
+      "status": "historical-request-no-resolution"
+    },
+    {
+      "path": "data/evaluations/owner-decisions/v111-trusted-owner-signature-f50144b197ec/request.json",
+      "sha256": "7f78300b62b73da1eb9fc0bca818bd5bce88276bec7af549b3b4185355bdb89c",
+      "status": "historical-request-no-resolution"
+    }
+  ],
+  "q31_reference_inventory": [
+    {
+      "classification": "historical-diagnostic",
+      "path": "docs/status/live60-v2-latest.json",
+      "lines": [22],
+      "disposition": "preserve bytes"
+    },
+    {
+      "classification": "historical-diagnostic",
+      "path": "scripts/model/profile_first_live_rerank.py",
+      "lines": [65],
+      "disposition": "retain as measured historical profile"
+    },
+    {
+      "classification": "historical-diagnostic",
+      "path": "backend/app/retrieval/budget.py",
+      "lines": [19],
+      "disposition": "retain measurement; remove normative case authority from wording"
+    },
+    {
+      "classification": "current-q31-specific-dependency",
+      "path": "backend/app/evaluation/candidate_runtime_preflight.py",
+      "lines": [41, 158, 161],
+      "disposition": "replace with generic deterministic selection"
+    },
+    {
+      "classification": "current-q31-specific-dependency",
+      "path": "backend/app/evaluation/candidate_completion_preflight.py",
+      "lines": [74, 606, 629, 1331, 1361],
+      "disposition": "replace with generic deterministic selection and result fields"
+    },
+    {
+      "classification": "current-q31-specific-dependency",
+      "path": "scripts/candidate_runtime_preflight.py",
+      "lines": [2, 49],
+      "disposition": "make help and description case-agnostic"
+    },
+    {
+      "classification": "current-q31-specific-dependency",
+      "path": "scripts/candidate_completion_preflight.py",
+      "lines": [61],
+      "disposition": "make help case-agnostic"
+    },
+    {
+      "classification": "generic-runtime-safeguard-test-with-q31-fixture",
+      "path": "backend/tests/test_candidate_runtime_preflight.py",
+      "lines": [99, 128, 139, 140, 141, 175, 214, 252],
+      "disposition": "rewrite selection assertions across differently composed suites"
+    },
+    {
+      "classification": "generic-runtime-safeguard-test-with-q31-fixture",
+      "path": "backend/tests/test_candidate_completion_preflight.py",
+      "lines": [308, 346, 362, 363, 376, 414, 641, 642, 680, 708, 709, 737, 738, 739, 832, 868, 885, 916],
+      "disposition": "remove required/preferred assertions; fixtures may remain case-agnostic samples"
+    },
+    {
+      "classification": "unrelated-case-id-data",
+      "path": "backend/app/evaluation/live_suite.py",
+      "lines": [515, 525],
+      "disposition": "preserve Q31-Q60 lineage"
+    },
+    {
+      "classification": "unrelated-case-id-data",
+      "path": "backend/app/observability/runtime.py",
+      "lines": [268],
+      "disposition": "preserve registry coverage"
+    },
+    {
+      "classification": "unrelated-case-id-data",
+      "path": "docs/CURRENT_STATE.md",
+      "lines": [281],
+      "disposition": "preserve lineage description"
+    },
+    {
+      "classification": "unrelated-case-id-data",
+      "path": "docs/LIVE60_EVALUATION.md",
+      "lines": [26, 34, 50],
+      "disposition": "preserve historical suite documentation"
+    },
+    {
+      "classification": "unrelated-case-id-test-fixture",
+      "path": "backend/tests/test_live60_store_coverage.py",
+      "lines": [57, 58],
+      "disposition": "preserve registry-record test"
+    },
+    {
+      "classification": "unrelated-case-id-test-fixture",
+      "path": "backend/tests/test_live60_evaluation.py",
+      "lines": [51],
+      "disposition": "preserve suite identity"
+    },
+    {
+      "classification": "unrelated-case-id-test-fixture",
+      "path": "backend/tests/test_owner_observability_projections.py",
+      "lines": [179, 208, 218],
+      "disposition": "fixture identifier has no selection authority"
+    },
+    {
+      "classification": "unrelated-case-id-test-fixture",
+      "path": "backend/tests/test_owner_quality_v111_hardening.py",
+      "lines": [534, 541, 553],
+      "disposition": "fixture identifier has no selection authority"
+    },
+    {
+      "classification": "unrelated-case-id-test-fixture",
+      "path": "backend/tests/test_retry_policy.py",
+      "lines": [14],
+      "disposition": "fixture scope has no selection authority"
+    }
+  ],
+  "verification_observations": {
+    "strict_mypy": {
+      "command": "uv run --frozen mypy backend/app --no-incremental",
+      "exit_code": 1,
+      "checked_source_files": 242,
+      "error_count": 8,
+      "affected_file_count": 6,
+      "errors": [
+        "backend/app/observability/otel_jsonl.py:24 import-not-found opentelemetry",
+        "backend/app/evaluation/live30_execute.py:37 attr-defined word_count",
+        "backend/app/evaluation/live_suite_http_execute.py:30 attr-defined word_count",
+        "backend/app/evaluation/live_suite_admission.py:75 no-untyped-def",
+        "backend/app/evaluation/live_suite_admission.py:105 no-untyped-def",
+        "backend/app/evaluation/live_suite_v1_to_v2_migration.py:250 no-redef payload",
+        "backend/app/evaluation/live_suite_source_hold_review.py:238 assignment",
+        "backend/app/evaluation/live_suite_source_hold_review.py:240 assignment"
+      ]
+    },
+    "other_full_checks": {
+      "status": "not-run-for-pre-mutation-snapshot",
+      "reason": "Phase-1 dependency sync and verification follow this read-only observation"
+    }
+  },
+  "prohibited_phase1_actions_observed": {
+    "model_invocation": false,
+    "runtime_sanity_execution": false,
+    "all60_execution": false,
+    "stage_a_execution": false,
+    "promotion": false,
+    "live_activation": false
+  }
+}

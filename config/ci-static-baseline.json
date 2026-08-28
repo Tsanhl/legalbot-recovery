@@ -1,0 +1,12 @@
+{
+  "schema": "legalbot.ci-static-baseline.v1",
+  "temporary": false,
+  "note": "Strict zero-error Ruff and mypy baseline; regressions are prohibited.",
+  "ruff": {
+    "max_error_count": 0
+  },
+  "mypy": {
+    "max_error_count": 0,
+    "max_file_count": 0
+  }
+}

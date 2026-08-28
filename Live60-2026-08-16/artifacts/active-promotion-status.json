@@ -1,0 +1,17 @@
+{
+  "active_pointer_present": false,
+  "blocking_reason_codes": [
+    "no_active_pointer",
+    "no_qualified_issue_gold",
+    "no_stage_a",
+    "no_o04"
+  ],
+  "elasticsearch_used": false,
+  "eligible_for_training": false,
+  "hybrid_stack": "lancedb_fts_plus_vector_rrf_qwen_reranker",
+  "next_allowed_action": "build_rights_qualified_candidate_after_owner_ticks",
+  "promoted": false,
+  "schema": "legalbot.live60-active-promotion-status.v1",
+  "status": "blocked",
+  "training_export_allowed": false
+}

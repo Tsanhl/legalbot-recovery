@@ -1,0 +1,109 @@
+{
+  "authorizing": false,
+  "captured_at": "2026-08-22T07:16:01Z",
+  "checkpoint": {
+    "commit": "556cf6a3b27a75a51ac58a24ca0596f1dccef3f3",
+    "tag": "v1.11-integration-baseline-20260822-r4",
+    "tree": "ec656f20d167ec2cd4222ffd421cfba1fc789d4a"
+  },
+  "diagnostic_method": {
+    "answer_model_invoked": false,
+    "candidate_mutated": false,
+    "full_r4_reattestation_repeated": false,
+    "gold_or_threshold_changed": false,
+    "method": "Read the immutable r4 attempt report, inspect the sealed Lance authority table read-only, and compare the unchanged lexical/vector top-20 pools under the r4 hard-coded date and the already-proven candidate-bound snapshot date.",
+    "ranking_parameters_changed": false
+  },
+  "failed_attempt": {
+    "attempt_id": "45d463db4d2bdac43dc979250fc04132",
+    "candidate_build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "completed_query_count": 24,
+    "failed_gates": [
+      "aggregate.mrr",
+      "aggregate.positive_recall_at_10",
+      "aggregate.primary_must_hit_recall_at_5",
+      "development.mrr",
+      "development.positive_recall_at_10",
+      "development.primary_must_hit_recall_at_5",
+      "promotion.mrr",
+      "promotion.positive_recall_at_10",
+      "promotion.primary_must_hit_recall_at_5"
+    ],
+    "metrics": {
+      "development": {
+        "mrr": 0.25,
+        "primary_must_hit_recall_at_5": 0.25,
+        "recall_at_10": 0.25,
+        "recall_at_5": 0.25
+      },
+      "overall": {
+        "hit_at_10_count": 6,
+        "hit_at_5_count": 6,
+        "mrr": 0.25,
+        "positive_count": 24,
+        "primary_must_hit_recall_at_5": 0.25,
+        "recall_at_10": 0.25,
+        "recall_at_5": 0.25
+      },
+      "promotion": {
+        "mrr": 0.25,
+        "primary_must_hit_recall_at_5": 0.25,
+        "recall_at_10": 0.25,
+        "recall_at_5": 0.25
+      }
+    },
+    "report_file_sha256": "e16a3d544b34fd05b82379ca3b1bad2b86870798fa76406aef6d33d45e6f208b",
+    "report_path": "data/evaluations/retrieval/current-law-ew-full-fp16-v111-20260818-a/v1.1-reattest-attempt-556cf6a3b27a75a5-45d463db4d2bdac43dc979250fc04132-result.json",
+    "report_self_seal_sha256": "46ea39e273819de97904b9d5c25f89d241bdac3cf80fbbc2de83400c301af1a1",
+    "retrieval_call_count": 24
+  },
+  "findings": {
+    "candidate_bound_snapshot_date": "2026-08-14",
+    "candidate_contains_all_frozen_gold": true,
+    "contamination": {
+      "private_path_hits": 0,
+      "teaching_or_assessment_hits": 0,
+      "wrong_version_hits": 0
+    },
+    "correct_source_in_candidate_bound_top_20": {
+      "lexical_case_count": 12,
+      "total_legislation_case_count": 18,
+      "vector_case_count": 18
+    },
+    "correct_source_in_r4_top_20": {
+      "lexical_case_count": 0,
+      "total_legislation_case_count": 18,
+      "vector_case_count": 0
+    },
+    "failed_legislation_case_count": 18,
+    "passed_exact_case_identity_count": 6,
+    "r4_filter_date": "2026-08-13",
+    "root_cause": "The evaluation retriever hard-coded 2026-08-13 into both Lance backends after binding the frozen legislation rows to the sealed 2026-08-14 candidate. The Lance as-of predicate therefore excluded every candidate statute before lexical/vector ranking. Exact neutral-citation case routing was unaffected, producing the observed 6/24 pattern.",
+    "stage": "source-version/as-of filtering before candidate generation"
+  },
+  "invariants_after_failure": {
+    "active_index_build_count": 0,
+    "active_pointer_absent": true,
+    "catalogue_sha256": "206932a63a647f59fa448beacc3c2b80022ebcde074a4e5fe370d6307ca73fcf",
+    "candidate_row_count": 1,
+    "passing_attestation_history_count": 0,
+    "previous_pointer_absent": true,
+    "queued_or_running_job_count": 0,
+    "selected_attestation_count": 0
+  },
+  "r5_correction": {
+    "candidate_rebuild_required": false,
+    "description": "Derive the Lance retrieval date from the already-validated candidate/gold binding and require every rebound legislation row to match that exact candidate source, version and snapshot date before retrieval starts.",
+    "embedding_changed": false,
+    "filters_weakened": false,
+    "fusion_changed": false,
+    "gold_changed": false,
+    "query_changed": false,
+    "reranker_changed": false,
+    "thresholds_changed": false,
+    "top_k_changed": false
+  },
+  "schema": "legalbot.v111-phase1c-r4-retrieval-diagnosis.v1",
+  "seal_sha256": "b8e31943db931152fae439fbc61040f75ec33fc035c112f7189406f591587f1d",
+  "status": "diagnosed_for_new_checkpoint"
+}

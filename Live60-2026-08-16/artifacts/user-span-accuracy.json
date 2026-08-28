@@ -1,0 +1,17 @@
+{
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "ai_second_reviewer_forbidden": true,
+  "bound_issue_span_count": 0,
+  "checked_span_count": 8,
+  "eligible_for_training": false,
+  "exact_match": true,
+  "generation_authorised": false,
+  "mismatch_codes": [],
+  "mismatch_count": 0,
+  "overlay_sealable": false,
+  "owner_is_primary_reviewer": true,
+  "repair_span_count": 8,
+  "schema": "legalbot.live60-user-span-accuracy.v1",
+  "seals_expert_gold": false,
+  "training_export_allowed": false
+}

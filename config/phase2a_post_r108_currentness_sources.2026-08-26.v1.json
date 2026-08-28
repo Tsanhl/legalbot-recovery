@@ -1,0 +1,76 @@
+{
+  "automatic_embedding": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "candidate_mutation_authorized": false,
+  "development30_authorized": false,
+  "owner_source_admission_required": true,
+  "phase2b_authorized": false,
+  "schema": "legalbot.v111.phase2a.post-r108-currentness-source-plan.v1",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "targets": [
+    {
+      "affected_row_ids": [
+        "live30-q14:issue-06"
+      ],
+      "authority_identity_id": "neutral-citation:[2021] UKSC 3",
+      "expected_response_sha256": "9d0215b868922884fd74b5a47e89d15433b78bcbf6c67c23ad59e71bd758a1b1",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2021/3/data.xml",
+      "proposed_use": "CURRENT_BINDING_REPLACEMENT_PROPOSITION_SOURCE",
+      "required_locators": [
+        "paragraph 21",
+        "paragraph 102"
+      ],
+      "research_reason": "The planned 2018 Court of Appeal judgment was reversed on appeal. The later Supreme Court judgment contains the current binding restraint against mini-trials at the summary stage.",
+      "target_id": "post-r108-currentness-001"
+    },
+    {
+      "affected_row_ids": [
+        "live30-q28:issue-05"
+      ],
+      "authority_identity_id": "neutral-citation:[2025] UKSC 22",
+      "expected_response_sha256": "ac8b04ef02769abfa455694e1271778403d30342ede0b96b706e91c003f6270b",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2025/22/data.xml",
+      "proposed_use": "CURRENT_BINDING_REPLACEMENT_PROPOSITION_SOURCE",
+      "required_locators": [
+        "paragraph 1",
+        "paragraph 2",
+        "paragraph 40"
+      ],
+      "research_reason": "The 2025 Supreme Court judgment is a current binding statement of the undue-influence and lender-on-inquiry framework and is preferable to relying on a 2009 first-instance summary.",
+      "target_id": "post-r108-currentness-002"
+    },
+    {
+      "affected_row_ids": [
+        "live30-q30:issue-16"
+      ],
+      "authority_identity_id": "neutral-citation:[2025] EWHC 2863 (Ch)",
+      "expected_response_sha256": "b97f8f86be0aba3da7ba16cf0528555c1bbaca34449f4f079f5d85acbe22c6c6",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewhc/ch/2025/2863/data.xml",
+      "proposed_use": "LATER_TREATMENT_METADATA_ONLY_UNLESS_SEPARATELY_BOUND",
+      "required_locators": [
+        "paragraph 18"
+      ],
+      "research_reason": "The November 2025 trial judgment is later treatment in the same Getty proceedings and must be reviewed before relying on the January 2025 procedural judgment.",
+      "target_id": "post-r108-currentness-003"
+    },
+    {
+      "affected_row_ids": [
+        "live60-q54:issue-07"
+      ],
+      "authority_identity_id": "uksi:2006:246",
+      "expected_response_sha256": "57736cb8e4983aaafcdba99236f159afd3cb26b0532b97b33627db85dda7d1fa",
+      "official_url": "https://www.legislation.gov.uk/uksi/2006/246/2026-08-14/data.xml",
+      "proposed_use": "CURRENT_PRIMARY_LEGISLATION_PROPOSITION_SOURCE",
+      "required_locators": [
+        "regulation 4",
+        "regulation 10",
+        "regulation 13"
+      ],
+      "research_reason": "The current TUPE Regulations are absent from the sealed candidate and are primary authority for transfer, occupational-pension and consultation propositions.",
+      "target_id": "post-r108-currentness-004"
+    }
+  ],
+  "technical_qualification_assigned": false
+}

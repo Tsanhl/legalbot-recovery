@@ -1,0 +1,41 @@
+{
+  "schema": "legalbot.v111-deferred-archive-receipt.v1",
+  "captured_at": "2026-08-22T03:25:00Z",
+  "authorizing": false,
+  "preservation_only": true,
+  "branch": "archive/v111-deferred-operational-20260822",
+  "commit": "0c4f854ed4d6525d6153c6962dde3e5ffa6684c8",
+  "tree": "edfa7e49db683a44731c5d9b993b686e5cd64295",
+  "base_commit": "ad70f0a687a7ae4993ae49c6df84abe36af06d56",
+  "remote": "origin",
+  "remote_head_verified": true,
+  "marker": "DEFERRED-V111-OPERATIONAL-WORK.md",
+  "integration_worktree_copies_removed": true,
+  "recovery_command": "git show archive/v111-deferred-operational-20260822:<repository-relative-path>",
+  "files": [
+    {
+      "path": "backend/app/evaluation/release_content_certification.py",
+      "size": 28538,
+      "mode": "100644",
+      "sha256": "4484fc1d31dce72b9342e37d670a81f1bd6f96bc7faff98e3780cbdff138ac5b"
+    },
+    {
+      "path": "backend/app/evaluation/owner_quality_v111_operational_evidence.py",
+      "size": 157754,
+      "mode": "100644",
+      "sha256": "c534d44c0561d5bdf1ed651fa6aed87b4a79b62d8a4589d9f3979f7922c09113"
+    },
+    {
+      "path": "backend/tests/test_owner_quality_v111_operational_evidence.py",
+      "size": 70695,
+      "mode": "100644",
+      "sha256": "67e3006b7c11c3d44408f308ba436ad4c103cc72b396fe97524628cca1b98c2b"
+    },
+    {
+      "path": "scripts/run_v111_operational_evidence.py",
+      "size": 4257,
+      "mode": "100644",
+      "sha256": "51e46f62a9f67410720ee7fb5ae0b3109432efe4f437b02d5831a31ce3bb1936"
+    }
+  ]
+}

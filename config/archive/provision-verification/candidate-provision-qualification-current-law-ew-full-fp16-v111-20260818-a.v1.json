@@ -1,0 +1,119 @@
+{
+  "candidate": {
+    "build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "embedded_provision_registry_sha256": "1bb3c036a555cd67bc618a7edff1f1f5a0274ea4061c0775bccf8f722f7f88ac",
+    "lance_tree_sha256": "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705",
+    "manifest_file_sha256": "e28a4138e87cfeb2502e746073208ab25a647de8082a3c7fe96a44ed7d5cc74a",
+    "seal_file_sha256": "d8009de258306cb13ae2b5d0c0d03dbf725d8c0e563bccde74cedaa9acdba04a",
+    "source_manifest_file_sha256": "02a13a3641d0e406d974a1c8f1a4912ae6e761d059774bd68ff97a4cc7732e0e"
+  },
+  "method": "inherit_only_identical_official_provision_subtree_and_effective_context",
+  "predecessor_registry": {
+    "relative_path": "config/archive/provision-verification/provision-verification-2026-08-12.v1.json",
+    "sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+    "status": "immutable_historical"
+  },
+  "record_count": 4,
+  "records": [
+    {
+      "legal_locator": "section 2",
+      "official_provision_provenance": {
+        "candidate_as_of_date": "2026-08-14",
+        "candidate_source_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+        "inherited_context_sha256": "a9f6b6097d3ab6353ada4fe1ee348195fcfe633fdaf9bb78b031a35ac792ae20",
+        "predecessor_as_of_date": "2026-08-12",
+        "predecessor_source_sha256": "39d184eba98086e5f81b406d4bb1763a88205091b45c8f850208cf8fb128d83f",
+        "provision_c14n_sha256": "09751b155a9c98206c5f8a8f7eaa6773d1077064de3d3cd91ff6d5fbc7324742",
+        "provision_snapshot_sha256": "d6dc546d747a4566ae8a8c74b2a8b697d546252374dc31700885e01a8b8d337b",
+        "provision_text_sha256": "ec5a83b2c25069ba657181a785520e3da6ad8d90bb28fc112d5b8c86c7691727"
+      },
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1980/58/section/2",
+      "predecessor_record_sha256": "3d82a3755cc51e06cefbfbb4d1726b7b99346da672668e56b5ee64e827f2ef18",
+      "predecessor_source_id": "ukpga:1980:58:latest-available@2026-08-12",
+      "qualification_provenance": "inherited_identical_official_provision_snapshot",
+      "section_unapplied_effect_count": 1,
+      "source_content_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "source_subject_folder": "Tort and professional negligence law",
+      "source_version_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "stable_source_id": "ukpga:1980:58:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "not_material_to_queried_proposition",
+      "verified_extent": "E+W+N.I."
+    },
+    {
+      "legal_locator": "section 14A",
+      "official_provision_provenance": {
+        "candidate_as_of_date": "2026-08-14",
+        "candidate_source_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+        "inherited_context_sha256": "7d973694836598e8f2d010a2b20680b01951bd97ac44dcbe46e0eca7c37a9947",
+        "predecessor_as_of_date": "2026-08-12",
+        "predecessor_source_sha256": "39d184eba98086e5f81b406d4bb1763a88205091b45c8f850208cf8fb128d83f",
+        "provision_c14n_sha256": "8500f5c0a207f12de21e362bc6d1aaceea17cd96eaa2ba3e4d03c0221b70e680",
+        "provision_snapshot_sha256": "fdd1fe423c86800ec2c8ba0a6e20d1ecaec0d74e5ec3d5a210faf36e6cbc1ef8",
+        "provision_text_sha256": "82fb6094b2de587753056d11bdf1d6b1b1efc8dff256532d043de197ea1bab29"
+      },
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1980/58/section/14A",
+      "predecessor_record_sha256": "da1b436279d028b425e516b2d37721b96b0f5331527c460e4d4536b24eb558fe",
+      "predecessor_source_id": "ukpga:1980:58:latest-available@2026-08-12",
+      "qualification_provenance": "inherited_identical_official_provision_snapshot",
+      "section_unapplied_effect_count": 1,
+      "source_content_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "source_subject_folder": "Tort and professional negligence law",
+      "source_version_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "stable_source_id": "ukpga:1980:58:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "not_material_to_queried_proposition",
+      "verified_extent": "E+W+N.I."
+    },
+    {
+      "legal_locator": "section 1",
+      "official_provision_provenance": {
+        "candidate_as_of_date": "2026-08-14",
+        "candidate_source_sha256": "ebafb72d8bfbc8dfc0430d6f4b778cf31740c5c0c16f047a9ffef3b76073b612",
+        "inherited_context_sha256": "71c3ec8f8dc81053f3125f29d479d0da37b6d8b488a593fb6c460a73b239283c",
+        "predecessor_as_of_date": "2026-08-12",
+        "predecessor_source_sha256": "89acb7e390250bb355cf3792787fe8fe2815504e282b7e987485bce64de1bff6",
+        "provision_c14n_sha256": "5d9e96f1e36013e76cf1d049a3452e5f78d2ee6d283c6a1150a1937e902d627b",
+        "provision_snapshot_sha256": "c7ed6b596ab6b8cc6c4c483bda5ae85fdc17829fbcdcc9acc4fd134adeaf3f1b",
+        "provision_text_sha256": "3fe81a302888114638a53a3db01ad49441ccc5e6e2558a37d8e414e6c9a9f0ee"
+      },
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/2000/29/section/1",
+      "predecessor_record_sha256": "03f3147dcec3d8b0d8684aebd419fbc0cf83a278b8d96251b78096f993b9faea",
+      "predecessor_source_id": "ukpga:2000:29:latest-available@2026-08-12",
+      "qualification_provenance": "inherited_identical_official_provision_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "ebafb72d8bfbc8dfc0430d6f4b778cf31740c5c0c16f047a9ffef3b76073b612",
+      "source_subject_folder": "Trusts law",
+      "source_version_sha256": "ebafb72d8bfbc8dfc0430d6f4b778cf31740c5c0c16f047a9ffef3b76073b612",
+      "stable_source_id": "ukpga:2000:29:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 1",
+      "official_provision_provenance": {
+        "candidate_as_of_date": "2026-08-14",
+        "candidate_source_sha256": "1311476a3ec00bf00e1f6602f10520407785a8354d6d8fe5d86865270f66578a",
+        "inherited_context_sha256": "ec8f926e1d7825a2902dfaa477b4c697b1e2d9ed0e1727dce7fe8ddaa35ceebc",
+        "predecessor_as_of_date": "2026-08-12",
+        "predecessor_source_sha256": "31e54c0bb398de234109c7d005a3f768bbb8ad7bc7d1c658e0c55af08ef38394",
+        "provision_c14n_sha256": "63eadb0976308fea5c4cf4ef474b833b89894884a6c6dd91fb077b3289e1bc77",
+        "provision_snapshot_sha256": "e15346b5766f2e70d8ec81309a69ab44f44132df3c62e10e66257557e5368858",
+        "provision_text_sha256": "c5cbca22e9833667cf85d1c2895a9bc70dfd3db87898d92bf234b9164d439f69"
+      },
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1975/63/section/1",
+      "predecessor_record_sha256": "0a1f9b58ef4e959ae4a87a144cb047ea2d02d0d6fce63230825d75e9e21e3a2e",
+      "predecessor_source_id": "ukpga:1975:63:latest-available@2026-08-12",
+      "qualification_provenance": "inherited_identical_official_provision_snapshot",
+      "section_unapplied_effect_count": 2,
+      "source_content_sha256": "1311476a3ec00bf00e1f6602f10520407785a8354d6d8fe5d86865270f66578a",
+      "source_subject_folder": "Wills and succession law",
+      "source_version_sha256": "1311476a3ec00bf00e1f6602f10520407785a8354d6d8fe5d86865270f66578a",
+      "stable_source_id": "ukpga:1975:63:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "not_material_to_queried_proposition",
+      "verified_extent": "E+W"
+    }
+  ],
+  "schema": "legalbot.candidate-provision-qualification.v1",
+  "source_root": "sources/materials-2026-08-12",
+  "status": "active",
+  "version": "1.0.0"
+}

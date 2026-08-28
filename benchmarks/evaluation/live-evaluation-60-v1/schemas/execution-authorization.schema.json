@@ -1,0 +1,137 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active_build_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Active Build Id",
+      "type": "string"
+    },
+    "authorization_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Authorization Id",
+      "type": "string"
+    },
+    "authorized_case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Authorized Case Ids",
+      "type": "array"
+    },
+    "authorized_pass_count": {
+      "const": 1,
+      "title": "Authorized Pass Count",
+      "type": "integer"
+    },
+    "browser_recovery_report_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Browser Recovery Report Sha256",
+      "type": "string"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "local_only": {
+      "const": true,
+      "title": "Local Only",
+      "type": "boolean"
+    },
+    "o04_authorization_ref": {
+      "pattern": "^o04:[0-9a-f]{64}$",
+      "title": "O04 Authorization Ref",
+      "type": "string"
+    },
+    "online_research_allowed": {
+      "const": false,
+      "title": "Online Research Allowed",
+      "type": "boolean"
+    },
+    "owner_promotion_ref": {
+      "pattern": "^promotion:[0-9a-f]{64}$",
+      "title": "Owner Promotion Ref",
+      "type": "string"
+    },
+    "owner_ref": {
+      "pattern": "^owner:[0-9a-f]{64}$",
+      "title": "Owner Ref",
+      "type": "string"
+    },
+    "readiness_blocker_count": {
+      "const": 0,
+      "title": "Readiness Blocker Count",
+      "type": "integer"
+    },
+    "readiness_ready": {
+      "const": true,
+      "title": "Readiness Ready",
+      "type": "boolean"
+    },
+    "readiness_report_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Readiness Report Sha256",
+      "type": "string"
+    },
+    "rollback_repromotion_report_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Rollback Repromotion Report Sha256",
+      "type": "string"
+    },
+    "run_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "run_plan_seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Plan Seal Sha256",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.live60-execution-authorization.v1",
+      "default": "legalbot.live60-execution-authorization.v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Seal Sha256",
+      "type": "string"
+    },
+    "suite_id": {
+      "const": "live-evaluation-60-v1",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_manifest_seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Suite Manifest Seal Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "authorization_id",
+    "run_id",
+    "suite_id",
+    "suite_manifest_seal_sha256",
+    "run_plan_seal_sha256",
+    "active_build_id",
+    "owner_promotion_ref",
+    "rollback_repromotion_report_sha256",
+    "browser_recovery_report_sha256",
+    "readiness_report_sha256",
+    "readiness_ready",
+    "readiness_blocker_count",
+    "o04_authorization_ref",
+    "local_only",
+    "online_research_allowed",
+    "authorized_pass_count",
+    "authorized_case_ids",
+    "issued_at",
+    "owner_ref",
+    "seal_sha256"
+  ],
+  "title": "Live60ExecutionAuthorization",
+  "type": "object"
+}

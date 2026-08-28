@@ -1,0 +1,11 @@
+{
+  "benchmark_id": "legalbot-owner-retrieval",
+  "description": "Historical v1.0 audit pointer. Superseded by the positive-ranking-only v1.1 owner-review draft. No loader or promotion gate may select this file.",
+  "frozen_jsonl": "benchmarks/retrieval/v1.jsonl",
+  "frozen_jsonl_sha256": null,
+  "provisional_jsonl_sha256": "00f632ef0f296f23bb81226dc9fd921f5c17b3c2511edc02e03e043e4a3f583b",
+  "queries": [],
+  "schema": "legalbot.retrieval-benchmark.v1",
+  "status": "superseded_invalidated_for_promotion",
+  "version": "1.0.0"
+}

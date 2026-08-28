@@ -1,0 +1,44 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-official-source-plan.v1",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "targets": [
+    {
+      "target_id": "supplemental-crime-and-policing-act-2026",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "ukpga:2026:20",
+      "source_title": "Crime and Policing Act 2026",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2026/20/2026-08-14/data.xml",
+      "required_locators": [
+        "section-250",
+        "section-254",
+        "section-255"
+      ],
+      "affected_rows": [
+        "live30-q29:issue-01",
+        "live60-q48:issue-07"
+      ],
+      "research_reason": "ECCTA 2023 sections 196 to 198 were omitted on 29 June 2026; review the replacement identification-doctrine provision, extent and commencement at the target ceiling."
+    },
+    {
+      "target_id": "supplemental-arbitration-act-1996-current",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "ukpga:1996:23",
+      "source_title": "Arbitration Act 1996",
+      "official_url": "https://www.legislation.gov.uk/ukpga/1996/23/2026-08-14/data.xml",
+      "required_locators": [
+        "section-6A"
+      ],
+      "affected_rows": [
+        "live60-q43:issue-02"
+      ],
+      "research_reason": "The earlier packet supplied the amending Act; bind the proposition to current consolidated Arbitration Act 1996 section 6A instead."
+    }
+  ],
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

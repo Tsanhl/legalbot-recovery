@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.v111-integration-commit-ledger.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "captured_at",
+    "authorizing",
+    "range",
+    "entry_count",
+    "allowed_dispositions",
+    "evidence_profiles",
+    "entries"
+  ],
+  "properties": {
+    "schema": {"const": "legalbot.v111-integration-commit-ledger.v1"},
+    "captured_at": {"type": "string", "format": "date-time"},
+    "authorizing": {"const": false},
+    "range": {"type": "string", "minLength": 81},
+    "entry_count": {"type": "integer", "minimum": 1},
+    "allowed_dispositions": {
+      "const": ["INCLUDE", "PARTIAL", "SUPERSEDED", "DEFER", "REJECT"]
+    },
+    "evidence_profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["implementation", "focused_tests", "operational_gate", "owner_authorization"]
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sha", "disposition", "profile", "subject"],
+        "properties": {
+          "sha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "disposition": {"enum": ["INCLUDE", "PARTIAL", "SUPERSEDED", "DEFER", "REJECT"]},
+          "profile": {"type": "string", "minLength": 1},
+          "subject": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

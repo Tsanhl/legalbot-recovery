@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.log.operational-event.v1",
+  "title": "LegalBot operational event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "event_id",
+    "event_type",
+    "timestamp",
+    "component",
+    "fingerprint",
+    "user_or_owner_safe",
+    "occurrence_count",
+    "first_seen",
+    "last_seen"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.operational-event.v1" },
+    "event_id": { "type": "string", "minLength": 8 },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "operational_failure",
+        "data_quality_failure",
+        "source_policy_failure",
+        "privacy_failure",
+        "retrieval_degradation",
+        "quality_gate_failure",
+        "policy_decision",
+        "retry_scheduled",
+        "recovery_succeeded",
+        "terminal_failure",
+        "dlq_transition",
+        "warning"
+      ]
+    },
+    "timestamp": { "type": "string" },
+    "component": { "type": "string" },
+    "stage": { "type": ["string", "null"] },
+    "failure_code": { "type": ["string", "null"] },
+    "source_id": { "type": ["string", "null"] },
+    "fingerprint": { "type": "string", "minLength": 64, "maxLength": 64 },
+    "severity": { "type": ["string", "null"] },
+    "retryable": { "type": "boolean" },
+    "blocking": { "type": "boolean" },
+    "job_id": { "type": ["string", "null"] },
+    "build_id": { "type": ["string", "null"] },
+    "failure_id": { "type": ["string", "null"] },
+    "parent_failure_id": { "type": ["string", "null"] },
+    "user_or_owner_safe": { "type": "string" },
+    "internal_detail": { "type": ["string", "null"] },
+    "provenance": { "type": "object" },
+    "context": { "type": "object" },
+    "occurrence_count": { "type": "integer", "minimum": 1 },
+    "first_seen": { "type": "string" },
+    "last_seen": { "type": "string" },
+    "increment": { "type": "boolean" }
+  }
+}

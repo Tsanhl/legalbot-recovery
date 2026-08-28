@@ -1,0 +1,245 @@
+{
+  "$defs": {
+    "LiveSuiteLineage": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_no_go_memo_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Accepted No Go Memo Sha256",
+          "type": "string"
+        },
+        "legacy_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Legacy Manifest Sha256",
+          "type": "string"
+        },
+        "legacy_registry_file_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Legacy Registry File Sha256",
+          "type": "string"
+        },
+        "legacy_suite_id": {
+          "const": "live-evaluation-30-v1",
+          "title": "Legacy Suite Id",
+          "type": "string"
+        },
+        "new_question_source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "New Question Source Sha256",
+          "type": "string"
+        },
+        "preserved_case_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preserved Case Ids",
+          "type": "array"
+        },
+        "supersedes_only": {
+          "items": {
+            "enum": [
+              "live30_only_scope",
+              "stability_repeat_strategy",
+              "single_master_review_document"
+            ],
+            "type": "string"
+          },
+          "title": "Supersedes Only",
+          "type": "array"
+        }
+      },
+      "required": [
+        "legacy_suite_id",
+        "legacy_manifest_sha256",
+        "legacy_registry_file_sha256",
+        "preserved_case_ids",
+        "new_question_source_sha256",
+        "accepted_no_go_memo_sha256",
+        "supersedes_only"
+      ],
+      "title": "LiveSuiteLineage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "accepted_baseline_status": {
+      "const": "no_go",
+      "title": "Accepted Baseline Status",
+      "type": "string"
+    },
+    "case_count": {
+      "const": 60,
+      "title": "Case Count",
+      "type": "integer"
+    },
+    "case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Case Ids",
+      "type": "array"
+    },
+    "eligible_for_training": {
+      "const": false,
+      "title": "Eligible For Training",
+      "type": "boolean"
+    },
+    "expert_annotation_required_before_scoring": {
+      "const": true,
+      "title": "Expert Annotation Required Before Scoring",
+      "type": "boolean"
+    },
+    "expert_reviewers_required": {
+      "const": 1,
+      "title": "Expert Reviewers Required",
+      "type": "integer"
+    },
+    "immutable": {
+      "const": true,
+      "title": "Immutable",
+      "type": "boolean"
+    },
+    "lineage": {
+      "$ref": "#/$defs/LiveSuiteLineage"
+    },
+    "live_authorization_required": {
+      "const": true,
+      "title": "Live Authorization Required",
+      "type": "boolean"
+    },
+    "owner_promotion_required": {
+      "const": true,
+      "title": "Owner Promotion Required",
+      "type": "boolean"
+    },
+    "purpose": {
+      "const": "evaluation_only",
+      "title": "Purpose",
+      "type": "string"
+    },
+    "question_hashes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Question Hashes",
+      "type": "object"
+    },
+    "record_hashes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Record Hashes",
+      "type": "object"
+    },
+    "registry_canonical_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Registry Canonical Sha256",
+      "type": "string"
+    },
+    "registry_file_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Registry File Sha256",
+      "type": "string"
+    },
+    "registry_path": {
+      "title": "Registry Path",
+      "type": "string"
+    },
+    "run_plan_path": {
+      "title": "Run Plan Path",
+      "type": "string"
+    },
+    "run_plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Plan Sha256",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.live-evaluation-suite-manifest.v2",
+      "default": "legalbot.live-evaluation-suite-manifest.v2",
+      "title": "Schema",
+      "type": "string"
+    },
+    "seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Seal Sha256",
+      "type": "string"
+    },
+    "split": {
+      "const": "development_live",
+      "title": "Split",
+      "type": "string"
+    },
+    "suite_id": {
+      "const": "live-evaluation-60-v1",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_version": {
+      "const": "1.0.0",
+      "title": "Suite Version",
+      "type": "string"
+    },
+    "task_type_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "propertyNames": {
+        "enum": [
+          "problem",
+          "essay"
+        ]
+      },
+      "title": "Task Type Counts",
+      "type": "object"
+    },
+    "total_word_target": {
+      "const": 215000,
+      "title": "Total Word Target",
+      "type": "integer"
+    },
+    "training_export_allowed": {
+      "const": false,
+      "title": "Training Export Allowed",
+      "type": "boolean"
+    },
+    "word_target_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Word Target Counts",
+      "type": "object"
+    }
+  },
+  "required": [
+    "suite_id",
+    "suite_version",
+    "split",
+    "purpose",
+    "eligible_for_training",
+    "training_export_allowed",
+    "immutable",
+    "accepted_baseline_status",
+    "owner_promotion_required",
+    "live_authorization_required",
+    "expert_reviewers_required",
+    "expert_annotation_required_before_scoring",
+    "case_count",
+    "total_word_target",
+    "task_type_counts",
+    "word_target_counts",
+    "case_ids",
+    "registry_path",
+    "registry_file_sha256",
+    "registry_canonical_sha256",
+    "question_hashes",
+    "record_hashes",
+    "run_plan_path",
+    "run_plan_sha256",
+    "lineage",
+    "seal_sha256"
+  ],
+  "title": "LiveSuiteManifest",
+  "type": "object"
+}

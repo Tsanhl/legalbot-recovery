@@ -1,0 +1,34 @@
+{
+  "active_pointer_present": false,
+  "after_item_5_live_30_generation_authorised": false,
+  "ai_will_exact_match_any_spans_owner_binds": true,
+  "elasticsearch_used": false,
+  "eligible_for_training": false,
+  "fabricated_remaining_gates": false,
+  "generation_authorised": false,
+  "item_5_owner_reviewing_585": true,
+  "live_30_generation_requires_after_item_5": [
+    "sealed_expert_qualification_overlay_from_owner_ticks",
+    "current_date_rights_qualified_candidate",
+    "stage_a_all_60_recall_gates",
+    "owner_promote_ACTIVE",
+    "rollback_and_repromotion_report",
+    "real_local_browser_recovery",
+    "readiness_v6_ready_zero_blockers",
+    "owner_O-04_exact_30_ids"
+  ],
+  "o04_authorised": false,
+  "official_page_ticks_1_to_4_recorded": true,
+  "overlay_sealable": false,
+  "reason": "finishing the 585 dispositions is necessary but not sufficient; Stage A, ACTIVE, rollback, browser recovery, readiness v6 and O-04 remain separate owner gates",
+  "reviewer_policy": {
+    "ai_role": "mechanical_accuracy_verifier_only",
+    "ai_second_reviewer_forbidden": true,
+    "independent_second_review_status": "not_required",
+    "owner_is_primary_reviewer": true
+  },
+  "schema": "legalbot.live60-live-run-gate.v1",
+  "stage_a_cannot_pass_if_all_585_remain_knowledge_gap": true,
+  "suite_verify_and_unit_tests_may_run_now": true,
+  "training_export_allowed": false
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "legalbot.uksc-authority-pack.v1",
+  "version": "bounded-leading-recent-2026-08-12",
+  "as_of_date": "2026-08-12",
+  "licence": {
+    "name": "Open Government Licence",
+    "version": "3.0",
+    "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "terms_url": "https://www.supremecourt.uk/about/terms-and-conditions"
+  },
+  "items": [
+    {"case_id": "uksc-2019-0074", "neutral_citation": "[2021] UKSC 29", "case_name": "Triple Point Technology Inc v PTT Public Company Ltd", "subject_folder": "Contract law"},
+    {"case_id": "uksc-2013-0280", "neutral_citation": "[2015] UKSC 67", "case_name": "Cavendish Square Holding BV v Makdessi; ParkingEye Ltd v Beavis", "subject_folder": "Consumer law"},
+    {"case_id": "uksc-2019-0040", "neutral_citation": "[2021] UKSC 20", "case_name": "Manchester Building Society v Grant Thornton UK LLP", "subject_folder": "Professional negligence law"},
+    {"case_id": "uksc-2019-0011", "neutral_citation": "[2021] UKSC 21", "case_name": "Khan v Meadows", "subject_folder": "Professional negligence law"},
+    {"case_id": "uksc-2021-0208", "neutral_citation": "[2023] UKSC 48", "case_name": "TUI UK Ltd v Griffiths", "subject_folder": "Civil litigation law"},
+    {"case_id": "uksc-2022-0108", "neutral_citation": "[2024] UKSC 8", "case_name": "Lifestyle Equities CV v Amazon UK Services Ltd", "subject_folder": "Intellectual property law"},
+    {"case_id": "uksc-2021-0181", "neutral_citation": "[2024] UKSC 36", "case_name": "SkyKick UK Ltd v Sky Ltd", "subject_folder": "Intellectual property law"},
+    {"case_id": "uksc-2022-0015", "neutral_citation": "[2024] UKSC 43", "case_name": "Hirachand v Hirachand", "subject_folder": "Wills and succession law"},
+    {"case_id": "uksc-2015-0233", "neutral_citation": "[2017] UKSC 51", "case_name": "R (UNISON) v Lord Chancellor", "subject_folder": "Public and constitutional law"},
+    {"case_id": "uksc-2022-0080", "neutral_citation": "[2024] UKSC 12", "case_name": "Secretary of State for Business and Trade v Mercer", "subject_folder": "Public and constitutional law"},
+    {"case_id": "uksc-2019-0029", "neutral_citation": "[2021] UKSC 5", "case_name": "Uber BV v Aslam", "subject_folder": "Employment and equality law"},
+    {"case_id": "uksc-2022-0133", "neutral_citation": "[2024] UKSC 28", "case_name": "Tesco Stores Ltd v Union of Shop, Distributive and Allied Workers", "subject_folder": "Employment and equality law"},
+    {"case_id": "uksc-2019-0046", "neutral_citation": "[2022] UKSC 25", "case_name": "BTI 2014 LLC v Sequana SA", "subject_folder": "Company law"},
+    {"case_id": "uksc-2018-0178", "neutral_citation": "[2020] UKSC 31", "case_name": "Sevilleja v Marex Financial Ltd", "subject_folder": "Company law"},
+    {"case_id": "uksc-2024-0089", "neutral_citation": "[2025] UKSC 26", "case_name": "Standish v Standish", "subject_folder": "Family law"}
+  ]
+}

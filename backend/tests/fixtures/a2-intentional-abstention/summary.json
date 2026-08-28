@@ -1,0 +1,13 @@
+{
+  "a2_retain_count": 57,
+  "batch_seal": true,
+  "ids_removed_from_seal_path_this_round": [
+    "ocr-014",
+    "ocr-019",
+    "privacy-017",
+    "privacy-021"
+  ],
+  "independently_scored_unit_count": 47,
+  "seal_eligible_any": true,
+  "status": "SEALED"
+}

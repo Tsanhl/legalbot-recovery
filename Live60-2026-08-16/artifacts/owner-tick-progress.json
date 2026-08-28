@@ -1,0 +1,24 @@
+{
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "ai_second_reviewer_forbidden": true,
+  "blockers": [
+    "all_issues_knowledge_gap",
+    "exact_spans_absent",
+    "no_current_date_candidate",
+    "no_o04",
+    "overlay_not_sealable"
+  ],
+  "contrary_authority_status": "reviewed_none",
+  "eligible_for_training": false,
+  "gap": 585,
+  "generation_authorised": false,
+  "limited": 0,
+  "overlay_sealable": false,
+  "qualified": 0,
+  "schema": "legalbot.live60-owner-tick-progress.v1",
+  "seals_expert_gold": false,
+  "spans_bound": 0,
+  "training_export_allowed": false,
+  "wrote_active": false,
+  "wrote_expert_qualification": false
+}

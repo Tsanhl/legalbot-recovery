@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "python": "3.13",
+  "download": {
+    "disable_xet": true,
+    "max_workers": 1
+  },
+  "models": [
+    {
+      "role": "embedding",
+      "source_repo": "Qwen/Qwen3-Embedding-0.6B",
+      "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "file_manifest_sha256": "1d7b1bddebe83694815066f5254c5b0c7a1d05febd4e2b9e2120f2ec3fe3c018",
+      "directory": "models/retrieval/Qwen3-Embedding-0.6B",
+      "dimensions": 1024,
+      "required_files": [
+        "README.md",
+        "config.json",
+        "modules.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    },
+    {
+      "role": "reranker",
+      "source_repo": "Qwen/Qwen3-Reranker-0.6B",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+      "file_manifest_sha256": "f775cce47e7cbed490693a954aadcf6141cdf5ffa31b3e33f229adc374223e29",
+      "directory": "models/retrieval/Qwen3-Reranker-0.6B",
+      "required_files": [
+        "README.md",
+        "config.json",
+        "modules.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    }
+  ]
+}

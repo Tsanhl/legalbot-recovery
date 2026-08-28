@@ -1,0 +1,20 @@
+{
+  "acceptance": {
+    "phase1_pass": true,
+    "zero_cross_split_template_families": true,
+    "zero_duplicated_ocr_fixture_across_splits": true,
+    "zero_exact_cross_split_dups": true,
+    "zero_id_only_cross_split_variants": true,
+    "zero_unresolved_cross_split_semantic_near_dups": true
+  },
+  "exact_duplicate_groups": [
+    {
+      "case_ids": [
+        "knowledge-001",
+        "knowledge-006",
+        "knowledge-011"
+      ],
+      "cross_split": false
+    }
+  ]
+}

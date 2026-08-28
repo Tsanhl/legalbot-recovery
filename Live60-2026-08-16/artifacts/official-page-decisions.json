@@ -1,0 +1,71 @@
+{
+  "accepted_repair_actions": [
+    "replace_spliced_parent_with_chapeau",
+    "replace_spliced_parent_with_final_proviso",
+    "replace_spliced_opening_with_chapeau",
+    "replace_spliced_opening_with_concluding_words",
+    "bind_official_positive_text_omitting_repealed_or_1B",
+    "exclude_from_gold_ranking_generation_and_citation"
+  ],
+  "accepted_repair_span_ids": [
+    "repair-span-1aab1b54afe4a5bbb5c524c36b649b7a38da6d06cc122a83cfe6685301b92c50",
+    "repair-span-f6c1cac940c63b82c12b05ed399d3fa11ab12f6b6d08d8cd13cf44a566a6249b",
+    "repair-span-50818e8bcc491bde6092f593f75001dab129caacf009a9e5b42ced5b2e7adc56",
+    "repair-span-c1399b445f9ba9640f4aeb797314a0ef4c356adaaa85118ec340c2109954aba1",
+    "repair-span-fb7866605b0d408fd7ee5389cb19b81e374bcf8b9757fccd6e980b3ad23ea6b7"
+  ],
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "as_of_date": "2026-08-16",
+  "contiguous_repairs_accepted": true,
+  "contrary_authority": {
+    "not_a_claim_that": "english_law_has_no_contrary_cases_on_the_60_topics",
+    "revisit_when": "any_of_the_585_issues_is_qualified",
+    "scope": "no_contrary_or_limiting_authority_bound_in_this_overlay",
+    "status": "reviewed_none"
+  },
+  "decision_authority": "owner_asked_ai_to_search_and_tick_items_1_to_4",
+  "eligible_for_training": false,
+  "ipfda_s1_1_ba": {
+    "official_current_words": "any person (not being a person included in paragraph (a) or (b) above) to whom subsection (1A) below applies",
+    "omitted_from_2019-12-02": "or (1B)",
+    "omitting_instrument": "SI_2019_1458_sch3_para3_2_a",
+    "s1_1B": "omitted_exclude_dots_only_editorial_chunk"
+  },
+  "issues_585": "left_knowledge_gap_owner_reviewing",
+  "o04_authorised": false,
+  "overlay_sealable": false,
+  "provisions": {
+    "held-provision-01": {
+      "catalogue_chunk_gold": true,
+      "commencement_tick": "1981-05-01_except_s35",
+      "effects_tick": "recorded_application_and_companion_not_text_amendment",
+      "extent_tick": "E+W",
+      "qualify_tick": "current_official_bytes_accepted"
+    },
+    "held-provision-02": {
+      "catalogue_chunk_gold": false,
+      "commencement_tick": "in_force",
+      "effects_tick": "s14B_companion_not_in_span;_s234_4_prospective_application",
+      "extent_tick": "E+W",
+      "qualify_tick": "current_official_bytes_accepted_using_repair_spans"
+    },
+    "held-provision-03": {
+      "catalogue_chunk_gold": true,
+      "commencement_tick": "2001-02-01",
+      "effects_tick": "none_on_s1_page;_schedule_1_companion",
+      "extent_tick": "E+W",
+      "qualify_tick": "current_official_bytes_accepted"
+    },
+    "held-provision-04": {
+      "catalogue_chunk_gold": false,
+      "commencement_tick": "1976-04-01",
+      "effects_tick": "FLA_1996_sch8_para27_2_prospective_s1_2_a",
+      "extent_tick": "E+W",
+      "qualify_tick": "current_official_bytes_accepted_using_repair_spans"
+    }
+  },
+  "schema": "legalbot.live60-official-page-decisions.v1",
+  "seals_expert_gold": false,
+  "source": "legislation.gov.uk_revised_pages",
+  "training_export_allowed": false
+}

@@ -1,0 +1,84 @@
+{
+  "groups": [
+    {
+      "canonical_case_id": "knowledge-001",
+      "members": [
+        {
+          "id": "knowledge-001"
+        },
+        {
+          "id": "knowledge-006"
+        },
+        {
+          "id": "knowledge-011"
+        }
+      ],
+      "repeat_group_id": "a2-dev-knowledge-restaurant",
+      "split": "development"
+    },
+    {
+      "canonical_case_id": "knowledge-002",
+      "members": [
+        {
+          "id": "knowledge-002"
+        },
+        {
+          "id": "knowledge-007"
+        },
+        {
+          "id": "knowledge-012"
+        }
+      ],
+      "repeat_group_id": "a2-dev-knowledge-west_arcadia",
+      "split": "development"
+    },
+    {
+      "canonical_case_id": "knowledge-003",
+      "members": [
+        {
+          "id": "knowledge-003"
+        },
+        {
+          "id": "knowledge-008"
+        },
+        {
+          "id": "knowledge-013"
+        }
+      ],
+      "repeat_group_id": "a2-dev-knowledge-zx_settlement",
+      "split": "development"
+    },
+    {
+      "canonical_case_id": "knowledge-004",
+      "members": [
+        {
+          "id": "knowledge-004"
+        },
+        {
+          "id": "knowledge-009"
+        },
+        {
+          "id": "knowledge-014"
+        }
+      ],
+      "repeat_group_id": "a2-dev-knowledge-solicitor_advice",
+      "split": "development"
+    },
+    {
+      "canonical_case_id": "knowledge-005",
+      "members": [
+        {
+          "id": "knowledge-005"
+        },
+        {
+          "id": "knowledge-010"
+        },
+        {
+          "id": "knowledge-015"
+        }
+      ],
+      "repeat_group_id": "a2-dev-knowledge-tax_facts",
+      "split": "development"
+    }
+  ]
+}

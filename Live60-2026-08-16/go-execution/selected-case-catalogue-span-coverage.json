@@ -1,0 +1,18 @@
+{
+  "schema": "legalbot.live60-selected-case-catalogue-span-coverage.v1",
+  "as_of_date": "2026-08-16",
+  "note": "Catalogue span presence is not qualification. Owner tick, currentness, later treatment and rights still required.",
+  "selected_cases_with_catalogue_span_on_every_issue": [
+    {"case_id": "live30-q02", "issue_count": 9},
+    {"case_id": "live30-q06", "issue_count": 7},
+    {"case_id": "live30-q07", "issue_count": 9},
+    {"case_id": "live30-q15", "issue_count": 8},
+    {"case_id": "live30-q16", "issue_count": 7},
+    {"case_id": "live30-q17", "issue_count": 9},
+    {"case_id": "live60-q53", "issue_count": 11}
+  ],
+  "selected_cases_with_zero_catalogue_spans": [
+    {"case_id": "live60-q35", "hits": 0, "issue_count": 9},
+    {"case_id": "live60-q42", "hits": 0, "issue_count": 10}
+  ]
+}

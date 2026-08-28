@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.live-evaluation-suite-manifest.v1",
+  "title": "LegalBot live-evaluation-30 immutable suite manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "suite_id", "suite_version", "split", "purpose",
+    "eligible_for_training", "training_export_allowed", "immutable",
+    "case_count", "total_word_target", "word_target_counts", "case_ids",
+    "stratified_sample_ids", "file_sha256", "canonical_sha256",
+    "question_hashes", "record_hashes"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.live-evaluation-suite-manifest.v1" },
+    "suite_id": { "const": "live-evaluation-30-v1" },
+    "suite_version": { "const": "1.0.0" },
+    "split": { "const": "development_live" },
+    "purpose": { "const": "evaluation_only" },
+    "eligible_for_training": { "const": false },
+    "training_export_allowed": { "const": false },
+    "immutable": { "const": true },
+    "case_count": { "const": 30 },
+    "total_word_target": { "const": 115000 },
+    "word_target_counts": { "type": "object" },
+    "case_ids": { "type": "array", "minItems": 30, "maxItems": 30, "uniqueItems": true },
+    "stratified_sample_ids": { "type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true },
+    "file_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "canonical_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "question_hashes": { "type": "object" },
+    "record_hashes": { "type": "object" }
+  }
+}

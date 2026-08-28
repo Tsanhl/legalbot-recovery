@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.e2e-run-manifest.v1",
+  "title": "LegalBot encrypted local E2E run manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "run_id", "suite_id", "suite_version", "suite_file_sha256",
+    "suite_canonical_sha256", "split", "purpose", "eligible_for_training",
+    "training_export_allowed", "local_only", "case_count", "total_word_target",
+    "created_at", "as_of_date", "initial_status", "encrypted_unreleased_retention_days", "provenance"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.e2e-run-manifest.v1" },
+    "run_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$" },
+    "suite_id": { "const": "live-evaluation-30-v1" },
+    "suite_version": { "const": "1.0.0" },
+    "suite_file_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "suite_canonical_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "split": { "const": "development_live" },
+    "purpose": { "const": "evaluation_only" },
+    "eligible_for_training": { "const": false },
+    "training_export_allowed": { "const": false },
+    "local_only": { "const": true },
+    "case_count": { "const": 30 },
+    "total_word_target": { "const": 115000 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "as_of_date": { "type": "string", "format": "date" },
+    "initial_status": { "const": "created" },
+    "encrypted_unreleased_retention_days": { "type": "integer", "minimum": 1, "maximum": 365 },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "git_sha", "git_dirty", "model_version", "index_build_id", "prompt_version",
+        "router_version", "classifier_version", "policy_sha256", "assessment_rules_sha256"
+      ],
+      "properties": {
+        "git_sha": { "type": "string", "pattern": "^[0-9a-f]{7,64}$" },
+        "git_dirty": { "type": "boolean" },
+        "model_version": { "type": ["string", "null"] },
+        "index_build_id": { "type": ["string", "null"] },
+        "prompt_version": { "type": ["string", "null"] },
+        "router_version": { "type": ["string", "null"] },
+        "classifier_version": { "type": ["string", "null"] },
+        "policy_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "assessment_rules_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+"""Compatibility imports for evaluation prompt-template consumers."""
+
+from ..prompt_templates import (
+    AI_EVIDENCE_REVIEWER_TEMPLATE_NAME,
+    AI_EVIDENCE_REVIEWER_TEMPLATE_SHA256,
+    DRAFT_GENERATOR_TEMPLATE_NAME,
+    DRAFT_GENERATOR_TEMPLATE_SHA256,
+    PROMPTS_DIR,
+    PROPOSER_TEMPLATE_NAME,
+    PROPOSER_TEMPLATE_SHA256,
+    SEMANTIC_VERIFIER_TEMPLATE_NAME,
+    SEMANTIC_VERIFIER_TEMPLATE_SHA256,
+    prompt_template_bytes,
+    prompt_template_sha256,
+    prompt_template_text,
+)
+
+__all__ = [
+    "AI_EVIDENCE_REVIEWER_TEMPLATE_NAME",
+    "AI_EVIDENCE_REVIEWER_TEMPLATE_SHA256",
+    "DRAFT_GENERATOR_TEMPLATE_NAME",
+    "DRAFT_GENERATOR_TEMPLATE_SHA256",
+    "PROMPTS_DIR",
+    "PROPOSER_TEMPLATE_NAME",
+    "PROPOSER_TEMPLATE_SHA256",
+    "SEMANTIC_VERIFIER_TEMPLATE_NAME",
+    "SEMANTIC_VERIFIER_TEMPLATE_SHA256",
+    "prompt_template_bytes",
+    "prompt_template_sha256",
+    "prompt_template_text",
+]

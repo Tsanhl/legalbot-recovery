@@ -1,0 +1,78 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-binding-plan.v1",
+  "source_quarantine_manifest_content_sha256": "8a60f0350aad0aa6adf6757faa6b1f869c31e8f0e55242f23cfc1deb5ea7c2b9",
+  "source_plan_file_sha256": "71e7a16dfb3ac3d9bc6777247708ee4494876578faea0f36603ceb2c8c108351",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "bindings": [
+    {
+      "binding_id": "mental-capacity-act-2005-commencement",
+      "source_target_id": "currentness-mental-capacity-act-commencement-no-2-2007-as-made",
+      "expected_source_file_sha256": "1dc5d2d33320c3da8dbbfc47ec740d8cd14b0f672ff57f9d643bcc9240f9068d",
+      "row_ids": [
+        "live30-q20:issue-01",
+        "live30-q20:issue-03"
+      ],
+      "binding_scope": "CURRENTNESS_ONLY",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "mca-sections-5-to-29-commenced",
+          "proposition": "Mental Capacity Act 2005 sections 5 to 29 came into force on 1 October 2007.",
+          "anchor_id": "article-2-1",
+          "exact_normalized_span_text": "the following provisions of the act come into force on 1 october 2007- a sections 5 to 29; b sections 45 to 63; c sections 65 to 69; and d schedules 1 to 7."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "mca-sections-1-to-4-all-purposes",
+          "proposition": "Mental Capacity Act 2005 sections 1 to 4 came into force for all purposes on 1 October 2007.",
+          "anchor_id": "article-2-2",
+          "exact_normalized_span_text": "the following provisions of the act, which have already been commenced for limited purposes, come into force on 1 october 2007 for all purposes- a section 1 (principles); b section 2 (people who lack capacity); c section 3 (inability to make decisions); d section 4 (best interests); e sections 42(4) and (5) (codes of practice); and f section 64 (interpretation)."
+        }
+      ],
+      "proposed_action": "Approve this immutable as-made commencement order as currentness evidence for the Mental Capacity Act proposition bindings."
+    },
+    {
+      "binding_id": "data-use-access-act-section-80-commencement-transition",
+      "source_target_id": "currentness-data-use-access-act-commencement-no-6-2026-as-made",
+      "expected_source_file_sha256": "03f88216a8a37ed6471ea691df528b9975aea285dd2b593a98943e5cc2e89baf",
+      "row_ids": [
+        "live30-q23:issue-03"
+      ],
+      "binding_scope": "CURRENTNESS_AND_TRANSITION_ONLY",
+      "unresolved_scope_note": null,
+      "material_claims": [
+        {
+          "claim_id": "duaa-section-80-precommencement-decisions-saved",
+          "proposition": "The section 80 and Schedule 6 amendments do not apply to a decision taken before 5 February 2026 that fell within the specified former automated-decision provisions.",
+          "anchor_id": "regulation-5",
+          "exact_normalized_span_text": "the amendments made by section 80 of, and schedule 6 to, the 2025 act do not apply in relation to any decision taken before 5th february 2026 to which article 22(3) of the uk gdpr (automated individual decision-making, including profiling) or section 14 or 50(2) of the 2018 act (automated decision-making authorised by law: safeguards) applied."
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "duaa-regulation-2-effective-date",
+          "proposition": "Regulation 2 brought its listed provisions into force on 5 February 2026.",
+          "anchor_id": "regulation-2",
+          "exact_normalized_span_text": "the following provisions of the 2025 act, so far as not already in force, come into force on 5th february 2026-"
+        },
+        {
+          "claim_id": "duaa-regulation-2-j-includes-section-80",
+          "proposition": "Section 80 on automated decision-making is one of the provisions listed in regulation 2.",
+          "anchor_id": "regulation-2-j",
+          "exact_normalized_span_text": "section 80 (automated decision-making);"
+        }
+      ],
+      "proposed_action": "Approve this immutable as-made commencement instrument as currentness and transition evidence for the section 80 proposition binding."
+    }
+  ],
+  "owner_materiality_decision_required": true,
+  "owner_source_admission_required": true,
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

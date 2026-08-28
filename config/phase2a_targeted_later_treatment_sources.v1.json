@@ -1,0 +1,133 @@
+{
+  "as_of_date": "2026-08-14",
+  "automatic_embedding": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "bulk_search": false,
+  "development30_authorized": false,
+  "items": [
+    {
+      "candidate_case_id": "uksc-2016-0213",
+      "candidate_case_name": "Ivey v Genting Casinos (UK) Ltd t/a Crockfords",
+      "candidate_neutral_citation": "[2017] UKSC 67",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-001",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2016-0213",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_LIMITATION_OR_DISPLACEMENT_OF_DISHONESTY_TEST",
+      "target_neutral_citations": [
+        "[2002] UKHL 12"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2021-0150",
+      "candidate_case_name": "Lifestyle Equities CV v Ahmed",
+      "candidate_neutral_citation": "[2024] UKSC 17",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-002",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2021-0150",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_APPLICATION_OR_EXPLANATION_OF_ACCESSORY_DISHONESTY",
+      "target_neutral_citations": [
+        "[2002] UKHL 12"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2015-0057",
+      "candidate_case_name": "HMRC v Investment Trust Companies",
+      "candidate_neutral_citation": "[2017] UKSC 29",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-003",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2015-0057",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_LIMITATION_OF_SUFFICIENT_NEXUS_FORMULATION",
+      "target_neutral_citations": [
+        "[2015] UKSC 66"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2022-0049",
+      "candidate_case_name": "Paul v Royal Wolverhampton NHS Trust",
+      "candidate_neutral_citation": "[2024] UKSC 1",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-004",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2022-0049",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_APPLICATION_OR_EXPLANATION_OF_SCOPE_OF_DUTY",
+      "target_neutral_citations": [
+        "[2021] UKSC 21"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2021-0220",
+      "candidate_case_name": "HMRC v Professional Game Match Officials Ltd",
+      "candidate_neutral_citation": "[2024] UKSC 29",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-005",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2021-0220",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_APPLICATION_OR_EXPLANATION_OF_EMPLOYMENT_CONTROL_ANALYSIS",
+      "target_neutral_citations": [
+        "[2021] UKSC 5"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2024-0119",
+      "candidate_case_name": "D.E.L.T.A. Merseyside Ltd v Uber Britannia Ltd",
+      "candidate_neutral_citation": "[2025] UKSC 31",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-006",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2024-0119",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_CONSIDERATION_OF_PRIVATE_HIRE_CONTRACT_DICTA",
+      "target_neutral_citations": [
+        "[2021] UKSC 5"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2024-0130",
+      "candidate_case_name": "Providence Building Services Ltd v Hexagon Housing Association Ltd",
+      "candidate_neutral_citation": "[2026] UKSC 1",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-007",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2024-0130",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_COMPARATIVE_CONTRACT_INTERPRETATION_REFERENCE",
+      "target_neutral_citations": [
+        "[2024] UKSC 28"
+      ]
+    },
+    {
+      "candidate_case_id": "jcpc-2023-0088",
+      "candidate_case_name": "Woodford Construction Ltd v Readymix (West Indies) Ltd",
+      "candidate_neutral_citation": "[2025] UKPC 6",
+      "court_weight": "JCPC_PERSUASIVE",
+      "lead_id": "later-treatment-lead-008",
+      "official_case_url": "https://www.jcpc.uk/cases/judgments/jcpc-2023-0088",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_PERSUASIVE_CONFIRMATION_AS_AUTHORITATIVE_RESTATEMENT",
+      "target_neutral_citations": [
+        "[2023] UKSC 48"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2022-0100",
+      "candidate_case_name": "Armstead v Royal & Sun Alliance Insurance Company Ltd",
+      "candidate_neutral_citation": "[2024] UKSC 6",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-009",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2022-0100",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_APPLICATION_OR_EXPLANATION_OF_PENALTY_TEST",
+      "target_neutral_citations": [
+        "[2015] UKSC 67"
+      ]
+    }
+  ],
+  "owner_later_treatment_decision_required": true,
+  "owner_source_admission_required": true,
+  "phase2b_authorized": false,
+  "purpose": "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEADS_ONLY",
+  "schema": "legalbot.v111.phase2a.targeted-later-treatment-plan.v1",
+  "technical_qualification_assigned": false
+}

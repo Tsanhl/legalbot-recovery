@@ -1,0 +1,38 @@
+{
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "ai_second_reviewer_forbidden": true,
+  "approval_reviewer_ref": "reviewer:df8f9b06eb9dd93ea8a81184c96fc702e25a3d268da92646450f1f4e864defe8",
+  "approval_reviewer_role": "legal_reviewer",
+  "as_of_date": "2026-08-16",
+  "assessment_bundle_sha256": "9d5808d9275e8a91d18c9702d76ff8e5e6fbbf1388aa57e43ac4b788e96d8252",
+  "assessment_rules_kept": true,
+  "blocking_reason_codes": [
+    "owner_returned_hold",
+    "all_issues_knowledge_gap",
+    "exact_spans_absent",
+    "no_current_date_candidate",
+    "no_o04"
+  ],
+  "decision": "return_hold",
+  "eligible_for_training": false,
+  "filled_checklist_sha256": "283c8054e19e74f32b904ec52dd2430413f7497e9d1b39ca12a5c13078226ec8",
+  "filled_workbook_sha256": "d03c26cbcff04832203c6934b927c45ebdb0ff2b91df9e7905cd062d2bfef441",
+  "generation_authorised": false,
+  "independent_second_review_status": "not_required",
+  "issue_count": 585,
+  "knowledge_gap_issue_count": 585,
+  "o04_authorised": false,
+  "overlay_sealable": false,
+  "owner_is_primary_reviewer": true,
+  "schema": "legalbot.live60-owner-return-decision.v1",
+  "second_review_status": "not_required",
+  "sha_reconciliation": {
+    "explanation_code": "workbook_uses_run_plan_file_digest_checklist_uses_object_seal",
+    "mismatch_is_false_positive": true,
+    "run_plan_file_sha256": "3c03c07a4fdd3a7767472f83c98b079334b302550efb949c79c120eca37a21f1",
+    "run_plan_object_seal_sha256": "2bfccfc1e9b4638f33381ef82982e7683ed352246ade6e97e19e1369214f6d83",
+    "suite_manifest_seal_sha256": "50d967c4d490a05527fb5610b2eae19014005c22092210ec6b23f92582e41241"
+  },
+  "suite_id": "live-evaluation-60-v1",
+  "training_export_allowed": false
+}

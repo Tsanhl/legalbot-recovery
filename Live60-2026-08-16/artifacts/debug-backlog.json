@@ -1,0 +1,26 @@
+{
+  "elasticsearch_used": false,
+  "eligible_for_training": false,
+  "items": [
+    "corrected_research_routes_regenerated",
+    "contiguous_repair_candidates_accepted_from_official_pages",
+    "ipfda_dots_only_editorial_chunk_excluded_from_gold",
+    "official_byte_diff_human_readable_classification",
+    "owner_reviewing_585_knowledge_gap_issues",
+    "bind_or_gap_585_issues_evidence_fields",
+    "case_law_proposition_currentness",
+    "current_date_candidate",
+    "stage_a_all_60",
+    "owner_promote_rollback_repromote",
+    "browser_recovery_local_only",
+    "readiness_v6_green",
+    "o04_then_serial_30",
+    "mixed_topic_routing_audit",
+    "teaching_hits_never_authority",
+    "assessment_rules_load_for_general",
+    "slo_calibration_per_route_word_band"
+  ],
+  "schema": "legalbot.live60-debug-backlog.v1",
+  "status": "return_hold_pending_owner_ticks_on_repair_and_seal_fields",
+  "training_export_allowed": false
+}

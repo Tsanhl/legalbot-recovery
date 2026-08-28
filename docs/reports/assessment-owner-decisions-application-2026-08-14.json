@@ -1,0 +1,44 @@
+{
+  "schema": "legalbot.assessment-owner-decision-application.v1",
+  "applied_at": "2026-08-14T03:45:34.293870+00:00",
+  "source_document_sha256": "19984c50774eebf76e4661569684c65c1ea19e446fa6d35886cd850908d7129d",
+  "source_document_bytes_retained": false,
+  "decision_manifest_sha256": "be5916d6e3e40febb3819d1529df6f6ab4055de98baf275f8361b0fc31dda9a2",
+  "assessment_bundle_version": "owner-standards-2026-08-14.1",
+  "assessment_bundle_sha256": "9d5808d9275e8a91d18c9702d76ff8e5e6fbbf1388aa57e43ac4b788e96d8252",
+  "decisions": [
+    {
+      "decision_id": "M01",
+      "rule_id": "assessment-canonical-case-synthesis-v1",
+      "result": "approved_exact_mapping"
+    },
+    {
+      "decision_id": "M02",
+      "original_rule_id": "assessment-canonical-criminal-element-defence-v1",
+      "original_result": "rejected_superseded",
+      "replacement_rule_id": "owner-amended-criminal-element-defence-v2",
+      "replacement_result": "approved_owner_policy"
+    },
+    {
+      "decision_id": "M03",
+      "original_rule_id": "assessment-canonical-question-engagement-v1",
+      "original_result": "rejected_superseded",
+      "replacement_rule_id": "owner-amended-question-engagement-v2",
+      "replacement_result": "approved_owner_policy"
+    },
+    {
+      "decision_id": "M04",
+      "rule_id": "assessment-canonical-timely-authority-support-v1",
+      "result": "approved_exact_mapping"
+    }
+  ],
+  "approved_exact_mappings": 2,
+  "approved_owner_replacements": 2,
+  "superseded_original_mappings": 2,
+  "runtime_rule_count": 16,
+  "raw_feedback_included": false,
+  "owner_identity_included": false,
+  "index_built": false,
+  "promotion_performed": false,
+  "live_run_started": false
+}

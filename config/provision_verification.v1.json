@@ -1,0 +1,406 @@
+{
+  "as_of_date": "2026-08-14",
+  "current_legislation_pack_sha256": "380647101358c60cb73cbbcc331d2b04e4be6688401eb0d1b70ea4602d5b4328",
+  "download_report": {
+    "relative_path": "config/archive/provision-verification/current-legislation-download-2026-08-14.json",
+    "sha256": "ec4e1538a8267ab2f944ce58ef0d0e545af11170532e10ed17341e54e2f2036d"
+  },
+  "exception_report": {
+    "relative_path": "config/archive/provision-verification/provision-verification-roll-forward-2026-08-14.json",
+    "sha256": "336523030f0bf3ef1cc053c3ab246a16c1c3d3035017058c69100a1b92e83515"
+  },
+  "excluded_record_count": 4,
+  "inherited_record_count": 14,
+  "jurisdiction": "England and Wales",
+  "method": "inherited_identical_official_snapshot",
+  "predecessor_registry": {
+    "as_of_date": "2026-08-12",
+    "relative_path": "config/archive/provision-verification/provision-verification-2026-08-12.v1.json",
+    "sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+    "status": "superseded"
+  },
+  "records": [
+    {
+      "legal_locator": "section 2",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1977/50/section/2",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2016-10-01",
+        "source_modified": "2024-05-17",
+        "source_valid_from": "2016-10-01"
+      },
+      "official_version_sha256": "11df11a774e17806adbe3ed16d183cf99a3a1c1df4149216c545dfb408f83af6",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "11df11a774e17806adbe3ed16d183cf99a3a1c1df4149216c545dfb408f83af6",
+        "record_sha256": "1369a4b52bd993e8883e83337c45e75c10aa3275440f0315830a19ad742a0da3",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+        "source_version_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+        "stable_source_id": "ukpga:1977:50:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+      "source_version_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+      "stable_source_id": "ukpga:1977:50:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 3",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1977/50/section/3",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2016-10-01",
+        "source_modified": "2024-05-17",
+        "source_valid_from": "2016-10-01"
+      },
+      "official_version_sha256": "11df11a774e17806adbe3ed16d183cf99a3a1c1df4149216c545dfb408f83af6",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "11df11a774e17806adbe3ed16d183cf99a3a1c1df4149216c545dfb408f83af6",
+        "record_sha256": "e1b8b4b82a2bde2a508ec7f1bdfe7097c39f2190519aad8f4c095bc497a2dd04",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+        "source_version_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+        "stable_source_id": "ukpga:1977:50:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+      "source_version_sha256": "a7309e1131fc78c28af09e309306bb611d2fe4206519f228072bac634d9be0a6",
+      "stable_source_id": "ukpga:1977:50:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 1",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1999/31/section/1",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2014-04-22",
+        "source_modified": "2022-10-26",
+        "source_valid_from": "2014-04-22"
+      },
+      "official_version_sha256": "4e78dfb8f3743faa28c63c8ded0fc71f69c74f11d7e3a732b8a36dbde97c8f03",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "4e78dfb8f3743faa28c63c8ded0fc71f69c74f11d7e3a732b8a36dbde97c8f03",
+        "record_sha256": "f7da565e756a626e2f6fdb790107242a5275d94997c263200c036fee498ad9d7",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "77a3dabcd0cd27101c955665c8e534a98bfc52c722b45f80b84b6b7ffc78b969",
+        "source_version_sha256": "77a3dabcd0cd27101c955665c8e534a98bfc52c722b45f80b84b6b7ffc78b969",
+        "stable_source_id": "ukpga:1999:31:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "77a3dabcd0cd27101c955665c8e534a98bfc52c722b45f80b84b6b7ffc78b969",
+      "source_version_sha256": "77a3dabcd0cd27101c955665c8e534a98bfc52c722b45f80b84b6b7ffc78b969",
+      "stable_source_id": "ukpga:1999:31:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+N.I."
+    },
+    {
+      "legal_locator": "section 14",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1979/54/section/14",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2015-10-01",
+        "source_modified": "2025-07-29",
+        "source_valid_from": "2015-10-01"
+      },
+      "official_version_sha256": "ff51dc850e97a687f04e5367c6c55793d4039219048cff29a8bed42d2b3aaa23",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "ff51dc850e97a687f04e5367c6c55793d4039219048cff29a8bed42d2b3aaa23",
+        "record_sha256": "716d242af046112b4ab119a15e561491f471b4778fff831bce73f8c795426e71",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "b6f151de4117e7157b76b01d7fcb2b77946f515191c89e5cf7854b28f2d750f6",
+        "source_version_sha256": "b6f151de4117e7157b76b01d7fcb2b77946f515191c89e5cf7854b28f2d750f6",
+        "stable_source_id": "ukpga:1979:54:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "b6f151de4117e7157b76b01d7fcb2b77946f515191c89e5cf7854b28f2d750f6",
+      "source_version_sha256": "b6f151de4117e7157b76b01d7fcb2b77946f515191c89e5cf7854b28f2d750f6",
+      "stable_source_id": "ukpga:1979:54:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 13",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1982/29/section/13",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2015-10-01",
+        "source_modified": "2016-01-26",
+        "source_valid_from": "2015-10-01"
+      },
+      "official_version_sha256": "0843f090ef0619cf7077b09524107ec73123b0d4282fb960c85a2b0159594b1a",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "0843f090ef0619cf7077b09524107ec73123b0d4282fb960c85a2b0159594b1a",
+        "record_sha256": "1b6fd1e2c50990414599982401430b7af26328880ed940d00efd5dfb2238dc8c",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "9ecb795613c72020aa344f04de5b941c1f8a8b67c444596137a7c2a1fdbeacb2",
+        "source_version_sha256": "9ecb795613c72020aa344f04de5b941c1f8a8b67c444596137a7c2a1fdbeacb2",
+        "stable_source_id": "ukpga:1982:29:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "9ecb795613c72020aa344f04de5b941c1f8a8b67c444596137a7c2a1fdbeacb2",
+      "source_version_sha256": "9ecb795613c72020aa344f04de5b941c1f8a8b67c444596137a7c2a1fdbeacb2",
+      "stable_source_id": "ukpga:1982:29:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 1",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/Geo6/6-7/40/section/1",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "1991-02-01",
+        "source_modified": "2023-11-13",
+        "source_valid_from": "1991-02-01"
+      },
+      "official_version_sha256": "8b826bd793ce3c0e68866abd3bc1b94d206c3e1c8d698b88988470e6f3dee226",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "8b826bd793ce3c0e68866abd3bc1b94d206c3e1c8d698b88988470e6f3dee226",
+        "record_sha256": "905ff6a7279693270f7eace2e514bcde4017289bbc1ea7022c40a2961da160fc",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "8a85d5ca8c041ee366dc5865b6a09f5b6cc5b7f758cdef9a830052681ec5ed78",
+        "source_version_sha256": "8a85d5ca8c041ee366dc5865b6a09f5b6cc5b7f758cdef9a830052681ec5ed78",
+        "stable_source_id": "ukpga:Geo6:6-7:40:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "8a85d5ca8c041ee366dc5865b6a09f5b6cc5b7f758cdef9a830052681ec5ed78",
+      "source_version_sha256": "8a85d5ca8c041ee366dc5865b6a09f5b6cc5b7f758cdef9a830052681ec5ed78",
+      "stable_source_id": "ukpga:Geo6:6-7:40:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 2",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1987/43/section/2",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2024-10-14",
+        "source_modified": "2024-10-18",
+        "source_valid_from": "2024-10-14"
+      },
+      "official_version_sha256": "429cd6081e40d50fed5a1a715ac571e4409960c35b2fba8405422b02f982b6ec",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "429cd6081e40d50fed5a1a715ac571e4409960c35b2fba8405422b02f982b6ec",
+        "record_sha256": "37dc0ad7a0448653935cb25a08793a7b558e97f95e2c310c7510921e09a56401",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "fd09c209d11967e90347244dacf061acfac30e1b9bcbe552d7d6750bc92ce36a",
+        "source_version_sha256": "fd09c209d11967e90347244dacf061acfac30e1b9bcbe552d7d6750bc92ce36a",
+        "stable_source_id": "ukpga:1987:43:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "fd09c209d11967e90347244dacf061acfac30e1b9bcbe552d7d6750bc92ce36a",
+      "source_version_sha256": "fd09c209d11967e90347244dacf061acfac30e1b9bcbe552d7d6750bc92ce36a",
+      "stable_source_id": "ukpga:1987:43:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 1",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1984/3/section/1",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2010-01-12",
+        "source_modified": "2025-11-21",
+        "source_valid_from": "2010-01-12"
+      },
+      "official_version_sha256": "82cc7adcd91ed4636341420c0c69562325460113a6a6d93ef2c56f97e93c56c3",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "82cc7adcd91ed4636341420c0c69562325460113a6a6d93ef2c56f97e93c56c3",
+        "record_sha256": "31e407e2a8afbd9d256307c2154417537d5d2c168ee4d00f0104d5376bc80f41",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "d52a0fce1ef0f4fea0f1b98d6a5e3ba44c4efbb1c1d9244574916cfb5c0aea8e",
+        "source_version_sha256": "d52a0fce1ef0f4fea0f1b98d6a5e3ba44c4efbb1c1d9244574916cfb5c0aea8e",
+        "stable_source_id": "ukpga:1984:3:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "d52a0fce1ef0f4fea0f1b98d6a5e3ba44c4efbb1c1d9244574916cfb5c0aea8e",
+      "source_version_sha256": "d52a0fce1ef0f4fea0f1b98d6a5e3ba44c4efbb1c1d9244574916cfb5c0aea8e",
+      "stable_source_id": "ukpga:1984:3:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W"
+    },
+    {
+      "legal_locator": "section 2",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/Eliz2/5-6/31/section/2",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2005-05-28",
+        "source_modified": "2024-04-02",
+        "source_valid_from": "2005-05-28"
+      },
+      "official_version_sha256": "5ce008588aa86bb5d0530b00eb0f411ff2428985ed1a822a5db2db50f90c083b",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "5ce008588aa86bb5d0530b00eb0f411ff2428985ed1a822a5db2db50f90c083b",
+        "record_sha256": "62e9927d77c7add4649f94f190011703e1922a80bff03b8605d1eedf5f534d03",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "35ab03e4e4c1785c6061c11408b7b18ae2d8b919dafe69b14a218ccaa7e4901d",
+        "source_version_sha256": "35ab03e4e4c1785c6061c11408b7b18ae2d8b919dafe69b14a218ccaa7e4901d",
+        "stable_source_id": "ukpga:Eliz2:5-6:31:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "35ab03e4e4c1785c6061c11408b7b18ae2d8b919dafe69b14a218ccaa7e4901d",
+      "source_version_sha256": "35ab03e4e4c1785c6061c11408b7b18ae2d8b919dafe69b14a218ccaa7e4901d",
+      "stable_source_id": "ukpga:Eliz2:5-6:31:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+N.I."
+    },
+    {
+      "legal_locator": "section 5",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/2009/18/section/5",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2010-04-06",
+        "source_modified": "2015-10-13",
+        "source_valid_from": "2010-04-06"
+      },
+      "official_version_sha256": "2dea000e837d6a7d1728619f09c0651529190b34ca6e65208c4f3d203bd6b5a2",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "2dea000e837d6a7d1728619f09c0651529190b34ca6e65208c4f3d203bd6b5a2",
+        "record_sha256": "3b6f67f6f22554eb012fa91c610e9bafb099a4caf79410aef4b2d56538f842fe",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "52c451268ed7e7307c25fe515b388d39633bea80870be10102d4825d14151af2",
+        "source_version_sha256": "52c451268ed7e7307c25fe515b388d39633bea80870be10102d4825d14151af2",
+        "stable_source_id": "ukpga:2009:18:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "52c451268ed7e7307c25fe515b388d39633bea80870be10102d4825d14151af2",
+      "source_version_sha256": "52c451268ed7e7307c25fe515b388d39633bea80870be10102d4825d14151af2",
+      "stable_source_id": "ukpga:2009:18:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W"
+    },
+    {
+      "legal_locator": "section 1",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/Eliz2/6-7/53/section/1",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2007-10-01",
+        "source_modified": "2015-08-18",
+        "source_valid_from": "2007-10-01"
+      },
+      "official_version_sha256": "1f7a213f7ff7fa8c608ce27077892c9dbf425bd35baf8a2eaa8849072b063a3a",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "1f7a213f7ff7fa8c608ce27077892c9dbf425bd35baf8a2eaa8849072b063a3a",
+        "record_sha256": "d284dc530bf3c78b2bb4d76e7a87c065d560e71f7938a053930a3dc073770861",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "3757cb9f7a557175543377a01b028ec26011b322ea3e935a76eed99ae329137e",
+        "source_version_sha256": "3757cb9f7a557175543377a01b028ec26011b322ea3e935a76eed99ae329137e",
+        "stable_source_id": "ukpga:Eliz2:6-7:53:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "3757cb9f7a557175543377a01b028ec26011b322ea3e935a76eed99ae329137e",
+      "source_version_sha256": "3757cb9f7a557175543377a01b028ec26011b322ea3e935a76eed99ae329137e",
+      "stable_source_id": "ukpga:Eliz2:6-7:53:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+N.I."
+    },
+    {
+      "legal_locator": "section 20",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/1982/53/section/20",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2023-07-11",
+        "source_modified": "2024-04-02",
+        "source_valid_from": "2023-07-11"
+      },
+      "official_version_sha256": "c9658c35c791d73e9b7f0f1c8986632288a88899cd69cb03a70e6de247f5ec00",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "c9658c35c791d73e9b7f0f1c8986632288a88899cd69cb03a70e6de247f5ec00",
+        "record_sha256": "9fb57c5fc4842773ad677d81a78ccc05623b19818b199e8dcad006d4312436d5",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "bc157368e346179f4dca6d02536a2381da9df6da4ee3dbe2c1f25dcfcf0592c3",
+        "source_version_sha256": "bc157368e346179f4dca6d02536a2381da9df6da4ee3dbe2c1f25dcfcf0592c3",
+        "stable_source_id": "ukpga:1982:53:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "bc157368e346179f4dca6d02536a2381da9df6da4ee3dbe2c1f25dcfcf0592c3",
+      "source_version_sha256": "bc157368e346179f4dca6d02536a2381da9df6da4ee3dbe2c1f25dcfcf0592c3",
+      "stable_source_id": "ukpga:1982:53:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+S+N.I."
+    },
+    {
+      "legal_locator": "section 46",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/Geo5/15-16/23/section/46",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2022-10-31",
+        "source_modified": "2022-11-11",
+        "source_valid_from": "2022-10-31"
+      },
+      "official_version_sha256": "e0592d098402da275df40280d9bd348bb821c2a7b9444829c2f001721bc3dc9f",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "e0592d098402da275df40280d9bd348bb821c2a7b9444829c2f001721bc3dc9f",
+        "record_sha256": "8a7bb5b1fe985d1548dcdeb3f7118c503d612b7900a94378b197a7dceb93f4c8",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "511ae1d56188396e5344ad03b50011b057e538549ebcb0d6e0356de58be9dd4f",
+        "source_version_sha256": "511ae1d56188396e5344ad03b50011b057e538549ebcb0d6e0356de58be9dd4f",
+        "stable_source_id": "ukpga:Geo5:15-16:23:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "511ae1d56188396e5344ad03b50011b057e538549ebcb0d6e0356de58be9dd4f",
+      "source_version_sha256": "511ae1d56188396e5344ad03b50011b057e538549ebcb0d6e0356de58be9dd4f",
+      "stable_source_id": "ukpga:Geo5:15-16:23:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W"
+    },
+    {
+      "legal_locator": "section 9",
+      "official_source_url": "https://www.legislation.gov.uk/ukpga/Will4and1Vict/7/26/section/9",
+      "official_version": {
+        "document_status": "revised",
+        "restrict_start_date": "2022-04-06",
+        "source_modified": "2022-05-30",
+        "source_valid_from": "2022-04-06"
+      },
+      "official_version_sha256": "91e8f0df8c6654dde56fbd4158980903c1037c6fe622208ccf6d2ffacbee4331",
+      "predecessor_provenance": {
+        "as_of_date": "2026-08-12",
+        "official_version_sha256": "91e8f0df8c6654dde56fbd4158980903c1037c6fe622208ccf6d2ffacbee4331",
+        "record_sha256": "2c074d12ca513cc21e52b979bbe3cff1bd980fdfa51b68f1ae68245a0acb7464",
+        "registry_sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+        "source_content_sha256": "33e50a31cd13d02646993d2eb4f6a607a39f71b006cb2d9c7be844ab68bb87e3",
+        "source_version_sha256": "33e50a31cd13d02646993d2eb4f6a607a39f71b006cb2d9c7be844ab68bb87e3",
+        "stable_source_id": "ukpga:Will4and1Vict:7:26:latest-available@2026-08-12"
+      },
+      "qualification_provenance": "inherited_identical_official_snapshot",
+      "section_unapplied_effect_count": 0,
+      "source_content_sha256": "33e50a31cd13d02646993d2eb4f6a607a39f71b006cb2d9c7be844ab68bb87e3",
+      "source_version_sha256": "33e50a31cd13d02646993d2eb4f6a607a39f71b006cb2d9c7be844ab68bb87e3",
+      "stable_source_id": "ukpga:Will4and1Vict:7:26:latest-available@2026-08-14",
+      "unapplied_effect_materiality": "none_recorded",
+      "verified_extent": "E+W+N.I."
+    }
+  ],
+  "roll_forward_policy": "identical_official_bytes_and_version_metadata_only",
+  "schema": "legalbot.provision-verification.v1",
+  "status": "active",
+  "version": "1.1.0"
+}

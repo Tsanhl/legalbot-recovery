@@ -1,0 +1,36 @@
+{
+  "schema": "legalbot.v111.recovery.data-backup-manifest.v1",
+  "created_at_utc": "2026-08-28T19:25:59Z",
+  "status": "PASS_CURRENT_PREDECESSOR_AND_SOURCE_SNAPSHOT_RETAINED",
+  "active_catalogue": {
+    "relative_path": "data/catalog.sqlite3",
+    "size_bytes": 6204092416,
+    "sha256": "fac8cf47689a4088d2224af3ec8773d5372a41874cefe620ae38f019607804e5"
+  },
+  "current_catalogue_backup": {
+    "relative_path": "recovery/2026-08-29/catalogue-backups/current/catalog.sqlite3",
+    "size_bytes": 6204092416,
+    "sha256": "fac8cf47689a4088d2224af3ec8773d5372a41874cefe620ae38f019607804e5",
+    "receipt_sha256": "e08955f6af7a8e3285755bb41edc7b21e83704aba25cbd1d74a60fbcfe110a36"
+  },
+  "immediate_predecessor_catalogue_backup": {
+    "relative_path": "recovery/2026-08-29/catalogue-backups/predecessor/catalog.sqlite3",
+    "size_bytes": 6204092416,
+    "sha256": "3ca8fadfdef5c1d54e9b1444286259450e37e37cd15e38785643fbac3185412b",
+    "receipt_sha256": "baec8e04f95c49c3ddadb63e3dc3406625b33021cd3eb3a6d312a806236fb0eb"
+  },
+  "active_sources": {
+    "relative_path": "sources",
+    "file_count": 316,
+    "tree_content_sha256": "b972cbd22287dffe9b2531ec52858b75a9ace602a2f32398e4d5cf4b0ffcb366"
+  },
+  "source_snapshot": {
+    "relative_path": "recovery/2026-08-29/source-backup/sources",
+    "file_count": 316,
+    "verification": "RSYNC_ARCHIVE_CHECKSUM_DRY_RUN_ZERO_DIFFERENCES"
+  },
+  "git_backup_warning": "The catalogue, evaluations, source vault, catalogue backups and source snapshot are intentionally Git-ignored. A future Git repository is not a backup of these bytes.",
+  "active_or_previous_written": false,
+  "candidate_build_run": false,
+  "embedding_run": false
+}

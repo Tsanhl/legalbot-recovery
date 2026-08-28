@@ -1,0 +1,29 @@
+{
+  "bound_artifacts": [
+    {
+      "artifact_type": "current_legislation_download_report",
+      "as_of_date": "2026-08-14",
+      "relative_path": "config/archive/provision-verification/current-legislation-download-2026-08-14.json",
+      "sha256": "ec4e1538a8267ab2f944ce58ef0d0e545af11170532e10ed17341e54e2f2036d",
+      "status": "bound_to_active_registry"
+    },
+    {
+      "artifact_type": "provision_verification_exception_report",
+      "as_of_date": "2026-08-14",
+      "relative_path": "config/archive/provision-verification/provision-verification-roll-forward-2026-08-14.json",
+      "sha256": "336523030f0bf3ef1cc053c3ab246a16c1c3d3035017058c69100a1b92e83515",
+      "status": "bound_to_active_registry"
+    }
+  ],
+  "entries": [
+    {
+      "as_of_date": "2026-08-12",
+      "relative_path": "config/archive/provision-verification/provision-verification-2026-08-12.v1.json",
+      "sha256": "c8bea54215d32cebaf0add5221cb3cf0c9d514cab5af5902cae0b5a4bad16d1a",
+      "status": "superseded",
+      "successor_as_of_date": "2026-08-14",
+      "successor_registry_sha256": "1bb3c036a555cd67bc618a7edff1f1f5a0274ea4061c0775bccf8f722f7f88ac"
+    }
+  ],
+  "schema": "legalbot.provision-verification-archive-index.v1"
+}

@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package legalbot.modelruntime.v1;
+
+// Internal service-to-service API. The production channel is Unix-domain
+// socket only and is activated only by the exact Phase-2B owner payload.
+service LegalBotModelRuntime {
+  rpc GenerateStream(GenerateStreamRequest) returns (stream GenerateStreamFrame);
+  rpc Health(HealthRequest) returns (HealthReply);
+}
+
+message HealthRequest {}
+
+message HealthReply {
+  string status = 1;
+  string model_id = 2;
+  string model_version = 3;
+  bool model_loaded = 4;
+}
+
+message ChatMessage {
+  string role = 1;
+  string content = 2;
+}
+
+message GenerateStreamRequest {
+  string request_id = 1;
+  string mode = 2;
+  bytes payload_json = 3;
+  repeated ChatMessage messages = 4;
+  uint32 max_tokens = 5;
+  double temperature = 6;
+  double top_p = 7;
+  uint32 seed = 8;
+  repeated string stop = 9;
+  string prompt_sha256 = 10;
+  string candidate_sha256 = 11;
+}
+
+message TokenFrame {
+  // Internal only. Raw tokens are never forwarded to the browser transport.
+  string text = 1;
+  uint64 elapsed_ms = 2;
+}
+
+message SentenceDiagnosticFrame {
+  string sentence_id = 1;
+  string sentence_sha256 = 2;
+  string validation_status = 3;
+  repeated string evidence_ids = 4;
+  repeated string standard_ids = 5;
+  repeated string hurdle_codes = 6;
+  // Exact UTF-8-decoded character range in FinalFrame.raw_text. Diagnostics
+  // must form an ordered, gap-free partition of the complete final text.
+  uint64 start_char = 7;
+  uint64 end_char = 8;
+}
+
+message RuntimeDiagnosticFrame {
+  string code = 1;
+  uint64 elapsed_ms = 2;
+  bytes safe_metrics_json = 3;
+}
+
+message FinalFrame {
+  string model_version = 1;
+  string backend = 2;
+  string raw_text_sha256 = 3;
+  bytes structured_json = 4;
+  uint32 input_tokens = 5;
+  uint32 output_tokens = 6;
+  uint64 generation_ms = 7;
+  uint64 time_to_first_token_ms = 8;
+  string finish_reason = 9;
+  bool deterministic = 10;
+}
+
+message ErrorFrame {
+  string code = 1;
+  bool retryable = 2;
+}
+
+message GenerateStreamFrame {
+  string request_id = 1;
+  uint64 sequence = 2;
+  oneof frame {
+    TokenFrame token = 3;
+    SentenceDiagnosticFrame sentence = 4;
+    RuntimeDiagnosticFrame diagnostic = 5;
+    FinalFrame final = 6;
+    ErrorFrame error = 7;
+  }
+}

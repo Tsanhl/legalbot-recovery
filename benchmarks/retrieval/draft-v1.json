@@ -1,0 +1,3223 @@
+{
+  "approval_required": "independent_expert_and_owner",
+  "benchmark_id": "legalbot-evaluation-v1-development-draft",
+  "eligible_for_training": false,
+  "purpose": "evaluation_only",
+  "queries": [
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-001",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d8a16c405e74371b64ee801f12ac9624649204c1"
+      ],
+      "query": "Explain the legal effect of Contracts (Rights of Third Parties) Act 1999, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d8a16c405e74371b64ee801f12ac9624649204c1": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d8a16c405e74371b64ee801f12ac9624649204c1"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-002",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-55131578aa8ede1161a0e68c0fdbc90aa8c833ea"
+      ],
+      "query": "Explain the legal effect of Tribunals, Courts and Enforcement Act 2007, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-55131578aa8ede1161a0e68c0fdbc90aa8c833ea": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-55131578aa8ede1161a0e68c0fdbc90aa8c833ea"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-003",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-9be2077f24a636d38fdf8b4f41f0ad5cefc3bbb4"
+      ],
+      "query": "Explain the legal effect of Company Directors Disqualification Act 1986, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-9be2077f24a636d38fdf8b4f41f0ad5cefc3bbb4": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-9be2077f24a636d38fdf8b4f41f0ad5cefc3bbb4"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-004",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-20e0e5001feeeb0ff6ccc3d14130b22ea633498d"
+      ],
+      "query": "Explain the legal effect of Children Act 1989, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-20e0e5001feeeb0ff6ccc3d14130b22ea633498d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-20e0e5001feeeb0ff6ccc3d14130b22ea633498d"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-005",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-893dd2c6daa59f5363bb1a936e103333511be326"
+      ],
+      "query": "Explain the legal effect of The Civil Procedure Rules 1998, rule 1.1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-893dd2c6daa59f5363bb1a936e103333511be326": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-893dd2c6daa59f5363bb1a936e103333511be326"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-006",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-c4c1ddeb17272c7c5acac661d37e27f08f171bf0"
+      ],
+      "query": "Explain the legal effect of Arbitration Act 2025, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-c4c1ddeb17272c7c5acac661d37e27f08f171bf0": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c4c1ddeb17272c7c5acac661d37e27f08f171bf0"
+      ],
+      "subject": "commercial"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-007",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-b2cd351e4b08f4bd43a16422fe2609a59d3e49a2"
+      ],
+      "query": "Explain the legal effect of Trade Marks Act 1994, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-b2cd351e4b08f4bd43a16422fe2609a59d3e49a2": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b2cd351e4b08f4bd43a16422fe2609a59d3e49a2"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-008",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-29b8778fa61cbe93a76f218dabbb72eea2105ff9"
+      ],
+      "query": "Explain the legal effect of source-0062dbecc693.pdf, para 21, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-29b8778fa61cbe93a76f218dabbb72eea2105ff9": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-29b8778fa61cbe93a76f218dabbb72eea2105ff9"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-009",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-449fedf0aa6cf7e6261c297dde81c8d6f40cfa61"
+      ],
+      "query": "Explain the legal effect of Registered Designs Act 1949, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-449fedf0aa6cf7e6261c297dde81c8d6f40cfa61": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-449fedf0aa6cf7e6261c297dde81c8d6f40cfa61"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-010",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-74fd446edb4821c310d69d4238579ffe85e7eb22"
+      ],
+      "query": "Explain the legal effect of Variation of Trusts Act 1958, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-74fd446edb4821c310d69d4238579ffe85e7eb22": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-74fd446edb4821c310d69d4238579ffe85e7eb22"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-011",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-17a73405d1ca196fa0ed084b79b971de314f0920"
+      ],
+      "query": "Explain the legal effect of source-f49e8400d8f0.pdf, para 12, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-17a73405d1ca196fa0ed084b79b971de314f0920": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-17a73405d1ca196fa0ed084b79b971de314f0920"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-012",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-b36c8ae61222b1e8b8dcf076f9726f3e6a673220"
+      ],
+      "query": "Explain the legal effect of Trusts of Land and Appointment of Trustees Act 1996, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-b36c8ae61222b1e8b8dcf076f9726f3e6a673220": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b36c8ae61222b1e8b8dcf076f9726f3e6a673220"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-013",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d8a8966f79d245049c38e49c360f974f5e9d7a49"
+      ],
+      "query": "Explain the legal effect of Employment Relations Act 1999, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d8a8966f79d245049c38e49c360f974f5e9d7a49": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d8a8966f79d245049c38e49c360f974f5e9d7a49"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-014",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-0c7f7a11c44b28670ce1e7e5b15b7a04040c6d1d"
+      ],
+      "query": "Explain the legal effect of Fatal Accidents Act 1976, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-0c7f7a11c44b28670ce1e7e5b15b7a04040c6d1d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0c7f7a11c44b28670ce1e7e5b15b7a04040c6d1d"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-015",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-6af46d213224c9bfb93bbc137137caa615984df3"
+      ],
+      "query": "Explain the legal effect of Financial Services and Markets Act 2000, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-6af46d213224c9bfb93bbc137137caa615984df3": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-6af46d213224c9bfb93bbc137137caa615984df3"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-016",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-add4e3dc5286c005407c42686e95399b9d98d285"
+      ],
+      "query": "Explain the legal effect of Administration of Justice Act 1982, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-add4e3dc5286c005407c42686e95399b9d98d285": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-add4e3dc5286c005407c42686e95399b9d98d285"
+      ],
+      "subject": "wills and succession"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-017",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-006d8220a811a5dbce96a0fa9cbe9f691245645f"
+      ],
+      "query": "Explain the legal effect of Defective Premises Act 1972, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-006d8220a811a5dbce96a0fa9cbe9f691245645f": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-006d8220a811a5dbce96a0fa9cbe9f691245645f"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-018",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-3c9f39d17b113faf29272114c5f544fdf790356d"
+      ],
+      "query": "Explain the legal effect of Criminal Attempts Act 1981, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-3c9f39d17b113faf29272114c5f544fdf790356d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-3c9f39d17b113faf29272114c5f544fdf790356d"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-019",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-a2364e45574fb143a3573a3193de068a602682cc"
+      ],
+      "query": "Explain the legal effect of Financial Services Act 2021, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-a2364e45574fb143a3573a3193de068a602682cc": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a2364e45574fb143a3573a3193de068a602682cc"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-020",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-2c22039c45cdb90a1eb39b506ed8b326b727e11f"
+      ],
+      "query": "Explain the legal effect of The Trade Secrets (Enforcement, etc.) Regulations 2018, regulation 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-2c22039c45cdb90a1eb39b506ed8b326b727e11f": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-2c22039c45cdb90a1eb39b506ed8b326b727e11f"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-021",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-c878b725ac08157889547e9739f03daedf878675"
+      ],
+      "query": "Explain the legal effect of Law of Property Act 1925, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-c878b725ac08157889547e9739f03daedf878675": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c878b725ac08157889547e9739f03daedf878675"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-022",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-3ee92fac8cdee01a670116d78024c5034d90e4c8"
+      ],
+      "query": "Explain the legal effect of source-34e22c2130d4.pdf, para 26, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-3ee92fac8cdee01a670116d78024c5034d90e4c8": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-3ee92fac8cdee01a670116d78024c5034d90e4c8"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-023",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-9978c10daa4b3c21135e1eda0c8fdf8a51cd9b84"
+      ],
+      "query": "Explain the legal effect of Consumer Protection Act 1987, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-9978c10daa4b3c21135e1eda0c8fdf8a51cd9b84": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-9978c10daa4b3c21135e1eda0c8fdf8a51cd9b84"
+      ],
+      "subject": "consumer"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-024",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d2d9358fbc82c3ca2ba74107b82ec32c7fbf549c"
+      ],
+      "query": "Explain the legal effect of Inheritance (Provision for Family and Dependants) Act 1975, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d2d9358fbc82c3ca2ba74107b82ec32c7fbf549c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d2d9358fbc82c3ca2ba74107b82ec32c7fbf549c"
+      ],
+      "subject": "wills and succession"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-025",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-9c1d874cfd1fb1ebc8e29c9f575df47b890f546d"
+      ],
+      "query": "Explain the legal effect of source-b7f36283ce2a.pdf, para 32, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-9c1d874cfd1fb1ebc8e29c9f575df47b890f546d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-9c1d874cfd1fb1ebc8e29c9f575df47b890f546d"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-026",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-552f9cc3ce647f8be49059ecbb9fc61dcc6affc0"
+      ],
+      "query": "Explain the legal effect of Occupiers’ Liability Act 1957, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-552f9cc3ce647f8be49059ecbb9fc61dcc6affc0": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-552f9cc3ce647f8be49059ecbb9fc61dcc6affc0"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-027",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-0604df7b50ec65fbf31d8c78b586419832e9c5e4"
+      ],
+      "query": "Explain the legal effect of source-848f825f47f9.pdf, para 111, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-0604df7b50ec65fbf31d8c78b586419832e9c5e4": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0604df7b50ec65fbf31d8c78b586419832e9c5e4"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-028",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-dfa78c786adb02c0677a5155bca39936a0857f16"
+      ],
+      "query": "Explain the legal effect of Economic Crime and Corporate Transparency Act 2023, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-dfa78c786adb02c0677a5155bca39936a0857f16": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-dfa78c786adb02c0677a5155bca39936a0857f16"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-029",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-b5303fd2cc11d88c31494731ba00eaf4eb750b17"
+      ],
+      "query": "Explain the legal effect of source-83eaf2a8da1d.pdf, para 20, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-b5303fd2cc11d88c31494731ba00eaf4eb750b17": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b5303fd2cc11d88c31494731ba00eaf4eb750b17"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-030",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-1742b47e07761d6fb13ec3c997d0fa22cd8c6413"
+      ],
+      "query": "Explain the legal effect of source-e50b7f7fdbc1.pdf, para 36, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-1742b47e07761d6fb13ec3c997d0fa22cd8c6413": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-1742b47e07761d6fb13ec3c997d0fa22cd8c6413"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-031",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-98b4d0209d71bb29e73cb3a57d16f450b9882b0f"
+      ],
+      "query": "Explain the legal effect of Patents Act 1977, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-98b4d0209d71bb29e73cb3a57d16f450b9882b0f": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-98b4d0209d71bb29e73cb3a57d16f450b9882b0f"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-032",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-61897d261838082417e59f2770b1db94a9861225"
+      ],
+      "query": "Explain the legal effect of Matrimonial Causes Act 1973, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-61897d261838082417e59f2770b1db94a9861225": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-61897d261838082417e59f2770b1db94a9861225"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-033",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-243dfcd235eb9da803c68aa5004ee50eee1e0fd2"
+      ],
+      "query": "Explain the legal effect of Police and Criminal Evidence Act 1984, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-243dfcd235eb9da803c68aa5004ee50eee1e0fd2": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-243dfcd235eb9da803c68aa5004ee50eee1e0fd2"
+      ],
+      "subject": "criminal evidence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-034",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-0e126a97f1c469da21e23dc4b8886805165c7650"
+      ],
+      "query": "Explain the legal effect of source-123f9096dcf0.pdf, para 47, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-0e126a97f1c469da21e23dc4b8886805165c7650": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0e126a97f1c469da21e23dc4b8886805165c7650"
+      ],
+      "subject": "mediation and ADR"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-035",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-940110a65325834adbd52afc05f05eea65c8af5e"
+      ],
+      "query": "Explain the legal effect of source-2b743bfbb662.pdf, para 15, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-940110a65325834adbd52afc05f05eea65c8af5e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-940110a65325834adbd52afc05f05eea65c8af5e"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-036",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-7080b8133781707d358c22aed64b63bbce649a90"
+      ],
+      "query": "Explain the legal effect of Employment Rights Act 1996, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-7080b8133781707d358c22aed64b63bbce649a90": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-7080b8133781707d358c22aed64b63bbce649a90"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-037",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-294b99390c9ed1cd023679aea3bf82f8da474925"
+      ],
+      "query": "Explain the legal effect of source-a199d1fd7455.pdf, para 14, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-294b99390c9ed1cd023679aea3bf82f8da474925": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-294b99390c9ed1cd023679aea3bf82f8da474925"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-038",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-043c4e56b6269485ce664b194c0075e8b02a475e"
+      ],
+      "query": "Explain the legal effect of Trade Union and Labour Relations (Consolidation) Act 1992, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-043c4e56b6269485ce664b194c0075e8b02a475e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-043c4e56b6269485ce664b194c0075e8b02a475e"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-039",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e95fbac5e00f8b2de17a39cca6a73a95c3b3f879"
+      ],
+      "query": "Explain the legal effect of source-6a5e1d88cae4.pdf, para 254, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-e95fbac5e00f8b2de17a39cca6a73a95c3b3f879": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e95fbac5e00f8b2de17a39cca6a73a95c3b3f879"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-040",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-064de2abcb9f4cc8701cea8bbd9a537bb72cbde6"
+      ],
+      "query": "Explain the legal effect of source-be796ef451d3.pdf, para 81, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-064de2abcb9f4cc8701cea8bbd9a537bb72cbde6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-064de2abcb9f4cc8701cea8bbd9a537bb72cbde6"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-041",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-4b329f02d99b932418be84849a4fa932545e78b6"
+      ],
+      "query": "Explain the legal effect of source-86271e0b5fa6.pdf, para 30, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-4b329f02d99b932418be84849a4fa932545e78b6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-4b329f02d99b932418be84849a4fa932545e78b6"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-042",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d3417a8858616009946127f3c073cca10dee4704"
+      ],
+      "query": "Explain the legal effect of source-ec8d8862008d.pdf, para 31, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d3417a8858616009946127f3c073cca10dee4704": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d3417a8858616009946127f3c073cca10dee4704"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-043",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-7af553d24f1051f7e77a072b0ca855a539a777fe"
+      ],
+      "query": "Explain the legal effect of Homicide Act 1957, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-7af553d24f1051f7e77a072b0ca855a539a777fe": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-7af553d24f1051f7e77a072b0ca855a539a777fe"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-044",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-60e867771696dd3fc87cac02097dfdfe20563da0"
+      ],
+      "query": "Explain the legal effect of Insolvency Act 1986, section A1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-60e867771696dd3fc87cac02097dfdfe20563da0": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-60e867771696dd3fc87cac02097dfdfe20563da0"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-045",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-4dc1a7eac4f51b66facf8555859283b965e87ab6"
+      ],
+      "query": "Explain the legal effect of Unfair Contract Terms Act 1977, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-4dc1a7eac4f51b66facf8555859283b965e87ab6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-4dc1a7eac4f51b66facf8555859283b965e87ab6"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-046",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-25cc5e5e2324286234bdb7bbb27e99a7e56b876e"
+      ],
+      "query": "Explain the legal effect of Copyright, Designs and Patents Act 1988, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-25cc5e5e2324286234bdb7bbb27e99a7e56b876e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-25cc5e5e2324286234bdb7bbb27e99a7e56b876e"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-047",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-521faf8ac7440a4b688ccaa79d5ca68b5dbc48a1"
+      ],
+      "query": "Explain the legal effect of Perpetuities and Accumulations Act 2009, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-521faf8ac7440a4b688ccaa79d5ca68b5dbc48a1": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-521faf8ac7440a4b688ccaa79d5ca68b5dbc48a1"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-048",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-3b9ac7ab65f166ab0780215b70779497ecf3e090"
+      ],
+      "query": "Explain the legal effect of source-1449b2fa121b.docx, section 2, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-3b9ac7ab65f166ab0780215b70779497ecf3e090": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-3b9ac7ab65f166ab0780215b70779497ecf3e090"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-049",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-6e8c399a9ec263f706b166f8b12430a7093b2832"
+      ],
+      "query": "Explain the legal effect of source-af670ac6b911.pdf, para 10, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-6e8c399a9ec263f706b166f8b12430a7093b2832": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-6e8c399a9ec263f706b166f8b12430a7093b2832"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-050",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-cc7b42b62aac2fd4f6e1811b9deaeae2d4622bf5"
+      ],
+      "query": "Explain the legal effect of Equality Act 2010, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-cc7b42b62aac2fd4f6e1811b9deaeae2d4622bf5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-cc7b42b62aac2fd4f6e1811b9deaeae2d4622bf5"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-051",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-3e5a194ae6c31bdf6211f387377f19479aff325e"
+      ],
+      "query": "Explain the legal effect of Land Registration Act 2002, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-3e5a194ae6c31bdf6211f387377f19479aff325e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-3e5a194ae6c31bdf6211f387377f19479aff325e"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-052",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-b89cb7017bbd8e28660abcc34e0610e9f0e7ff04"
+      ],
+      "query": "Explain the legal effect of Administration of Estates Act 1925, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-b89cb7017bbd8e28660abcc34e0610e9f0e7ff04": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b89cb7017bbd8e28660abcc34e0610e9f0e7ff04"
+      ],
+      "subject": "wills and succession"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-053",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-7325e8b14811a26397a3f1a2f4c80f83a0aeb7a6"
+      ],
+      "query": "Explain the legal effect of Wills Act 1837, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-7325e8b14811a26397a3f1a2f4c80f83a0aeb7a6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-7325e8b14811a26397a3f1a2f4c80f83a0aeb7a6"
+      ],
+      "subject": "wills and succession"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-054",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e2f26560ede57ebcaeb25a8d2a545d3e0c0c57b6"
+      ],
+      "query": "Explain the legal effect of County Courts Act 1984, section A1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-e2f26560ede57ebcaeb25a8d2a545d3e0c0c57b6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e2f26560ede57ebcaeb25a8d2a545d3e0c0c57b6"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-055",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-c1c96e37bac3f0d1f1797ed10d6191a0553f3d99"
+      ],
+      "query": "Explain the legal effect of Misrepresentation Act 1967, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-c1c96e37bac3f0d1f1797ed10d6191a0553f3d99": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c1c96e37bac3f0d1f1797ed10d6191a0553f3d99"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-056",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-c9504ffd37899e36b20238f5a22369a1b2a194f3"
+      ],
+      "query": "Explain the legal effect of Law Reform (Frustrated Contracts) Act 1943, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-c9504ffd37899e36b20238f5a22369a1b2a194f3": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c9504ffd37899e36b20238f5a22369a1b2a194f3"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-057",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-2a9dd1ce434cba87520f3799d8a8ee9885574b96"
+      ],
+      "query": "Explain the legal effect of source-79f2cc5a3b10.pdf, para 33, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-2a9dd1ce434cba87520f3799d8a8ee9885574b96": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-2a9dd1ce434cba87520f3799d8a8ee9885574b96"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-058",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d76525ab310dc05381fffba3d21c0c7ed877f1e4"
+      ],
+      "query": "Explain the legal effect of Human Rights Act 1998, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d76525ab310dc05381fffba3d21c0c7ed877f1e4": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d76525ab310dc05381fffba3d21c0c7ed877f1e4"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-059",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-45ed014948166e6834f8fc428a018651f845cecc"
+      ],
+      "query": "Explain the legal effect of Domestic Abuse Act 2021, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-45ed014948166e6834f8fc428a018651f845cecc": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-45ed014948166e6834f8fc428a018651f845cecc"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-060",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ff9bccab7d783355b28c4b5bb57e47a208082a67"
+      ],
+      "query": "Explain the legal effect of Constitutional Reform Act 2005, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-ff9bccab7d783355b28c4b5bb57e47a208082a67": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ff9bccab7d783355b28c4b5bb57e47a208082a67"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-061",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d33caa95462c8b92a6f8c57715bc6b7752455416"
+      ],
+      "query": "Explain the legal effect of source-d87445625eed.pdf, para 3, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d33caa95462c8b92a6f8c57715bc6b7752455416": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d33caa95462c8b92a6f8c57715bc6b7752455416"
+      ],
+      "subject": "mediation and ADR"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-062",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-8892422515a54c9d6a5844f185616dc0c36c7df3"
+      ],
+      "query": "Explain the legal effect of Companies Act 2006, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-8892422515a54c9d6a5844f185616dc0c36c7df3": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-8892422515a54c9d6a5844f185616dc0c36c7df3"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-063",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-1384d6e54cd440e86d28793b25aa56ef18c51556"
+      ],
+      "query": "Explain the legal effect of Supply of Goods and Services Act 1982, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-1384d6e54cd440e86d28793b25aa56ef18c51556": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-1384d6e54cd440e86d28793b25aa56ef18c51556"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-064",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-8fef9517efb5ec0b4a69ea211fb13d16081dcfd3"
+      ],
+      "query": "Explain the legal effect of Senior Courts Act 1981, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-8fef9517efb5ec0b4a69ea211fb13d16081dcfd3": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-8fef9517efb5ec0b4a69ea211fb13d16081dcfd3"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-065",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-35a1e4dfd19f7896972761d526f0940812e20bcd"
+      ],
+      "query": "Explain the legal effect of Occupiers' Liability Act 1984, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-35a1e4dfd19f7896972761d526f0940812e20bcd": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-35a1e4dfd19f7896972761d526f0940812e20bcd"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-066",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ddd75529aa988b14695f7313f4eb190210e11c67"
+      ],
+      "query": "Explain the legal effect of Criminal Justice Act 2003, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-ddd75529aa988b14695f7313f4eb190210e11c67": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ddd75529aa988b14695f7313f4eb190210e11c67"
+      ],
+      "subject": "criminal evidence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-067",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-f2b75b5180da695aafbdb4cfd411e3ee6097b8be"
+      ],
+      "query": "Explain the legal effect of source-fdd2b9a82804.pdf, para 142, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-f2b75b5180da695aafbdb4cfd411e3ee6097b8be": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-f2b75b5180da695aafbdb4cfd411e3ee6097b8be"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-068",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-2e899af1d076638a4e5d40c570ead80dca7a44cd"
+      ],
+      "query": "Explain the legal effect of Law Reform (Contributory Negligence) Act 1945, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-2e899af1d076638a4e5d40c570ead80dca7a44cd": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-2e899af1d076638a4e5d40c570ead80dca7a44cd"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-069",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-77f043416a0dac9076bad7d38f17d889b63fdd9c"
+      ],
+      "query": "Explain the legal effect of Sale of Goods Act 1979, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-77f043416a0dac9076bad7d38f17d889b63fdd9c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-77f043416a0dac9076bad7d38f17d889b63fdd9c"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-070",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-f121af1c19e09062bb933256334779a46d31a615"
+      ],
+      "query": "Explain the legal effect of Digital Markets, Competition and Consumers Act 2024, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-f121af1c19e09062bb933256334779a46d31a615": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-f121af1c19e09062bb933256334779a46d31a615"
+      ],
+      "subject": "consumer"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-071",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e3122077440e7f9a2ea5f67b4ec235c8b3ad5726"
+      ],
+      "query": "Explain the legal effect of Consumer Rights Act 2015, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-e3122077440e7f9a2ea5f67b4ec235c8b3ad5726": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e3122077440e7f9a2ea5f67b4ec235c8b3ad5726"
+      ],
+      "subject": "consumer"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-072",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-71b9ccebfb38fb1c741d419ffc5ac2ce7878f650"
+      ],
+      "query": "Explain the legal effect of source-b8a643e403ae.pdf, para 69, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-71b9ccebfb38fb1c741d419ffc5ac2ce7878f650": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-71b9ccebfb38fb1c741d419ffc5ac2ce7878f650"
+      ],
+      "subject": "ai and data protection"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-073",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-0199738cf0044c20cbb58503bd5aeb1c5d392383"
+      ],
+      "query": "Explain the legal effect of Arbitration Act 1996, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-0199738cf0044c20cbb58503bd5aeb1c5d392383": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0199738cf0044c20cbb58503bd5aeb1c5d392383"
+      ],
+      "subject": "commercial"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-074",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-7707d25c9bcda799e1e51aeb7f0c6a924fe97507"
+      ],
+      "query": "Explain the legal effect of Limitation Act 1980, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-7707d25c9bcda799e1e51aeb7f0c6a924fe97507": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-7707d25c9bcda799e1e51aeb7f0c6a924fe97507"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-075",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-7a2c415d6dd97553b6d5b55a4cbf0d5f5aac7416"
+      ],
+      "query": "Explain the legal effect of Coroners and Justice Act 2009, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-7a2c415d6dd97553b6d5b55a4cbf0d5f5aac7416": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-7a2c415d6dd97553b6d5b55a4cbf0d5f5aac7416"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-076",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-038e0fe0abcfc2a32cec0b9ad650f9b10d64adab"
+      ],
+      "query": "Explain the legal effect of Matrimonial and Family Proceedings Act 1984, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-038e0fe0abcfc2a32cec0b9ad650f9b10d64adab": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-038e0fe0abcfc2a32cec0b9ad650f9b10d64adab"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-077",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-8bfc41fc4d620e181c55d59bb1b754089af10da2"
+      ],
+      "query": "Explain the legal effect of Family Law Act 1996, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-8bfc41fc4d620e181c55d59bb1b754089af10da2": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-8bfc41fc4d620e181c55d59bb1b754089af10da2"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-078",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ffdf5201af4e212e0b036295be91fc5dbc2d8502"
+      ],
+      "query": "Explain the legal effect of Judicial Review and Courts Act 2022, section 1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-ffdf5201af4e212e0b036295be91fc5dbc2d8502": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ffdf5201af4e212e0b036295be91fc5dbc2d8502"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-079",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d4a219820f9bc44d27cdfb664f69011fab6e3e31"
+      ],
+      "query": "Explain the legal effect of The Family Procedure Rules 2010, rule 1.1, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-d4a219820f9bc44d27cdfb664f69011fab6e3e31": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d4a219820f9bc44d27cdfb664f69011fab6e3e31"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "core-080",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ddcab86c9aa5b8a1cb8a11b921d579d5503b33d8"
+      ],
+      "query": "Explain the legal effect of Trustee Act 1925, section 2, as it applies in England and Wales on 12 August 2026.",
+      "relevance_grades": {
+        "chunk-ddcab86c9aa5b8a1cb8a11b921d579d5503b33d8": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ddcab86c9aa5b8a1cb8a11b921d579d5503b33d8"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-01-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-01",
+      "primary_must_hit_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "query": "What does source-e1330a094bac.pdf, para 11, require?",
+      "relevance_grades": {
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-01-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-01",
+      "primary_must_hit_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "query": "In plain English, how does para 11 of source-e1330a094bac.pdf operate?",
+      "relevance_grades": {
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-01-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-01",
+      "primary_must_hit_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "query": "Please clarify the current rule in source-e1330a094bac.pdf at para 11.",
+      "relevance_grades": {
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-01-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-01",
+      "primary_must_hit_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "query": "Wht is the efect of source-e1330a094bac.pdf para 11?",
+      "relevance_grades": {
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-df890c883faa69f72deb8459402f3a5ffedae25d"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-02-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-02",
+      "primary_must_hit_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "query": "What does source-e3fff27829ca.pdf, para 14, require?",
+      "relevance_grades": {
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-02-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-02",
+      "primary_must_hit_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "query": "In plain English, how does para 14 of source-e3fff27829ca.pdf operate?",
+      "relevance_grades": {
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-02-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-02",
+      "primary_must_hit_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "query": "Please clarify the current rule in source-e3fff27829ca.pdf at para 14.",
+      "relevance_grades": {
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-02-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-02",
+      "primary_must_hit_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "query": "Wht is the efect of source-e3fff27829ca.pdf para 14?",
+      "relevance_grades": {
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a1242bb94b5f5a31d12edda5472fd02a05ba21fb"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-03-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-03",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "query": "What does Trustee Act 2000, section 1, require?",
+      "relevance_grades": {
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-03-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-03",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "query": "In plain English, how does section 1 of Trustee Act 2000 operate?",
+      "relevance_grades": {
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-03-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-03",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "query": "Please clarify the current rule in Trustee Act 2000 at section 1.",
+      "relevance_grades": {
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-03-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-03",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "query": "Wht is the efect of Trustee Act 2000 section 1?",
+      "relevance_grades": {
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b033a4860328921d089a878f46b0787563fbfc96"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-04-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-04",
+      "primary_must_hit_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "query": "What does source-21aaf4830dde.pdf, para 254, require?",
+      "relevance_grades": {
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-04-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-04",
+      "primary_must_hit_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "query": "In plain English, how does para 254 of source-21aaf4830dde.pdf operate?",
+      "relevance_grades": {
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-04-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-04",
+      "primary_must_hit_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "query": "Please clarify the current rule in source-21aaf4830dde.pdf at para 254.",
+      "relevance_grades": {
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-04-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-04",
+      "primary_must_hit_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "query": "Wht is the efect of source-21aaf4830dde.pdf para 254?",
+      "relevance_grades": {
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e23990465f4ff8e20fac9471163c630d930b805b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-05-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-05",
+      "primary_must_hit_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "query": "What does Financial Services and Markets Act 2023, section 1, require?",
+      "relevance_grades": {
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-05-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-05",
+      "primary_must_hit_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "query": "In plain English, how does section 1 of Financial Services and Markets Act 2023 operate?",
+      "relevance_grades": {
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-05-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-05",
+      "primary_must_hit_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "query": "Please clarify the current rule in Financial Services and Markets Act 2023 at section 1.",
+      "relevance_grades": {
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-05-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-05",
+      "primary_must_hit_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "query": "Wht is the efect of Financial Services and Markets Act 2023 section 1?",
+      "relevance_grades": {
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-0482d7f88c17b35a1899cec6824c9d9dfd9b786c"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-06-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-06",
+      "primary_must_hit_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "query": "What does Civil Procedure Act 1997, section 1, require?",
+      "relevance_grades": {
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-06-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-06",
+      "primary_must_hit_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "query": "In plain English, how does section 1 of Civil Procedure Act 1997 operate?",
+      "relevance_grades": {
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-06-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-06",
+      "primary_must_hit_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "query": "Please clarify the current rule in Civil Procedure Act 1997 at section 1.",
+      "relevance_grades": {
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-06-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-06",
+      "primary_must_hit_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "query": "Wht is the efect of Civil Procedure Act 1997 section 1?",
+      "relevance_grades": {
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-07-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-07",
+      "primary_must_hit_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "query": "What does Employment Act 2002, section 1, require?",
+      "relevance_grades": {
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-07-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-07",
+      "primary_must_hit_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "query": "In plain English, how does section 1 of Employment Act 2002 operate?",
+      "relevance_grades": {
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-07-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-07",
+      "primary_must_hit_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "query": "Please clarify the current rule in Employment Act 2002 at section 1.",
+      "relevance_grades": {
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-07-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-07",
+      "primary_must_hit_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "query": "Wht is the efect of Employment Act 2002 section 1?",
+      "relevance_grades": {
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c39d19bba1cfe9c4007d4ff980e8c8beb60f65af"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-08-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-08",
+      "primary_must_hit_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "query": "What does Law of Property (Miscellaneous Provisions) Act 1989, section 1, require?",
+      "relevance_grades": {
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-08-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-08",
+      "primary_must_hit_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "query": "In plain English, how does section 1 of Law of Property (Miscellaneous Provisions) Act 1989 operate?",
+      "relevance_grades": {
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-08-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-08",
+      "primary_must_hit_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "query": "Please clarify the current rule in Law of Property (Miscellaneous Provisions) Act 1989 at section 1.",
+      "relevance_grades": {
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-08-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-08",
+      "primary_must_hit_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "query": "Wht is the efect of Law of Property (Miscellaneous Provisions) Act 1989 section 1?",
+      "relevance_grades": {
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-1afd8bbffb9916bd903ff53f43b44bcc5d02973b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-09-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-09",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "query": "What does Contracts (Rights of Third Parties) Act 1999, section 1, require?",
+      "relevance_grades": {
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-09-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-09",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "query": "In plain English, how does section 1 of Contracts (Rights of Third Parties) Act 1999 operate?",
+      "relevance_grades": {
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-09-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-09",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "query": "Please clarify the current rule in Contracts (Rights of Third Parties) Act 1999 at section 1.",
+      "relevance_grades": {
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-09-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-09",
+      "primary_must_hit_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "query": "Wht is the efect of Contracts (Rights of Third Parties) Act 1999 section 1?",
+      "relevance_grades": {
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b0e7eb4ea45d91ea44bb4adce47e07bcfe6e41c5"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-10-1",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-10",
+      "primary_must_hit_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "query": "What does Tribunals, Courts and Enforcement Act 2007, section 2, require?",
+      "relevance_grades": {
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-10-2",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-10",
+      "primary_must_hit_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "query": "In plain English, how does section 2 of Tribunals, Courts and Enforcement Act 2007 operate?",
+      "relevance_grades": {
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-10-3",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-10",
+      "primary_must_hit_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "query": "Please clarify the current rule in Tribunals, Courts and Enforcement Act 2007 at section 2.",
+      "relevance_grades": {
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "para-10-4",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": "paraphrase-family-10",
+      "primary_must_hit_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "query": "Wht is the efect of Tribunals, Courts and Enforcement Act 2007 section 2?",
+      "relevance_grades": {
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-37d3ee742d6eedceecef3bdc76bde48cdfe3aa0b"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-001",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-71b9ccebfb38fb1c741d419ffc5ac2ce7878f650",
+        "chunk-dddb90bd7c4c7d087472f1283c472ab44c619313"
+      ],
+      "query": "Analyse how source-b8a643e403ae.pdf, para 69, and source-b8a643e403ae.pdf, para 62, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-71b9ccebfb38fb1c741d419ffc5ac2ce7878f650": 3,
+        "chunk-dddb90bd7c4c7d087472f1283c472ab44c619313": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-71b9ccebfb38fb1c741d419ffc5ac2ce7878f650",
+        "chunk-dddb90bd7c4c7d087472f1283c472ab44c619313"
+      ],
+      "subject": "ai and data protection"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-002",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885",
+        "chunk-cf505f767fa0514ca3eae71b53bd786140e31d8b"
+      ],
+      "query": "Analyse how Civil Procedure Act 1997, section 1, and The Civil Procedure Rules 1998, rule 1.1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885": 3,
+        "chunk-cf505f767fa0514ca3eae71b53bd786140e31d8b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ab9ee8c86a2b442dadbed343043aaa61a6de7885",
+        "chunk-cf505f767fa0514ca3eae71b53bd786140e31d8b"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-003",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-85c7fb74c282091a8ee27572a1c51f05f35be33c",
+        "chunk-5315ab2e01f5ccdbfc76d87a1687bac261e9b905"
+      ],
+      "query": "Analyse how Arbitration Act 2025, section 1, and Arbitration Act 1996, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-5315ab2e01f5ccdbfc76d87a1687bac261e9b905": 3,
+        "chunk-85c7fb74c282091a8ee27572a1c51f05f35be33c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-85c7fb74c282091a8ee27572a1c51f05f35be33c",
+        "chunk-5315ab2e01f5ccdbfc76d87a1687bac261e9b905"
+      ],
+      "subject": "commercial"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-004",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-5296183290fb824ddc14e66088bfc3d719b80a25",
+        "chunk-373bf00c5b594e996a0ed2a6a6eba5d147e82aa3"
+      ],
+      "query": "Analyse how Insolvency Act 1986, section A1, and Companies Act 2006, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-373bf00c5b594e996a0ed2a6a6eba5d147e82aa3": 3,
+        "chunk-5296183290fb824ddc14e66088bfc3d719b80a25": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-5296183290fb824ddc14e66088bfc3d719b80a25",
+        "chunk-373bf00c5b594e996a0ed2a6a6eba5d147e82aa3"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-005",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-dcddec85c5374e2b0b23e474207ffede2956a444",
+        "chunk-bc7499509b876e0b2aef0ff272d2a7fbbb38ed6c"
+      ],
+      "query": "Analyse how Consumer Rights Act 2015, section 1, and Consumer Protection Act 1987, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-bc7499509b876e0b2aef0ff272d2a7fbbb38ed6c": 3,
+        "chunk-dcddec85c5374e2b0b23e474207ffede2956a444": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-dcddec85c5374e2b0b23e474207ffede2956a444",
+        "chunk-bc7499509b876e0b2aef0ff272d2a7fbbb38ed6c"
+      ],
+      "subject": "consumer"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-006",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-b4b38f657945a8f37b85e725f45f69f1bfc06356",
+        "chunk-2b243322eed50c3a7a33e3e343b3d9d6b4d8e3a9"
+      ],
+      "query": "Analyse how Supply of Goods and Services Act 1982, section 1, and Sale of Goods Act 1979, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-2b243322eed50c3a7a33e3e343b3d9d6b4d8e3a9": 3,
+        "chunk-b4b38f657945a8f37b85e725f45f69f1bfc06356": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b4b38f657945a8f37b85e725f45f69f1bfc06356",
+        "chunk-2b243322eed50c3a7a33e3e343b3d9d6b4d8e3a9"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-007",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-4cc7ac80942ce747f082751349d42638d03f9256",
+        "chunk-f6cc15b48ecbfc365712637fe855276f6d394dc5"
+      ],
+      "query": "Analyse how Homicide Act 1957, section 1, and source-af670ac6b911.pdf, para 11, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-4cc7ac80942ce747f082751349d42638d03f9256": 3,
+        "chunk-f6cc15b48ecbfc365712637fe855276f6d394dc5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-4cc7ac80942ce747f082751349d42638d03f9256",
+        "chunk-f6cc15b48ecbfc365712637fe855276f6d394dc5"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-008",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-2828479d1310d97736d5867f246e308f4ae46d26",
+        "chunk-8934626d3008eb0ff54508789b2263153ff5628b"
+      ],
+      "query": "Analyse how Police and Criminal Evidence Act 1984, section 1, and Criminal Justice Act 2003, section 4, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-2828479d1310d97736d5867f246e308f4ae46d26": 3,
+        "chunk-8934626d3008eb0ff54508789b2263153ff5628b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-2828479d1310d97736d5867f246e308f4ae46d26",
+        "chunk-8934626d3008eb0ff54508789b2263153ff5628b"
+      ],
+      "subject": "criminal evidence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-009",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ca692cba1fbe30a252be9a3ef2c25807538b887e",
+        "chunk-8c1f6543d66ab0e569a398f9eac5fcf625ec0d4d"
+      ],
+      "query": "Analyse how Employment Rights Act 1996, section 1, and Trade Union and Labour Relations (Consolidation) Act 1992, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-8c1f6543d66ab0e569a398f9eac5fcf625ec0d4d": 3,
+        "chunk-ca692cba1fbe30a252be9a3ef2c25807538b887e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ca692cba1fbe30a252be9a3ef2c25807538b887e",
+        "chunk-8c1f6543d66ab0e569a398f9eac5fcf625ec0d4d"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-010",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-04cf2b523563330a24959e96863acfac60c20a86",
+        "chunk-7bceddeceb8ff90d8b02265ebfdf946073a472c4"
+      ],
+      "query": "Analyse how Children Act 1989, section 1, and Matrimonial Causes Act 1973, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-04cf2b523563330a24959e96863acfac60c20a86": 3,
+        "chunk-7bceddeceb8ff90d8b02265ebfdf946073a472c4": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-04cf2b523563330a24959e96863acfac60c20a86",
+        "chunk-7bceddeceb8ff90d8b02265ebfdf946073a472c4"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-011",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-3cbab7ce300027755463e3ec21be22e2e4f51278",
+        "chunk-8eca2eed38248325e3dfc6a4e4e6778b84d825e3"
+      ],
+      "query": "Analyse how Financial Services and Markets Act 2023, section 1, and Financial Services and Markets Act 2000, section 6A, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-3cbab7ce300027755463e3ec21be22e2e4f51278": 3,
+        "chunk-8eca2eed38248325e3dfc6a4e4e6778b84d825e3": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-3cbab7ce300027755463e3ec21be22e2e4f51278",
+        "chunk-8eca2eed38248325e3dfc6a4e4e6778b84d825e3"
+      ],
+      "subject": "financial services"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-012",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-a50decd703f14b279f46ede33b8a483ae462b275",
+        "chunk-3dfcaef83632c937bb65fe9a2194619a684635de"
+      ],
+      "query": "Analyse how The Trade Secrets (Enforcement, etc.) Regulations 2018, regulation 3, and Patents Act 1977, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-3dfcaef83632c937bb65fe9a2194619a684635de": 3,
+        "chunk-a50decd703f14b279f46ede33b8a483ae462b275": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a50decd703f14b279f46ede33b8a483ae462b275",
+        "chunk-3dfcaef83632c937bb65fe9a2194619a684635de"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-013",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-faa5d24c1eba36530b4dfd6656b21a85fe513550",
+        "chunk-046d231b7f1fb358778e03fbae77527497e37cd1"
+      ],
+      "query": "Analyse how Law of Property (Miscellaneous Provisions) Act 1989, section 1, and Trusts of Land and Appointment of Trustees Act 1996, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-046d231b7f1fb358778e03fbae77527497e37cd1": 3,
+        "chunk-faa5d24c1eba36530b4dfd6656b21a85fe513550": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-faa5d24c1eba36530b4dfd6656b21a85fe513550",
+        "chunk-046d231b7f1fb358778e03fbae77527497e37cd1"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-014",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d33caa95462c8b92a6f8c57715bc6b7752455416",
+        "chunk-664ff798d29da2c4dfecfb5d6bde01e8fb838be1"
+      ],
+      "query": "Analyse how source-d87445625eed.pdf, para 3, and source-123f9096dcf0.pdf, para 51, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-664ff798d29da2c4dfecfb5d6bde01e8fb838be1": 3,
+        "chunk-d33caa95462c8b92a6f8c57715bc6b7752455416": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d33caa95462c8b92a6f8c57715bc6b7752455416",
+        "chunk-664ff798d29da2c4dfecfb5d6bde01e8fb838be1"
+      ],
+      "subject": "mediation and ADR"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-015",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e5db62f7efa4705734030a806e0d0706c473f860",
+        "chunk-1141a4dcd476c7091153d839e2f5340c29d249fc"
+      ],
+      "query": "Analyse how source-86271e0b5fa6.pdf, para 24, and source-e3fff27829ca.pdf, para 53, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-1141a4dcd476c7091153d839e2f5340c29d249fc": 3,
+        "chunk-e5db62f7efa4705734030a806e0d0706c473f860": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e5db62f7efa4705734030a806e0d0706c473f860",
+        "chunk-1141a4dcd476c7091153d839e2f5340c29d249fc"
+      ],
+      "subject": "pensions"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-016",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-57a8e9b2b68cf48301f63607403f14d85c7457cf",
+        "chunk-2413ad57231c5d4b367e1aefd998acdeb15e9a16"
+      ],
+      "query": "Analyse how source-ec8d8862008d.pdf, para 32, and source-e1330a094bac.pdf, para 177, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-2413ad57231c5d4b367e1aefd998acdeb15e9a16": 3,
+        "chunk-57a8e9b2b68cf48301f63607403f14d85c7457cf": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-57a8e9b2b68cf48301f63607403f14d85c7457cf",
+        "chunk-2413ad57231c5d4b367e1aefd998acdeb15e9a16"
+      ],
+      "subject": "private international law"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-017",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-d1133d7d86c6860568943dc641a88be9d217a9a2",
+        "chunk-6059f873fb841dd2d50e290ab5cf4a58f0c69737"
+      ],
+      "query": "Analyse how Occupiers’ Liability Act 1957, section 1, and Occupiers' Liability Act 1984, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-6059f873fb841dd2d50e290ab5cf4a58f0c69737": 3,
+        "chunk-d1133d7d86c6860568943dc641a88be9d217a9a2": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-d1133d7d86c6860568943dc641a88be9d217a9a2",
+        "chunk-6059f873fb841dd2d50e290ab5cf4a58f0c69737"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-018",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-bd33cbbfb3e77970df2e9ea8fad2b8a3c68eed01",
+        "chunk-ccc048f3053b16b0507261fad5d89800e4d3854a"
+      ],
+      "query": "Analyse how Judicial Review and Courts Act 2022, section 1, and Tribunals, Courts and Enforcement Act 2007, section 2, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-bd33cbbfb3e77970df2e9ea8fad2b8a3c68eed01": 3,
+        "chunk-ccc048f3053b16b0507261fad5d89800e4d3854a": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-bd33cbbfb3e77970df2e9ea8fad2b8a3c68eed01",
+        "chunk-ccc048f3053b16b0507261fad5d89800e4d3854a"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-019",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-28b322b35d347805e76cf3c6dfcb3bd2173680ad",
+        "chunk-f89df24915426c7aa7454714dbc275e3a2967c8b"
+      ],
+      "query": "Analyse how source-e50b7f7fdbc1.pdf, para 16, and Perpetuities and Accumulations Act 2009, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-28b322b35d347805e76cf3c6dfcb3bd2173680ad": 3,
+        "chunk-f89df24915426c7aa7454714dbc275e3a2967c8b": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-28b322b35d347805e76cf3c6dfcb3bd2173680ad",
+        "chunk-f89df24915426c7aa7454714dbc275e3a2967c8b"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-020",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-57fd3c1448ac7dadd62ad2ecfcd2a62638dee419",
+        "chunk-bc433b788ee40c44e9086f724108cb38f1f12530"
+      ],
+      "query": "Analyse how Administration of Estates Act 1925, section 2, and Wills Act 1837, section 9, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-57fd3c1448ac7dadd62ad2ecfcd2a62638dee419": 3,
+        "chunk-bc433b788ee40c44e9086f724108cb38f1f12530": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-57fd3c1448ac7dadd62ad2ecfcd2a62638dee419",
+        "chunk-bc433b788ee40c44e9086f724108cb38f1f12530"
+      ],
+      "subject": "wills and succession"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-021",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-03665cde84a3df8938ffe5a24975ba35cf291d58",
+        "chunk-b600cb8d523d9132408bc85cca9a97fd7bae7938"
+      ],
+      "query": "Analyse how source-b8a643e403ae.pdf, para 80, and source-b8a643e403ae.pdf, para 84, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-03665cde84a3df8938ffe5a24975ba35cf291d58": 3,
+        "chunk-b600cb8d523d9132408bc85cca9a97fd7bae7938": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-03665cde84a3df8938ffe5a24975ba35cf291d58",
+        "chunk-b600cb8d523d9132408bc85cca9a97fd7bae7938"
+      ],
+      "subject": "ai and data protection"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-022",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-c238c95d2dc9f911b06f3c5efbbc198028fae4f3",
+        "chunk-9c5d2da9bc507471aca8b907fcf9b309ab6eaa4e"
+      ],
+      "query": "Analyse how The Civil Procedure Rules 1998, rule 1.2, and County Courts Act 1984, section 4, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-9c5d2da9bc507471aca8b907fcf9b309ab6eaa4e": 3,
+        "chunk-c238c95d2dc9f911b06f3c5efbbc198028fae4f3": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c238c95d2dc9f911b06f3c5efbbc198028fae4f3",
+        "chunk-9c5d2da9bc507471aca8b907fcf9b309ab6eaa4e"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-023",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e5077d6336af7636d68c0a76b33484650d889c6e",
+        "chunk-75807fd92b5aeb8743ad4126e20d763861483f86"
+      ],
+      "query": "Analyse how Arbitration Act 2025, section 6, and Arbitration Act 1996, section 4, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-75807fd92b5aeb8743ad4126e20d763861483f86": 3,
+        "chunk-e5077d6336af7636d68c0a76b33484650d889c6e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e5077d6336af7636d68c0a76b33484650d889c6e",
+        "chunk-75807fd92b5aeb8743ad4126e20d763861483f86"
+      ],
+      "subject": "commercial"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-024",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-44ac642bfb05a648f0c608cc95cab284357d1799",
+        "chunk-6b9539009fbc4dc00e51c5cb6981739b973570a6"
+      ],
+      "query": "Analyse how Insolvency Act 1986, section A1, and Companies Act 2006, section 2, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-44ac642bfb05a648f0c608cc95cab284357d1799": 3,
+        "chunk-6b9539009fbc4dc00e51c5cb6981739b973570a6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-44ac642bfb05a648f0c608cc95cab284357d1799",
+        "chunk-6b9539009fbc4dc00e51c5cb6981739b973570a6"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-025",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-b95f43e344c0340ee41f51e5e43c86fb62829c07",
+        "chunk-628fe788adedd7fc530a40133f352264162e59b9"
+      ],
+      "query": "Analyse how Consumer Protection Act 1987, section 2, and Digital Markets, Competition and Consumers Act 2024, section 2, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-628fe788adedd7fc530a40133f352264162e59b9": 3,
+        "chunk-b95f43e344c0340ee41f51e5e43c86fb62829c07": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-b95f43e344c0340ee41f51e5e43c86fb62829c07",
+        "chunk-628fe788adedd7fc530a40133f352264162e59b9"
+      ],
+      "subject": "consumer"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-026",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-73e0c9c837ae88628bcd495ea73815dc4af383da",
+        "chunk-3b3c0a7c68d2219bdeb096f8e6d800fadde42fb9"
+      ],
+      "query": "Analyse how Misrepresentation Act 1967, section 3, and Law Reform (Frustrated Contracts) Act 1943, section 2, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-3b3c0a7c68d2219bdeb096f8e6d800fadde42fb9": 3,
+        "chunk-73e0c9c837ae88628bcd495ea73815dc4af383da": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-73e0c9c837ae88628bcd495ea73815dc4af383da",
+        "chunk-3b3c0a7c68d2219bdeb096f8e6d800fadde42fb9"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-027",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-65572cda3030246790d311d45798ba31d56b80e5",
+        "chunk-6239dd495cbeb29e138fc095fd99fb8587689bbd"
+      ],
+      "query": "Analyse how source-af670ac6b911.pdf, para 30, and Coroners and Justice Act 2009, section 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-6239dd495cbeb29e138fc095fd99fb8587689bbd": 3,
+        "chunk-65572cda3030246790d311d45798ba31d56b80e5": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-65572cda3030246790d311d45798ba31d56b80e5",
+        "chunk-6239dd495cbeb29e138fc095fd99fb8587689bbd"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-028",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-20a19d3c2315f91038b616fdd3ffcc2e2cac207e",
+        "chunk-a6d086e4d6adfcb095c608078f6bc32b4787029d"
+      ],
+      "query": "Analyse how Police and Criminal Evidence Act 1984, section 1, and Criminal Justice Act 2003, section 9, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-20a19d3c2315f91038b616fdd3ffcc2e2cac207e": 3,
+        "chunk-a6d086e4d6adfcb095c608078f6bc32b4787029d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-20a19d3c2315f91038b616fdd3ffcc2e2cac207e",
+        "chunk-a6d086e4d6adfcb095c608078f6bc32b4787029d"
+      ],
+      "subject": "criminal evidence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-029",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-5966773987172076a3cfdab72226b26bea1a6a79",
+        "chunk-ac229aa1790aa11d2617ce6b078f22cf4fd43e7f"
+      ],
+      "query": "Analyse how Employment Rights Act 1996, section 1, and Trade Union and Labour Relations (Consolidation) Act 1992, section 2, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-5966773987172076a3cfdab72226b26bea1a6a79": 3,
+        "chunk-ac229aa1790aa11d2617ce6b078f22cf4fd43e7f": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-5966773987172076a3cfdab72226b26bea1a6a79",
+        "chunk-ac229aa1790aa11d2617ce6b078f22cf4fd43e7f"
+      ],
+      "subject": "employment"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "multi-030",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-a49f3be96f41c01153cd91ab7800b67bd20f101f",
+        "chunk-76e93ccf8de6dd001c2c24b2528a1fcea0ab8efd"
+      ],
+      "query": "Analyse how Family Law Act 1996, section 6, and The Family Procedure Rules 2010, article 1, interact. Identify any scope, date or apparent-conflict issues and state what can and cannot be concluded from the provisions.",
+      "relevance_grades": {
+        "chunk-76e93ccf8de6dd001c2c24b2528a1fcea0ab8efd": 3,
+        "chunk-a49f3be96f41c01153cd91ab7800b67bd20f101f": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-a49f3be96f41c01153cd91ab7800b67bd20f101f",
+        "chunk-76e93ccf8de6dd001c2c24b2528a1fcea0ab8efd"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-contract-001",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-17e351346e605fa243a6e1f6998c1e509df60bce",
+        "chunk-881bd4bd8e678db0f0bc0c1ef254263bfb329d7e",
+        "chunk-3d2ad73421f2010dda3bf239ca737ef3e42e58d5",
+        "chunk-59e9532da211b7dc3acbf2afeed5e5e07ef04648",
+        "chunk-18944f8538bd5e2377abfa72bdb6acec3f7adc5c"
+      ],
+      "query": "A software company agrees to build a bespoke AI recruitment platform for £180,000, promising delivery by 1 June. The contract states that “time is of the essence” and limits the supplier’s liability to £25,000. The platform is delivered on 20 June. Several important functions do not work, and the customer claims that the delay caused it to lose a commercial contract worth £300,000. The supplier argues that the customer would probably have lost the contract anyway and that the exclusion clause limits any recovery. Advise the customer on breach, classification of contractual terms, termination, causation, remoteness, mitigation, damages and the enforceability of the limitation clause.",
+      "relevance_grades": {
+        "chunk-17e351346e605fa243a6e1f6998c1e509df60bce": 3,
+        "chunk-18944f8538bd5e2377abfa72bdb6acec3f7adc5c": 3,
+        "chunk-3d2ad73421f2010dda3bf239ca737ef3e42e58d5": 3,
+        "chunk-59e9532da211b7dc3acbf2afeed5e5e07ef04648": 3,
+        "chunk-881bd4bd8e678db0f0bc0c1ef254263bfb329d7e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-17e351346e605fa243a6e1f6998c1e509df60bce",
+        "chunk-881bd4bd8e678db0f0bc0c1ef254263bfb329d7e",
+        "chunk-3d2ad73421f2010dda3bf239ca737ef3e42e58d5",
+        "chunk-59e9532da211b7dc3acbf2afeed5e5e07ef04648",
+        "chunk-18944f8538bd5e2377abfa72bdb6acec3f7adc5c"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-consumer-002",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e82c3f7d86176c2bf4dfc1a92b340073d9df7728",
+        "chunk-3898780b70d29eed3449499c6be6cd4d9c7e7b7c",
+        "chunk-7302863f55f31c2932b91fdd29f679c6a50883f7",
+        "chunk-ef7f2e2f32277610df278e68e956e2145e9a6ca1",
+        "chunk-41a617ac2ed1eee4ee851acce7921a74d3e4da4f"
+      ],
+      "query": "Maya buys a £4,500 laptop from TechHub Ltd after a salesperson tells her that it is “specifically designed for professional 8K video editing” and will remain suitable for at least five years. Within four months, the laptop repeatedly overheats when Maya edits 8K footage. TechHub relies on written terms stating that sales staff cannot make binding representations and that the customer’s only remedy is repair. The manufacturer offers to replace an internal component but refuses a refund. Advise Maya on satisfactory quality, fitness for purpose, description, pre-contract statements, statutory remedies, repair, replacement, rejection, misrepresentation and attempts to restrict consumer rights.",
+      "relevance_grades": {
+        "chunk-3898780b70d29eed3449499c6be6cd4d9c7e7b7c": 3,
+        "chunk-41a617ac2ed1eee4ee851acce7921a74d3e4da4f": 3,
+        "chunk-7302863f55f31c2932b91fdd29f679c6a50883f7": 3,
+        "chunk-e82c3f7d86176c2bf4dfc1a92b340073d9df7728": 3,
+        "chunk-ef7f2e2f32277610df278e68e956e2145e9a6ca1": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e82c3f7d86176c2bf4dfc1a92b340073d9df7728",
+        "chunk-3898780b70d29eed3449499c6be6cd4d9c7e7b7c",
+        "chunk-7302863f55f31c2932b91fdd29f679c6a50883f7",
+        "chunk-ef7f2e2f32277610df278e68e956e2145e9a6ca1",
+        "chunk-41a617ac2ed1eee4ee851acce7921a74d3e4da4f"
+      ],
+      "subject": "consumer"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-tort-003",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-6308be83ec0486c486a9b126825fae8ffb57c223",
+        "chunk-1134c275b70b7911e4e245eff7629eb4ebe1e6ba",
+        "chunk-4bbeadfb905b23934996774e931e3fd607c74b2d",
+        "chunk-c8de91d615b7c55ba2cf495d8460f1613e1a1a73",
+        "chunk-6287b34f6afe13055ad11a8a7f921f8b73665505"
+      ],
+      "query": "“The modern law governing duties of care is not based on one coherent legal test, but on a collection of policy-driven exceptions.” Critically assess this statement. Your answer should consider incremental development, assumption of responsibility, omissions, public-authority liability, pure economic loss and the role of foreseeability, proximity, fairness and precedent.",
+      "relevance_grades": {
+        "chunk-1134c275b70b7911e4e245eff7629eb4ebe1e6ba": 3,
+        "chunk-4bbeadfb905b23934996774e931e3fd607c74b2d": 3,
+        "chunk-6287b34f6afe13055ad11a8a7f921f8b73665505": 3,
+        "chunk-6308be83ec0486c486a9b126825fae8ffb57c223": 3,
+        "chunk-c8de91d615b7c55ba2cf495d8460f1613e1a1a73": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-6308be83ec0486c486a9b126825fae8ffb57c223",
+        "chunk-1134c275b70b7911e4e245eff7629eb4ebe1e6ba",
+        "chunk-4bbeadfb905b23934996774e931e3fd607c74b2d",
+        "chunk-c8de91d615b7c55ba2cf495d8460f1613e1a1a73",
+        "chunk-6287b34f6afe13055ad11a8a7f921f8b73665505"
+      ],
+      "subject": "tort"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-criminal-004",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-09b86408c2dab2e4a125a31736b01b7712edb157",
+        "chunk-a52e9cc743f84efa3f3876cf7e03ebf61d51dcbb",
+        "chunk-9b691630e322f848064aa33bb1056c388319e0aa",
+        "chunk-e5295681a0c02d81f99d7a6b03dc1e3da6ef1104",
+        "chunk-599382f160613c9cf6d457be39d94b7a54fe4090"
+      ],
+      "query": "During a protest, Aaron deliberately pushes a security officer in order to move him away from a doorway. The officer falls, strikes his head and suffers a serious injury. Because of an undiagnosed medical condition, the injury becomes fatal. Later that night, Ben believes that the officer is still alive and strikes him with a metal bar, intending to kill him. Medical evidence shows that the officer had probably died shortly before Ben struck him, although the time of death cannot be established conclusively. Advise Aaron and Ben on homicide, unlawful act manslaughter, causation, mens rea, attempts and any relevant defences.",
+      "relevance_grades": {
+        "chunk-09b86408c2dab2e4a125a31736b01b7712edb157": 3,
+        "chunk-599382f160613c9cf6d457be39d94b7a54fe4090": 3,
+        "chunk-9b691630e322f848064aa33bb1056c388319e0aa": 3,
+        "chunk-a52e9cc743f84efa3f3876cf7e03ebf61d51dcbb": 3,
+        "chunk-e5295681a0c02d81f99d7a6b03dc1e3da6ef1104": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-09b86408c2dab2e4a125a31736b01b7712edb157",
+        "chunk-a52e9cc743f84efa3f3876cf7e03ebf61d51dcbb",
+        "chunk-9b691630e322f848064aa33bb1056c388319e0aa",
+        "chunk-e5295681a0c02d81f99d7a6b03dc1e3da6ef1104",
+        "chunk-599382f160613c9cf6d457be39d94b7a54fe4090"
+      ],
+      "subject": "criminal"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-professional-negligence-005",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-38bbf61f0fe1b71f3a1549b2d35ead130fb885be",
+        "chunk-96338b04695e54dcd6c2486e1333e559fcb9f813",
+        "chunk-e3ad4cf43804e60b2685f8aaf18308d8eec5b43d",
+        "chunk-84b1cbcf3b8573ffde639a7ef316f45654bf7de7",
+        "chunk-f825efeb64f0b3c5e174bf37a36be0f250c97240"
+      ],
+      "query": "A solicitor uses an AI limitation-calculation tool when advising a client about a negligence claim. The tool produces the wrong date, and the solicitor fails to verify it manually. Proceedings are commenced after the applicable limitation period has expired. The solicitor argues that the client failed to provide complete medical records and that the underlying negligence claim had only a 40% chance of success. Advise the client on duty, breach, scope of duty, causation, loss of a chance, contributory negligence, recoverable loss and the relevance of the solicitor’s reliance on AI.",
+      "relevance_grades": {
+        "chunk-38bbf61f0fe1b71f3a1549b2d35ead130fb885be": 3,
+        "chunk-84b1cbcf3b8573ffde639a7ef316f45654bf7de7": 3,
+        "chunk-96338b04695e54dcd6c2486e1333e559fcb9f813": 3,
+        "chunk-e3ad4cf43804e60b2685f8aaf18308d8eec5b43d": 3,
+        "chunk-f825efeb64f0b3c5e174bf37a36be0f250c97240": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-38bbf61f0fe1b71f3a1549b2d35ead130fb885be",
+        "chunk-96338b04695e54dcd6c2486e1333e559fcb9f813",
+        "chunk-e3ad4cf43804e60b2685f8aaf18308d8eec5b43d",
+        "chunk-84b1cbcf3b8573ffde639a7ef316f45654bf7de7",
+        "chunk-f825efeb64f0b3c5e174bf37a36be0f250c97240"
+      ],
+      "subject": "professional negligence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-criminal-evidence-006",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-71811a62bf3661f8dec580ce3d8fcbe2e37cd9f6",
+        "chunk-c2d191a044b7c8bf1d7f27b5313d8c7e606aefa7",
+        "chunk-f3441750cc005bad342619c3d6061c64c106de05"
+      ],
+      "query": "“The English courts’ power to exclude improperly obtained evidence gives defendants weaker protection than a strict exclusionary rule would provide.” Critically assess this statement. Consider confessions, oppression, unreliability, improperly obtained evidence, fairness, identification evidence, hearsay and judicial discretion. Address the competing objectives of reliable fact-finding, protection of defendants and public confidence in criminal justice.",
+      "relevance_grades": {
+        "chunk-71811a62bf3661f8dec580ce3d8fcbe2e37cd9f6": 3,
+        "chunk-c2d191a044b7c8bf1d7f27b5313d8c7e606aefa7": 3,
+        "chunk-f3441750cc005bad342619c3d6061c64c106de05": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-71811a62bf3661f8dec580ce3d8fcbe2e37cd9f6",
+        "chunk-c2d191a044b7c8bf1d7f27b5313d8c7e606aefa7",
+        "chunk-f3441750cc005bad342619c3d6061c64c106de05"
+      ],
+      "subject": "criminal evidence"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-employment-equality-007",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-fbf8d2c056287bf70cd0b24c6f6d652d99f1a38f",
+        "chunk-7e8df7ec8d1c2f969aa724e5f6498a449f7d5cae",
+        "chunk-2ab6d562bddc384ec530ba8e6dbec5d413e2d197",
+        "chunk-85f8909ec9136712be3a1d3144393e4bb8e67f7c",
+        "chunk-1d6c7711bed5036a5d911b257cc12c1b30df71db"
+      ],
+      "query": "A technology company introduces an AI system that scores employees for promotion and redundancy. The system gives lower scores to older workers; women returning from maternity leave; disabled employees with periods of sickness absence; and employees who previously complained about discrimination. Several employees are dismissed after managers rely on the scores without conducting independent assessments. The employer argues that the system was designed by an external supplier and was intended to improve efficiency. Advise the affected employees and the employer on unfair dismissal, redundancy, direct and indirect discrimination, discrimination arising from disability, reasonable adjustments, victimisation, justification, evidential burdens and remedies.",
+      "relevance_grades": {
+        "chunk-1d6c7711bed5036a5d911b257cc12c1b30df71db": 3,
+        "chunk-2ab6d562bddc384ec530ba8e6dbec5d413e2d197": 3,
+        "chunk-7e8df7ec8d1c2f969aa724e5f6498a449f7d5cae": 3,
+        "chunk-85f8909ec9136712be3a1d3144393e4bb8e67f7c": 3,
+        "chunk-fbf8d2c056287bf70cd0b24c6f6d652d99f1a38f": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-fbf8d2c056287bf70cd0b24c6f6d652d99f1a38f",
+        "chunk-7e8df7ec8d1c2f969aa724e5f6498a449f7d5cae",
+        "chunk-2ab6d562bddc384ec530ba8e6dbec5d413e2d197",
+        "chunk-85f8909ec9136712be3a1d3144393e4bb8e67f7c",
+        "chunk-1d6c7711bed5036a5d911b257cc12c1b30df71db"
+      ],
+      "subject": "employment and equality"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-land-008",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ceaaa84f6f72a8a4a9b3ad3293623483804bdfb2",
+        "chunk-be3bf0c5a3ce5197486e14b84c483698a23cc8f4",
+        "chunk-b57231f0a58d9c165dbb9c761d51c53e645e28ef",
+        "chunk-bcb089a37be306cf00d45e88ceb1fbb80c369b63",
+        "chunk-74064e9b99dec874faae17f9d411fc4c81a49a4b"
+      ],
+      "query": "A owns registered freehold land. A orally promises B that B may live in the property for life if B pays for major renovations. B spends £120,000 improving the property and moves into it. A subsequently grants C a seven-year lease, but the lease is not registered. A then sells the property to D. D knows that B occupies the property but makes no detailed enquiries. D argues that neither B nor C has a registered interest. Advise B, C and D on proprietary estoppel, constructive trusts where relevant, leases, overriding interests, actual occupation, priorities and registration.",
+      "relevance_grades": {
+        "chunk-74064e9b99dec874faae17f9d411fc4c81a49a4b": 3,
+        "chunk-b57231f0a58d9c165dbb9c761d51c53e645e28ef": 3,
+        "chunk-bcb089a37be306cf00d45e88ceb1fbb80c369b63": 3,
+        "chunk-be3bf0c5a3ce5197486e14b84c483698a23cc8f4": 3,
+        "chunk-ceaaa84f6f72a8a4a9b3ad3293623483804bdfb2": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ceaaa84f6f72a8a4a9b3ad3293623483804bdfb2",
+        "chunk-be3bf0c5a3ce5197486e14b84c483698a23cc8f4",
+        "chunk-b57231f0a58d9c165dbb9c761d51c53e645e28ef",
+        "chunk-bcb089a37be306cf00d45e88ceb1fbb80c369b63",
+        "chunk-74064e9b99dec874faae17f9d411fc4c81a49a4b"
+      ],
+      "subject": "land"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-public-009",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-bf886f2f06176583600b2ddd280c4d5440f2d983",
+        "chunk-1fba706db2309ff37ec443b25d83a41ede0a4b6f",
+        "chunk-e5f45e22cf3b63657029646aeba74f0d9b33c6d0",
+        "chunk-91ee582cf99170e756504f5c19701e3431a863c4",
+        "chunk-a3631a6c8e485cc11a92fd1eb941cce56ed469e7"
+      ],
+      "query": "“Judicial review has developed from a mechanism for controlling the legal limits of government power into a constitutional system for protecting substantive rights.” Critically evaluate this proposition. Your answer should consider illegality, procedural fairness, legitimate expectation, irrationality, proportionality, justiciability, ouster clauses and the constitutional relationship between Parliament, the executive and the courts.",
+      "relevance_grades": {
+        "chunk-1fba706db2309ff37ec443b25d83a41ede0a4b6f": 3,
+        "chunk-91ee582cf99170e756504f5c19701e3431a863c4": 3,
+        "chunk-a3631a6c8e485cc11a92fd1eb941cce56ed469e7": 3,
+        "chunk-bf886f2f06176583600b2ddd280c4d5440f2d983": 3,
+        "chunk-e5f45e22cf3b63657029646aeba74f0d9b33c6d0": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-bf886f2f06176583600b2ddd280c4d5440f2d983",
+        "chunk-1fba706db2309ff37ec443b25d83a41ede0a4b6f",
+        "chunk-e5f45e22cf3b63657029646aeba74f0d9b33c6d0",
+        "chunk-91ee582cf99170e756504f5c19701e3431a863c4",
+        "chunk-a3631a6c8e485cc11a92fd1eb941cce56ed469e7"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-company-010",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-92c2ae039a219707f97ba8d6abd806bc075af366",
+        "chunk-82bb73ed51b1049aa8c3e36f3b0077feadf53cee",
+        "chunk-4bf8994a0758ed406edc0fe892c40cd51c75ef81",
+        "chunk-64637b57b34757534ab259f3e8c8050d167d9ccc",
+        "chunk-27d57b01a9cbb44fbf91d70f8bb7d895b916dcdd"
+      ],
+      "query": "The directors of Alpha Ltd learn that a major customer wishes to award Alpha a valuable supply contract. One director secretly forms a separate company and causes the customer to award the contract to that company instead. The same director also receives an undisclosed payment from a supplier. After discovering the conduct, the controlling shareholders pass a resolution purporting to approve everything the director has done. A minority shareholder wishes to bring proceedings. Advise the parties on directors’ duties, corporate opportunities, conflicts of interest, secret profits, ratification, derivative claims, unfair prejudice and available remedies.",
+      "relevance_grades": {
+        "chunk-27d57b01a9cbb44fbf91d70f8bb7d895b916dcdd": 3,
+        "chunk-4bf8994a0758ed406edc0fe892c40cd51c75ef81": 3,
+        "chunk-64637b57b34757534ab259f3e8c8050d167d9ccc": 3,
+        "chunk-82bb73ed51b1049aa8c3e36f3b0077feadf53cee": 3,
+        "chunk-92c2ae039a219707f97ba8d6abd806bc075af366": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-92c2ae039a219707f97ba8d6abd806bc075af366",
+        "chunk-82bb73ed51b1049aa8c3e36f3b0077feadf53cee",
+        "chunk-4bf8994a0758ed406edc0fe892c40cd51c75ef81",
+        "chunk-64637b57b34757534ab259f3e8c8050d167d9ccc",
+        "chunk-27d57b01a9cbb44fbf91d70f8bb7d895b916dcdd"
+      ],
+      "subject": "company"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-family-011",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-e4888a82889e0b739cc0d2ea649f0e2fa0bff858",
+        "chunk-fefe186c7a19288f23e5621ec1f1834f3c22af93",
+        "chunk-e3514522ff7141cccd73440c06a74692b0c729af",
+        "chunk-e6a0096458a42a00a5bff809cc58e05743a47f6d",
+        "chunk-2a06a200017acc4a06382d2902d88c81baa4c8dd"
+      ],
+      "query": "Daniel and Priya have been married for fourteen years and have two children aged six and eleven. Priya gave up a highly paid career after the first child was born. Daniel now earns £420,000 per year and owns shares in a technology company that he founded three years before the marriage. The family home is worth £2.8 million and was partly purchased using inherited money. Shortly before separation, Daniel transfers £700,000 to his brother, claiming that it represents repayment of an old loan. Priya seeks to remain in the family home and asks for substantial financial provision. Daniel argues that the company, inheritance and premarital assets should be excluded. Advise both parties on needs, sharing, compensation, matrimonial and non-matrimonial property, inherited wealth, business assets, pensions, children and transactions intended to defeat financial claims.",
+      "relevance_grades": {
+        "chunk-2a06a200017acc4a06382d2902d88c81baa4c8dd": 3,
+        "chunk-e3514522ff7141cccd73440c06a74692b0c729af": 3,
+        "chunk-e4888a82889e0b739cc0d2ea649f0e2fa0bff858": 3,
+        "chunk-e6a0096458a42a00a5bff809cc58e05743a47f6d": 3,
+        "chunk-fefe186c7a19288f23e5621ec1f1834f3c22af93": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-e4888a82889e0b739cc0d2ea649f0e2fa0bff858",
+        "chunk-fefe186c7a19288f23e5621ec1f1834f3c22af93",
+        "chunk-e3514522ff7141cccd73440c06a74692b0c729af",
+        "chunk-e6a0096458a42a00a5bff809cc58e05743a47f6d",
+        "chunk-2a06a200017acc4a06382d2902d88c81baa4c8dd"
+      ],
+      "subject": "family"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-human-rights-012",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-c85e548bde1804c2ad83bd0af6968b4baf0008e0",
+        "chunk-6ba0b52e59b18d30554e8dabbec29267f62b028f",
+        "chunk-1fba706db2309ff37ec443b25d83a41ede0a4b6f",
+        "chunk-185a420282fb0198f485c050c61dc1920ce43e0f",
+        "chunk-9f73d21b0f3d9059dca14a58fef620c337bae6e3"
+      ],
+      "query": "“The Human Rights Act preserves parliamentary sovereignty in formal legal theory while substantially redistributing constitutional power towards the judiciary in practice.” Critically evaluate this statement. Consider statutory interpretation, declarations of incompatibility, public-authority liability, proportionality, positive obligations, horizontal effect, parliamentary responses and the relationship between domestic courts and the European Court of Human Rights.",
+      "relevance_grades": {
+        "chunk-185a420282fb0198f485c050c61dc1920ce43e0f": 3,
+        "chunk-1fba706db2309ff37ec443b25d83a41ede0a4b6f": 3,
+        "chunk-6ba0b52e59b18d30554e8dabbec29267f62b028f": 3,
+        "chunk-9f73d21b0f3d9059dca14a58fef620c337bae6e3": 3,
+        "chunk-c85e548bde1804c2ad83bd0af6968b4baf0008e0": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-c85e548bde1804c2ad83bd0af6968b4baf0008e0",
+        "chunk-6ba0b52e59b18d30554e8dabbec29267f62b028f",
+        "chunk-1fba706db2309ff37ec443b25d83a41ede0a4b6f",
+        "chunk-185a420282fb0198f485c050c61dc1920ce43e0f",
+        "chunk-9f73d21b0f3d9059dca14a58fef620c337bae6e3"
+      ],
+      "subject": "human rights and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-equity-trusts-013",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-10612b5e7fa821b78e4f270d5d4644ff8ec86522",
+        "chunk-1fdbdc969d4aa62c679ff012d9ad71c51179ca44",
+        "chunk-f623886505eabf2b69b466a8f629bc8999cfe18a",
+        "chunk-9f3af10fe2bb66773451431c16e772bb8716ca31",
+        "chunk-47ff4aeb5d4b531496e9ac387edb05da9d5fa443"
+      ],
+      "query": "T’s will leaves £1 million to R, stating that T is “confident that R will use the money for my most loyal employees.” T separately transfers shares to S, saying: “Hold these for my children until they are mature enough.” T also tells U that U is to receive a valuable painting, but title to the painting is never formally transferred. After T’s death: R uses half of the £1 million for herself; S invests the shares in a business in which S has a personal interest; one beneficiary assigns their equitable interest to X; and some misapplied trust money is paid into a mixed bank account. Analyse certainty, constitution, imperfect gifts, trusts arising by will, fiduciary duties, breach of trust, tracing, proprietary remedies, personal remedies and third-party liability.",
+      "relevance_grades": {
+        "chunk-10612b5e7fa821b78e4f270d5d4644ff8ec86522": 3,
+        "chunk-1fdbdc969d4aa62c679ff012d9ad71c51179ca44": 3,
+        "chunk-47ff4aeb5d4b531496e9ac387edb05da9d5fa443": 3,
+        "chunk-9f3af10fe2bb66773451431c16e772bb8716ca31": 3,
+        "chunk-f623886505eabf2b69b466a8f629bc8999cfe18a": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-10612b5e7fa821b78e4f270d5d4644ff8ec86522",
+        "chunk-1fdbdc969d4aa62c679ff012d9ad71c51179ca44",
+        "chunk-f623886505eabf2b69b466a8f629bc8999cfe18a",
+        "chunk-9f3af10fe2bb66773451431c16e772bb8716ca31",
+        "chunk-47ff4aeb5d4b531496e9ac387edb05da9d5fa443"
+      ],
+      "subject": "trusts"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-civil-litigation-014",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-ea1bb3e39359c73313efc92c23b9efa7a87a7907",
+        "chunk-00b7c0815ccbc0341a0804b81e36c4fc64eea253",
+        "chunk-9623f4db03758328ff35e485fc7ff96141f6d2a0",
+        "chunk-9bbd65ba26a8adef20f4e5f1b734e309dacce9d2"
+      ],
+      "query": "“The overriding objective has transformed civil litigation from a system primarily concerned with determining substantive rights into one increasingly concerned with procedural discipline, efficiency and proportionality.” Critically analyse this claim. Your answer should consider case management, sanctions, relief from sanctions, disclosure, witness and expert evidence, summary judgment, strike-out, ADR, costs, Part 36 and the tension between finality, efficiency and access to justice.",
+      "relevance_grades": {
+        "chunk-00b7c0815ccbc0341a0804b81e36c4fc64eea253": 3,
+        "chunk-9623f4db03758328ff35e485fc7ff96141f6d2a0": 3,
+        "chunk-9bbd65ba26a8adef20f4e5f1b734e309dacce9d2": 3,
+        "chunk-ea1bb3e39359c73313efc92c23b9efa7a87a7907": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-ea1bb3e39359c73313efc92c23b9efa7a87a7907",
+        "chunk-00b7c0815ccbc0341a0804b81e36c4fc64eea253",
+        "chunk-9623f4db03758328ff35e485fc7ff96141f6d2a0",
+        "chunk-9bbd65ba26a8adef20f4e5f1b734e309dacce9d2"
+      ],
+      "subject": "civil litigation"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-intellectual-property-015",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-96ad8c1b367044843710fd12e719efe8631436ac",
+        "chunk-7c52ed2de26b73eff0ac586f9c20ccd10dac23c2",
+        "chunk-80355e208d098b42181f7bd82aaad7932ea5e5ce",
+        "chunk-70f2b5da8499f72dbb4a1e5901da152f0012aa0c",
+        "chunk-7a5a3f856424facb4b5248202667311589cdcd74"
+      ],
+      "query": "Nova Games Ltd employs Aisha as a software developer. In her spare time, Aisha creates an AI-assisted gaming engine using sections of code that she originally developed while working on a Nova project. She trains an image-generation module using thousands of online artworks without obtaining express licences. Nova later incorporates parts of the engine into a commercial game. A competing developer claims that sections of the engine are substantially similar to its proprietary software. An artist discovers that generated game imagery closely resembles one of her illustrations. Aisha claims ownership of the engine and demands royalties. Advise the parties on ownership, employee-created works, originality, substantial copying, computer programs, training material, generated outputs, confidential information, licensing and remedies.",
+      "relevance_grades": {
+        "chunk-70f2b5da8499f72dbb4a1e5901da152f0012aa0c": 3,
+        "chunk-7a5a3f856424facb4b5248202667311589cdcd74": 3,
+        "chunk-7c52ed2de26b73eff0ac586f9c20ccd10dac23c2": 3,
+        "chunk-80355e208d098b42181f7bd82aaad7932ea5e5ce": 3,
+        "chunk-96ad8c1b367044843710fd12e719efe8631436ac": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-96ad8c1b367044843710fd12e719efe8631436ac",
+        "chunk-7c52ed2de26b73eff0ac586f9c20ccd10dac23c2",
+        "chunk-80355e208d098b42181f7bd82aaad7932ea5e5ce",
+        "chunk-70f2b5da8499f72dbb4a1e5901da152f0012aa0c",
+        "chunk-7a5a3f856424facb4b5248202667311589cdcd74"
+      ],
+      "subject": "intellectual property"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-wills-succession-016",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-4102fa46827b628166d63e77ef2951b184fcc695",
+        "chunk-bd9c49d330ceb0137d86597614ccf568cc8ad3f6",
+        "chunk-2847989fa150353ce109706ced37cab452439587",
+        "chunk-17dd941597be7db414019bf7f0a9f69278a8d9f5",
+        "chunk-a368db15eff064cdf0b4b147e6b1180e9a785e56"
+      ],
+      "query": "George dies leaving an estate worth £9 million. His 2018 will leaves most of the estate to his three children. In 2025, while seriously ill, George signs a new document leaving 80% of the estate to his live-in carer, Nina. One witness signs in George’s presence. The second witness signs later after Nina tells the witness that George has already executed the document. Medical records show fluctuating confusion caused by medication. Nina arranged the solicitor’s appointment and was present during several discussions. After George’s death, an unsigned handwritten note is found stating that the family home should pass to his eldest daughter. Advise the potential beneficiaries on execution formalities, testamentary capacity, knowledge and approval, undue influence, revocation, interpretation, intestacy and claims for reasonable financial provision.",
+      "relevance_grades": {
+        "chunk-17dd941597be7db414019bf7f0a9f69278a8d9f5": 3,
+        "chunk-2847989fa150353ce109706ced37cab452439587": 3,
+        "chunk-4102fa46827b628166d63e77ef2951b184fcc695": 3,
+        "chunk-a368db15eff064cdf0b4b147e6b1180e9a785e56": 3,
+        "chunk-bd9c49d330ceb0137d86597614ccf568cc8ad3f6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-4102fa46827b628166d63e77ef2951b184fcc695",
+        "chunk-bd9c49d330ceb0137d86597614ccf568cc8ad3f6",
+        "chunk-2847989fa150353ce109706ced37cab452439587",
+        "chunk-17dd941597be7db414019bf7f0a9f69278a8d9f5",
+        "chunk-a368db15eff064cdf0b4b147e6b1180e9a785e56"
+      ],
+      "subject": "wills and succession"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-remedies-017",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-391bbeffeabd23760cd4fe55b7ce4391a25d2a51",
+        "chunk-881bd4bd8e678db0f0bc0c1ef254263bfb329d7e",
+        "chunk-07bdcb65b4669be8869e95f3eb692398bb2ae9f1",
+        "chunk-18944f8538bd5e2377abfa72bdb6acec3f7adc5c",
+        "chunk-58d15e987978915d5b6ec17210a5cbe5775454b9"
+      ],
+      "query": "A nationwide technology supplier terminates a ten-year managed-services contract after repeated service failures. The customer seeks expectation damages, wasted expenditure, an account of profits, specific performance and an injunction, while the supplier invokes force majeure, a liquidated-damages clause and a contractual cap. Advise both parties in a fully researched 7,000-word opinion addressing election, causation, remoteness, mitigation, penalties, exclusion clauses, equitable relief, concurrent remedies, limitation and evidential uncertainty.",
+      "relevance_grades": {
+        "chunk-07bdcb65b4669be8869e95f3eb692398bb2ae9f1": 3,
+        "chunk-18944f8538bd5e2377abfa72bdb6acec3f7adc5c": 3,
+        "chunk-391bbeffeabd23760cd4fe55b7ce4391a25d2a51": 3,
+        "chunk-58d15e987978915d5b6ec17210a5cbe5775454b9": 3,
+        "chunk-881bd4bd8e678db0f0bc0c1ef254263bfb329d7e": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-391bbeffeabd23760cd4fe55b7ce4391a25d2a51",
+        "chunk-881bd4bd8e678db0f0bc0c1ef254263bfb329d7e",
+        "chunk-07bdcb65b4669be8869e95f3eb692398bb2ae9f1",
+        "chunk-18944f8538bd5e2377abfa72bdb6acec3f7adc5c",
+        "chunk-58d15e987978915d5b6ec17210a5cbe5775454b9"
+      ],
+      "subject": "contract"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-public-emergency-018",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-83781476008d2cfabf22e3ea38c269021576ad3b",
+        "chunk-ab095dac930cd7ca17a7ad38b33f2607f510cd1c",
+        "chunk-15e57e129938d07842f00ce170c0836ae42e9ad2",
+        "chunk-1b56ca14d5b95c0e057cbc8e2b10a17a15fcb7f9",
+        "chunk-8e199d0b1b97a8478a554c9b41456ccdc2fc7756"
+      ],
+      "query": "Critically evaluate, in 7,000 words, the constitutional controls on executive emergency power in the United Kingdom. Address statutory authority, prerogative power, parliamentary accountability, justiciability, procedural fairness, proportionality, Convention rights, derogation, remedies and the institutional limits of courts, using competing authority and acknowledging unresolved questions.",
+      "relevance_grades": {
+        "chunk-15e57e129938d07842f00ce170c0836ae42e9ad2": 3,
+        "chunk-1b56ca14d5b95c0e057cbc8e2b10a17a15fcb7f9": 3,
+        "chunk-83781476008d2cfabf22e3ea38c269021576ad3b": 3,
+        "chunk-8e199d0b1b97a8478a554c9b41456ccdc2fc7756": 3,
+        "chunk-ab095dac930cd7ca17a7ad38b33f2607f510cd1c": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-83781476008d2cfabf22e3ea38c269021576ad3b",
+        "chunk-ab095dac930cd7ca17a7ad38b33f2607f510cd1c",
+        "chunk-15e57e129938d07842f00ce170c0836ae42e9ad2",
+        "chunk-1b56ca14d5b95c0e057cbc8e2b10a17a15fcb7f9",
+        "chunk-8e199d0b1b97a8478a554c9b41456ccdc2fc7756"
+      ],
+      "subject": "public and constitutional"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-ai-employment-019",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-482d2453f918e8503fe682c5733b7a064a8683fb",
+        "chunk-88d5956f900f1e62ea4e9501f72cf0dc2bf8755d",
+        "chunk-4e41768a9d46ad3d0a461936777def6d2a88b373",
+        "chunk-71868a7aefefbfb89ba0382d4ab857a5e69102d8",
+        "chunk-5a4f88e6a074a42edb4482f52c5cbd5300ff5b2c"
+      ],
+      "query": "An international employer deploys automated monitoring, performance scoring and dismissal recommendations across its UK workforce. Advise affected employees and the employer in a 7,000-word opinion covering contract, unfair dismissal, collective consultation, discrimination, disability adjustments, victimisation, data protection, explainability, evidential burdens, remedies, supplier responsibility and cross-border complications.",
+      "relevance_grades": {
+        "chunk-482d2453f918e8503fe682c5733b7a064a8683fb": 3,
+        "chunk-4e41768a9d46ad3d0a461936777def6d2a88b373": 3,
+        "chunk-5a4f88e6a074a42edb4482f52c5cbd5300ff5b2c": 3,
+        "chunk-71868a7aefefbfb89ba0382d4ab857a5e69102d8": 3,
+        "chunk-88d5956f900f1e62ea4e9501f72cf0dc2bf8755d": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-482d2453f918e8503fe682c5733b7a064a8683fb",
+        "chunk-88d5956f900f1e62ea4e9501f72cf0dc2bf8755d",
+        "chunk-4e41768a9d46ad3d0a461936777def6d2a88b373",
+        "chunk-71868a7aefefbfb89ba0382d4ab857a5e69102d8",
+        "chunk-5a4f88e6a074a42edb4482f52c5cbd5300ff5b2c"
+      ],
+      "subject": "employment and equality"
+    },
+    {
+      "as_of_date": "2026-08-12",
+      "id": "longform-digital-estate-020",
+      "jurisdiction": "England and Wales",
+      "paraphrase_group": null,
+      "primary_must_hit_chunk_ids": [
+        "chunk-bd9c49d330ceb0137d86597614ccf568cc8ad3f6",
+        "chunk-7b42ab747d505d8fab520227a4ee93b09c8dccb0",
+        "chunk-7325e8b14811a26397a3f1a2f4c80f83a0aeb7a6",
+        "chunk-a368db15eff064cdf0b4b147e6b1180e9a785e56",
+        "chunk-83c1aad9e867c87426ae7b74e0d8b128729f47c4"
+      ],
+      "query": "A testator leaves a complex estate containing a family company, cryptoassets, cloud accounts, intellectual property and foreign property. Competing wills, remote witnessing, fluctuating capacity, a professional executor's conflict, lifetime transfers and dependent-family claims are disputed. Advise all parties in a 7,000-word opinion addressing formalities, capacity, knowledge and approval, undue influence, revocation, construction, administration, fiduciary duties, tracing, tax uncertainty, foreign elements and reasonable financial provision.",
+      "relevance_grades": {
+        "chunk-7325e8b14811a26397a3f1a2f4c80f83a0aeb7a6": 3,
+        "chunk-7b42ab747d505d8fab520227a4ee93b09c8dccb0": 3,
+        "chunk-83c1aad9e867c87426ae7b74e0d8b128729f47c4": 3,
+        "chunk-a368db15eff064cdf0b4b147e6b1180e9a785e56": 3,
+        "chunk-bd9c49d330ceb0137d86597614ccf568cc8ad3f6": 3
+      },
+      "relevant_chunk_ids": [
+        "chunk-bd9c49d330ceb0137d86597614ccf568cc8ad3f6",
+        "chunk-7b42ab747d505d8fab520227a4ee93b09c8dccb0",
+        "chunk-7325e8b14811a26397a3f1a2f4c80f83a0aeb7a6",
+        "chunk-a368db15eff064cdf0b4b147e6b1180e9a785e56",
+        "chunk-83c1aad9e867c87426ae7b74e0d8b128729f47c4"
+      ],
+      "subject": "wills and succession"
+    }
+  ],
+  "schema": "legalbot.retrieval-benchmark.v1",
+  "status": "draft",
+  "training_export_allowed": false,
+  "version": "1.0.0"
+}

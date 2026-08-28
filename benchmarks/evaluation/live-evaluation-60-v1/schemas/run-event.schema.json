@@ -1,0 +1,159 @@
+{
+  "$defs": {
+    "RunEventType": {
+      "enum": [
+        "run_created",
+        "case_registered",
+        "case_started",
+        "stage_completed",
+        "artifact_stored",
+        "case_completed",
+        "case_failed",
+        "issue_logged",
+        "knowledge_gap_logged",
+        "run_completed"
+      ],
+      "title": "RunEventType",
+      "type": "string"
+    },
+    "RunStage": {
+      "enum": [
+        "run",
+        "intake",
+        "routing",
+        "retrieval",
+        "evidence_freeze",
+        "drafting",
+        "verification",
+        "repair",
+        "assembly",
+        "release",
+        "human_review"
+      ],
+      "title": "RunStage",
+      "type": "string"
+    },
+    "RunStatus": {
+      "enum": [
+        "created",
+        "queued",
+        "running",
+        "complete",
+        "verified_limited",
+        "held_for_review",
+        "system_error",
+        "cancelled"
+      ],
+      "title": "RunStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Artifact Id"
+    },
+    "attempt": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Attempt"
+    },
+    "case_id": {
+      "anyOf": [
+        {
+          "pattern": "^(?:live30|live60)-q[0-9]{2}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Case Id"
+    },
+    "duration_ms": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duration Ms"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "event_id": {
+      "pattern": "^[a-f0-9]{32}$",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "event_type": {
+      "$ref": "#/$defs/RunEventType"
+    },
+    "run_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.live-evaluation-run-event.v2",
+      "default": "legalbot.live-evaluation-run-event.v2",
+      "title": "Schema",
+      "type": "string"
+    },
+    "stage": {
+      "$ref": "#/$defs/RunStage"
+    },
+    "status": {
+      "$ref": "#/$defs/RunStatus"
+    },
+    "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "timestamp",
+    "run_id",
+    "event_type",
+    "stage",
+    "status"
+  ],
+  "title": "LiveSuiteRunEvent",
+  "type": "object"
+}

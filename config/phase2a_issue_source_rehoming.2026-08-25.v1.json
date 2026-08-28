@@ -1,0 +1,112 @@
+{
+  "as_of_date": "2026-08-14",
+  "automatic_embedding": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "bulk_search": false,
+  "candidate_mutation_authorized": false,
+  "development30_authorized": false,
+  "items": [
+    {
+      "affected_rows": [
+        "live30-q20:issue-02"
+      ],
+      "case_id": "uksc-2013-0134",
+      "case_name": "Aintree University Hospitals NHS Foundation Trust v James",
+      "judgment_date": "2013-10-30",
+      "locator_hints": [
+        "p 9"
+      ],
+      "neutral_citation": "[2013] UKSC 67",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2013-0134",
+      "official_judgment_pdf_url": "https://supremecourt.uk/uploads/uksc_2013_0134_judgment_e00fda9e90.pdf",
+      "proposal_id": "issue-source-rehome-001"
+    },
+    {
+      "affected_rows": [
+        "live30-q09:issue-04",
+        "live30-q12:issue-04",
+        "live30-q27:issue-08",
+        "live60-q56:issue-01",
+        "live60-q56:issue-07",
+        "live60-q56:issue-09",
+        "live60-q56:issue-11"
+      ],
+      "case_id": "uksc-2018-0004",
+      "case_name": "R (Privacy International) v Investigatory Powers Tribunal",
+      "judgment_date": "2019-05-15",
+      "locator_hints": [
+        "p 4",
+        "p 14",
+        "p 19",
+        "p 53",
+        "p 100"
+      ],
+      "neutral_citation": "[2019] UKSC 22",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2018-0004",
+      "official_judgment_pdf_url": "https://supremecourt.uk/uploads/uksc_2018_0004_judgment_1678e631d2.pdf",
+      "proposal_id": "issue-source-rehome-002"
+    },
+    {
+      "affected_rows": [
+        "live30-q13:issue-07",
+        "live30-q13:issue-09",
+        "live30-q18:issue-01"
+      ],
+      "case_id": "uksc-2022-0048",
+      "case_name": "Byers v Saudi National Bank",
+      "judgment_date": "2023-12-20",
+      "locator_hints": [
+        "p 27",
+        "p 55",
+        "p 66"
+      ],
+      "neutral_citation": "[2023] UKSC 51",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2022-0048",
+      "official_judgment_pdf_url": "https://supremecourt.uk/uploads/uksc_2022_0048_judgment_ee0884449a.pdf",
+      "proposal_id": "issue-source-rehome-003"
+    },
+    {
+      "affected_rows": [
+        "live30-q18:issue-03",
+        "live30-q18:issue-05",
+        "live30-q18:issue-06"
+      ],
+      "case_id": "uksc-2021-0147",
+      "case_name": "Lifestyle Equities CV v Ahmed",
+      "judgment_date": "2024-05-15",
+      "locator_hints": [
+        "p 31"
+      ],
+      "neutral_citation": "[2024] UKSC 17",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2021-0147",
+      "official_judgment_pdf_url": "https://supremecourt.uk/uploads/uksc_2021_0147_0150_judgment_e07b3b6f6a.pdf",
+      "proposal_id": "issue-source-rehome-004"
+    },
+    {
+      "affected_rows": [
+        "live30-q26:issue-08",
+        "live30-q26:issue-09",
+        "live60-q43:issue-06",
+        "live60-q58:issue-09"
+      ],
+      "case_id": "uksc-2024-0015",
+      "case_name": "UniCredit Bank GmbH v RusChemAlliance LLC",
+      "judgment_date": "2024-09-18",
+      "locator_hints": [
+        "p 3",
+        "p 25"
+      ],
+      "neutral_citation": "[2024] UKSC 30",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2024-0015",
+      "official_judgment_pdf_url": "https://supremecourt.uk/uploads/uksc_2024_0015_judgment_117c893794.pdf",
+      "proposal_id": "issue-source-rehome-005"
+    }
+  ],
+  "licence_evidence_url": "https://supremecourt.uk/about/terms-and-conditions",
+  "owner_proposition_level_admission_required": true,
+  "phase2b_authorized": false,
+  "purpose": "REHOME_RESTRICTED_FIND_CASE_LAW_REFERENCES_TO_OFFICIAL_UKSC_REPRESENTATIONS",
+  "schema": "legalbot.v111.phase2a.issue-source-rehoming-plan.v1",
+  "technical_qualification_assigned": false
+}

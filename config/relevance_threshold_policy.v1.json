@@ -1,0 +1,23 @@
+{
+  "calibration": {
+    "dangerous_false_admission_tolerance": 0,
+    "exact_span_hit_at_5": 1.0,
+    "holdout_query_count": 10,
+    "mrr": 0.8,
+    "recall_at_10": 0.95,
+    "training_query_count": 20
+  },
+  "exact_routes": [
+    "exact_authority_identity",
+    "exact_legislation_reference"
+  ],
+  "policy_sha256": "5f87c2825101a8a0de64cc633f2e9fa2f8a9fda97562785c7e6b3b942b41a011",
+  "schema": "legalbot.retrieval-relevance-policy.v1",
+  "score_scale": "qwen_yes_probability_0_1",
+  "semantic_routes": [
+    "hybrid_rrf"
+  ],
+  "semantic_threshold": null,
+  "status": "PENDING_PHASE2B_CALIBRATION",
+  "version": "phase2b-calibration-pending-2026-08-24"
+}

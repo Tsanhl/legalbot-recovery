@@ -1,0 +1,2270 @@
+{
+  "after_jsonl_sha256": "541268593a1f22a2e497c716f9390f4c06ef433dd7cc78471c49be7b96a3989e",
+  "applied_at": "2026-08-13",
+  "before_jsonl_sha256": "5b986f291eb178c5345ab3519513353b426d14925b3751d12c2949613d53bcc2",
+  "decision_counts": {
+    "amend": 19,
+    "approve": 5,
+    "reject": 0
+  },
+  "records": [
+    {
+      "after_row_sha256": "7af80503e0c3692deb3bf850b4a8db32fe7b9bccfad4b23f84d5dfd0be94faec",
+      "before_row_sha256": "c71678dcd3e3cf36381b1f48dad619bab67003d51fcec407086a23845c2c967d",
+      "case_id": "dev-ucta-s2",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "approve",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1977/50/section/2",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(1): death or personal injury from negligence",
+              "relevance_grade": 3,
+              "span_sha256": "ece1d68ec45f6ed732b76c5f22b25d540269fc32b66ec84f55c5b802222d76aa"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "official_record_modified": {
+          "after": "2024-05-17",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "approve"
+    },
+    {
+      "after_row_sha256": "6bf9138d97ebf139612c6a10bcc87aea5de2261e78e8e9d9999ad4bbd964607b",
+      "before_row_sha256": "d2d908c8a6ebb58caa0de71bd7d68a5bc3e0d6380eaa52ebf44d105678a34af6",
+      "case_id": "dev-ucta-s3",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1977/50/section/3",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(1): written-standard-terms trigger",
+              "relevance_grade": 3,
+              "span_sha256": "81b41ea02cce7a4d5ca2987b214396956b8145a61ec9bc2817e89dc126ca3901"
+            },
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(2): control opening",
+              "relevance_grade": 3,
+              "span_sha256": "93a04307511b0a733a0706086fc35c0b0cf394d2127da6e199f8659ca25c1b25"
+            },
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(2)(a): breach exclusion or restriction",
+              "relevance_grade": 3,
+              "span_sha256": "888731774204e7168c46f9aab7106891cf03b1da6fa5cabbb6b4252e284f717a"
+            },
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(2)(b): substantially different or no performance control",
+              "relevance_grade": 3,
+              "span_sha256": "8df34725ed43b3baa1872d6b149fec9d8bb508fb9ecdca86cd581eaac1472ddc"
+            },
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(2)(b)(i): substantially different performance",
+              "relevance_grade": 3,
+              "span_sha256": "40f793b68c3cf7fab36f970df32a3ed3669278fc1fb92e453c33f4e6b232ff75"
+            },
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(2)(b)(ii): no performance",
+              "relevance_grade": 3,
+              "span_sha256": "7d8c13c17afed7350c84bb2fd907794b42d181bcd68d6a64fe1a70aa67730bf9"
+            },
+            {
+              "legal_locator": "section 3",
+              "proposition": "section 3(3): consumer-contract exclusion",
+              "relevance_grade": 3,
+              "span_sha256": "ca2d3e46545fe325688ba4bfda7f874506bfd6c2b3d499290c29050ef2db1e40"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-05-17",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "81b41ea02cce7a4d5ca2987b214396956b8145a61ec9bc2817e89dc126ca3901"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "52dee8fb6df83c527d759a63d7c159f85a5ca9f8bac0294c2b189c1be6e53d58",
+      "before_row_sha256": "6e5936322144137a6db1baeebf2832ac4469c6ef93f08049c089b93768f1b301",
+      "case_id": "dev-crtpa-s1",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1999/31/section/1",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1): enforcement opening",
+              "relevance_grade": 3,
+              "span_sha256": "353869e2a654104e82ef189567f0f4876c4c164d2f2fbf8a1ab6002376c4056f"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(a): express enforcement",
+              "relevance_grade": 3,
+              "span_sha256": "e53972cd42806d78f91c1e437ba688e8c42acdee40f6076ce28a19e26dd8150a"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(b): purported benefit",
+              "relevance_grade": 3,
+              "span_sha256": "ddba978d4b63b010cf4325db17b4e64240f90c84897c1ab9b10b08a0312931cf"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(2): contrary intention qualification",
+              "relevance_grade": 3,
+              "span_sha256": "1bb446a35b2b0346b303052881df9fb9a0c255d2e35b39a7de64b3c2dc222fa2"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3): third-party identification",
+              "relevance_grade": 3,
+              "span_sha256": "d735e612c0ef04b8982554223e12ae40a07fcd467517f8fbf4a72090f75162ed"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2022-10-26",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "353869e2a654104e82ef189567f0f4876c4c164d2f2fbf8a1ab6002376c4056f"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "777ba108ac53e12fe5ace5e8633227652829d84b3040497b0a94c51bcfb7490e",
+      "before_row_sha256": "32ea6b1ea1666a23efd4529b5e6b89403ee51820c72aa0c105739f5ba5340aa2",
+      "case_id": "dev-sga-s14",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1979/54/section/14",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2): satisfactory quality",
+              "relevance_grade": 3,
+              "span_sha256": "cad58b18a7f12271ef8ee1b0d361cf69da7fe3064de3993f967ed70ea4696bc1"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2A): reasonable-person standard",
+              "relevance_grade": 3,
+              "span_sha256": "3ac2f7629c1964aba04f8b8bcac491978ddbd5f72b206c41e77f659f9a57409e"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2B): quality includes state and condition",
+              "relevance_grade": 3,
+              "span_sha256": "44451dc6f14fe80373d4ae26dcf439d153576e651f3129982dd5cb4e7b42dddd"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2B)(a): common-purpose fitness",
+              "relevance_grade": 3,
+              "span_sha256": "f258238b0fde0098a648557fa07e56c3eefa6aa1fbd23bc08f887fdff8090f9d"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2B)(b): appearance and finish",
+              "relevance_grade": 3,
+              "span_sha256": "643e412674a19578d8412530034ce91c723a6f392be7abe7d7d80010c07f9f1d"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2B)(c): freedom from minor defects",
+              "relevance_grade": 3,
+              "span_sha256": "46e6e5c32b3d52fc4e96c2b2c8abbb1a0b2c422bb9fb2efa8826ccc3df0f60f9"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2B)(d): safety",
+              "relevance_grade": 3,
+              "span_sha256": "1c57c2e9781795650b22412aa4cd24ce90c3abae3985423aeee83b08ac617759"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(2B)(e): durability",
+              "relevance_grade": 3,
+              "span_sha256": "86079472c80a4edc2313e13ca2af283d1181faf3a7c0356d9238225fa7a3d868"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(3): particular-purpose fitness",
+              "relevance_grade": 3,
+              "span_sha256": "34a447f436235823617426ad6dcebf3afdc46c67f4978b8b2565dea63749bb5f"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(3)(a): purpose disclosed to seller",
+              "relevance_grade": 3,
+              "span_sha256": "e2be95d30111d2c6014364234209d02437931f8d50f13abd36d3ab8ba49e3d25"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(3)(b): purpose disclosed to credit-broker",
+              "relevance_grade": 3,
+              "span_sha256": "cd79f01e72f7af2fe18f7b6a5a25490f897c90dea6a02fd668251ae775f9fe97"
+            },
+            {
+              "legal_locator": "section 14",
+              "proposition": "section 14(9): Consumer Rights Act exclusion",
+              "relevance_grade": 3,
+              "span_sha256": "9306377c393069b7a9f8e7c01afa627773766ec83af2eee2d40d597c20e08b4c"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2025-07-29",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "238537059d07a66bd661d78a0758a1366f59956de6539301735e13841cbf3a69"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "10787cb8328fc2bed0e7191663c2b0896a05c4c84433769ee4930a27647cd573",
+      "before_row_sha256": "87b0e63c2962abdc82413727448d6bb1d4c052ce528a82458ddb2e3c45e85c2c",
+      "case_id": "dev-sgsa-s13",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "approve",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1982/29/section/13",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 13",
+              "proposition": "section 13: reasonable care and skill",
+              "relevance_grade": 3,
+              "span_sha256": "85ba16c7584b079d24cd6ce583b4f76330c0208dfd67725e5a0a9c7206bf9072"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "official_record_modified": {
+          "after": "2016-01-26",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "approve"
+    },
+    {
+      "after_row_sha256": "55c2eb24b62a53196f9cc1abf09bdf52a037626380ccbe4a941fce79c9120a9c",
+      "before_row_sha256": "11cbb701275556b1811f91e575e1e2aaea636026dc3a137c1dfe5b1ef4e3e620",
+      "case_id": "dev-frustrated-contracts-s1",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/Geo6/6-7/40/section/1",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1): application after frustration",
+              "relevance_grade": 3,
+              "span_sha256": "f14a37fe4eb957102b007f99ffc9216641140ac3feb9409fef0ff29cd10f3f29"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(2): paid/payable sums and expenses",
+              "relevance_grade": 3,
+              "span_sha256": "c4712d7cdf02418fd2ce7fb6cf0d5cf4411a8b05c8eebb1c20b5a2dce15c89ce"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3): non-money valuable benefit",
+              "relevance_grade": 3,
+              "span_sha256": "37ab3c129f262709f83e0cd5282f0d63a13476837931c976e76287395727f0b8"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3)(a): benefited-party expenses",
+              "relevance_grade": 3,
+              "span_sha256": "76263f9177c4f2388ca5e028646a78ffcb026a94910ad45fd352234aba510c35"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3)(b): effect of frustrating circumstances",
+              "relevance_grade": 3,
+              "span_sha256": "dd29b0ec93b600e8d188fff3286104d8b8989af0a789d96645d3aabd57ed9b6e"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2023-11-13",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "f14a37fe4eb957102b007f99ffc9216641140ac3feb9409fef0ff29cd10f3f29"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "1e429c1349de23cc6bd2a7d306577f84ae1161a597788ec5ac2858d171d6b995",
+      "before_row_sha256": "6b726bc8e97190d1db429d0b93a5bb931f53c07a6a51a597ceb6c4c576b1c040",
+      "case_id": "dev-cpa1987-s2",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1987/43/section/2",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(1): liability opening",
+              "relevance_grade": 3,
+              "span_sha256": "0bd6955f6e8c8494c7aa1204a754b19d49a13d0fb168b13a77e88e18e6e42109"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(2)(a): producer",
+              "relevance_grade": 3,
+              "span_sha256": "c1289e58e565bfa362a673d5ab84b315e5962e985493cce20fdf07cbeb1ec5d5"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(2)(b): own-brander",
+              "relevance_grade": 3,
+              "span_sha256": "aed24aa715f2ea31c7eeebaa5ccd7bc5b25ac8ff6fb9ee7006d4f9f9fb1d7ac7"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(2)(c): UK importer",
+              "relevance_grade": 3,
+              "span_sha256": "6bd1a81fae5957b62c7773669e795431165fa46239528f278aafbb66d497f30f"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(3): supplier-identification route",
+              "relevance_grade": 3,
+              "span_sha256": "a22b0f39e1a326f95231bb6583ddcf97eba7b259b4b184b1608555e3edf79f40"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(3)(a): identification request",
+              "relevance_grade": 3,
+              "span_sha256": "9ee0670289b42555c980ec36a6494b59f5e5776e77ad976d62a46eae9f535413"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(3)(b): reasonable-period condition",
+              "relevance_grade": 3,
+              "span_sha256": "f637d2110f29836c7519e59ee55e7548f6d77cfced3feeabfc73a7d3e95b7fea"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(3)(c): supplier failure",
+              "relevance_grade": 3,
+              "span_sha256": "358df6ee775ca6e8f4549656f8cf9d845df4e487cc5f15e08e354cf758a761be"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(5): joint and several liability",
+              "relevance_grade": 3,
+              "span_sha256": "347ecc47bb818689d34d8c4365c24bc433d62a04b9c6240233d5adb67f92ed3f"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-10-18",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "0bd6955f6e8c8494c7aa1204a754b19d49a13d0fb168b13a77e88e18e6e42109"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "3b60bd514a09194c8b9908d5f973a02b2f215b65c5af492d70f3dc292dc7575a",
+      "before_row_sha256": "3359cdd70737b7d082cb301e032b7507841f29a3bdec305726f19e7f4212e814",
+      "case_id": "dev-limitation-s2",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "approve",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1980/58/section/2",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2: six years from accrual",
+              "relevance_grade": 3,
+              "span_sha256": "00b14462e7c1b99902f74ab2cfa474b63d441e8aa712aae2be10154cf3c266fe"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "official_record_modified": {
+          "after": "2026-06-29",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 1,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "not_material_to_queried_proposition",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+N.I.",
+          "before": null
+        }
+      },
+      "decision": "approve"
+    },
+    {
+      "after_row_sha256": "f7ac360a7cbe1a211452b07b3b609d5f2eb293573d4bfccdfa946d06b52322d2",
+      "before_row_sha256": "ac337fccc911ae7e450ffd1ea9d608d09a62cbc0d7f6ee5139707fc84f44fb17",
+      "case_id": "dev-limitation-s14a",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1980/58/section/14A",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(1): latent-negligence scope",
+              "relevance_grade": 3,
+              "span_sha256": "fa1f93ba7656fc72d0903a2a024132ac48a0851338ce037a03986a53358659eb"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(3): applicable period",
+              "relevance_grade": 3,
+              "span_sha256": "0b2fb5eafd5ec15c8bff07bf56ae9f78819189806b3986b0d655b14abeffa240"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(4)(a): six years from accrual",
+              "relevance_grade": 3,
+              "span_sha256": "c4e73ebe7fea8fe728eabda5a0572c6258b9e6b06a8322dd5d0c79be35bd1af7"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(4)(b): later three-year knowledge period",
+              "relevance_grade": 3,
+              "span_sha256": "7161bd1734f15b001f017362b01015b3c733228e6f154e8ef7e738df7db7680c"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(5): starting date",
+              "relevance_grade": 3,
+              "span_sha256": "6d3e0ed2e50af1923baa81e3a8fb2d48f35d6cc2c01dbdd9a9f5092e72328041"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(6): knowledge opening",
+              "relevance_grade": 3,
+              "span_sha256": "786366ecee0fd55f20a37b96ee01afbacddc93149f8aec908dfd6370d50a7793"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(6)(a): material damage facts",
+              "relevance_grade": 3,
+              "span_sha256": "0c805d87277f13b441aba19fd43252716d22e0845707094e883bc4cf64a5d98a"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(6)(b): other action facts",
+              "relevance_grade": 3,
+              "span_sha256": "69fa1b0d66a384fbf94b314e8e1a026aa500ac2f986cf8ad0359c58f828d1f9c"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(7): seriousness of damage",
+              "relevance_grade": 3,
+              "span_sha256": "e4c0e0f76543947e2d4d731993f7bd5b5f8b6bad6ff3cad1a82f49869fcd25c8"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(8): other facts opening",
+              "relevance_grade": 3,
+              "span_sha256": "2b8dc4f08d3ef8d2897ffd0d0696af237f92194483510e3a97ad1b919092d01a"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(8)(a): attribution",
+              "relevance_grade": 3,
+              "span_sha256": "2cef5eb91708adac0f24d28a296916e16225cbf26a47472c7254a153f897ee4b"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(8)(b): defendant identity",
+              "relevance_grade": 3,
+              "span_sha256": "fa95c01fc06ed57ef75c047bc3aa31c47153e5d97fc82b02a3e9cfd8d49dc384"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(8)(c): other actor identity and supporting facts",
+              "relevance_grade": 3,
+              "span_sha256": "d8a73703f1fda9604318a46c9ae91ae2b3a5c636ddb8b9cfd38452c7e1c41b79"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(9): legal knowledge irrelevant",
+              "relevance_grade": 3,
+              "span_sha256": "780b5b353ee4b03ce9a404f3bae8de556b40f0774654983fa949ac8468827ffb"
+            },
+            {
+              "legal_locator": "section 14A",
+              "proposition": "section 14A(10): constructive and expert knowledge",
+              "relevance_grade": 3,
+              "span_sha256": "ff16a9671738f1e9571c4630913af1d015936fc16c3a5dea7025381770f918b8"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2026-06-29",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "fa1f93ba7656fc72d0903a2a024132ac48a0851338ce037a03986a53358659eb"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 1,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "not_material_to_queried_proposition",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "6ca6e30daf27fce4c134655a2c869553231bb8cdd48fea768d17dbae3cc79b38",
+      "before_row_sha256": "d7dc2b5e993c8be8a849aa2ac21230f5c9fd9de0eb8caa662f15d8f027440c08",
+      "case_id": "dev-ola1984-s1",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1984/3/section/1",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3): duty conditions opening",
+              "relevance_grade": 3,
+              "span_sha256": "58d1b809890c859f44d5a6ee9c5112cb11726bbd36eb41676b96bc063b89ae70"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3)(a): knowledge of danger",
+              "relevance_grade": 3,
+              "span_sha256": "a817a4a348c3769bd77eb722e2b34e6337d373c88dec06c38049a1aa817f8951"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3)(b): knowledge of likely vicinity",
+              "relevance_grade": 3,
+              "span_sha256": "7df952c7a96cb546791b5050e27c3fbf517560f5b15fca1cd9013f628c0b20be"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(3)(c): reasonable expectation of protection",
+              "relevance_grade": 3,
+              "span_sha256": "db2c1fdb2b2679773b85db95e3320ad2112c133a7417494f62d5be47494f3213"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(4): reasonable-care duty",
+              "relevance_grade": 3,
+              "span_sha256": "19ccbd1340ae9410a6a66db9687b0e700ea139ac00b47f60c5248cfd07c7d25f"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2025-11-21",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "b9750afe24f230d0336f65372567f73dd2276e099daca97cf8865c6235029734"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "a66bdeba87030bcf5f813a7f44a69c8c8127cf1daca7596afe152915077e9ec5",
+      "before_row_sha256": "01ed8d95453f8c8addb2fb0e09bd0ade304924e3ee01149733afea5adba90da8",
+      "case_id": "dev-ola1957-s2",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/Eliz2/5-6/31/section/2",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(1): common duty context",
+              "relevance_grade": 3,
+              "span_sha256": "855b42548076bb9b06251c605bf354ec7807efcd5c91b11b8fc8d7b0d3143d99"
+            },
+            {
+              "legal_locator": "section 2",
+              "proposition": "section 2(2): reasonable visitor safety",
+              "relevance_grade": 3,
+              "span_sha256": "62a9cdc42ea716777e5e6d49f183bfd6c7bd277b1ef0805b656dc3697e5b16ce"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "official_record_modified": {
+          "after": "2024-04-02",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": "62a9cdc42ea716777e5e6d49f183bfd6c7bd277b1ef0805b656dc3697e5b16ce",
+          "before": "855b42548076bb9b06251c605bf354ec7807efcd5c91b11b8fc8d7b0d3143d99"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "2eddcd5771530518d2e3efde1484ff944b942c26bc0095f6fa9dbe4adaf76993",
+      "before_row_sha256": "7a6bc56beb9361e36c37263244f5cd8dd5eb308fdb63555bba1bc433cf080127",
+      "case_id": "dev-trustee-act-s1",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/2000/29/section/1",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1): reasonable care and skill opening",
+              "relevance_grade": 3,
+              "span_sha256": "963e01fe187867c5856da1cbe0ac67e233e518831738290d19016f34faea5cc2"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(a): actual or claimed special knowledge or experience",
+              "relevance_grade": 3,
+              "span_sha256": "9dba13de32edb2d15476fc2b063233a86badf7cbb04ed4f207f995e6e3dbb643"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(b): business or professional benchmark",
+              "relevance_grade": 3,
+              "span_sha256": "4937f8d2f1f318193bb2dc2b3229c0867fc98f9753db53d268f8956fa5f76431"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(2): statutory name of duty",
+              "relevance_grade": 3,
+              "span_sha256": "2373105730432ae43956b2ac770f55d5ab00901e18200f51b39d53f44217ac3b"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2025-05-23",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "963e01fe187867c5856da1cbe0ac67e233e518831738290d19016f34faea5cc2"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "000f15d30a9eaffa10c908fb203991112a09b0f3d010f621eaba4845d9855a0b",
+      "before_row_sha256": "b679ed1d13fd7b0c286e4ac487e137a30c21e969a4f7fde8d273df04e0e28544",
+      "case_id": "dev-triple-point-identity",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_uk_supreme_court_case_record",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.supremecourt.uk/cases/uksc-2019-0074",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "legal_locator": {
+          "after": null,
+          "before": "p 1"
+        },
+        "match_mode": {
+          "after": "source_identity_only",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-04-16",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "57bf193a5a7fb70dd4f098f04bc07e78503173be5a6d96fb302a23ed68b5aa70"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "296057da53eb3fd3b84dc5f4154c3daa4f3b7e1875bfcabf7fd48d0ff4b176f6",
+      "before_row_sha256": "041ab73a2231753a14b757c0ac811b5e59170a4de99010abcee463c7fe0779ff",
+      "case_id": "dev-cavendish-identity",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_uk_supreme_court_case_record",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.supremecourt.uk/cases/uksc-2013-0280",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "legal_locator": {
+          "after": null,
+          "before": "p 1"
+        },
+        "match_mode": {
+          "after": "source_identity_only",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-04-16",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "29a72020eff82a8b950be6894019d7a70fe2353f85e550939ded52d02aacec7e"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "4ccfdc2fc58135c23df75bcade236a5e3fcd1fdfc2d5667b17b2e79ac82002c7",
+      "before_row_sha256": "75ebe5f9366d58bc580ff45d8ff5a644c176af87b0c080164571936a5818ec06",
+      "case_id": "dev-mbs-identity",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_uk_supreme_court_case_record",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.supremecourt.uk/cases/uksc-2019-0040",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "legal_locator": {
+          "after": null,
+          "before": "p 1"
+        },
+        "match_mode": {
+          "after": "source_identity_only",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-04-16",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "e071634ef4d85ffa8809ffe3c1296e7b63a1b321fcbba17e0c20d739f607670f"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "630d9997ffd259012c92813185088c3ba8c079c877ebce7b1b768ed1fab71328",
+      "before_row_sha256": "385dedc0cebc43d754c671d306686313140f6f663c56ad0c0bae4a36353b6a54",
+      "case_id": "dev-unison-id-only",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "approve",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_uk_supreme_court_case_record",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.supremecourt.uk/cases/uksc-2015-0233",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "official_record_modified": {
+          "after": "2024-04-16",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        }
+      },
+      "decision": "approve"
+    },
+    {
+      "after_row_sha256": "c27753345adce6a263cfda8225a3d92de9583aeb6678133e832991d644891e98",
+      "before_row_sha256": "d7c54d861e61d49a4cc1755f529e675477cb388881789dbd175536707979b065",
+      "case_id": "prom-perpetuities-s5",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "approve",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/2009/18/section/5",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 5",
+              "proposition": "section 5(1): 125 years and no other period",
+              "relevance_grade": 3,
+              "span_sha256": "a2e40d284917ba52f60a08e89a295ee5417d5c6607b86d756396a9d60d02b8c5"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "official_record_modified": {
+          "after": "2015-10-13",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W",
+          "before": null
+        }
+      },
+      "decision": "approve"
+    },
+    {
+      "after_row_sha256": "23690b1e366d905dca3a29119f139fa6717fd265de61021bdb9763196c134aad",
+      "before_row_sha256": "83cffca5a3723b065777d18a6cc556449180b506c971cb727dfd555148ad2357",
+      "case_id": "prom-variation-trusts-s1",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/Eliz2/6-7/53/section/1",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1): arrangement and benefit proviso",
+              "relevance_grade": 3,
+              "span_sha256": "ed61673e1f98d8f733d3d4a0764c5e04b2d39c2528dc0d466028baf3a65e694a"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(a): incapable beneficiary",
+              "relevance_grade": 3,
+              "span_sha256": "2361f2a25848b11c1e73dd56952049465e5e234e38c4b7f2026716da307e2976"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(b): future or contingent class",
+              "relevance_grade": 3,
+              "span_sha256": "dd501302ade15dd7b2df28211e3373718d21a1826861ece197554f6b74c9c8d0"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(c): unborn person",
+              "relevance_grade": 3,
+              "span_sha256": "23db72bb07581c176d9767647ffc9cf56351005938cede19ad6ddd26654ff4d3"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(d): protective-trust discretionary interest",
+              "relevance_grade": 3,
+              "span_sha256": "4fa2c74490416267ee0f8f7c8e605646b692e6bec6d372d157f3d90bb88a0269"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2015-08-18",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "ed61673e1f98d8f733d3d4a0764c5e04b2d39c2528dc0d466028baf3a65e694a"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "732e89f02c98b18e10113a75d12a1d3bf92bf28bb989453f175d21edde533f3d",
+      "before_row_sha256": "994858992c917b83061f37fb9818932f703a27e61a2a12c5a0f8a0c9d6b85761",
+      "case_id": "prom-family-provision-s1",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1975/63/section/1",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1): domicile, survival and application opening",
+              "relevance_grade": 3,
+              "span_sha256": "61c644c76e72e7f98c2feeb98f312f9c29f23b0a2089b5db191cbe8610eba9e5"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(a): spouse or civil partner",
+              "relevance_grade": 3,
+              "span_sha256": "f18772c3f6edda701c10ea3db8606817b505921d311b5a8e538301fb618e9bbc"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(b): former spouse or civil partner",
+              "relevance_grade": 3,
+              "span_sha256": "ade0d58f9f13f3d655d117d96eab32975d1678ab06331d1d93d721a7d31a7fde"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(ba): qualifying cohabitant",
+              "relevance_grade": 3,
+              "span_sha256": "6fed87f28b099aeddddf4a542ff260730dc24db2b88837326845c8faa6748ca1"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(c): child",
+              "relevance_grade": 3,
+              "span_sha256": "b1451fcdee9e4e9936c41b9465d37133d49aaacacc209012627abef79ceb0113"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(d): person treated as child of family",
+              "relevance_grade": 3,
+              "span_sha256": "39325df97cad7e4b989f2893f708c21090fc05f2fef72816c01695c5171d1c7d"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1)(e): maintained dependant",
+              "relevance_grade": 3,
+              "span_sha256": "aeb0b30faefe86de3d5b1d3bbe8b4087bcfa45bfdd7daf27f01062924dab2728"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1A): cohabitant period and relationship opening",
+              "relevance_grade": 3,
+              "span_sha256": "66bad29ce491b3fd2ed191373433a51cf42515a4b3fb1b56d822fa1a7877165f"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1A)(a): same household",
+              "relevance_grade": 3,
+              "span_sha256": "9db112f86a7a668c435ba4d34214f9c4eeab714c77915807e27979eb59378105"
+            },
+            {
+              "legal_locator": "section 1",
+              "proposition": "section 1(1A)(b): living as married couple or civil partners",
+              "relevance_grade": 3,
+              "span_sha256": "7f358be38e9958d5f7e29ed3d4bf85ed2036a0e827fbaf2f358357e25d85bfc0"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2022-06-05",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "61c644c76e72e7f98c2feeb98f312f9c29f23b0a2089b5db191cbe8610eba9e5"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 2,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "not_material_to_queried_proposition",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "e4d32a2bbef44afa3a8b5519bd043abe4df95d526946de1c169f29fcac9998e9",
+      "before_row_sha256": "318f1093e7655c7d11825be6fa2007100cb1fb5fa64f4537099532c744093d5a",
+      "case_id": "prom-aja1982-s20",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/1982/53/section/20",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 20",
+              "proposition": "section 20(1): rectification power",
+              "relevance_grade": 3,
+              "span_sha256": "d3f3f9f885e15cd6144fcd957923569683ae8e117238214f275d89b847252121"
+            },
+            {
+              "legal_locator": "section 20",
+              "proposition": "section 20(1)(a): clerical error",
+              "relevance_grade": 3,
+              "span_sha256": "566ffce59fa63a49061694667b27ec9a686c452b8b2d66b6bf5f67f90b9650d7"
+            },
+            {
+              "legal_locator": "section 20",
+              "proposition": "section 20(1)(b): failure to understand instructions",
+              "relevance_grade": 3,
+              "span_sha256": "f96df4b7ca116cc572058461ee88f60df51870c96349a2ec7342bef9f88e246f"
+            },
+            {
+              "legal_locator": "section 20",
+              "proposition": "section 20(2): six months, subject to permission",
+              "relevance_grade": 3,
+              "span_sha256": "7bc1e3f6a6555b6d67720fce90b3c583b329ba76f9848eabbcaff1c50239bde2"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-04-02",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "d3f3f9f885e15cd6144fcd957923569683ae8e117238214f275d89b847252121"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+S+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "697aa531a2608ec95deb393fbbfb179b58db174ae0f3c5dd9257835428a3bfc1",
+      "before_row_sha256": "546a0a217ea69b51e838641dd05a076772967b4f4292272ebf51be47f9ed6364",
+      "case_id": "prom-aea1925-s46",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/Geo5/15-16/23/section/46",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1): distribution opening",
+              "relevance_grade": 3,
+              "span_sha256": "b45ed2e72801207aa105b73675e0e19d871b4c9c01333ff25698bb65378e8b88"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(i): spouse or civil-partner table",
+              "relevance_grade": 3,
+              "span_sha256": "d49662491aadaeaeece8f6172b0bbd40fb90cb161f6bd3462c6f56c05058aa41"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(i): personal chattels",
+              "relevance_grade": 3,
+              "span_sha256": "858a87e3db2c22d41eb85ca8739af0f1b1c5f090138a30f57e777fda290adff2"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(i): fixed net sum and interest",
+              "relevance_grade": 3,
+              "span_sha256": "d65c0175345d717902bda3cbf0f7717f38a7bb66e624c57c276c8d648398e985"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(i): remaining halves",
+              "relevance_grade": 3,
+              "span_sha256": "27930fa390e42560ebb1ddb701fdc2a7dc7ef5aa1e8854c7be3b571c556bb9f2"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(ii): issue without spouse or civil partner",
+              "relevance_grade": 3,
+              "span_sha256": "eed0c97b60c109064cf21628142a1a6a8c568e217370af50ab7521ca1e6312f3"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(iii): both parents",
+              "relevance_grade": 3,
+              "span_sha256": "cb76f3fe5b81b11472fa9e5ad73523f69a1eadbc894ccee465869da4a972c3ec"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(iv): one parent",
+              "relevance_grade": 3,
+              "span_sha256": "7e6ac2c430ff2b1018805bad5253062331f08a00a3ea042c077a2eb613d15327"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(v): remoter family order",
+              "relevance_grade": 3,
+              "span_sha256": "1fa59131affbeb1aa76348b06c07f14b718f54f2f5dbaecfd78ef28d831c633b"
+            },
+            {
+              "legal_locator": "section 46",
+              "proposition": "section 46(1)(vi): bona vacantia",
+              "relevance_grade": 3,
+              "span_sha256": "4b8649e83b78b771f4c60b25aa6b7716c9a8d8c6e46232af9f469668a2442e91"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2022-11-11",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "b45ed2e72801207aa105b73675e0e19d871b4c9c01333ff25698bb65378e8b88"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "bbf49b3a27cdadbf6dac8d8e9b3a3ae7b204742e3bde1df96df74f159a4b1090",
+      "before_row_sha256": "f6fad5d784fb388dac331d97d730d9ac4e46b6e67595f66e7049a454e119d0aa",
+      "case_id": "prom-wills-act-s9",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_legislation_current_section_xml",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.legislation.gov.uk/ukpga/Will4and1Vict/7/26/section/9",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1): validity opening",
+              "relevance_grade": 3,
+              "span_sha256": "0f498febc9c8d1c0d114d9c016ad3eb9970c03384de1b9fd63d7ea2e216126c9"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1)(a): writing and signature",
+              "relevance_grade": 3,
+              "span_sha256": "1b121af5e761033cccd76aa7326bf47d607f439834cc455f84cbd44c1feef11b"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1)(b): testamentary intention",
+              "relevance_grade": 3,
+              "span_sha256": "dbb275c4eb7dbc268c070788fabb93b1351c09780f14a2ad2ebb92ea3d3b2656"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1)(c): two witnesses present together",
+              "relevance_grade": 3,
+              "span_sha256": "e24b3f5123379003734af2f61e0c40903f7383aeb46766714fd226d34c515731"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1)(d): witness attestation or acknowledgment",
+              "relevance_grade": 3,
+              "span_sha256": "844f912e3f8dd5066ec14ef5f2281ed9a5229013a95deec0f58f44cee2314bd4"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1)(d)(i): attestation and signature",
+              "relevance_grade": 3,
+              "span_sha256": "97870b1372f83122af1c196bf8d2a0e3f093f3352b1d94047a436c25fd1938fe"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(1)(d)(ii): signature acknowledgment",
+              "relevance_grade": 3,
+              "span_sha256": "242f47f131fc86fd834f9054d0cb2199c070a49e0e663e0f3b7c2a017a16068a"
+            },
+            {
+              "legal_locator": "section 9",
+              "proposition": "section 9(2): temporary visual presence for 2020–2024 wills",
+              "relevance_grade": 3,
+              "span_sha256": "ae840ce52b0ce99b5fd68934771d6110e96c0bc0227853666e998e7f7febe8b6"
+            }
+          ],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "match_mode": {
+          "after": "source_and_locator",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2022-05-30",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "0f498febc9c8d1c0d114d9c016ad3eb9970c03384de1b9fd63d7ea2e216126c9"
+        },
+        "provision_extent_review": {
+          "after": "england_and_wales_verified_2026-08-13",
+          "before": "owner_or_expert_confirmation_required"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        },
+        "section_unapplied_effect_count": {
+          "after": 0,
+          "before": null
+        },
+        "unapplied_effect_materiality": {
+          "after": "none_recorded",
+          "before": null
+        },
+        "verified_extent": {
+          "after": "E+W+N.I.",
+          "before": null
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "282ee0c60d42ed4be8d3fc07835a831d3e93e95ba1c6821454015b5e0636be3c",
+      "before_row_sha256": "d8571313ab840949f79e71d4e79a50ce98d82b4b46b944d3ec6282e9f3ff4b81",
+      "case_id": "prom-khan-identity",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_uk_supreme_court_case_record",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.supremecourt.uk/cases/uksc-2019-0011",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "legal_locator": {
+          "after": null,
+          "before": "p 1"
+        },
+        "match_mode": {
+          "after": "source_identity_only",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-04-16",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "891aacd3ad8efd52d8a3175e9e65f7e5ef4f7a8eba93d60af0aa4f9eda75c01a"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        }
+      },
+      "decision": "amend"
+    },
+    {
+      "after_row_sha256": "80874f0089c6e5547e976c167b9e3264b23cb5df58e0ad63a2a0be95e973f8af",
+      "before_row_sha256": "1fadbad0242a8b271f1482d25fbf30b3a8e9afbbea08af4f844d893efffb3c55",
+      "case_id": "prom-hirachand-identity",
+      "changed_fields": {
+        "fact_check_decision": {
+          "after": "amend",
+          "before": null
+        },
+        "fact_check_method": {
+          "after": "official_uk_supreme_court_case_record",
+          "before": null
+        },
+        "fact_check_source_url": {
+          "after": "https://www.supremecourt.uk/cases/uksc-2022-0015",
+          "before": null
+        },
+        "fact_checked_at": {
+          "after": "2026-08-13",
+          "before": null
+        },
+        "gold_spans": {
+          "after": [],
+          "before": null
+        },
+        "legal_confirmation_needed": {
+          "after": false,
+          "before": true
+        },
+        "legal_locator": {
+          "after": null,
+          "before": "p 1"
+        },
+        "match_mode": {
+          "after": "source_identity_only",
+          "before": "source_and_span"
+        },
+        "official_record_modified": {
+          "after": "2024-12-18",
+          "before": null
+        },
+        "owner_approval_basis": {
+          "after": "owner_adopted_all_fact_checked_recommendations_2026-08-13",
+          "before": null
+        },
+        "owner_review_status": {
+          "after": "frozen",
+          "before": "provisional_assistant"
+        },
+        "proposition_span_sha256": {
+          "after": null,
+          "before": "28c56b6c879e2f8ae0ff89c948e6aff7b3074b695eda042f12b48bd385d7d6e4"
+        },
+        "schema": {
+          "after": "legalbot.retrieval-case.v1.1.1",
+          "before": "legalbot.retrieval-case.v1.1"
+        }
+      },
+      "decision": "amend"
+    }
+  ],
+  "schema": "legalbot.retrieval-amendment-diff.v1.1.1",
+  "status": "applied_before_freeze"
+}

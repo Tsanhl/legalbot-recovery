@@ -1,0 +1,59 @@
+{
+  "catalogue_parents_excluded_from_body": true,
+  "cleanup": {
+    "excluded": [
+      "chunk-73fd50b82133e6bd94542a9e1d78ae5b06f91987",
+      "chunk-65e1c2ac95885e5e8e9d65e5ae138b5b6fbcde0a",
+      "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+      "chunk-0bdcbc97ae11975ac1032cc3c6974aeaad9e43a7"
+    ],
+    "inserted": 5,
+    "parent_bytes_deleted": false
+  },
+  "contiguous_repair": {
+    "qualified": false,
+    "repair_span_count": 0
+  },
+  "mechanical_verification": {
+    "approval_status": "mechanical_check_only",
+    "expert_approved": false,
+    "qualified_count": 0,
+    "results": [
+      {
+        "disposition": "hold",
+        "held_id": "held-provision-01",
+        "official_normalised_exact_match": false,
+        "qualified": false,
+        "structural_defect_count": 0,
+        "title": "Limitation Act 1980 section 2"
+      },
+      {
+        "disposition": "hold",
+        "held_id": "held-provision-02",
+        "official_normalised_exact_match": false,
+        "qualified": false,
+        "structural_defect_count": 0,
+        "title": "Limitation Act 1980 section 14A"
+      },
+      {
+        "disposition": "hold",
+        "held_id": "held-provision-03",
+        "official_normalised_exact_match": false,
+        "qualified": false,
+        "structural_defect_count": 0,
+        "title": "Trustee Act 2000 section 1"
+      },
+      {
+        "disposition": "hold",
+        "held_id": "held-provision-04",
+        "official_normalised_exact_match": false,
+        "qualified": false,
+        "structural_defect_count": 0,
+        "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+      }
+    ]
+  },
+  "qualified": false,
+  "schema": "legalbot.live60-four-statute-repair-pack.v1",
+  "seals_expert_gold": false
+}
