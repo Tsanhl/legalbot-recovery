@@ -1,0 +1,30 @@
+{
+  "schema": "legalbot.assessment-guidance-reaudit-application.v1",
+  "applied_at": "2026-08-14",
+  "source_report_sha256": "faf6a5356b4fcbc69ffcbe7348e8170028ff32842791d9938c3884029dd649ed",
+  "legacy_approved_before": 25,
+  "legacy_approved_remaining": 0,
+  "staged_for_owner_review": {
+    "exact_support_candidate": 4,
+    "partial_support_reword": 0,
+    "total": 4
+  },
+  "rejected_partial_support_reword": 10,
+  "rejected_unsupported": 11,
+  "rejected_invalid_positional_provenance": 74,
+  "owner_pending_review_total": 4,
+  "catalogue_after_application": {
+    "approved": 0,
+    "staged": 4,
+    "rejected": 6487
+  },
+  "rules_deleted": 0,
+  "history_preserved": true,
+  "runtime_bundle": {
+    "kind": "owner_authored_policy",
+    "rule_count": 12,
+    "sha256": "c452b8a3dfac4d25ae5f9a836a9838d440961ce20ac40115eb13045c8c9eacab",
+    "blind_human_70_calibrated": false,
+    "academic_release_gate": false
+  }
+}

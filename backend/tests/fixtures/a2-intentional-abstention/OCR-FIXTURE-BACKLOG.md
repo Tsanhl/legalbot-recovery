@@ -1,0 +1,12 @@
+legalbot:non-ingestible
+ocr-001
+ocr-003
+ocr-005
+ocr-006
+ocr-008
+ocr-010
+ocr-011
+ocr-014
+ocr-015
+ocr-018
+ocr-019

@@ -1,0 +1,63 @@
+{
+  "archive": {
+    "commit": "0c4f854ed4d6525d6153c6962dde3e5ffa6684c8",
+    "ref": "archive/v111-deferred-operational-20260822",
+    "remote_present": true,
+    "unchanged": true
+  },
+  "candidate": {
+    "build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "chunk_count": 149855,
+    "dimensions": 1024,
+    "document_count": 85,
+    "lance_tree_sha256": "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705",
+    "manifest_file_sha256": "e28a4138e87cfeb2502e746073208ab25a647de8082a3c7fe96a44ed7d5cc74a",
+    "seal_file_sha256": "d8009de258306cb13ae2b5d0c0d03dbf725d8c0e563bccde74cedaa9acdba04a",
+    "source_manifest_file_sha256": "02a13a3641d0e406d974a1c8f1a4912ae6e761d059774bd68ff97a4cc7732e0e",
+    "vector_count": 149855,
+    "verified_unchanged": true
+  },
+  "catalogue": {
+    "active_candidate_rows": 0,
+    "active_index_jobs": 0,
+    "active_source_scans": 0,
+    "attestation_history_rows": 0,
+    "attestation_selection_rows": 0,
+    "foreign_key_violation_count": 0,
+    "integrity_check": "ok"
+  },
+  "captured_at": "2026-08-22T14:00:15+08:00",
+  "failure_evidence": {
+    "case_ids": [
+      "dev-limitation-s14a",
+      "dev-limitation-s2",
+      "dev-trustee-act-s1",
+      "prom-family-provision-s1"
+    ],
+    "finding_count": 8,
+    "path": "data/evaluations/retrieval/current-law-ew-full-fp16-v111-20260818-a/v111-reattest-binding-failure-119d818.json",
+    "reason_code": "candidate_gold_binding_failed",
+    "retrieval_query_count": 0,
+    "sha256": "ca96298c6e7fc6a46a8933474fbc463b6ffb9a5f14f3fd6b9236af854edbd976"
+  },
+  "git": {
+    "branch": "codex/release-v111-integration",
+    "clean": true,
+    "commit": "119d818cdc773b3870cd03411a8289a896d2bdb3",
+    "local_matches_upstream": true,
+    "tag": "v1.11-integration-baseline-20260822-r2",
+    "tag_object": "237811fb4e17302dcc5dfa070676659c5d058e44",
+    "tree": "917da615afdca0a1fc141a3aae69e7cfe0cefacd",
+    "upstream": "origin/codex/release-v111-integration"
+  },
+  "phase_boundaries": {
+    "active_absent": true,
+    "answer_model_invoked": false,
+    "main_untouched": true,
+    "o04_absent": true,
+    "previous_absent": true,
+    "promotion_absent": true
+  },
+  "schema": "legalbot.v111-phase1b-entry-state.v1",
+  "status": "verified"
+}

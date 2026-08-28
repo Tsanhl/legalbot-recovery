@@ -1,0 +1,126 @@
+{
+  "authorizing": false,
+  "captured_at": "2026-08-22T07:41:37Z",
+  "checkpoint": {
+    "commit": "5a0a573e0a4767dc545fc2bea1de6cf24a6634c9",
+    "tag": "v1.11-integration-baseline-20260822-r5",
+    "tree": "442f700f46bd9f7b6a4a275681067e30241d1402"
+  },
+  "diagnostic_method": {
+    "answer_model_invoked": false,
+    "candidate_mutated": false,
+    "full_r5_reattestation_repeated": false,
+    "gold_or_threshold_changed": false,
+    "method": "Read the immutable r5 attempt, replay lexical/vector fusion without scoring authority for the two misses, inspect admission decisions, then run the pinned reranker only on those two unchanged candidate pools after removing locator-only suppression for diagnosis.",
+    "ranking_depth_changed": false
+  },
+  "failed_attempt": {
+    "attempt_id": "3af133937ce43172a90f662c0af8a321",
+    "candidate_build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "completed_query_count": 24,
+    "failed_gates": [
+      "aggregate.positive_recall_at_10",
+      "aggregate.primary_must_hit_recall_at_5",
+      "development.positive_recall_at_10",
+      "development.primary_must_hit_recall_at_5",
+      "promotion.positive_recall_at_10",
+      "promotion.primary_must_hit_recall_at_5"
+    ],
+    "metrics": {
+      "development": {
+        "mrr": 0.90625,
+        "primary_must_hit_recall_at_5": 0.9375,
+        "recall_at_10": 0.9375,
+        "recall_at_5": 0.9375
+      },
+      "overall": {
+        "hit_at_10_count": 22,
+        "hit_at_5_count": 22,
+        "mrr": 0.8958333333333334,
+        "positive_count": 24,
+        "primary_must_hit_recall_at_5": 0.9166666666666666,
+        "recall_at_10": 0.9166666666666666,
+        "recall_at_5": 0.9166666666666666
+      },
+      "promotion": {
+        "mrr": 0.875,
+        "primary_must_hit_recall_at_5": 0.875,
+        "recall_at_10": 0.875,
+        "recall_at_5": 0.875
+      }
+    },
+    "report_file_sha256": "20e6c33fba9d772f4dcb7e33a74ae0daafc049c266ec618634fccc92ff4e95c1",
+    "report_path": "data/evaluations/retrieval/current-law-ew-full-fp16-v111-20260818-a/v1.1-reattest-attempt-5a0a573e0a4767dc-3af133937ce43172a90f662c0af8a321-result.json",
+    "report_payload_sha256": "e3e9dc3b8f1c777b6cd69682bed1ed32b980a081f5bdea2a4e788b47f8eafed6",
+    "report_self_seal_sha256": "a1d9f7f172ad39f197761aeb552dce3ff92e669b3c94b685d82863c37c80d60a",
+    "retrieval_call_count": 24,
+    "start_receipt_file_sha256": "2b9c219a9367c686bd204c2e49ac756cf8f8ef148b5f7cce8e6bc9d61a76f5c6"
+  },
+  "findings": {
+    "candidate_bound_date_applied": "2026-08-14",
+    "contamination": {
+      "private_path_hits": 0,
+      "teaching_or_assessment_hits": 0,
+      "wrong_version_hits": 0
+    },
+    "misses": [
+      {
+        "case_id": "dev-ola1957-s2",
+        "fused_gold_ranks": [
+          4,
+          6
+        ],
+        "gold_admitted_to_reranker": false,
+        "gold_ranks_after_content_aware_diagnostic": [
+          3,
+          4
+        ],
+        "vector_gold_ranks": [
+          1,
+          3
+        ]
+      },
+      {
+        "case_id": "prom-perpetuities-s5",
+        "fused_gold_ranks": [
+          12
+        ],
+        "gold_admitted_to_reranker": false,
+        "gold_ranks_after_content_aware_diagnostic": [
+          2
+        ],
+        "vector_gold_ranks": [
+          6
+        ]
+      }
+    ],
+    "root_cause": "The admission layer treated source plus locator, and the locator-derived ordinal, as a duplicate identity. Distinct atomic statutory proposition chunks commonly share one section locator, so the layer discarded the exact gold chunks before Qwen reranking even though fusion ranked them well inside the unchanged candidate pool.",
+    "stage": "pre-rerank admission / parent-child span handling"
+  },
+  "invariants_after_failure": {
+    "active_index_build_count": 0,
+    "active_pointer_absent": true,
+    "catalogue_sha256": "206932a63a647f59fa448beacc3c2b80022ebcde074a4e5fe370d6307ca73fcf",
+    "candidate_row_count": 1,
+    "passing_attestation_history_count": 0,
+    "previous_pointer_absent": true,
+    "queued_or_running_job_count": 0,
+    "selected_attestation_count": 0
+  },
+  "r6_correction": {
+    "candidate_rebuild_required": false,
+    "description": "Retain distinct chunks at the same legal coordinate and suppress only chunks from the same source/coordinate whose five-token shingles show at least 80 percent containment, while preserving the existing per-source cap and exact-content safeguard.",
+    "embedding_changed": false,
+    "filters_changed": false,
+    "fusion_changed": false,
+    "gold_changed": false,
+    "per_source_cap_changed": false,
+    "query_changed": false,
+    "reranker_changed": false,
+    "thresholds_changed": false,
+    "top_k_changed": false
+  },
+  "schema": "legalbot.v111-phase1c-r5-retrieval-diagnosis.v1",
+  "seal_sha256": "0cb6de37be335370df0bd82c9d922f1e136cba764d753d64a208584647ef9781",
+  "status": "diagnosed_for_new_checkpoint"
+}

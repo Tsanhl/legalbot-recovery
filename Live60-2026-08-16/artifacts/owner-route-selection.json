@@ -1,0 +1,28 @@
+{
+  "ai_role": "mechanical_preparation_only",
+  "as_of_date": "2026-08-16",
+  "coverage_only_issue_count": 280,
+  "current_dispositions": {
+    "knowledge_gap": 585,
+    "limited": 0,
+    "qualified": 0
+  },
+  "eligible_for_training": false,
+  "full_run_requirement": {
+    "coverage_only_issues_may_remain_knowledge_gap": true,
+    "selected_case_count": 30,
+    "selected_cases_must_be_qualified": 30,
+    "selected_issue_count": 305,
+    "selected_issues_must_have_positive_exact_spans": 305
+  },
+  "generation_authorised": false,
+  "gold_or_owner_seal_created": false,
+  "owner_instruction_recorded": true,
+  "route": "path_b",
+  "schema": "legalbot.live60-owner-route-selection.v1",
+  "suite_id": "live-evaluation-60-v1",
+  "target": "full_30_answer_run",
+  "training_export_allowed": false,
+  "writes_active": false,
+  "writes_o04": false
+}

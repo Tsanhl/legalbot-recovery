@@ -1,0 +1,148 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+
+# Node
+node_modules/
+web/.vinext/
+web/.next/
+web/dist/
+web/.wrangler/
+
+# Runtime data and secrets
+.env
+data/catalog.sqlite3*
+data/*.sqlite*
+data/*.db*
+data/.*.lock
+data/vault/
+data/indexes/
+data/answers/
+data/uploads/
+data/review_queue/gaps/*.json
+data/review_queue/verified-*.json
+data/review_queue/
+data/reports/
+data/evaluation/
+data/evaluations/
+data/quarantine/
+data/retrieval_telemetry/
+# Phase-2B unseen-custody prompt sources remain local-only.  Builders and
+# synthetic fixtures may be tracked, but exact unseen prompts must not enter
+# the ordinary Development repository even when the remote is private.
+scripts/phase2b_unseen_question_bank.py
+scripts/phase2b_common_public_enquiry_questions.py
+scripts/phase2b_expansion_preparation_questions.py
+# Owner-quality canary outputs contain readable released answers and private review data.
+data/evaluations/canary-output-review/
+!data/evaluations/live60/
+!data/evaluations/live60/CURRENT.json
+!data/evaluations/live60/issue-state.json
+!data/evaluations/live60/.gitkeep
+data/incidents/
+data/curation/
+data/backups/
+models/runtime/
+models/archive/
+models/retrieval/
+# Reproducible, project-local OCR environment and micromamba package cache.
+tools/ocr/
+tools/.micromamba/
+# Retained original interrupted Base download (archival input, never source code).
+Qwen3.5-9B-Base/
+# Runtime observability payloads (committed contract is Log/; alias -Log).
+logs/
+tmp/
+# Local licensed/private source vaults are indexed in place but are not
+# published with the application repository. Their hashes are sealed in a
+# separate data/source backup manifest; Git is not that backup.
+sources/
+
+# Disaster-recovery data snapshots and historical Git bundles are local-only.
+recovery/**/catalogue-backups/
+recovery/**/source-backup/
+recovery/**/*.bundle
+
+# Owner-review Word packs. Generate locally; do not publish in the source tree.
+*.docx
+
+# Owner final-check packs. JSON is the import surface; generate locally.
+LegalBot-Live60-Path-B-Final-Check-*/
+Live60-*/artifacts/owner-final-check*.json
+Live60-*/artifacts/path-b-final-check*.json
+
+# Path-B owner-review exports and encrypted previews are local, regenerable
+# working files. Only the privacy-safe route and authority contracts are tracked.
+Live60-*/artifacts/path-b-review-export*.json
+Live60-*/artifacts/path-b-reviewed-rows*.json
+Live60-*/artifacts/path-b-remaining-*.json
+Live60-*/artifacts/path-b-official-bind*.json
+Live60-*/artifacts/encrypted/
+Live60-*/artifacts/owner-decision-intake-draft*.json
+Live60-*/artifacts/owner-decision-intake-diff*.md
+Live60-*/artifacts/owner-decision-intake-migration*.json
+Live60-*/artifacts/owner-decisions-d1-d15-sealed*.json
+Live60-*/artifacts/contrary-authority-review-sealed*.json
+Live60-*/artifacts/path-b-overlay-reconstruction*.json
+Live60-*/artifacts/V1_TO_V2_MIGRATION.json
+Live60-*/artifacts/knowledge-gap-inventory.json
+Live60-*/artifacts/issue-ticks-draft.json
+Live60-*/artifacts/issue-decision-pack.json
+Live60-*/artifacts/owner-tick-application.json
+Live60-*/artifacts/expert-qualification-template.json
+Live60-*/artifacts/held-provision-chunks.json
+
+# Generated go-execution inventories, binaries, and source-folder listings.
+Live60-*/go-execution/*.xlsx
+Live60-*/go-execution/inputs/
+Live60-*/go-execution/law-folder-*.json
+Live60-*/go-execution/law-folder-*.csv
+Live60-*/go-execution/issue-candidate-evidence-map.json
+Live60-*/go-execution/issue-decision-pack.json
+Live60-*/go-execution/source-acquisition-manifest.json
+Live60-*/go-execution/official-judgment-download-inventory.json
+Live60-*/go-execution/url-outcome-report.csv
+Live60-*/go-execution/unresolved-source-report.csv
+Live60-*/go-execution/rights-and-licence-report.json
+Live60-*/go-execution/acquisition-followup.json
+Live60-*/go-execution/acquired-source-hash-map.json
+Live60-*/go-execution/missing-assessment-materials-queue.json
+Live60-*/go-execution/missing-legislation-staged.json
+Live60-*/go-execution/gap-materials-report.json
+Live60-*/go-execution/gap-materials-ingest.json
+Live60-*/go-execution/candidate-assessment-rules-*.json
+!Live60-2026-08-16/go-execution/candidate-assessment-rules-2026-08-16.json
+Live60-*/go-execution/held-span-catalogue-cleanup.json
+Live60-*/go-execution/legislation-effects-report.json
+
+# Owner Path-B review ledgers. Keep README and SHA256SUMS only.
+8-17 review/**/*.json
+8-17 review/**/*.csv
+!8-17 review/**/README.md
+!8-17 review/**/SHA256SUMS.txt
+
+# Dated implementation dumps. CURRENT_STATE.md remains the live document.
+docs/reports/*-2026-*.md
+docs/reports/*-2026-*.json
+!docs/reports/assessment-guidance-reaudit-2026-08-14.json
+!docs/reports/assessment-guidance-reaudit-application-2026-08-14.json
+!docs/reports/assessment-owner-decisions-application-2026-08-14.json
+
+# Generated owner/audit exports. Authoritative contracts and CURRENT_STATE.md
+# remain tracked; these local views are reproducible and may contain review notes.
+docs/reports/decision-pack-*.md
+docs/reports/architecture-inspection-facts-*.json
+docs/reports/offline-retrieval-vertical-slice-*.md
+docs/reports/retrieval-v1-freeze-*.md
+
+# Keep directory contracts in Git
+!data/**/.gitkeep
+!models/**/.gitkeep
+
+.DS_Store
+*.log

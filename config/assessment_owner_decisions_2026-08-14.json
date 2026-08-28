@@ -1,0 +1,93 @@
+{
+  "schema": "legalbot.assessment-owner-decisions.v1",
+  "version": "assessment-owner-decisions-2026-08-14",
+  "source_document_sha256": "19984c50774eebf76e4661569684c65c1ea19e446fa6d35886cd850908d7129d",
+  "reaudit_manifest_sha256": "faf6a5356b4fcbc69ffcbe7348e8170028ff32842791d9938c3884029dd649ed",
+  "source_document_content_included": false,
+  "owner_identity_included": false,
+  "resulting_bundle_version": "owner-standards-2026-08-14.1",
+  "decisions": [
+    {
+      "decision_id": "M01",
+      "disposition": "approve_exact_marker_mapping",
+      "original_rule_id": "assessment-canonical-case-synthesis-v1",
+      "source_rule_id": "assessment-rule-0515a8d4b3595f3d87e095cb661df096742feba6",
+      "source_span_sha256": "869dca10c23de859655330298e2e678160aa91f30b5ae9c66f80cf10241ca586",
+      "original_rule_text_sha256": "e46e18cf5bd969f8018f9fbb013f2f4ee74418f3ac327efc8492066683d477c7",
+      "runtime_rule": {
+        "rule_id": "assessment-canonical-case-synthesis-v1",
+        "source_span_hash": "869dca10c23de859655330298e2e678160aa91f30b5ae9c66f80cf10241ca586",
+        "grade_band": "50-59",
+        "criterion": "authority_accuracy",
+        "task_type": "essay",
+        "subject": null,
+        "positive_target": "Compare the material cases, identify agreement or tension between them, and explain how their relationship supports the thesis.",
+        "anti_pattern": "Do not discuss key authorities as isolated summaries; explain the relationship between the cases and make that synthesis central to the essay argument.",
+        "repair_action": "Compare the material cases, identify agreement or tension between them, and explain how their relationship supports the thesis.",
+        "verification_signal": "owner_approved_marker_mapping_v1"
+      }
+    },
+    {
+      "decision_id": "M02",
+      "disposition": "supersede_with_owner_policy",
+      "original_rule_id": "assessment-canonical-criminal-element-defence-v1",
+      "replacement_rule_id": "owner-amended-criminal-element-defence-v2",
+      "source_rule_id": "assessment-rule-73b981246ce7d058e3a20c5d6b913a008fa6b259",
+      "source_span_sha256": "16a99516338c713373f26f76745521012a8a57a7b6a01bab4bd6bdb470cfd06b",
+      "original_rule_text_sha256": "3318a0031cb821f3923e06e6dd428b5922c8802326192183d27ec6b1e650d007",
+      "runtime_rule": {
+        "rule_id": "owner-amended-criminal-element-defence-v2",
+        "source_span_hash": "6a2caf4b50f23c64240961158b6074242e7b34b33b8cd2680e70aa125abe2430",
+        "grade_band": "50-59",
+        "criterion": "issue_spotting",
+        "task_type": "problem",
+        "subject": "criminal",
+        "positive_target": "For each materially arguable offence, checklist its elements and factually raised defences; address every live item and expressly exclude only material alternatives. Do not add remote offences or defences merely to complete a generic list.",
+        "anti_pattern": "Do not omit an element of an offence materially raised by the facts, or a defence reasonably arising on the facts. Conclude on each live item or explain why it is not satisfied.",
+        "repair_action": "Build an offence-by-offence checklist, add a supported conclusion for each factually live element and defence, remove remote generic items, and repair only the affected section.",
+        "verification_signal": "owner_authored_policy_v1"
+      }
+    },
+    {
+      "decision_id": "M03",
+      "disposition": "supersede_with_owner_policy",
+      "original_rule_id": "assessment-canonical-question-engagement-v1",
+      "replacement_rule_id": "owner-amended-question-engagement-v2",
+      "source_rule_id": "assessment-rule-5f2f371e9b3687092bebb7207c562915a3edf94f",
+      "source_span_sha256": "8446e774c6cfb8c4c53c2a863deeaf9788bccaa7354deecc7d53c2b5af2768d1",
+      "original_rule_text_sha256": "837eb9b07745d109b9a1f270bcce0b7488aa7ad152a3ce74dca74b724ca5eee6",
+      "runtime_rule": {
+        "rule_id": "owner-amended-question-engagement-v2",
+        "source_span_hash": "85d56d7e4e90af6a469b80b4c534273d9855051cc7188237a8e348d85ee26fd5",
+        "grade_band": "50-59",
+        "criterion": "thesis",
+        "task_type": "any",
+        "subject": null,
+        "positive_target": "State the controlling thesis or issue-by-issue answer, then connect each section's conclusion to the precise question, party and outcome requested.",
+        "anti_pattern": "Do not write a legally relevant but question-neutral discussion; make every section advance an answer to the precise problem or proposition set.",
+        "repair_action": "Rewrite the controlling thesis or issue-by-issue answer and reconnect each affected section conclusion to the precise question, party and requested outcome without changing verified legal propositions.",
+        "verification_signal": "owner_authored_policy_v1"
+      }
+    },
+    {
+      "decision_id": "M04",
+      "disposition": "approve_exact_marker_mapping",
+      "original_rule_id": "assessment-canonical-timely-authority-support-v1",
+      "source_rule_id": "assessment-rule-1d9705c980d28350870922786f93430b8307b06f",
+      "source_span_sha256": "66b9db83516fa629e5d7cf425a16e077d4ef44d644635d8c01d48f3a6fa4799b",
+      "original_rule_text_sha256": "54e146dde72d3e9c41bb03729e643589a0afa727035e0595810daff7807742af",
+      "runtime_rule": {
+        "rule_id": "assessment-canonical-timely-authority-support-v1",
+        "source_span_hash": "66b9db83516fa629e5d7cf425a16e077d4ef44d644635d8c01d48f3a6fa4799b",
+        "grade_band": "60-69",
+        "criterion": "authority_accuracy",
+        "task_type": "any",
+        "subject": null,
+        "positive_target": "Add the relevant primary or approved secondary authority beside the material proposition and explain its relevance.",
+        "anti_pattern": "Support each material proposition with appropriate authority at the point where it is made; do not postpone essential references until a later section.",
+        "repair_action": "Add the relevant primary or approved secondary authority beside the material proposition and explain its relevance.",
+        "verification_signal": "owner_approved_marker_mapping_v1"
+      }
+    }
+  ]
+}

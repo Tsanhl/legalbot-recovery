@@ -1,0 +1,10 @@
+{
+  "archived_at": "2026-08-13",
+  "files": {
+    "v1.1.OWNER-REVIEW.md": "b5a0d298922fcdc366b0c309dfbfbc90c48db302b41ea185e89bee56942074dd",
+    "v1.1.json": "edb68c0e70f5024f15a96c3a7d757078774322d59df3c8865137c1f16e0a63af",
+    "v1.1.jsonl": "5b986f291eb178c5345ab3519513353b426d14925b3751d12c2949613d53bcc2"
+  },
+  "schema": "legalbot.retrieval-provisional-archive.v1",
+  "status": "superseded_by_owner_frozen_v1.1.1"
+}

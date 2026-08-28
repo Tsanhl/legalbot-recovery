@@ -1,0 +1,137 @@
+{
+  "ai_self_authored": false,
+  "as_of_date": "2026-08-16",
+  "decisions": [
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-01",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-02",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-03",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-04",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": true,
+      "id": "D-05",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": true,
+      "id": "D-06",
+      "later_owner_action": true,
+      "notes": null,
+      "state": "deferred_later_owner_action"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": true,
+      "id": "D-07",
+      "later_owner_action": true,
+      "notes": null,
+      "state": "deferred_later_owner_action"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": true,
+      "id": "D-08",
+      "later_owner_action": true,
+      "notes": null,
+      "state": "deferred_later_owner_action"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": true,
+      "id": "D-09",
+      "later_owner_action": true,
+      "notes": null,
+      "state": "deferred_later_owner_action"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-10",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-11",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-12",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-13",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-14",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    },
+    {
+      "cannot_be_done_by_ai": true,
+      "conditional": false,
+      "id": "D-15",
+      "later_owner_action": false,
+      "notes": null,
+      "state": "unsigned"
+    }
+  ],
+  "index_build_id": null,
+  "owner_authored": false,
+  "run_id": null,
+  "run_plan_sha256": null,
+  "schema": "legalbot.live60-owner-decisions.v1",
+  "seal_sha256": null,
+  "suite_id": "live-evaluation-60-v1",
+  "suite_registry_canonical_sha256": null,
+  "unsigned": true,
+  "writes_active": false,
+  "writes_o04": false
+}

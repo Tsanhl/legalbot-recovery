@@ -1,0 +1,380 @@
+{
+  "artifact_content_sha256": "66347360ff04266ad69d9fdd80d8cdfdc50c82387201335551e1e6dc6bde3fe9",
+  "counts": {
+    "bytes_placed": 3329523,
+    "complete_roots_placed": 4,
+    "data_quarantine_roots_placed": 0,
+    "files_placed": 25,
+    "package_checksum_members_independently_verified": 21,
+    "partial_roots_placed": 0
+  },
+  "destination_root": "work/posthead-replay-r6",
+  "excluded_roots": [
+    "data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-q53-semenya-substitute-quarantine-r1"
+  ],
+  "pre_placement_plan": {
+    "content_sha256": "a481edd14751fa2c3152c160fd2707ae3c75d2256753c83ae25ed6f50c5e5c45",
+    "file_sha256": "b705ff8de8efe6716f1292e5659f3004323d92c32d154e23da943b9b5a7a6a7e",
+    "path": "manifests/ignored-artifact-placement-r1/PRE-PLACEMENT-PLAN.json"
+  },
+  "roots": [
+    {
+      "file_count": 3,
+      "files": [
+        {
+          "mode": "0600",
+          "name": "AUTHORITYLESS-COHORT-59-REMEDIATION-ADVISORY-R4.json",
+          "sha256": "327450b2ce6d71cef38937b5de5eff80c5e2c3b1e6c5188005b29ad708206305",
+          "size": 702971
+        },
+        {
+          "mode": "0600",
+          "name": "PACKAGE-MANIFEST.json",
+          "sha256": "eaa3ca65bd5b1facf7309327a100ff45faf0b4e606d16320b0c5ca61c4bb5e33",
+          "size": 2765
+        },
+        {
+          "mode": "0600",
+          "name": "SHA256SUMS.txt",
+          "sha256": "9b536e223a1ac6431f7b9a5b8511cae16dd1dc1d8a63679c01ef25b64572109e",
+          "size": 207
+        }
+      ],
+      "package_checksum_verification": {
+        "checked_member_count": 2,
+        "checksum_file_sha256": "9b536e223a1ac6431f7b9a5b8511cae16dd1dc1d8a63679c01ef25b64572109e",
+        "members": [
+          {
+            "expected_sha256": "327450b2ce6d71cef38937b5de5eff80c5e2c3b1e6c5188005b29ad708206305",
+            "member": "AUTHORITYLESS-COHORT-59-REMEDIATION-ADVISORY-R4.json",
+            "observed_sha256": "327450b2ce6d71cef38937b5de5eff80c5e2c3b1e6c5188005b29ad708206305",
+            "passed": true
+          },
+          {
+            "expected_sha256": "eaa3ca65bd5b1facf7309327a100ff45faf0b4e606d16320b0c5ca61c4bb5e33",
+            "member": "PACKAGE-MANIFEST.json",
+            "observed_sha256": "eaa3ca65bd5b1facf7309327a100ff45faf0b4e606d16320b0c5ca61c4bb5e33",
+            "passed": true
+          }
+        ],
+        "status": "PASS"
+      },
+      "placement": "ATOMIC_RENAMEX_NP_RENAME_EXCL",
+      "status": "PASS",
+      "target_relative_to_r6": "data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-authorityless-cohort-59-remediation-advisory-r4"
+    },
+    {
+      "file_count": 5,
+      "files": [
+        {
+          "mode": "0600",
+          "name": "EXACT-28-ROW-SUBSTANTIVE-REMEDIATION-ADVISORY-R3.json",
+          "sha256": "aa2f1b10f712ba4f8799326e6047bbd253b65ee8780547ed121800fac89e5f3d",
+          "size": 299005
+        },
+        {
+          "mode": "0600",
+          "name": "NINE-PROPOSED-REPRESENTATION-BINDINGS-R3.json",
+          "sha256": "48bfdaa4bba29d2f5679e29d34252813558f2fba03ce68cc3ff818e565ef6b4f",
+          "size": 38671
+        },
+        {
+          "mode": "0600",
+          "name": "PACKAGE-MANIFEST.json",
+          "sha256": "cbd2b2aec49ee5c4890326c334875f0c233c2938d0495e72d036c5aee3273faa",
+          "size": 5619
+        },
+        {
+          "mode": "0600",
+          "name": "R2-TARGETED-AUDIT-NO-GO.json",
+          "sha256": "b734f29a1b4e590145eec7858989a981ecfffaa2502c38a5e1276e73f092c6f9",
+          "size": 5736
+        },
+        {
+          "mode": "0600",
+          "name": "SHA256SUMS.txt",
+          "sha256": "746fbe2fa13a419fe5c1dbc4bd1820cb7912a095753aae626408f37277b41188",
+          "size": 415
+        }
+      ],
+      "package_checksum_verification": {
+        "checked_member_count": 4,
+        "checksum_file_sha256": "746fbe2fa13a419fe5c1dbc4bd1820cb7912a095753aae626408f37277b41188",
+        "members": [
+          {
+            "expected_sha256": "aa2f1b10f712ba4f8799326e6047bbd253b65ee8780547ed121800fac89e5f3d",
+            "member": "EXACT-28-ROW-SUBSTANTIVE-REMEDIATION-ADVISORY-R3.json",
+            "observed_sha256": "aa2f1b10f712ba4f8799326e6047bbd253b65ee8780547ed121800fac89e5f3d",
+            "passed": true
+          },
+          {
+            "expected_sha256": "48bfdaa4bba29d2f5679e29d34252813558f2fba03ce68cc3ff818e565ef6b4f",
+            "member": "NINE-PROPOSED-REPRESENTATION-BINDINGS-R3.json",
+            "observed_sha256": "48bfdaa4bba29d2f5679e29d34252813558f2fba03ce68cc3ff818e565ef6b4f",
+            "passed": true
+          },
+          {
+            "expected_sha256": "cbd2b2aec49ee5c4890326c334875f0c233c2938d0495e72d036c5aee3273faa",
+            "member": "PACKAGE-MANIFEST.json",
+            "observed_sha256": "cbd2b2aec49ee5c4890326c334875f0c233c2938d0495e72d036c5aee3273faa",
+            "passed": true
+          },
+          {
+            "expected_sha256": "b734f29a1b4e590145eec7858989a981ecfffaa2502c38a5e1276e73f092c6f9",
+            "member": "R2-TARGETED-AUDIT-NO-GO.json",
+            "observed_sha256": "b734f29a1b4e590145eec7858989a981ecfffaa2502c38a5e1276e73f092c6f9",
+            "passed": true
+          }
+        ],
+        "status": "PASS"
+      },
+      "placement": "ATOMIC_RENAMEX_NP_RENAME_EXCL",
+      "status": "PASS",
+      "target_relative_to_r6": "data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-held-missing-28-substantive-remediation-advisory-r3"
+    },
+    {
+      "file_count": 12,
+      "files": [
+        {
+          "mode": "0600",
+          "name": "GOVUK-CANONICAL-DERIVATIVE-MANIFEST.json",
+          "sha256": "bc9e540d2348f77c6dc81663247487c361eaa15e958050a9ecd10ab50cfde00a",
+          "size": 9951
+        },
+        {
+          "mode": "0600",
+          "name": "PACKAGE-MANIFEST.json",
+          "sha256": "51a97b526421cff22de834e264a018c3df0c59386418239018968f4206662bee",
+          "size": 4377
+        },
+        {
+          "mode": "0600",
+          "name": "R2-HOLD-DISPOSITION-LEDGER-R5.json",
+          "sha256": "47d80f3a62bd5d6e1f50d89fb6020e438c4176c19da43c236c111a5a4f7ec749",
+          "size": 170054
+        },
+        {
+          "mode": "0600",
+          "name": "R4-NO-GO-CORRECTIVE-AUDIT-R5.json",
+          "sha256": "049857853ce7eac8b40db6d709bdc577a0d5ac9d90c1d8a461d581257bfc8183",
+          "size": 3448
+        },
+        {
+          "mode": "0600",
+          "name": "RESIDUAL-BLOCKER-LEDGER-R5.json",
+          "sha256": "ee357a2894e09980cef1e3e7dc391727ddfe3457c295a6d76f2d121dc0f6a295",
+          "size": 56215
+        },
+        {
+          "mode": "0600",
+          "name": "RETAINED-FULL-BYTE-SPAN-COVERAGE-LEDGER.json",
+          "sha256": "430d7f3eb86aefbabd927653353c0eddf468915e5bee12aba19ff96bd652855f",
+          "size": 191528
+        },
+        {
+          "mode": "0600",
+          "name": "SHA256SUMS.txt",
+          "sha256": "ca19311bd61ba37c533dd04607e9aaf11b1e018c98c1fb5349345b6bce6fef6d",
+          "size": 1171
+        },
+        {
+          "mode": "0600",
+          "name": "SOURCE-READY-59-CORRECTIVE-REMEDIATION-ADVISORY-R5.json",
+          "sha256": "45481c2fe89efbbb5916c6ddab5d86f6a74fbd02e3263bdd4ee2a9e1a7d48232",
+          "size": 347698
+        },
+        {
+          "mode": "0600",
+          "name": "govuk-canonical-0001-bc2002bbc93f3fd2f3a3.md",
+          "sha256": "bc2002bbc93f3fd2f3a3dac700aef4f8a8a14e202f972cc944add20d49a07229",
+          "size": 94260
+        },
+        {
+          "mode": "0600",
+          "name": "govuk-canonical-0002-9404012da59a60dc222b.md",
+          "sha256": "9404012da59a60dc222b7579b3b212fb17ef539e1d5b71298c6c4e91a3944cea",
+          "size": 237846
+        },
+        {
+          "mode": "0600",
+          "name": "govuk-canonical-0003-e4e013f708568192f8c8.md",
+          "sha256": "e4e013f708568192f8c88e6ecf1225bfd0f97a4135a8313f849fa72c9ed73797",
+          "size": 322647
+        },
+        {
+          "mode": "0600",
+          "name": "govuk-canonical-0004-153e6be1959afbc89aeb.md",
+          "sha256": "153e6be1959afbc89aeb77c676115ac16749a16692d149b19b0a3272d5b06662",
+          "size": 106834
+        }
+      ],
+      "package_checksum_verification": {
+        "checked_member_count": 11,
+        "checksum_file_sha256": "ca19311bd61ba37c533dd04607e9aaf11b1e018c98c1fb5349345b6bce6fef6d",
+        "members": [
+          {
+            "expected_sha256": "bc9e540d2348f77c6dc81663247487c361eaa15e958050a9ecd10ab50cfde00a",
+            "member": "GOVUK-CANONICAL-DERIVATIVE-MANIFEST.json",
+            "observed_sha256": "bc9e540d2348f77c6dc81663247487c361eaa15e958050a9ecd10ab50cfde00a",
+            "passed": true
+          },
+          {
+            "expected_sha256": "51a97b526421cff22de834e264a018c3df0c59386418239018968f4206662bee",
+            "member": "PACKAGE-MANIFEST.json",
+            "observed_sha256": "51a97b526421cff22de834e264a018c3df0c59386418239018968f4206662bee",
+            "passed": true
+          },
+          {
+            "expected_sha256": "47d80f3a62bd5d6e1f50d89fb6020e438c4176c19da43c236c111a5a4f7ec749",
+            "member": "R2-HOLD-DISPOSITION-LEDGER-R5.json",
+            "observed_sha256": "47d80f3a62bd5d6e1f50d89fb6020e438c4176c19da43c236c111a5a4f7ec749",
+            "passed": true
+          },
+          {
+            "expected_sha256": "049857853ce7eac8b40db6d709bdc577a0d5ac9d90c1d8a461d581257bfc8183",
+            "member": "R4-NO-GO-CORRECTIVE-AUDIT-R5.json",
+            "observed_sha256": "049857853ce7eac8b40db6d709bdc577a0d5ac9d90c1d8a461d581257bfc8183",
+            "passed": true
+          },
+          {
+            "expected_sha256": "ee357a2894e09980cef1e3e7dc391727ddfe3457c295a6d76f2d121dc0f6a295",
+            "member": "RESIDUAL-BLOCKER-LEDGER-R5.json",
+            "observed_sha256": "ee357a2894e09980cef1e3e7dc391727ddfe3457c295a6d76f2d121dc0f6a295",
+            "passed": true
+          },
+          {
+            "expected_sha256": "430d7f3eb86aefbabd927653353c0eddf468915e5bee12aba19ff96bd652855f",
+            "member": "RETAINED-FULL-BYTE-SPAN-COVERAGE-LEDGER.json",
+            "observed_sha256": "430d7f3eb86aefbabd927653353c0eddf468915e5bee12aba19ff96bd652855f",
+            "passed": true
+          },
+          {
+            "expected_sha256": "45481c2fe89efbbb5916c6ddab5d86f6a74fbd02e3263bdd4ee2a9e1a7d48232",
+            "member": "SOURCE-READY-59-CORRECTIVE-REMEDIATION-ADVISORY-R5.json",
+            "observed_sha256": "45481c2fe89efbbb5916c6ddab5d86f6a74fbd02e3263bdd4ee2a9e1a7d48232",
+            "passed": true
+          },
+          {
+            "expected_sha256": "bc2002bbc93f3fd2f3a3dac700aef4f8a8a14e202f972cc944add20d49a07229",
+            "member": "govuk-canonical-0001-bc2002bbc93f3fd2f3a3.md",
+            "observed_sha256": "bc2002bbc93f3fd2f3a3dac700aef4f8a8a14e202f972cc944add20d49a07229",
+            "passed": true
+          },
+          {
+            "expected_sha256": "9404012da59a60dc222b7579b3b212fb17ef539e1d5b71298c6c4e91a3944cea",
+            "member": "govuk-canonical-0002-9404012da59a60dc222b.md",
+            "observed_sha256": "9404012da59a60dc222b7579b3b212fb17ef539e1d5b71298c6c4e91a3944cea",
+            "passed": true
+          },
+          {
+            "expected_sha256": "e4e013f708568192f8c88e6ecf1225bfd0f97a4135a8313f849fa72c9ed73797",
+            "member": "govuk-canonical-0003-e4e013f708568192f8c8.md",
+            "observed_sha256": "e4e013f708568192f8c88e6ecf1225bfd0f97a4135a8313f849fa72c9ed73797",
+            "passed": true
+          },
+          {
+            "expected_sha256": "153e6be1959afbc89aeb77c676115ac16749a16692d149b19b0a3272d5b06662",
+            "member": "govuk-canonical-0004-153e6be1959afbc89aeb.md",
+            "observed_sha256": "153e6be1959afbc89aeb77c676115ac16749a16692d149b19b0a3272d5b06662",
+            "passed": true
+          }
+        ],
+        "status": "PASS"
+      },
+      "placement": "ATOMIC_RENAMEX_NP_RENAME_EXCL",
+      "status": "PASS",
+      "target_relative_to_r6": "data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-source-ready-59-corrective-advisory-r5"
+    },
+    {
+      "file_count": 5,
+      "files": [
+        {
+          "mode": "0600",
+          "name": "EXACT-146-ROW-FINITE-OUTCOME-CONTRACTS.json",
+          "sha256": "0cd3162c482287e443389dd23ffb4ed8c40774b441076b8e62e5f30b9a7ef4a0",
+          "size": 709863
+        },
+        {
+          "mode": "0600",
+          "name": "EXACT-PHASE2A-FINITE-REMEDIATION-OWNER-PACKET.json",
+          "sha256": "1775e034b680583df1e4b2e7e907798c2fba45efca00a2f033fdfdc2b46b0f3c",
+          "size": 11883
+        },
+        {
+          "mode": "0600",
+          "name": "OWNER-APPROVAL-PROMPT.txt",
+          "sha256": "b1d7ea6df721f59f301c95d5b63f371c73dc47681c7a062c904523f26d2ea0a9",
+          "size": 2336
+        },
+        {
+          "mode": "0600",
+          "name": "PACKAGE-MANIFEST.json",
+          "sha256": "4e12644f3c8c817a3874ed1fa048c09d1d06eb6a070a1ccaef9b85015b3059ae",
+          "size": 3616
+        },
+        {
+          "mode": "0600",
+          "name": "SHA256SUMS.txt",
+          "sha256": "a58919e89c6fdd71f2aafac0e739752d48e879b3eb26a65ee122055c6ae8b810",
+          "size": 407
+        }
+      ],
+      "package_checksum_verification": {
+        "checked_member_count": 4,
+        "checksum_file_sha256": "a58919e89c6fdd71f2aafac0e739752d48e879b3eb26a65ee122055c6ae8b810",
+        "members": [
+          {
+            "expected_sha256": "0cd3162c482287e443389dd23ffb4ed8c40774b441076b8e62e5f30b9a7ef4a0",
+            "member": "EXACT-146-ROW-FINITE-OUTCOME-CONTRACTS.json",
+            "observed_sha256": "0cd3162c482287e443389dd23ffb4ed8c40774b441076b8e62e5f30b9a7ef4a0",
+            "passed": true
+          },
+          {
+            "expected_sha256": "1775e034b680583df1e4b2e7e907798c2fba45efca00a2f033fdfdc2b46b0f3c",
+            "member": "EXACT-PHASE2A-FINITE-REMEDIATION-OWNER-PACKET.json",
+            "observed_sha256": "1775e034b680583df1e4b2e7e907798c2fba45efca00a2f033fdfdc2b46b0f3c",
+            "passed": true
+          },
+          {
+            "expected_sha256": "b1d7ea6df721f59f301c95d5b63f371c73dc47681c7a062c904523f26d2ea0a9",
+            "member": "OWNER-APPROVAL-PROMPT.txt",
+            "observed_sha256": "b1d7ea6df721f59f301c95d5b63f371c73dc47681c7a062c904523f26d2ea0a9",
+            "passed": true
+          },
+          {
+            "expected_sha256": "4e12644f3c8c817a3874ed1fa048c09d1d06eb6a070a1ccaef9b85015b3059ae",
+            "member": "PACKAGE-MANIFEST.json",
+            "observed_sha256": "4e12644f3c8c817a3874ed1fa048c09d1d06eb6a070a1ccaef9b85015b3059ae",
+            "passed": true
+          }
+        ],
+        "status": "PASS"
+      },
+      "placement": "ATOMIC_RENAMEX_NP_RENAME_EXCL",
+      "status": "PASS",
+      "target_relative_to_r6": "data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-finite-remediation-owner-packet-r3"
+    }
+  ],
+  "safety": {
+    "active_or_previous_written": false,
+    "atomic_root_publication": true,
+    "candidate_build_run": false,
+    "checksum_mismatches": 0,
+    "damaged_integration_modified": false,
+    "data_quarantine_placed": false,
+    "embedding_run": false,
+    "index_run": false,
+    "kernel_no_replace": true,
+    "legalbot_new_modified": false,
+    "live_activation_run": false,
+    "model_call_run": false,
+    "partial_q53_placed": false,
+    "phase2a_run": false,
+    "phase2b_run": false,
+    "qualification_run": false,
+    "source_scan_run": false,
+    "target_collisions": 0
+  },
+  "schema": "legalbot.disaster-recovery.ignored-artifact-placement.v1",
+  "status": "PASS_FOUR_COMPLETE_ROOTS_PLACED_PARTIAL_Q53_EXCLUDED"
+}

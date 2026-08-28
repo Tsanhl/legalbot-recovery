@@ -1,0 +1,31 @@
+{
+  "accounted_file_count": 3581,
+  "code_sha": "d66c14c4931b4388ca6f5b0f67cf6d1d5971166e",
+  "completed_at": "2026-08-17T13:06:10.865553+00:00",
+  "expected_file_count": 3581,
+  "manifest_sha256": "e9481cf1dd43b2c1cb60cdf3929fe20b483347c57331396ee853a313c861c322",
+  "quarantine_count": 75,
+  "quarantine_reason_code": "processing_policy_rollback_refused",
+  "quarantine_reason_counts": {
+    "parse_failed": 9,
+    "processing_policy_rollback_refused": 65,
+    "symlink_not_followed": 1
+  },
+  "rollback_quarantine_count": 65,
+  "scan_id": "a6200da832c587e7",
+  "schema": "legalbot.source-scan-attestation.v1",
+  "seal_sha256": "47cbdeef120ca5fa89b28ec8b650cedaaeeac220ef59b923cb17bb772f254729",
+  "source_root_count": 3,
+  "status": "complete",
+  "superseded_scan_ids": [
+    "adf960e9-629e-4d07-8a39-aa7c9e7bced6",
+    "84d676d6-cd48-437d-85f1-16e57e524cb0",
+    "c6bcff512ce6f3e3",
+    "3062376d6de9b104",
+    "778acf8bce94fc02",
+    "7d7d2101e9e12200",
+    "6987785b9d45a21f"
+  ],
+  "writes_active": false,
+  "writes_o04": false
+}

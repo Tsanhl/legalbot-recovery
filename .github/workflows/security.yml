@@ -1,0 +1,19 @@
+name: Security
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Scan executable workflow steps
+        run: python3 scripts/security/check_workflow_policy.py
+      - name: Confirm repository-boundary note exists
+        run: test -f docs/security/repository-boundary.md

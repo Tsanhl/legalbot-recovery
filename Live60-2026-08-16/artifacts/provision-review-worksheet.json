@@ -1,0 +1,131 @@
+{
+  "ai_cannot_seal_gold": true,
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "approval_reviewer_ref": "reviewer:df8f9b06eb9dd93ea8a81184c96fc702e25a3d268da92646450f1f4e864defe8",
+  "approval_reviewer_role": "legal_reviewer",
+  "decision": "return_hold",
+  "eligible_for_training": false,
+  "independent_second_review_status": "not_required",
+  "note": "official-page ticks recorded; 585 issues remain knowledge_gap; overlay not sealed",
+  "o04_authorised": false,
+  "primary_reviewer_is_owner": true,
+  "provisions": [
+    {
+      "authority_identity_id": "ukpga:1980:58",
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "companion_provisions": [],
+      "difference_class": "fetch_disabled",
+      "disposition": "current_official_bytes_accepted",
+      "document_content_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "held_id": "held-provision-01",
+      "legal_locator": "section 2",
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/1980/58/section/2/data.xml",
+      "owner_commencement_tick": "1981-05-01_except_s35",
+      "owner_effects_tick": "recorded_application_and_companion_not_text_amendment",
+      "owner_extent_tick": "E+W",
+      "owner_qualify_tick": "current_official_bytes_accepted",
+      "proposed_commencement": "1981-05-01_except_s35_see_s41",
+      "proposed_extent": "E+W",
+      "proposed_unapplied_effects": [
+        "dmcca_2024_s234_4_applies_LA_1980_to_consumer_redress_as_simple_contract_still_prospective_on_official_page",
+        "crime_and_policing_act_2026_s96_inserts_s11ZA_s11ZB_not_part_of_s2"
+      ],
+      "qualified": true,
+      "source_version_id": "source-version-165ec3c1938f1ef2414b767ee444c80321b3d5eb",
+      "structural_defect_count": 0,
+      "title": "Limitation Act 1980 section 2"
+    },
+    {
+      "authority_identity_id": "ukpga:1980:58",
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "companion_provisions": [
+        "limitation_act_1980_s14B_fifteen_year_longstop_not_part_of_s14A"
+      ],
+      "difference_class": "fetch_disabled",
+      "disposition": "current_official_bytes_accepted",
+      "document_content_sha256": "bca5969ce0cd667f59741cf8d1edd2feb9b76512b12a49fafedcf521d89924df",
+      "held_id": "held-provision-02",
+      "legal_locator": "section 14A",
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/1980/58/section/14A/data.xml",
+      "owner_commencement_tick": "in_force",
+      "owner_effects_tick": "s14B_companion_not_in_span;_s234_4_prospective_application",
+      "owner_extent_tick": "E+W",
+      "owner_qualify_tick": "current_official_bytes_accepted_using_repair_spans",
+      "proposed_commencement": "in_force_as_part_of_limitation_act_1980",
+      "proposed_extent": "E+W",
+      "proposed_unapplied_effects": [
+        "dmcca_2024_s234_4_applies_LA_1980_to_consumer_redress_as_simple_contract_still_prospective_on_official_page",
+        "crime_and_policing_act_2026_s96_4_amends_s14B_not_s14A"
+      ],
+      "qualified": true,
+      "source_version_id": "source-version-165ec3c1938f1ef2414b767ee444c80321b3d5eb",
+      "structural_defect_count": 1,
+      "title": "Limitation Act 1980 section 14A"
+    },
+    {
+      "authority_identity_id": "ukpga:2000:29",
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "companion_provisions": [
+        "trustee_act_2000_schedule_1_when_duty_applies"
+      ],
+      "difference_class": "fetch_disabled",
+      "disposition": "current_official_bytes_accepted",
+      "document_content_sha256": "ebafb72d8bfbc8dfc0430d6f4b778cf31740c5c0c16f047a9ffef3b76073b612",
+      "held_id": "held-provision-03",
+      "legal_locator": "section 1",
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/2000/29/section/1/data.xml",
+      "owner_commencement_tick": "2001-02-01",
+      "owner_effects_tick": "none_on_s1_page;_schedule_1_companion",
+      "owner_extent_tick": "E+W",
+      "owner_qualify_tick": "current_official_bytes_accepted",
+      "proposed_commencement": "2001-02-01_SI_2001_49",
+      "proposed_extent": "E+W_principally_see_s42_4",
+      "proposed_unapplied_effects": [
+        "none_recorded_on_official_s1_page"
+      ],
+      "qualified": true,
+      "source_version_id": "source-version-da8a52df46f1ac2f4de4775b103b292cf09b0615",
+      "structural_defect_count": 0,
+      "title": "Trustee Act 2000 section 1"
+    },
+    {
+      "authority_identity_id": "ukpga:1975:63",
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "companion_provisions": [],
+      "difference_class": "fetch_disabled",
+      "disposition": "current_official_bytes_accepted",
+      "document_content_sha256": "1311476a3ec00bf00e1f6602f10520407785a8354d6d8fe5d86865270f66578a",
+      "held_id": "held-provision-04",
+      "legal_locator": "section 1",
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/1975/63/section/1/data.xml",
+      "owner_commencement_tick": "1976-04-01",
+      "owner_effects_tick": "FLA_1996_sch8_para27_2_prospective_s1_2_a",
+      "owner_extent_tick": "E+W",
+      "owner_qualify_tick": "current_official_bytes_accepted_using_repair_spans",
+      "proposed_commencement": "1976-04-01_see_s27",
+      "proposed_extent": "E+W",
+      "proposed_unapplied_effects": [
+        "family_law_act_1996_sch8_para27_2_prospective_on_s1_2_a_not_in_force"
+      ],
+      "qualified": true,
+      "source_version_id": "source-version-f08689990adf41acb4bc811a881a066e4105ee04",
+      "structural_defect_count": 3,
+      "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+    }
+  ],
+  "schema": "legalbot.live60-provision-review-worksheet.v1",
+  "seals_expert_gold": false,
+  "training_export_allowed": false
+}

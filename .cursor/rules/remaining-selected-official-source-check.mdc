@@ -1,0 +1,28 @@
+---
+description: Official-source internet fact-check for remaining selected Live60 issues
+alwaysApply: true
+---
+
+# Remaining selected-issue official-source checks
+
+When the owner is checking the remaining selected Path-B issues (currently 293 knowledge gaps), agents and subagents **must** use the internet on official sources. Do not wait for a local quote if an official page can be fetched.
+
+## Allowed network work
+
+- Open and fetch `https://www.legislation.gov.uk/` (including `/data.xml` where needed).
+- Open and fetch Find Case Law at `https://caselaw.nationalarchives.gov.uk/`.
+- Download official XML/HTML into the configured source roots so local catalogue bytes can be compared.
+- Use WebSearch, WebFetch, or the browser tools for those hosts.
+- Cloud or local subagents doing this check must be allowed network access to those hosts.
+
+## What still is not gold
+
+- Downloaded or searched text is a candidate only.
+- Gold still requires an exact local catalogue or accepted v2-repair match: source version, chunk, locator, and SHA-256.
+- Commentary, blogs, Wikipedia, and unpaid summaries are not authority spans.
+- Do not invent later treatment for case law from a web page. `confirmed_current` / `qualified_current` remain owner later-treatment findings. `qualified_current` still needs limiting-authority IDs.
+- AI remains `mechanical_accuracy_verifier_only`. AI is not `legal_reviewer` and cannot seal overlay, ACTIVE, or O-04.
+
+## Clean room
+
+Do not import the old project. The only permitted old-project path is its `New_materials` document directory.

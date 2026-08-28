@@ -1,0 +1,63 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-official-source-plan.v1",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "targets": [
+    {
+      "target_id": "currentness-mental-capacity-act-commencement-no-2-2007",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "uksi:2007:1897",
+      "source_title": "Mental Capacity Act 2005 (Commencement No. 2) Order 2007",
+      "official_url": "https://www.legislation.gov.uk/uksi/2007/1897/2026-08-14/data.xml",
+      "required_locators": [
+        "article-2"
+      ],
+      "affected_rows": [
+        "live30-q20:issue-01",
+        "live30-q20:issue-03"
+      ],
+      "research_reason": "Verify commencement of the Mental Capacity Act 2005 provisions used for capacity and treatment propositions at the target date. This source is currentness evidence only and is not automatically admitted or indexed."
+    },
+    {
+      "target_id": "currentness-procurement-act-commencement-no-3-2024",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "uksi:2024:716",
+      "source_title": "Procurement Act 2023 (Commencement No. 3 and Transitional and Saving Provisions) Regulations 2024",
+      "official_url": "https://www.legislation.gov.uk/uksi/2024/716/2026-08-14/data.xml",
+      "required_locators": [
+        "regulation-2",
+        "schedule-1"
+      ],
+      "affected_rows": [
+        "live30-q21:issue-01",
+        "live30-q21:issue-05",
+        "live30-q21:issue-06",
+        "live30-q21:issue-07",
+        "live30-q21:issue-08"
+      ],
+      "research_reason": "Verify the Procurement Act 2023 commencement date and transitional boundary before proposing current-law proposition bindings. This source is currentness evidence only and is not automatically admitted or indexed."
+    },
+    {
+      "target_id": "currentness-data-use-access-act-commencement-no-6-2026",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "uksi:2026:82",
+      "source_title": "Data (Use and Access) Act 2025 (Commencement No. 6 and Transitional and Saving Provisions) Regulations 2026",
+      "official_url": "https://www.legislation.gov.uk/uksi/2026/82/2026-08-14/data.xml",
+      "required_locators": [
+        "regulation-2",
+        "regulation-5"
+      ],
+      "affected_rows": [
+        "live30-q23:issue-03",
+        "live60-q46:issue-04"
+      ],
+      "research_reason": "Verify commencement and the decision-date transition for section 80 automated-decision amendments at the target date. This source is currentness evidence only and is not automatically admitted or indexed."
+    }
+  ],
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

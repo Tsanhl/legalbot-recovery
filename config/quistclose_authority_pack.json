@@ -1,0 +1,238 @@
+{
+  "schema": "legalbot.quistclose-authority-pack.v1",
+  "version": "official-quistclose-core-2026-08-14",
+  "as_of_date": "2026-08-14",
+  "purpose": "A bounded, reviewed official-authority pack for the current English law of Quistclose trusts and its proprietary-remedy limits.",
+  "product_scope": {
+    "jurisdiction": "England and Wales",
+    "subject": "trusts",
+    "default_currentness_status": "historical",
+    "subsequent_treatment_check_required": true
+  },
+  "licences": {
+    "uk_parliament_opl_v3": {
+      "name": "Open Parliament Licence",
+      "version": "3.0",
+      "url": "https://www.parliament.uk/site-information/copyright-parliament/open-parliament-licence/",
+      "publisher": "UK Parliament",
+      "required_attribution": "Contains Parliamentary information licensed under the Open Parliament Licence v3.0.",
+      "terms_snapshot": {
+        "kind": "browser_rendered_official_html_snapshot",
+        "safe_filename": "parliament-opl-v3.htm",
+        "sha256": "3575edb2dcb041076bb24a1037154435076230e9e0265b6debfb9ed8402ac5de",
+        "bytes": 113429
+      },
+      "verification_markers": [
+        "worldwide, royalty-free, perpetual, non-exclusive licence",
+        "copy, publish, distribute and transmit",
+        "commercially and non-commercially"
+      ]
+    },
+    "uksc_ogl_v3": {
+      "name": "Open Government Licence",
+      "version": "3.0",
+      "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+      "terms_url": "https://www.supremecourt.uk/about/terms-and-conditions",
+      "publisher": "UK Supreme Court",
+      "required_attribution": "Contains public sector information licensed under the Open Government Licence v3.0.",
+      "terms_snapshot": {
+        "kind": "browser_rendered_official_html_snapshot",
+        "safe_filename": "uksc-terms.htm",
+        "sha256": "274a553d2747c4f1e71b23f884d632722eecbb4f7553e9b07a60df46d65a9b45",
+        "bytes": 108073
+      },
+      "verification_markers": [
+        "Crown copyright",
+        "Open Government Licence",
+        "reproduced accurately and not in a misleading context"
+      ]
+    }
+  },
+  "items": [
+    {
+      "authority_id": "neutral-citation:[2002] UKHL 12",
+      "case_id": "ukhl-2002-12",
+      "case_name": "Twinsectra Ltd v Yardley",
+      "neutral_citation": "[2002] UKHL 12",
+      "decision_date": "2002-03-21",
+      "court": "House of Lords",
+      "publisher": "UK Parliament",
+      "licence_id": "uk_parliament_opl_v3",
+      "official_case_url": "https://publications.parliament.uk/pa/ld200102/ldjudgmt/jd020321/yardle-1.htm",
+      "representations": [
+        {
+          "representation_id": "ukhl-2002-12-part-1",
+          "kind": "browser_rendered_official_html_snapshot",
+          "official_url": "https://publications.parliament.uk/pa/ld200102/ldjudgmt/jd020321/yardle-1.htm",
+          "safe_filename": "twinsectra-ukhl-12-part-1.htm",
+          "sha256": "810ca3ae4e1029452920896474df4287d8b49d8ff85c13404e3c71052a2bc377",
+          "bytes": 41975
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-2",
+          "kind": "browser_rendered_official_html_snapshot",
+          "official_url": "https://publications.parliament.uk/pa/ld200102/ldjudgmt/jd020321/yardle-2.htm",
+          "safe_filename": "twinsectra-ukhl-12-part-2.htm",
+          "sha256": "4d9732ffa27f2e0026c20b612c1d9f247259e69489f1616549e9de0bf2859b8e",
+          "bytes": 41690
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-3",
+          "kind": "browser_rendered_official_html_snapshot",
+          "official_url": "https://publications.parliament.uk/pa/ld200102/ldjudgmt/jd020321/yardle-3.htm",
+          "safe_filename": "twinsectra-ukhl-12-part-3.htm",
+          "sha256": "1225902ad64637511320d151f05c0b14b63868baf3046fdeb7987f2241eefc61",
+          "bytes": 41967
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-4",
+          "kind": "browser_rendered_official_html_snapshot",
+          "official_url": "https://publications.parliament.uk/pa/ld200102/ldjudgmt/jd020321/yardle-4.htm",
+          "safe_filename": "twinsectra-ukhl-12-part-4.htm",
+          "sha256": "5501957611780e367add5376863b54dd663d7b7036dffef9b06e625a8eac8fe6",
+          "bytes": 41799
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-5",
+          "kind": "browser_rendered_official_html_snapshot",
+          "official_url": "https://publications.parliament.uk/pa/ld200102/ldjudgmt/jd020321/yardle-5.htm",
+          "safe_filename": "twinsectra-ukhl-12-part-5.htm",
+          "sha256": "2e0abad37483b4d2e3325ce4073a2a08f40f0906363f99d165ba518fff612be4",
+          "bytes": 29957
+        }
+      ],
+      "reviewed_passages": [
+        {
+          "representation_id": "ukhl-2002-12-part-1",
+          "locator": "[12]-[17]",
+          "legal_role": "holding_ratio",
+          "issues": ["restricted-purpose undertaking", "certainty", "intention assessed objectively"],
+          "review_note": "Lord Hoffmann's reasons sustaining the trust: no free disposal, sufficiently certain purpose, and objective construction of the undertaking."
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-3",
+          "locator": "[68]-[76]",
+          "legal_role": "holding_ratio",
+          "issues": ["specific purpose", "free disposal test", "requirements for creation"],
+          "review_note": "Lord Millett applies the established restricted-purpose test and agrees that the undertaking created a trust."
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-3",
+          "locator": "[77]-[95]",
+          "legal_role": "obiter",
+          "issues": ["theoretical nature of Quistclose trust", "location of beneficial interest"],
+          "review_note": "The extended taxonomy and beneficial-interest analysis goes beyond what was necessary to uphold the trust and is conservatively labelled obiter."
+        },
+        {
+          "representation_id": "ukhl-2002-12-part-4",
+          "locator": "[96]-[100]",
+          "legal_role": "obiter",
+          "issues": ["resulting-trust analysis", "beneficial interest retained by lender"],
+          "review_note": "Lord Millett's preferred theoretical explanation is important but is not treated as a majority ratio."
+        }
+      ]
+    },
+    {
+      "authority_id": "neutral-citation:[2015] UKSC 66",
+      "case_id": "uksc-2013-0171",
+      "case_name": "Bank of Cyprus UK Ltd v Menelaou",
+      "neutral_citation": "[2015] UKSC 66",
+      "decision_date": "2015-11-04",
+      "court": "UK Supreme Court",
+      "publisher": "UK Supreme Court",
+      "licence_id": "uksc_ogl_v3",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2013-0171",
+      "representations": [
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "kind": "official_pdf",
+          "official_url": "https://supremecourt.uk/uploads/uksc_2013_0171_judgment_2d8e4e3ca4.pdf",
+          "safe_filename": "bank-of-cyprus-v-menelaou-uksc-66.pdf",
+          "sha256": "a28a4407fe320a1ecb8e5a0ef76e2d9e8f79efaaf2a1428c99b6e8fc96eeeb0b",
+          "bytes": 378763
+        }
+      ],
+      "reviewed_passages": [
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "locator": "[53]",
+          "legal_role": "obiter",
+          "issues": ["security interest unnecessary to result"],
+          "review_note": "Lord Clarke expressly says it is unnecessary to decide the security-interest question."
+        },
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "locator": "[94]-[99]",
+          "legal_role": "holding_ratio",
+          "issues": ["proprietary subrogation", "unjust enrichment"],
+          "review_note": "Part of Lord Neuberger's majority reasoning sustaining the Bank's subrogation remedy, distinct from the alternative Quistclose analysis."
+        },
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "locator": "[100]-[104]",
+          "legal_role": "obiter",
+          "issues": ["alternative proprietary interest", "Quistclose not necessary"],
+          "review_note": "A simpler alternative route considered on limited argument; it was not necessary to the majority's subrogation conclusion."
+        },
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "locator": "[105]",
+          "legal_role": "holding_ratio",
+          "issues": ["disposition of appeal", "subrogation remedy"],
+          "review_note": "The majority disposition expressly rests on the unjust-enrichment claim reflected in subrogation to the unpaid vendor's lien."
+        },
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "locator": "[106]",
+          "legal_role": "obiter",
+          "issues": ["provisional proprietary-interest view"],
+          "review_note": "Lord Neuberger expressly describes this view as provisional."
+        },
+        {
+          "representation_id": "uksc-2013-0171-judgment",
+          "locator": "[133]-[139]",
+          "legal_role": "obiter",
+          "issues": ["alternative Quistclose route", "solicitor undertaking", "beneficial ownership"],
+          "review_note": "Lord Carnwath's concurring alternative route is conservatively labelled obiter because the appeal was resolved by the majority on subrogation."
+        }
+      ]
+    },
+    {
+      "authority_id": "neutral-citation:[2016] UKSC 47",
+      "case_id": "uksc-2014-0106",
+      "case_name": "Bailey v Angove’s Pty Ltd",
+      "neutral_citation": "[2016] UKSC 47",
+      "decision_date": "2016-07-27",
+      "court": "UK Supreme Court",
+      "publisher": "UK Supreme Court",
+      "licence_id": "uksc_ogl_v3",
+      "official_case_url": "https://www.supremecourt.uk/cases/uksc-2014-0106",
+      "representations": [
+        {
+          "representation_id": "uksc-2014-0106-judgment",
+          "kind": "official_pdf",
+          "official_url": "https://supremecourt.uk/uploads/uksc_2014_0106_judgment_154fbf6c02.pdf",
+          "safe_filename": "bailey-v-angoves-uksc-47.pdf",
+          "sha256": "b58438b6ce578c56914279f18431ae5a666c0289e5eaf7b75a42eef23ddd43c0",
+          "bytes": 293724
+        }
+      ],
+      "reviewed_passages": [
+        {
+          "representation_id": "uksc-2014-0106-judgment",
+          "locator": "[24]-[31]",
+          "legal_role": "holding_ratio",
+          "issues": ["no constructive trust", "insolvency distribution", "identifiable trust property", "limits of proprietary restitution"],
+          "review_note": "Lord Sumption's reasons for rejecting the constructive trust and defining the minimum conditions for a proprietary restitutionary claim."
+        },
+        {
+          "representation_id": "uksc-2014-0106-judgment",
+          "locator": "[32]",
+          "legal_role": "obiter",
+          "issues": ["possible mistake claim"],
+          "review_note": "The judgment states that this alternative argument does not arise on the facts."
+        }
+      ]
+    }
+  ]
+}

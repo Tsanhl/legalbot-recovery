@@ -1,0 +1,133 @@
+{
+  "as_of_date": "2026-08-14",
+  "automatic_embedding": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "bulk_search": false,
+  "candidate_mutated": false,
+  "owner_outcomes_applied": false,
+  "phase2b_authorized": false,
+  "purpose": "TARGETED_NON_BULK_EXACT_CITATION_LATER_TREATMENT_FOR_DIRECT_READY_ROWS",
+  "schema": "legalbot.v111.phase2a.direct-hold-later-treatment-plan.v1",
+  "source_ceiling_date": "2026-08-14",
+  "source_queue_content_sha256": "155af28ca81bb6848a875fab8173e0f646339282d695d2ae61edece143bda7a5",
+  "targets": [
+    {
+      "candidates": [
+        {
+          "advisory_relationship": "AFFIRMED_IDENTIFIABLE_PROPERTY_AND_NON_GENERAL_ASSETS",
+          "candidate_existing": true,
+          "exact_paragraph_ids": [
+            "para_83",
+            "para_91",
+            "para_93"
+          ],
+          "neutral_citation": "[2023] UKSC 51",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2023/51/data.xml",
+          "title": "Byers and others v Saudi National Bank"
+        },
+        {
+          "advisory_relationship": "AFFIRMED_NO_REMEDIAL_CONSTRUCTIVE_TRUST",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_84",
+            "para_86"
+          ],
+          "neutral_citation": "[2025] EWCA Civ 906",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/ewca/civ/2025/906/data.xml",
+          "title": "Dilip Desai and another v Paul David Wood and another"
+        },
+        {
+          "advisory_relationship": "AFFIRMED_INSTITUTIONAL_NOT_REMEDIAL_CONSTRUCTIVE_TRUST",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_121",
+            "para_123"
+          ],
+          "neutral_citation": "[2025] UKSC 28",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2025/28/data.xml",
+          "title": "Stevens v Hotel Portfolio II UK Ltd (In Liquidation) and another"
+        }
+      ],
+      "recommended_owner_outcome": "AFFIRMED_FOR_SELECTED_IDENTIFIABLE_PROPERTY_PROPOSITION",
+      "row_ids": [
+        "live60-q38:issue-07"
+      ],
+      "target_neutral_citation": "[2016] UKSC 47"
+    },
+    {
+      "candidates": [
+        {
+          "advisory_relationship": "AFFIRMED_CLEAR_EXPLICIT_WORDS_AND_DISTINGUISHED_LATER_PARTIAL_OUSTER",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_30",
+            "para_31"
+          ],
+          "neutral_citation": "[2023] EWCA Civ 1337",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/ewca/civ/2023/1337/data.xml",
+          "title": "LA (Albania) v Upper Tribunal (Immigration and Asylum Chamber)"
+        },
+        {
+          "advisory_relationship": "APPLIED_STRONG_PRESUMPTION_AGAINST_COMPLETE_OUSTER",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_79",
+            "para_80"
+          ],
+          "neutral_citation": "[2026] EWHC 2043 (Admin)",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/ewhc/admin/2026/2043/data.xml",
+          "title": "Bayswater Support Group and others v Health Research Authority and another"
+        }
+      ],
+      "recommended_owner_outcome": "AFFIRMED_HISTORICAL_MAJORITY_HOLDING_WITH_LATER_STATUTORY_DISTINCTION",
+      "row_ids": [
+        "live30-q09:issue-07"
+      ],
+      "target_neutral_citation": "[2019] UKSC 22"
+    },
+    {
+      "candidates": [
+        {
+          "advisory_relationship": "AFFIRMED_NON_MATRIMONIAL_PROPERTY_EXCLUDED_FROM_SHARING_PRINCIPLE",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_37"
+          ],
+          "neutral_citation": "[2026] EWHC 1501 (Ch)",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/ewhc/ch/2026/1501/data.xml",
+          "title": "Sarah Jane Thirsk v Henry Stamford Thirsk and others"
+        }
+      ],
+      "recommended_owner_outcome": "AFFIRMED_FOR_SELECTED_NON_MATRIMONIAL_SHARING_PROPOSITION",
+      "row_ids": [
+        "live30-q11:issue-02"
+      ],
+      "target_neutral_citation": "[2025] UKSC 26"
+    },
+    {
+      "candidates": [
+        {
+          "advisory_relationship": "DISTINCT_REGULATED_SEGREGATED_CLIENT_MONEY_CONTEXT_NOT_MATERIAL_TREATMENT_OF_SELECTED_PROPOSITION",
+          "candidate_existing": false,
+          "exact_paragraph_ids": [
+            "para_58",
+            "para_59",
+            "para_60",
+            "para_61",
+            "para_63"
+          ],
+          "neutral_citation": "[2025] EWHC 3079 (Comm)",
+          "official_url": "https://caselaw.nationalarchives.gov.uk/ewhc/comm/2025/3079/data.xml",
+          "title": "Beneathco DMCC v RJ O'Brien Limited"
+        }
+      ],
+      "recommended_owner_outcome": "NO_ADVERSE_TREATMENT_IDENTIFIED_IN_BOUNDED_EXACT_CITATION_RESULTS_RETAIN_UKPC_PERSUASIVE_CAVEAT",
+      "row_ids": [
+        "live60-q60:issue-04"
+      ],
+      "target_neutral_citation": "[2022] UKPC 8"
+    }
+  ],
+  "technical_qualification_assigned": false
+}

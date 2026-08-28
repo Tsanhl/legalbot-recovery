@@ -1,0 +1,69 @@
+{
+  "companion_not_in_span": [
+    "limitation_act_1980_s14B_fifteen_year_longstop_not_part_of_s14A",
+    "trustee_act_2000_schedule_1_applications_of_duty_of_care"
+  ],
+  "decision": "return_hold",
+  "defect_count": 4,
+  "defects": [
+    {
+      "chunk_id": "chunk-73fd50b82133e6bd94542a9e1d78ae5b06f91987",
+      "defect_codes": [
+        "non_contiguous_s14A_10_chapeau_spliced_with_final_proviso"
+      ],
+      "gold_eligible_candidate": false,
+      "held_id": "held-provision-02",
+      "ordinal": 161,
+      "repair_action": "fresh_contiguous_rechunk_required",
+      "required_sublocator": "malformed_non_contiguous_s14A(10)_replace",
+      "title": "Limitation Act 1980 section 14A"
+    },
+    {
+      "chunk_id": "chunk-65e1c2ac95885e5e8e9d65e5ae138b5b6fbcde0a",
+      "defect_codes": [
+        "non_contiguous_ipfda_s1_1_chapeau_spliced_with_concluding_words"
+      ],
+      "gold_eligible_candidate": false,
+      "held_id": "held-provision-04",
+      "ordinal": 1,
+      "repair_action": "fresh_contiguous_rechunk_required",
+      "required_sublocator": "replace_with_s1(1)_chapeau_and_post_list_concluding_span",
+      "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+    },
+    {
+      "chunk_id": "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+      "defect_codes": [
+        "editorial_ellipsis_mixed_into_positive_text"
+      ],
+      "gold_eligible_candidate": false,
+      "held_id": "held-provision-04",
+      "ordinal": 4,
+      "repair_action": "fresh_contiguous_rechunk_required",
+      "required_sublocator": "s 1(1)(ba)_retain_annotation_separately",
+      "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+    },
+    {
+      "chunk_id": "chunk-0bdcbc97ae11975ac1032cc3c6974aeaad9e43a7",
+      "defect_codes": [
+        "repealed_or_omitted_editorial_marker"
+      ],
+      "gold_eligible_candidate": false,
+      "held_id": "held-provision-04",
+      "ordinal": 11,
+      "repair_action": "fresh_contiguous_rechunk_required",
+      "required_sublocator": "repealed_or_omitted_s1(1B)_exclude",
+      "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+    }
+  ],
+  "eligible_for_training": false,
+  "known_hard_defects": [
+    "non_contiguous_s14A_10_chapeau_spliced_with_final_proviso",
+    "non_contiguous_ipfda_s1_1_chapeau_spliced_with_concluding_words",
+    "repealed_or_omitted_editorial_marker",
+    "editorial_ellipsis_mixed_into_positive_text"
+  ],
+  "schema": "legalbot.live60-held-span-structural-defects.v1",
+  "seals_expert_gold": false,
+  "suite_id": "live-evaluation-60-v1",
+  "training_export_allowed": false
+}

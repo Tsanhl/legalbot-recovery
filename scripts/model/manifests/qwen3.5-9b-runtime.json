@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "source_repo": "mlx-community/Qwen3.5-9B-4bit",
+  "revision": "8b2b98c00a6b4d291155e4890773ca8f769aee53",
+  "runtime_directory": "models/runtime/Qwen3.5-9B-4bit",
+  "post_trained": true,
+  "quantization_bits": 4,
+  "python": "3.13",
+  "download": {
+    "disable_xet": true,
+    "max_workers": 1
+  },
+  "required_files": [
+    "README.md",
+    "chat_template.jinja",
+    "config.json",
+    "model.safetensors.index.json",
+    "tokenizer.json",
+    "tokenizer_config.json"
+  ]
+}

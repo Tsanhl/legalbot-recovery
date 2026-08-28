@@ -1,0 +1,42 @@
+{
+  "mismatch_count": 0,
+  "previously_coerced_full_enquiry_case_ids": [
+    "live30-q11",
+    "live30-q13",
+    "live30-q15",
+    "live30-q16",
+    "live30-q18",
+    "live30-q20",
+    "live30-q21",
+    "live30-q23",
+    "live30-q25",
+    "live30-q26",
+    "live30-q27",
+    "live30-q28",
+    "live30-q29",
+    "live30-q30",
+    "live60-q43",
+    "live60-q44",
+    "live60-q46",
+    "live60-q47",
+    "live60-q49",
+    "live60-q51",
+    "live60-q52",
+    "live60-q54",
+    "live60-q55",
+    "live60-q57",
+    "live60-q58",
+    "live60-q59",
+    "live60-q60"
+  ],
+  "research_route_counts": {
+    "full_enquiry": 27,
+    "sectioned": 33
+  },
+  "route_field_used": "expected_research_route",
+  "schema": "legalbot.live60-route-integrity-verified.v1",
+  "selected_research_route_counts": {
+    "full_enquiry": 15,
+    "sectioned": 15
+  }
+}

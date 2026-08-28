@@ -1,0 +1,81 @@
+{
+  "benchmark_id": "legalbot-retrieval-v1",
+  "checkpoint_sha": "c0e7381c3c67cf95edfaff0c5dab201c9fa8a1c2",
+  "families": [
+    "exact_statute",
+    "case_name",
+    "id_only",
+    "entity_substitution",
+    "faithful_paraphrase",
+    "mixed_lexical_semantic",
+    "terminology_synonym",
+    "multi_authority",
+    "currentness",
+    "source_span_provenance",
+    "negative_out_of_scope",
+    "wrong_jurisdiction",
+    "clarification",
+    "evidence_limited",
+    "teaching_not_authority",
+    "zero_hit"
+  ],
+  "families_covered_in_development": [
+    "case_name",
+    "clarification",
+    "currentness",
+    "entity_substitution",
+    "evidence_limited",
+    "exact_statute",
+    "faithful_paraphrase",
+    "id_only",
+    "mixed_lexical_semantic",
+    "multi_authority",
+    "negative_out_of_scope",
+    "source_span_provenance",
+    "teaching_not_authority",
+    "terminology_synonym",
+    "wrong_jurisdiction",
+    "zero_hit"
+  ],
+  "fcl_full_text": "excluded",
+  "gold_policy": "Positive expected_source_id and proposition_anchor taken from approved catalogue current/latest-available legislation or OGL UKSC. No invented gold. No gold answer prose on negative rows.",
+  "holdout_policy": "Store holdout query text in v1.jsonl with split=adversarial_holdout. Runners must not use holdout for tuning. Do not open holdout until the candidate is frozen.",
+  "jsonl_path": "benchmarks/retrieval/v1.jsonl",
+  "jsonl_sha256": "00f632ef0f296f23bb81226dc9fd921f5c17b3c2511edc02e03e043e4a3f583b",
+  "leakage": {
+    "findings": [],
+    "passed": true,
+    "rule": "promotion/holdout must not be ID-only, entity-substitution, or paraphrase of development queries"
+  },
+  "legal_confirmation_needed_ids": [
+    "dev-case-name-triple-point",
+    "dev-id-only-unison",
+    "dev-multi-ca2006-directors",
+    "dev-wrong-jurisdiction-ucta-scotland",
+    "dev-clarification-limitation-bare",
+    "dev-evidence-limited-fcl",
+    "dev-teaching-not-authority",
+    "prom-case-name-uber",
+    "prom-multi-cra-quality-fitness",
+    "prom-wrong-jurisdiction-children-ni",
+    "prom-clarification-duty-bare",
+    "prom-evidence-limited-unreported",
+    "hold-case-name-cavendish",
+    "hold-wrong-jurisdiction-eqa-scotland"
+  ],
+  "owner_review_status": "provisional_assistant",
+  "polarity_counts": {
+    "negative": 13,
+    "positive": 19
+  },
+  "query_count": 32,
+  "schema": "legalbot.retrieval-benchmark-v1-summary.v1",
+  "split_counts": {
+    "adversarial_holdout": 8,
+    "development": 16,
+    "promotion": 8
+  },
+  "status": "draft_provisional_assistant",
+  "teaching_as_authority": "forbidden",
+  "version": "1.0.0"
+}

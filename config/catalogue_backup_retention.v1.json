@@ -1,0 +1,11 @@
+{
+  "schema": "legalbot.catalogue-backup-retention-policy.v1",
+  "authorizing": false,
+  "automatic_deletion_allowed": false,
+  "minimum_full_backups_after_prune": 2,
+  "retain_newest_full_backups": 2,
+  "require_newest_restore_drill_passed": true,
+  "require_actual_sha256_verification_before_prune": true,
+  "recoverable_trash_required": true,
+  "permanent_trash_emptying_is_separate_user_action": true
+}

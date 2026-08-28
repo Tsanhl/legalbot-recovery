@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.e2e-case-index.v1",
+  "title": "LegalBot privacy-safe append-only E2E case index entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "entry_id", "timestamp", "run_id", "case_id", "question_sha256",
+    "status", "artifact_id"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.e2e-case-index.v1" },
+    "entry_id": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "run_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$" },
+    "case_id": { "type": "string", "pattern": "^live30-q(?:0[1-9]|[12][0-9]|30)$" },
+    "question_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "status": {
+      "enum": [
+        "created", "queued", "running", "complete", "verified_limited",
+        "held_for_review", "system_error", "cancelled"
+      ]
+    },
+    "artifact_id": { "type": ["string", "null"] }
+  }
+}

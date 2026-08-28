@@ -1,0 +1,27 @@
+{
+  "schema": "legalbot.provision-verification.v1",
+  "version": "1.0.0",
+  "verified_at": "2026-08-13",
+  "jurisdiction": "England and Wales",
+  "method": "official_legislation_current_section_xml",
+  "records": [
+    {"stable_source_id":"ukpga:1977:50:latest-available@2026-08-12","legal_locator":"section 2","official_source_url":"https://www.legislation.gov.uk/ukpga/1977/50/section/2","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1977:50:latest-available@2026-08-12","legal_locator":"section 3","official_source_url":"https://www.legislation.gov.uk/ukpga/1977/50/section/3","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1999:31:latest-available@2026-08-12","legal_locator":"section 1","official_source_url":"https://www.legislation.gov.uk/ukpga/1999/31/section/1","verified_extent":"E+W+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1979:54:latest-available@2026-08-12","legal_locator":"section 14","official_source_url":"https://www.legislation.gov.uk/ukpga/1979/54/section/14","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1982:29:latest-available@2026-08-12","legal_locator":"section 13","official_source_url":"https://www.legislation.gov.uk/ukpga/1982/29/section/13","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:Geo6:6-7:40:latest-available@2026-08-12","legal_locator":"section 1","official_source_url":"https://www.legislation.gov.uk/ukpga/Geo6/6-7/40/section/1","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1987:43:latest-available@2026-08-12","legal_locator":"section 2","official_source_url":"https://www.legislation.gov.uk/ukpga/1987/43/section/2","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1980:58:latest-available@2026-08-12","legal_locator":"section 2","official_source_url":"https://www.legislation.gov.uk/ukpga/1980/58/section/2","verified_extent":"E+W+N.I.","section_unapplied_effect_count":1,"unapplied_effect_materiality":"not_material_to_queried_proposition"},
+    {"stable_source_id":"ukpga:1980:58:latest-available@2026-08-12","legal_locator":"section 14A","official_source_url":"https://www.legislation.gov.uk/ukpga/1980/58/section/14A","verified_extent":"E+W+N.I.","section_unapplied_effect_count":1,"unapplied_effect_materiality":"not_material_to_queried_proposition"},
+    {"stable_source_id":"ukpga:1984:3:latest-available@2026-08-12","legal_locator":"section 1","official_source_url":"https://www.legislation.gov.uk/ukpga/1984/3/section/1","verified_extent":"E+W","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:Eliz2:5-6:31:latest-available@2026-08-12","legal_locator":"section 2","official_source_url":"https://www.legislation.gov.uk/ukpga/Eliz2/5-6/31/section/2","verified_extent":"E+W+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:2000:29:latest-available@2026-08-12","legal_locator":"section 1","official_source_url":"https://www.legislation.gov.uk/ukpga/2000/29/section/1","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:2009:18:latest-available@2026-08-12","legal_locator":"section 5","official_source_url":"https://www.legislation.gov.uk/ukpga/2009/18/section/5","verified_extent":"E+W","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:Eliz2:6-7:53:latest-available@2026-08-12","legal_locator":"section 1","official_source_url":"https://www.legislation.gov.uk/ukpga/Eliz2/6-7/53/section/1","verified_extent":"E+W+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:1975:63:latest-available@2026-08-12","legal_locator":"section 1","official_source_url":"https://www.legislation.gov.uk/ukpga/1975/63/section/1","verified_extent":"E+W","section_unapplied_effect_count":2,"unapplied_effect_materiality":"not_material_to_queried_proposition"},
+    {"stable_source_id":"ukpga:1982:53:latest-available@2026-08-12","legal_locator":"section 20","official_source_url":"https://www.legislation.gov.uk/ukpga/1982/53/section/20","verified_extent":"E+W+S+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:Geo5:15-16:23:latest-available@2026-08-12","legal_locator":"section 46","official_source_url":"https://www.legislation.gov.uk/ukpga/Geo5/15-16/23/section/46","verified_extent":"E+W","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"},
+    {"stable_source_id":"ukpga:Will4and1Vict:7:26:latest-available@2026-08-12","legal_locator":"section 9","official_source_url":"https://www.legislation.gov.uk/ukpga/Will4and1Vict/7/26/section/9","verified_extent":"E+W+N.I.","section_unapplied_effect_count":0,"unapplied_effect_materiality":"none_recorded"}
+  ]
+}

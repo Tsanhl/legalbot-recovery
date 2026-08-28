@@ -1,0 +1,43 @@
+{
+  "schema": "legalbot.scholarship-pack.v1",
+  "version": "quistclose-scholarship-2026-08-12",
+  "items": [
+    {
+      "sha256": "a9f37df4afb91243c34a0f639fbc46eb21f4ff6b12a0f98fca5be0e8d9347a49",
+      "stable_identifier": "doi:10.14324/111.2052-1871.001",
+      "canonical_url": "https://doi.org/10.14324/111.2052-1871.001",
+      "source_date": "2013-01-01",
+      "licence_name": "Open-access copy from UCL Discovery",
+      "licence_url": "https://discovery.ucl.ac.uk/1470677/",
+      "citation_data": {
+        "source_type": "journal",
+        "author": "Brandon Dominic Chan",
+        "title": "The Enigma of the Quistclose Trust",
+        "year": "2013",
+        "year_format": "round",
+        "volume": "2",
+        "issue": "1",
+        "journal": "UCL Journal of Law and Jurisprudence",
+        "first_page": "1"
+      }
+    },
+    {
+      "sha256": "bddb76d00de79813dc58e493ddf01757893ceb7eae25c0373adb0135460fd042",
+      "stable_identifier": "ouulj:2017:6:1:56",
+      "canonical_url": "https://www.law.ox.ac.uk/sites/files/oxlaw/field/field_document/koh_6th_edition_vol_1.pdf",
+      "source_date": "2017-01-01",
+      "licence_name": "Owner-supplied copy; local educational use",
+      "citation_data": {
+        "source_type": "journal",
+        "author": "Nathalie Koh Jia En",
+        "title": "Once More Unto the Breach: The Quistclose Trust Revisited",
+        "year": "2017",
+        "year_format": "round",
+        "volume": "6",
+        "issue": "1",
+        "journal": "Oxford University Undergraduate Law Journal",
+        "first_page": "56"
+      }
+    }
+  ]
+}

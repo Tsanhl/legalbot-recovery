@@ -1,0 +1,11 @@
+{
+  "schema": "legalbot.retrieval-benchmark-archive.v1",
+  "version": "1.0.0",
+  "status": "superseded_invalidated_for_promotion",
+  "historical_jsonl": "benchmarks/retrieval/v1.jsonl",
+  "historical_jsonl_sha256": "00f632ef0f296f23bb81226dc9fd921f5c17b3c2511edc02e03e043e4a3f583b",
+  "reason": "Mixed positive ranking with A2 behaviour rows, used implementation chunk assumptions, and was never owner-frozen.",
+  "current_replacement": "benchmarks/retrieval/v1.1.jsonl",
+  "loader_eligible": false,
+  "promotion_eligible": false
+}

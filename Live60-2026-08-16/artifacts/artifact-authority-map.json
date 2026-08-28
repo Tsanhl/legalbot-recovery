@@ -1,0 +1,94 @@
+{
+  "as_of_date": "2026-08-16",
+  "authoritative_control_plane": {
+    "issue_dispositions": "Live60-2026-08-16/artifacts/owner-tick-application.json",
+    "issue_progress": "Live60-2026-08-16/artifacts/owner-tick-progress.json",
+    "remaining_gates": "Live60-2026-08-16/artifacts/remaining-gate-attempts.json",
+    "remaining_full_run": "Live60-2026-08-16/artifacts/full-run-remaining-status.json",
+    "route_selection": "Live60-2026-08-16/artifacts/owner-route-selection.json",
+    "run_identity": "Live60-2026-08-16/go-execution/superseding-run-identity.json",
+    "v1_to_v2_migration": "Live60-2026-08-16/artifacts/V1_TO_V2_MIGRATION.json",
+    "current_state_resolver": "legalbot.live60-current-state-report.v2"
+  },
+  "current_issue_state": {
+    "knowledge_gap": 508,
+    "limited": 0,
+    "qualified": 77,
+    "spans_bound": 200,
+    "reviewed_rows_sha256": "e06d7f1179d58824c16ce2e45cbf46dcdce64365d69652729255738b9ddb1d2d"
+  },
+  "eligible_for_training": false,
+  "historical_aliases": [
+    {
+      "alias": "Live60-2026-08-16/go-execution/run-identity-reconciliation.json",
+      "authoritative_target": "Live60-2026-08-16/go-execution/superseding-run-identity.json",
+      "byte_identical": true,
+      "retain_for_audit": true
+    }
+  ],
+  "local_only_regenerable": [
+    "Live60-2026-08-16/artifacts/path-b-review-export.json",
+    "Live60-2026-08-16/artifacts/path-b-reviewed-rows.json",
+    "Live60-2026-08-16/artifacts/encrypted/live60-review-export-2026-08-16.preview.enc",
+    "Live60-2026-08-16/artifacts/owner-decision-intake-draft.json",
+    "Live60-2026-08-16/artifacts/owner-decision-intake-diff.md",
+    "Live60-2026-08-16/artifacts/owner-decision-intake-migration.json"
+  ],
+  "held_span_repair_current": "Live60-2026-08-16/artifacts/held-span-contiguous-repair-v2.json",
+  "held_span_repair_v1_audit_only": "Live60-2026-08-16/artifacts/held-span-contiguous-repair.json",
+  "path_b_remaining_status": "Live60-2026-08-16/artifacts/full-run-remaining-status.json",
+  "path_b_remaining_blockers": [
+    "owner_evidence_reviews_absent",
+    "selected_qualified_case_count_not_30",
+    "selected_issues_missing_positive_exact_spans",
+    "contrary_review_missing_or_unsealed",
+    "owner_decisions_missing_or_unsealed",
+    "held_statutes_still_hold",
+    "overlay_not_sealable",
+    "no_sealed_ranking_gold_overlay",
+    "no_current_date_rights_qualified_candidate"
+  ],
+  "schema": "legalbot.live60-artifact-authority-map.v1",
+  "suite_id": "live-evaluation-60-v1",
+  "superseded_snapshots": [
+    {
+      "current_authority": "canonical_reviewed_rows_import",
+      "historical_counts": {
+        "knowledge_gap": 585,
+        "limited": 0,
+        "qualified": 0,
+        "spans_bound": 0
+      },
+      "location": "Live60-2026-08-16/artifacts/owner-tick-progress.json",
+      "reason": "stale_pre_import_snapshot_must_not_override_77_of_508",
+      "retain_for_audit": true
+    },
+    {
+      "current_authority": "Live60-2026-08-16/artifacts/owner-tick-progress.json",
+      "historical_counts": {
+        "knowledge_gap": 142,
+        "limited": 180,
+        "qualified": 263,
+        "spans_bound": 443
+      },
+      "location": "Live60-2026-08-16/go-execution/gap-materials-report.json#tick_progress",
+      "reason": "generic_catalogue_presence_was_not_issue_specific_gold",
+      "retain_for_audit": true
+    },
+    {
+      "current_authority": "Live60-2026-08-16/artifacts/owner-tick-progress.json",
+      "historical_counts": {
+        "knowledge_gap": 272,
+        "limited": 50,
+        "qualified": 263,
+        "spans_bound": 313
+      },
+      "location": "Live60-2026-08-16/go-execution/owner-delegated-application.json#ticks",
+      "reason": "delegated_mechanical_draft_was_not_owner_adopted_gold",
+      "retain_for_audit": true
+    }
+  ],
+  "training_export_allowed": false,
+  "writes_active": false,
+  "writes_o04": false
+}

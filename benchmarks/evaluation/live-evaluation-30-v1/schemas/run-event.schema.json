@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.e2e-run-event.v1",
+  "title": "LegalBot privacy-safe E2E run event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "event_id", "timestamp", "run_id", "case_id", "event_type",
+    "stage", "status", "duration_ms", "attempt", "artifact_id", "error_code"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.e2e-run-event.v1" },
+    "event_id": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "run_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$" },
+    "case_id": { "type": ["string", "null"] },
+    "event_type": {
+      "enum": [
+        "run_created", "case_registered", "case_started", "stage_completed",
+        "artifact_stored", "case_completed", "case_failed", "issue_logged",
+        "knowledge_gap_logged", "run_completed"
+      ]
+    },
+    "stage": {
+      "enum": [
+        "run", "intake", "routing", "retrieval", "evidence_freeze", "drafting",
+        "verification", "repair", "assembly", "release", "human_review"
+      ]
+    },
+    "status": {
+      "enum": [
+        "created", "queued", "running", "complete", "verified_limited",
+        "held_for_review", "system_error", "cancelled"
+      ]
+    },
+    "duration_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "attempt": { "type": ["integer", "null"], "minimum": 1 },
+    "artifact_id": { "type": ["string", "null"] },
+    "error_code": { "type": ["string", "null"] }
+  }
+}

@@ -1,0 +1,27 @@
+schema: legalbot.current-law-slice-policy.v1
+version: 1.0.0
+corpus_id: current-law-ew-core-slice-v1
+jurisdiction: England and Wales
+
+# This selects a legal domain, not documents named by benchmark answers.
+# Every approved authority satisfying this policy is eligible, so plausible
+# distractors remain in the slice.
+subjects:
+  - commercial
+  - consumer
+  - contract
+  - professional negligence
+  - public and constitutional
+  - trusts
+  - wills and succession
+source_families:
+  - legislation
+  - uksc
+approved_only: true
+authority_lane_only: true
+latest_available_legislation_only: true
+include_historical_as_enacted: false
+exclude_find_case_law_full_text: true
+max_source_body_chunks: 1000
+locator_allowlists: false
+benchmark_case_ids_used_for_selection: false

@@ -1,0 +1,123 @@
+{
+  "gates": [
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/superseding-run-identity.json",
+      "gate": "run identity",
+      "observed": "50d967c4d490a05527fb5610b2eae19014005c22092210ec6b23f92582e41241",
+      "required": "one reconciled frozen suite identity",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "benchmarks/evaluation/live-evaluation-60-v1/manifest.json",
+      "gate": "question integrity",
+      "observed": "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a",
+      "required": "frozen registry hashes match manifest",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/issue-decision-pack.json",
+      "gate": "route integrity",
+      "observed": "{\"full_enquiry\": 27, \"sectioned\": 33}",
+      "required": "33/27 research routes; selected 15/15",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/law-folder-index-audit.xlsx",
+      "gate": "Law-folder audit",
+      "observed": "3005 files; unindexed_relevant=0",
+      "required": "complete inventory vs catalogue",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/source-acquisition-manifest.json",
+      "gate": "source acquisition",
+      "observed": "{\"already_indexed_and_redownloaded\": 43, \"dead_or_failed\": 4, \"downloaded_not_yet_ingested\": 115, \"duplicate\": 3, \"metadata_only\": 3, \"rights_hold\": 3, \"rights_hold_public_representation\": 117, \"unresolved_no_url\": 32}",
+      "required": "recorded outcome for every map URL",
+      "status": "PARTIAL"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/rights-and-licence-report.json",
+      "gate": "rights",
+      "observed": "holds recorded; body not promoted",
+      "required": "no unlicensed body in retrieval",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/four-statute-pack.json",
+      "gate": "four statutes",
+      "observed": "qualified=False",
+      "required": "official bytes + contiguous repair + owner qualification",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/case-proposition-currentness-records.json",
+      "gate": "case currentness",
+      "observed": "not_completed",
+      "required": "proposition-level later treatment",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/issue-candidate-evidence-map.json",
+      "gate": "issue qualification",
+      "observed": "qualified=0 knowledge_gap=585",
+      "required": "585 owner-ticked exact spans",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "data/evaluations/expert-qualification.json",
+      "gate": "overlay seal",
+      "observed": "False",
+      "required": "sealed expert-qualification.json",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/stage-a-report.json",
+      "gate": "Stage A",
+      "observed": "not_run_zero_qualified_issues",
+      "required": "Recall@5=100%; Recall@10>=95%; MRR>=0.80 on qualified gold",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "data/indexes/ACTIVE.json",
+      "gate": "ACTIVE",
+      "observed": "False",
+      "required": "owner-promoted pointer",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "data/indexes/PREVIOUS.json",
+      "gate": "PREVIOUS",
+      "observed": "False",
+      "required": "valid previous pointer after promotion",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/rollback-repromotion-report.json",
+      "gate": "rollback",
+      "observed": "not_run_no_active",
+      "required": "rollback and re-promotion proof",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/browser-recovery-report.json",
+      "gate": "browser recovery",
+      "observed": "not_run_no_active",
+      "required": "real localhost drill",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "data/reports/production-readiness.json",
+      "gate": "readiness",
+      "observed": "not_green",
+      "required": "ready=true and empty blocking gates",
+      "status": "HOLD"
+    },
+    {
+      "evidence_path": "Live60-2026-08-16/go-execution/owner-go-o04-pack.json",
+      "gate": "O-04",
+      "observed": "not_issued",
+      "required": "owner authorisation of exact 30 IDs",
+      "status": "HOLD"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "schema": "legalbot.pensions-seminar-gap-official-judgment-plan.v1",
+  "version": "pensions-seminar-gap-2026-08-26-v2",
+  "jurisdiction": "United Kingdom",
+  "download_date": "2026-08-26",
+  "parent_legislation_plan": {
+    "version": "pensions-seminar-gap-2026-08-26-v1",
+    "file_sha256": "03df6e8fd383650b29add1db32f3e332005dcb4ae20e6da5688bfcae1190f382"
+  },
+  "source_root_relative_directory": "Official Legislation/seminar-gap-official-2026-08-26/judgments",
+  "source": "https://caselaw.nationalarchives.gov.uk/",
+  "licence_review_status": "official_record_downloaded_for_legal_research_owner_review_required_before_corpus_admission",
+  "teaching_lane_use": "issue_discovery_only_never_legal_authority",
+  "targets": [
+    {
+      "authority_identity": "[2005] EWCA Civ 1004",
+      "source_title": "Aon Trust Corporation Ltd v KPMG (A Firm) & Ors",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewca/civ/2005/1004/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/ewca-civ-2005-1004-data.xml",
+      "content_sha256": "bb8b7f33b27572f247291cb088b5777635ef9a57c453201a1884d33cf3c7c2ec",
+      "byte_count": 213520,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2010] EWCA Civ 990",
+      "source_title": "NS, R (on the application of) v Secretary of State for the Home Department",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewca/civ/2010/990/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/ewca-civ-2010-990-data.xml",
+      "content_sha256": "e18d9e6dd550758220e44d5bda5972db3ac8c06ba21c7af6d4fe69c2584957e1",
+      "byte_count": 17207,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2011] UKSC 45",
+      "source_title": "R (on the application of Quila and another) v Secretary of State for the Home Department",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2011/45/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/uksc-2011-45-data.xml",
+      "content_sha256": "d393df05751202de88655410701857bf22a3dd5a36b98b8b22d1e3a8dc1b6696",
+      "byte_count": 172098,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2012] EWHC 570 (Ch)",
+      "source_title": "Danks & Ors v Qinetiq Holdings Ltd & Anor",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewhc/ch/2012/570/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/ewhc-ch-2012-570-data.xml",
+      "content_sha256": "abcff06413a0b90acaa0ee1ec9499050683e8462801d8bc74d146fa033caeac1",
+      "byte_count": 162117,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2013] UKSC 39",
+      "source_title": "Bank Mellat v Her Majesty's Treasury (No 2)",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2013/39/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/uksc-2013-39-data.xml",
+      "content_sha256": "84f65311948d95c42e329c4215e0884b9bee62d6851cfecdd2e3cb372e96d841",
+      "byte_count": 292689,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2017] UKSC 8",
+      "source_title": "In the matter of an application by Denise Brewster for Judicial Review (Northern Ireland)",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2017/8/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/uksc-2017-8-data.xml",
+      "content_sha256": "9a81666e4b5bb63184ff878d22e112f5b8aa13da1ca0577b7f1ef6108d354ed5",
+      "byte_count": 102614,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2017] UKSC 47",
+      "source_title": "Walker v Innospec Limited and others",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2017/47/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/uksc-2017-47-data.xml",
+      "content_sha256": "e0198de9c419240f07c2b82cd13957670fd26a7edb33498a965249c72a0118be",
+      "byte_count": 113975,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2018] EWCA Civ 1533",
+      "source_title": "British Airways Plc v Airways Pension Scheme Trustee Ltd",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewca/civ/2018/1533/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/ewca-civ-2018-1533-data.xml",
+      "content_sha256": "4be4e63741a555587aa76f111f0a1da6c3ea42010e802e0ccf8992a5031b0331",
+      "byte_count": 175664,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2019] UKSC 52",
+      "source_title": "RR v Secretary of State for Work and Pensions",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/uksc/2019/52/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/uksc-2019-52-data.xml",
+      "content_sha256": "09e677bf0e52c64c0085d9354d6bebe8a50ed6c21e7cb059646746ce09d8fb9b",
+      "byte_count": 65971,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2023] EWHC 1965 (Ch)",
+      "source_title": "BBC v BBC Pension Trust Limited & Anor",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewhc/ch/2023/1965/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/ewhc-ch-2023-1965-data.xml",
+      "content_sha256": "949700da66e3f7f29c61e4de60cd4f8f3eb80b9380e63407ade0976d1d559d08",
+      "byte_count": 159224,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    },
+    {
+      "authority_identity": "[2024] EWCA Civ 767",
+      "source_title": "BBC v BBC Pension Trust Limited & Anor",
+      "official_url": "https://caselaw.nationalarchives.gov.uk/ewca/civ/2024/767/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/judgments/ewca-civ-2024-767-data.xml",
+      "content_sha256": "2db1dd8446395f397491b3e9b679248421932f232bf7cd77c46d541bca354cd3",
+      "byte_count": 100633,
+      "identity_verified_from_xml": true,
+      "later_treatment_status": "owner_review_required"
+    }
+  ],
+  "already_catalogued_approved_not_candidate": [
+    "[2003] EWCA Civ 1048",
+    "[2012] EWHC 1257 (Ch)"
+  ],
+  "unresolved_official_source_gaps": [
+    {
+      "authority_identity": "[2003] UKHL 68",
+      "reason_code": "not_available_in_find_case_law_collection",
+      "required_next_source": "official_parliamentary_or_national_archives_record"
+    }
+  ],
+  "automatic_source_admission": false,
+  "automatic_currentness_approval": false,
+  "automatic_later_treatment_approval": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "active_promotion_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false,
+  "validation30_authorized": false,
+  "live_activation_authorized": false
+}

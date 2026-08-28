@@ -1,0 +1,55 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-binding-plan.v1",
+  "source_quarantine_manifest_content_sha256": "1efa272eb58ebb80de8a336b6cb52af15910cb81a3d1d741e7b35f969a2a74e2",
+  "source_plan_file_sha256": "582ddd08a5e0fb01267c5c241c8ebeea6957d6a4489bed780f55cea299acb0ef",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "bindings": [
+    {
+      "binding_id": "crime-policing-2026-identification-doctrine-current-law",
+      "source_target_id": "supplemental-crime-and-policing-act-2026",
+      "expected_source_file_sha256": "f286b09e8f72174069e0d1592f9321926e32fdee84c9273a3067024f41b0f68b",
+      "row_ids": [
+        "live30-q29:issue-01",
+        "live60-q48:issue-07"
+      ],
+      "material_claim_anchor_ids": [
+        "section-250-1",
+        "section-250-2"
+      ],
+      "currentness_anchor_ids": [
+        "section-250-7",
+        "section-254-2",
+        "section-254-2-z11",
+        "section-255-3",
+        "section-255-3-k"
+      ],
+      "proposed_action": "Replace the omitted ECCTA 2023 section 196 binding with the in-force Crime and Policing Act 2026 section 250 rule, subject to explicit owner materiality and source-admission approval."
+    },
+    {
+      "binding_id": "arbitration-act-1996-section-6a-current-law",
+      "source_target_id": "supplemental-arbitration-act-1996-current",
+      "expected_source_file_sha256": "4fc9543918d2dfae70ec69bbdca2a03bced17a62bf665fa3cff6762a7e914f1d",
+      "row_ids": [
+        "live60-q43:issue-02"
+      ],
+      "material_claim_anchor_ids": [
+        "section-6A-1",
+        "section-6A-2"
+      ],
+      "currentness_anchor_ids": [
+        "section-6A",
+        "key-3418cfb7f933abb54f45df51e2c80a66"
+      ],
+      "proposed_action": "Rebind the proposition from the amending Act to current consolidated Arbitration Act 1996 section 6A, subject to explicit owner materiality and source-admission approval."
+    }
+  ],
+  "owner_materiality_decision_required": true,
+  "owner_source_admission_required": true,
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

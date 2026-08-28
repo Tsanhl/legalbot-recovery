@@ -1,0 +1,43 @@
+{
+  "document_lane_counts": {
+    "assessment_guidance": 44,
+    "official_secondary": 312,
+    "primary_authority": 747,
+    "private_teaching": 1589,
+    "scholarship": 829
+  },
+  "document_status_counts": {
+    "assessment_guidance": 39,
+    "citable": 1666,
+    "duplicate": 293,
+    "encrypted": 10,
+    "ocr_required": 1,
+    "private_teaching": 1355,
+    "quarantined": 6,
+    "unsupported": 151
+  },
+  "elasticsearch_used": false,
+  "eligible_for_training": false,
+  "first_live_index": "authority_lane_only",
+  "journals_and_westlaw_copies": "scholarship_not_first_live",
+  "legislation_and_cases": "primary_authority_after_currentness_and_rights",
+  "live_assessment_bundle_version": "owner-standards-2026-08-14.1",
+  "live_assessment_grade_bands": {
+    "50-59": 6,
+    "60-69": 4,
+    "70+": 6
+  },
+  "live_assessment_rule_count": 16,
+  "proposed_law_folder_theme_count": 74,
+  "proposed_theme_source": "proposed-assessment-standards-from-law-folder-2026-08-13",
+  "proposed_themes_live": false,
+  "schema": "legalbot.live60-law-lane-inventory.v1",
+  "source_root_role": "configured_law_folder_is_catalogue_input",
+  "source_version_review_counts": {
+    "approved": 2414,
+    "rejected": 5615,
+    "staged": 17564
+  },
+  "teaching_notes_and_ppts": "private_teaching_issue_spotting_only",
+  "training_export_allowed": false
+}

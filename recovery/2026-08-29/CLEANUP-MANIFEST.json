@@ -1,0 +1,93 @@
+{
+  "schema": "legalbot.v111.recovery.workspace-cleanup.v1",
+  "created_at_utc": "2026-08-28T19:25:59Z",
+  "status": "PASS_ACTIVE_WORKSPACE_CLEAN_FORENSICS_MOVED_TO_TRASH",
+  "cleanup_completed_at_utc": "2026-08-28T19:31:25Z",
+  "active_workspace": "/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829",
+  "source_working_tree": "work/posthead-replay-r6",
+  "source_working_tree_status": "BYTE_IDENTICAL_COPY_VERIFIED_THEN_MOVED_TO_RECOVERABLE_TRASH",
+  "copy_method": "RSYNC_WORKING_TREE_PLUS_APFS_CLONES_FOR_PRIVATE_LARGE_DATA",
+  "excluded_from_active_copy": [
+    ".git",
+    "Python virtual environments",
+    "Node dependency/build directories",
+    "pytest/ruff/hypothesis caches",
+    "Python bytecode",
+    "SQLite WAL/SHM/lock sidecars",
+    "temporary logs"
+  ],
+  "verification_before_cleanup": {
+    "working_tree_rsync_checksum_difference_count": 0,
+    "source_tree_rsync_checksum_difference_count": 0,
+    "source_backup_rsync_checksum_difference_count": 0,
+    "active_catalogue_sha256": "fac8cf47689a4088d2224af3ec8773d5372a41874cefe620ae38f019607804e5",
+    "active_source_file_count": 316,
+    "active_git_metadata_present": false,
+    "active_or_previous_present": false,
+    "focused_source_root_regression": "PASS",
+    "focused_ruff": "PASS"
+  },
+  "recoverable_trash_targets": [
+    "work",
+    "toolchain",
+    "evidence",
+    "manifests",
+    ".ruff_cache",
+    ".pytest_cache",
+    ".hypothesis",
+    "logs",
+    ".DS_Store",
+    "ten Python __pycache__ directories"
+  ],
+  "recoverable_trash_receipts": {
+    "work": "/Users/hltsang/.Trash/work",
+    "toolchain": "/Users/hltsang/.Trash/toolchain",
+    "evidence": "/Users/hltsang/.Trash/evidence",
+    "manifests": "/Users/hltsang/.Trash/manifests",
+    "ruff_cache": "/Users/hltsang/.Trash/.ruff_cache",
+    "pytest_cache": "/Users/hltsang/.Trash/.pytest_cache",
+    "hypothesis_cache": "/Users/hltsang/.Trash/.hypothesis",
+    "logs": "/Users/hltsang/.Trash/logs",
+    "ds_store": "/Users/hltsang/.Trash/.DS_Store 03-30-26-640",
+    "python_bytecode_directories": "10 items moved to recoverable Trash; verbose receipts retained in this task transcript"
+  },
+  "retained_in_active_workspace": [
+    "application code, configs, tests and docs",
+    "data/catalog.sqlite3",
+    "data/evaluations",
+    "316-file source tree",
+    "Live60 and 8-17 review dependencies",
+    "one current and one predecessor catalogue backup",
+    "316-file source snapshot",
+    "minimal recovery receipts and verified Git history bundle"
+  ],
+  "damaged_integration_disposition": {
+    "path": "/Users/hltsang/Desktop/LegalBot-v111-Integration",
+    "status": "PENDING_ACTIVE_TASK_HANDLES",
+    "action_when_idle": "MOVE_TO_RECOVERABLE_TRASH",
+    "reason": "The current Codex task and six other ChatGPT/Codex processes still use it as cwd; moving it during this task is unsafe.",
+    "last_checked_at_utc": "2026-08-28T19:31:25Z",
+    "cwd_holder_count": 7
+  },
+  "legalbot_new": {
+    "status_at_preflight": "ABSENT",
+    "accessed_or_modified": false
+  },
+  "phase2b_run": false,
+  "candidate_build_run": false,
+  "embedding_run": false,
+  "active_or_previous_written": false,
+  "verification_after_cleanup": {
+    "top_level_obsolete_recovery_roots_present": false,
+    "git_metadata_directory_count": 0,
+    "generated_dependency_or_cache_directory_count": 0,
+    "active_source_file_count": 316,
+    "source_snapshot_file_count": 316,
+    "active_catalogue_sha256": "fac8cf47689a4088d2224af3ec8773d5372a41874cefe620ae38f019607804e5",
+    "index_members": [
+      "data/indexes/.gitkeep"
+    ],
+    "clean_room_python_3_13": "PASS",
+    "complete_dependency_backed_test_matrix": "NOT_RUN_DEPENDENCIES_INTENTIONALLY_EXCLUDED_PENDING_NEW_GIT_BASELINE"
+  }
+}

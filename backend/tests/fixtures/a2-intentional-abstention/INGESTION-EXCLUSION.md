@@ -1,0 +1,11 @@
+legalbot:non-ingestible
+ocr-fixture-backlog.json
+OCR-FIXTURE-BACKLOG.md
+mixed-safe-unsafe-backlog.json
+MIXED-SAFE-UNSAFE-BACKLOG.md
+a2-repeat-groups.json
+bucket-a2-owner-decisions-2026-08-13.json
+bucket-a2-owner-decisions-2026-08-13.md
+PROPOSED-SEAL-CHECKLIST.md
+OWNER-VIEW-A2.md
+A2-OWNER-REVIEW.md

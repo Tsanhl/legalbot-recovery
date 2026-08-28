@@ -1,0 +1,100 @@
+schema: legalbot.quality-policy.v1
+version: evidence-first-70-v3
+owner_only: true
+product_scope:
+  jurisdiction: England and Wales
+  outside_scope_behaviour: clarify_or_refuse
+default_citation_style: OSCOLA 5
+
+# Until blind legal calibration exists, 70+ is a drafting target and repair
+# signal.  It is not evidence that the law is correct and is not a safety gate.
+academic_quality:
+  target_score: 70
+  release_gate: false
+  calibrated_by_blind_human_review: false
+
+release_states:
+  - verified_full
+  - verified_concise
+  - verified_limited
+  - held_for_review
+  - system_error
+
+hard_blockers:
+  - invented_authority
+  - unsupported_material_law
+  - wrong_authority_identity
+  - material_contradiction
+  - wrong_jurisdiction
+  - materially_outdated_law
+  - false_quotation
+  - prompt_injection
+  - personal_data_leakage
+  - unrelated_evidence
+  - prohibited_lane_evidence
+  - unverified_case_legal_role
+  - unsupported_material_fact
+  - non_atomic_material_claim
+  - no_threshold_qualified_evidence
+
+repairable:
+  - requested_length
+  - headings
+  - structure
+  - incomplete_application
+  - weak_counterargument
+  - missing_remedy
+  - insufficient_scholarship
+  - conclusion_quality
+  - academic_score_below_target
+
+current_law:
+  snapshot_label: latest_available_revised_snapshot
+  point_in_time_claim_requires_provision_verification: true
+  england_wales_extent_required_for_material_legislation_claim: true
+  unapplied_effects:
+    zero: eligible_for_full_verification
+    material_or_unknown: verify_provision_or_release_limited
+  historical_as_enacted_default_eligible: false
+
+claim_support:
+  lexical_overlap_is_entailment: false
+  material_claim_requires_exact_frozen_span: true
+  case_proposition_requires_legal_role: true
+  allowed_case_roles_for_established_proposition:
+    - holding_ratio
+    - binding_legal_rule
+
+e2e_logging:
+  safe_fields:
+    - trace_id
+    - job_id
+    - stage
+    - duration_ms
+    - retry_count
+    - error_code
+    - model_version
+    - prompt_version
+    - index_build_id
+    - policy_sha256
+    - retrieval_candidate_count
+    - safe_source_ids
+    - safe_legal_locators
+    - release_decision
+  forbidden_plaintext:
+    - raw_question
+    - filesystem_path
+    - original_filename
+    - personal_data
+    - source_text
+    - system_prompt
+    - licensed_full_text
+  sensitive_debug_storage: encrypted_explicit_retention
+
+retention:
+  encrypted_unreleased_days: 30
+  released_answers: indefinite_local
+training_export:
+  default: disabled
+  requires_user_opt_in: true
+  requires_owner_approval: true

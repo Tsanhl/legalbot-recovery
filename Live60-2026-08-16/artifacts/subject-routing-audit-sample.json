@@ -1,0 +1,17 @@
+{
+  "classifier_version": "legalbot-subject-classifier-v3",
+  "elasticsearch_used": false,
+  "expanded_catalogue_subject_count": 2,
+  "expanded_catalogue_subjects": [
+    "contract",
+    "tort"
+  ],
+  "filter_mode": "mixed_prefilter",
+  "mixed": true,
+  "recognised_subject_count": 2,
+  "recognised_subjects": [
+    "contract",
+    "tort"
+  ],
+  "schema": "legalbot.subject-routing-audit.v1"
+}

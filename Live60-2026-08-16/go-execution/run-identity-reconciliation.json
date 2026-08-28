@@ -1,0 +1,118 @@
+{
+  "as_of_date": "2026-08-16",
+  "assessment_bundle_sha256": "9d5808d9275e8a91d18c9702d76ff8e5e6fbbf1388aa57e43ac4b788e96d8252",
+  "authoritative": true,
+  "case_count": 60,
+  "copied_owner_inputs": [
+    {
+      "bytes": "404951",
+      "filename": "LegalBot-Live60-Candidate-Resource-Map.xlsx",
+      "sha256": "db7ce371a1d8fc072b55fc946a40565f0b4fecceffaa48b7047af6eb47a2a723"
+    },
+    {
+      "bytes": "55828",
+      "filename": "LegalBot-Live60-Full-Verification-And-Resource-Discovery-Report.docx",
+      "sha256": "98fad4f2dd65256633a6595778bf917df43175e1e84ee0928e18bb2e92d8ead1"
+    }
+  ],
+  "coverage_only_case_ids": [
+    "live30-q01",
+    "live30-q04",
+    "live30-q05",
+    "live30-q08",
+    "live30-q09",
+    "live30-q10",
+    "live30-q11",
+    "live30-q12",
+    "live30-q14",
+    "live30-q18",
+    "live30-q19",
+    "live30-q22",
+    "live30-q25",
+    "live30-q28",
+    "live30-q30",
+    "live60-q33",
+    "live60-q34",
+    "live60-q36",
+    "live60-q37",
+    "live60-q39",
+    "live60-q41",
+    "live60-q44",
+    "live60-q45",
+    "live60-q47",
+    "live60-q50",
+    "live60-q52",
+    "live60-q54",
+    "live60-q55",
+    "live60-q57",
+    "live60-q58"
+  ],
+  "eligible_for_training": false,
+  "issue_count": 585,
+  "new_registry_generated": false,
+  "o04_authorised": false,
+  "reason_no_new_registry": "The frozen suite already verifies. The two run-plan SHA values are the file digest and the object seal of the same generation-run-plan.json.",
+  "registry_canonical_sha256": "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a",
+  "registry_file_sha256": "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a",
+  "research_route_counts": {
+    "full_enquiry": 27,
+    "sectioned": 33
+  },
+  "run_plan_file_sha256": "3c03c07a4fdd3a7767472f83c98b079334b302550efb949c79c120eca37a21f1",
+  "run_plan_object_seal_sha256": "2bfccfc1e9b4638f33381ef82982e7683ed352246ade6e97e19e1369214f6d83",
+  "schema": "legalbot.live60-superseding-run-identity.v1",
+  "seals_expert_gold": false,
+  "selected_case_ids": [
+    "live30-q02",
+    "live30-q03",
+    "live30-q06",
+    "live30-q07",
+    "live30-q13",
+    "live30-q15",
+    "live30-q16",
+    "live30-q17",
+    "live30-q20",
+    "live30-q21",
+    "live30-q23",
+    "live30-q24",
+    "live30-q26",
+    "live30-q27",
+    "live30-q29",
+    "live60-q31",
+    "live60-q32",
+    "live60-q35",
+    "live60-q38",
+    "live60-q40",
+    "live60-q42",
+    "live60-q43",
+    "live60-q46",
+    "live60-q48",
+    "live60-q49",
+    "live60-q51",
+    "live60-q53",
+    "live60-q56",
+    "live60-q59",
+    "live60-q60"
+  ],
+  "selected_research_route_counts": {
+    "full_enquiry": 15,
+    "sectioned": 15
+  },
+  "suite_id": "live-evaluation-60-v1",
+  "suite_manifest_seal_sha256": "50d967c4d490a05527fb5610b2eae19014005c22092210ec6b23f92582e41241",
+  "supersedes": [
+    {
+      "checklist_value": "2bfccfc1e9b4638f33381ef82982e7683ed352246ade6e97e19e1369214f6d83",
+      "resolution": "workbook_uses_run_plan_file_digest_checklist_uses_object_seal",
+      "same_file": "benchmarks/evaluation/live-evaluation-60-v1/generation-run-plan.json",
+      "stale_claim": "workbook_run_plan_sha_conflicts_with_checklist_run_plan_sha",
+      "workbook_value": "3c03c07a4fdd3a7767472f83c98b079334b302550efb949c79c120eca37a21f1"
+    },
+    {
+      "resolution": "pack_regenerated_from_expected_research_route",
+      "route_field_used": "expected_research_route",
+      "stale_claim": "issue_decision_pack_coerced_all_60_routes_to_sectioned"
+    }
+  ],
+  "training_export_allowed": false
+}

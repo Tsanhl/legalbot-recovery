@@ -1,0 +1,66 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-binding-plan.v1",
+  "source_quarantine_manifest_content_sha256": "d95a22de03835b75c68c5154e86df5e789fce7b89281a9443c72390aa6098806",
+  "source_plan_file_sha256": "5a705567920f60b4d6043aa145f2b1a01b0ccc37c54bb9e82c8edd2255b9cbdb",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "bindings": [
+    {
+      "binding_id": "procurement-act-2023-commencement-and-transition",
+      "source_target_id": "currentness-procurement-act-commencement-no-3-2024",
+      "expected_source_file_sha256": "23f0de02357c6059a1095a2cd264aace7358a2519af075867549ae14fb5c1b71",
+      "row_ids": [
+        "live30-q21:issue-01",
+        "live30-q21:issue-05",
+        "live30-q21:issue-06",
+        "live30-q21:issue-07",
+        "live30-q21:issue-08"
+      ],
+      "binding_scope": "CURRENTNESS_AND_TRANSITION_ONLY",
+      "unresolved_scope_note": "The problem facts do not state the procurement-launch date. The final answer must apply the Procurement Act 2023 only after determining that no saved pre-24-February-2025 procurement procedure governs.",
+      "material_claims": [
+        {
+          "claim_id": "procurement-transition-old-regime-continues",
+          "proposition": "The Public Contracts Regulations 2015 continue to apply to procurement procedures and contracts within the specified transitional circumstances.",
+          "anchor_id": "regulation-5-1",
+          "exact_normalized_span_text": "despite the revocation of the 2015 regulations by section 119(1) of, and paragraph 5 of schedule 11 to, the act, those regulations continue to apply, as modified by paragraph (4) b, c, d and e, in respect of procurement procedures, contracts, framework agreements and dynamic purchasing systems in any of the circumstances described in paragraphs (2) and (3)."
+        },
+        {
+          "claim_id": "procurement-transition-pre-cutover-events",
+          "proposition": "The transitional circumstances include specified awards, negotiations, notices and opportunity publications occurring before 24 February 2025.",
+          "anchor_id": "regulation-5-3",
+          "exact_normalized_span_text": "the circumstances in this paragraph are that, with reference to the 2015 regulations, before 24th february 2025 - a a contracting authority has awarded the contract, concluded the framework agreement or established the dynamic purchasing system; b a contracting authority has contacted an economic operator in order to commence the negotiated procedure without prior publication in any of the specific cases and circumstances set out in regulation 32; c either- i a contract notice required by regulation 26(8) or 75(1) a (publication of notices: public contracts for social and other specific services), or ii a contest notice required by regulation 79 (notices) has been submitted for publication in accordance with regulation 51; d a contracting authority has had published on the uk e-notification service a voluntary transparency notice expressing its intention to enter into a contract in accordance with regulation 99(3) b (grounds for ineffectiveness: one of the conditions for the non-application of the first ground); e a contracting authority has published information about a contract award opportunity on contracts finder in accordance with regulation 110(2) (publication of contract award opportunities on contracts finder)."
+        },
+        {
+          "claim_id": "procurement-transition-new-act-disapplied",
+          "proposition": "Where the saved 2015 regime continues, the Procurement Act 2023 does not apply.",
+          "anchor_id": "regulation-5-4-a",
+          "exact_normalized_span_text": "the act does not apply;"
+        }
+      ],
+      "currentness_claims": [
+        {
+          "claim_id": "procurement-commencement-24-february-2025",
+          "proposition": "The provisions listed in the Schedule came into force on 24 February 2025.",
+          "anchor_id": "regulation-2-2",
+          "exact_normalized_span_text": "the provisions of the act set out in the schedule come into force on 24th february 2025."
+        },
+        {
+          "claim_id": "procurement-transition-instrument-ew-extent",
+          "proposition": "The commencement and transition instrument extends to England and Wales.",
+          "anchor_id": "regulation-1-2",
+          "exact_normalized_span_text": "these regulations extend to england and wales, scotland and northern ireland."
+        }
+      ],
+      "proposed_action": "Approve this official instrument as currentness and transition evidence. Do not automatically assume the 2023 Act applies without a procurement-start-date finding."
+    }
+  ],
+  "owner_materiality_decision_required": true,
+  "owner_source_admission_required": true,
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

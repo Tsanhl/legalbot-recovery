@@ -1,0 +1,297 @@
+{
+  "schema": "legalbot.v111-disaster-recovery.final-manifest.v1",
+  "created_at_utc": "2026-08-28T19:11:13Z",
+  "status": "PARTIAL_VERIFIED_RECOVERY_NON_ACTIVE_AWAITING_OWNER_DECISION",
+  "recovery_root": "/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829",
+  "recovered_worktree": "work/posthead-replay-r6",
+  "truthfulness_boundary": {
+    "full_byte_complete_recovery_claimed": false,
+    "phase2a_success_claimed": false,
+    "candidate_runnable_claimed": false,
+    "technical_qualification_claimed": false,
+    "safe_description": "The latest provable code state and bounded exact data/evidence were recovered. Opaque historical bytes and both Lance vector trees that lack exact surviving evidence remain explicitly absent."
+  },
+  "git_recovery": {
+    "branch": "codex/recovery-v111-20260829",
+    "verified_baseline_commit": "79d0629c66e9758ad932a58261e7466ad0a8dbfc",
+    "recovered_head_commit": "1ea0ed9fa3bde04e1f20b371698995ff16119bf5",
+    "recovered_head_tree": "15cead6aea75f14be38fc274408585a05eb25288",
+    "lost_local_commit_count_recovered": 10,
+    "git_fsck_full_no_reflogs": "PASS",
+    "merged_to_main": false,
+    "promoted": false
+  },
+  "chronological_post_head_replay": {
+    "revision": "r6",
+    "failed_revisions_preserved": ["r1", "r2", "r3", "r4", "r5"],
+    "patch_event_count": 1784,
+    "observed_ruff_mutation_action_count": 238,
+    "add_event_count": 425,
+    "update_event_count": 1356,
+    "delete_event_count": 3,
+    "unique_patch_touched_path_count": 501,
+    "event_log_sha256": "7a52dad8471262f03e8dd9b0b587f035f548c2bac0aaaf80d503e80087425763",
+    "summary_content_sha256": "01c126eb6d5e92f44ab3f866e4d9964b92a84bf4b019933e39ca0b088bba94ca",
+    "historical_ruff_version": "ruff 0.12.8",
+    "historical_ruff_binary_sha256": "941cf41cf1eaa22612c96c3627fc0e4f2613214a94d957e44669ce4c72281e65",
+    "summary_file_sha256": "45c6c12663ef0b0ee39bc47bfbadcbcfc7d1e9b1e263ebf5714fdf4a436a78db"
+  },
+  "incident_worktree_parity": {
+    "porcelain_mode": "git status --porcelain=v1 with default collapsed untracked directories",
+    "expected_porcelain_entry_count": 438,
+    "expected_tracked_modified_count": 78,
+    "expected_untracked_count": 360,
+    "recovered_porcelain_entry_count": 431,
+    "recovered_tracked_modified_count": 78,
+    "recovered_untracked_count": 353,
+    "unexpected_entry_count": 0,
+    "absent_expected_entry_count": 7,
+    "expected_inventory_manifest_sha256": "bb60d4b3cf34b49a4532a428fdbce483ee307b912cf6a869975e2cdefa1a5558",
+    "expected_porcelain_sha256": "3dd38641a2bc0c392d40a76f88837faf98a644cce6729c1fb39b838829de6a49",
+    "absent_expected_paths": [
+      "config/pensions_seminar_gap_official_eu_judgments.2026-08-26.v1.json",
+      "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json",
+      "config/seminar_gap_official_fcl_search_recovery.2026-08-26.v1.json",
+      "config/seminar_gap_official_legislation_round2.2026-08-26.v1.json",
+      "config/seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json",
+      "config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json",
+      "config/seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json"
+    ]
+  },
+  "seminar_config_recovery": {
+    "runnable_overlay_applied": false,
+    "reason_not_applied": "Two required parent manifests are not byte-recoverable, so applying only surviving children would create an unsafe mixed lineage.",
+    "exact_evidence_artifacts": [
+      {
+        "intended_config_path": "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json",
+        "evidence_path": "manifests/seminar-manifest-overlay-r1/reconstructed-config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json",
+        "sha256": "78157320712f436e830cb95d9036044a6737d422ba6308e21abdaf2ca6cdc161"
+      },
+      {
+        "intended_config_path": "config/seminar_gap_official_fcl_search_recovery.2026-08-26.v1.json",
+        "evidence_path": "manifests/seminar-manifest-overlay-r1/reconstructed-config/seminar_gap_official_fcl_search_recovery.2026-08-26.v1.json",
+        "sha256": "0624086d37d57e61c841928fff5811a8841c87ca9efdab7016e3c66509d28a16"
+      },
+      {
+        "intended_config_path": "config/seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json",
+        "evidence_path": "manifests/seminar-manifest-overlay-r1/reconstructed-config/seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json",
+        "sha256": "f887e85ea1c03b9d80632d10b5ec0f774835bf37ff16744a6b0f349f5efeec4b"
+      },
+      {
+        "intended_config_path": "config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json",
+        "evidence_path": "manifests/seminar-manifest-overlay-r1/reconstructed-config/seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json",
+        "sha256": "62663395ced8e1cfa2524f4697755f28b4099c94093bf0520fae04291e73ea05"
+      }
+    ],
+    "deterministic_semantic_evidence_only": {
+      "intended_config_path": "config/pensions_seminar_gap_official_eu_judgments.2026-08-26.v1.json",
+      "evidence_path": "manifests/seminar-manifest-overlay-r1/reconstructed-config/pensions_seminar_gap_official_eu_judgments.2026-08-26.v1.json",
+      "sha256": "b36de80280c1d324406516a61c3c12a01f3f76ed59c2ea22dce8c32f79cac525",
+      "independent_historical_output_seal_available": false
+    },
+    "unrecoverable_exact_parents": [
+      {
+        "path": "config/seminar_gap_official_legislation_round2.2026-08-26.v1.json",
+        "known_historical_sha256": "c58b991a6f678bb07650fb6c5b9cb4cde0589ff067e1b8fc6fb672b506f93636",
+        "missing_opaque_dependency": "source-resolution file SHA-256"
+      },
+      {
+        "path": "config/seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json",
+        "known_historical_sha256": "c7595f2a44049d437a4bd2610df2909dbcb20a62ad42905dfc94ff0461c180bb",
+        "missing_opaque_dependency": "seminar-source-audit-v4 file SHA-256 and exact row bindings"
+      }
+    ],
+    "evidence_manifest_sha256": "62f816dcd6814095479e37338fb7c341058e251b9baefe6264f465139d885121"
+  },
+  "catalogue_recovery": {
+    "relative_path": "data/catalog.sqlite3",
+    "placed_sha256": "fac8cf47689a4088d2224af3ec8773d5372a41874cefe620ae38f019607804e5",
+    "size_bytes": 6204092416,
+    "mode": "0600",
+    "link_count": 1,
+    "main_inode": 181518416,
+    "main_mtime_epoch": 1787387652,
+    "staged_quick_check": "ok",
+    "staged_foreign_key_violation_count": 0,
+    "staged_all_45_table_counts_exact": true,
+    "prior_bound_full_integrity_check": "ok",
+    "placement_receipt_sha256": "9fa7afa0feca9917dff50da2b540b37abe297e81ac85f363b9cccf445c6fa7bd",
+    "final_verification_side_effect": {
+      "description": "A final read-only SQLite verification connection created WAL/SHM sidecars. The redundant long-running verifier was terminated; no process retained the database. The main database inode, size and mtime remained unchanged from the placement receipt.",
+      "sidecars_preserved": true,
+      "wal": {
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "shm": {
+        "size_bytes": 32768,
+        "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+      }
+    }
+  },
+  "source_recovery": {
+    "initial_exact_placement": {
+      "cursor_legacy_file_count": 254,
+      "law_exact_match_file_count": 46,
+      "file_count": 300,
+      "source_tree_sha256": "e4705ad51754146cf96d41d0a0ba36c414649594a3e9e0b18dd9f7ff8feb5fa3"
+    },
+    "bounded_official_recovery": {
+      "network_attempt_count": 21,
+      "network_retry_count": 0,
+      "redirect_count": 0,
+      "exact_match_placed_count": 16,
+      "rejected_current_byte_mismatch_count": 5,
+      "outside_allowlist_no_attempt_count": 3,
+      "raw_headers_and_bodies_preserved": true,
+      "plan_content_sha256": "a450742e87fa4a882337e9a95c9b9cc703add921b52a49967fc1e9f72d197006",
+      "results_content_sha256": "559a99432b6b6502ee0b2ff988a6fb2ed0abb633f741898fc6954255a5fd9cfe"
+    },
+    "final_tree": {
+      "file_count": 316,
+      "total_bytes": 395974546,
+      "source_tree_sha256": "b972cbd22287dffe9b2531ec52858b75a9ace602a2f32398e4d5cf4b0ffcb366",
+      "placement_manifest_sha256": "b7c3217329b811c154389a2a89724d8e6d0a8f9f67aa8fda0bf4958218a3e520"
+    },
+    "residual_missing_exact_representation_count": 8,
+    "residual_missing_exact_representations": [
+      {"label": "[2025] UKSC 21", "reason": "CURRENT_OFFICIAL_BYTES_DIFFER_FROM_SEALED_SHA256", "expected_sha256": "db5fa8656a9b70f3b28132d1998c34fdbac58ac04ae9bd4664127a41d5297274"},
+      {"label": "ukpga:2005:9", "reason": "CURRENT_OFFICIAL_BYTES_DIFFER_FROM_SEALED_SHA256", "expected_sha256": "144736714ee5ded24465f0422d55a9b40f1398db4672a8b6834941a239040d75"},
+      {"label": "ukpga:2025:18", "reason": "CURRENT_OFFICIAL_BYTES_DIFFER_FROM_SEALED_SHA256", "expected_sha256": "c04c780aa20839962f65e466a655a7c52ec7f511a63b7db252061fbb3829abe7"},
+      {"label": "uksi:2006:246", "reason": "CURRENT_OFFICIAL_BYTES_DIFFER_FROM_SEALED_SHA256", "expected_sha256": "89e9f6255d712033c7252927bd0d137b75907ca7828113ea1c1bc5a6553bf169"},
+      {"label": "uksi:2024:716", "reason": "CURRENT_OFFICIAL_BYTES_DIFFER_FROM_SEALED_SHA256", "expected_sha256": "23f0de02357c6059a1095a2cd264aace7358a2519af075867549ae14fb5c1b71"},
+      {"label": "[2021] UKPC 22", "reason": "SEALED_URL_HOST_OUTSIDE_AUTHORIZED_ALLOWLIST_NO_ATTEMPT", "expected_sha256": "91de66154b25e73904993024a89ddbecc2792e8740f43f12ac74e0019d6cf9de"},
+      {"label": "[2025] UKPC 34", "reason": "SEALED_URL_HOST_OUTSIDE_AUTHORIZED_ALLOWLIST_NO_ATTEMPT", "expected_sha256": "40ad97147d8959af75623b57e6f768851c3a07826909491b344578ad4a9bfbbc"},
+      {"label": "[2025] UKPC 6", "reason": "SEALED_URL_HOST_OUTSIDE_AUTHORIZED_ALLOWLIST_NO_ATTEMPT", "expected_sha256": "5b3639271b247ddab164a1b6554bc85686e645a4cd03b41598cb72b5b1699b9a"}
+    ],
+    "substitution_allowed": false
+  },
+  "ignored_evaluation_and_quarantine_recovery": {
+    "pre_loss_referenced_root_count": 425,
+    "evaluation_root_count": 402,
+    "quarantine_root_count": 23,
+    "complete_exact_roots_placed": 4,
+    "complete_exact_files_placed": 25,
+    "complete_exact_bytes_placed": 3329523,
+    "partial_exact_root_count": 1,
+    "partial_q53_root_placed": false,
+    "unproven_or_unavailable_root_count": 420,
+    "data_quarantine_root_placed": false,
+    "recovery_manifest_sha256": "e2d053187050d0917777a927e7586c8c4396d3810b14aabddf28a5049b5f8830",
+    "placement_manifest_sha256": "13d4ae578b030d82f07fbe411359df0bff3a9b6f1020a119c8a43e7d8b5fba6f",
+    "known_unavailable_examples": [
+      "Phase-2A prequalification r3 package",
+      "final-remediation authority and adoption receipt",
+      "2026-08-27 final-blocked owner-review DOCX, external-audit ZIP, delivery receipt and machine verdict",
+      "Q53 Semenya production advisory, package manifest and checksum file"
+    ]
+  },
+  "candidate_recovery": {
+    "runnable_candidate_present": false,
+    "active_pointer_present": false,
+    "previous_pointer_present": false,
+    "data_indexes_members": [".gitkeep"],
+    "actual_lance_vector_tree_recovered": false,
+    "historical_20260818_metadata": {
+      "core_metadata_exact": "4/4",
+      "standalone_members_exact": "10/12"
+    },
+    "historical_20260827_phase2a_metadata": {
+      "core_metadata_exact": "3/4",
+      "standalone_members_exact": "11/13"
+    },
+    "evidence_only_member_manifest_sha256": "5fa84140c5dbc9a655810c0dfd1598e220cc4afe77881de1737adf4e9b4a0e17",
+    "successor_qualification_config_sha256": "7248e70bb68548b96c12d5dddd1ea18b01fd481a1c7d86c33c834ae7274e2349",
+    "archived_predecessor_qualification_config_sha256": "91468882d1a6e9e57057f24e098936df14abe07d50c5a76b14ee03dc57e91b2b",
+    "candidate_build_run_during_recovery": false,
+    "embedding_run_during_recovery": false,
+    "retrieval_reattestation_run_during_recovery": false,
+    "qualification_run_during_recovery": false
+  },
+  "verification": {
+    "git_diff_check": "PASS",
+    "git_fsck_full_no_reflogs": "PASS",
+    "clean_room_check": "PASS",
+    "web_build_and_spa_tests": {"status": "PASS", "passed": 10, "failed": 0},
+    "python_code_and_safety_scope": {
+      "status": "PASS",
+      "selected_nodes": 1531,
+      "passed": 1528,
+      "skipped": 3,
+      "test_file_count": 188,
+      "log_sha256": "734ba8fca6de365e4fe75301f96f6143346dfec5853dd9249fff05b9d91f6ebc"
+    },
+    "historical_artifact_dependent_lastfailed_recheck": {
+      "status": "FAIL_CLOSED_NOT_A_FULL_RECOVERY_PASS",
+      "remaining_lastfailed_nodes": 455,
+      "remaining_test_file_count": 106,
+      "saved_log_reached_100_percent": true,
+      "saved_log_aggregate_summary_line_present": false,
+      "saved_log_failed_identifier_lines": 321,
+      "saved_log_error_identifier_lines": 134,
+      "log_sha256": "28a3a66dee7dc86c48436de331be53dee3b20982dc2f699dcd8145926de0d4d6",
+      "interpretation": "Failures remain concentrated in tests that bind unavailable historical packages, source bytes or candidate vector trees. They are preserved as recovery gaps and are not treated as successful qualification."
+    },
+    "full_ruff_check": {
+      "status": "FAIL_HISTORICAL_INCIDENT_CODE_STATE",
+      "issue_count": 48,
+      "automatic_fix_run": false,
+      "format_rewrite_run": false
+    },
+    "external_runtime_observation": {
+      "observed_process": "python -m uvicorn ml.embedding_server:app --host 127.0.0.1 --port 8090",
+      "process_start_local": "2026-08-29T00:28:40+0800",
+      "predates_recovery_workspace": true,
+      "invoked_by_this_recovery": false,
+      "terminated_by_this_recovery": false
+    }
+  },
+  "workspace_boundaries": {
+    "damaged_original_path": "/Users/hltsang/Desktop/LegalBot-v111-Integration",
+    "damaged_original_material_evidence_unchanged_insofar_verified": true,
+    "damaged_original_incidental_write_detected": true,
+    "damaged_original_incidental_write": {
+      "path": ".ruff_cache",
+      "classification": "NON_MATERIAL_TOOL_CACHE",
+      "detected_mtime_local": "2026-08-29T01:55:54+0800",
+      "file_count": 3,
+      "file_bytes": 306,
+      "disk_usage_kib": 12,
+      "root_mode": "0755",
+      "file_mode": "0644",
+      "members": [
+        {"path": ".ruff_cache/.gitignore", "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316"},
+        {"path": ".ruff_cache/CACHEDIR.TAG", "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae"},
+        {"path": ".ruff_cache/0.16.1/15392553523827120460", "sha256": "41768ab8da422cd4f563eff9b84dbe0a276d3e65f7a7062ec7f907e0aea252f1"}
+      ],
+      "preserved_not_deleted": true
+    },
+    "damaged_original_replaced": false,
+    "legalbot_new_path": "/Users/hltsang/Desktop/LegalBot-New",
+    "legalbot_new_final_check": "ABSENT",
+    "legalbot_new_created_or_modified_by_recovery": false
+  },
+  "prohibited_actions_confirmed_not_run": {
+    "scope": "DURING_THIS_RECOVERY_ONLY",
+    "phase2a_execution_chain": false,
+    "phase2b": false,
+    "candidate_build": false,
+    "embedding": false,
+    "retrieval_reattestation": false,
+    "all585_qualification": false,
+    "development30": false,
+    "validation30": false,
+    "owner_certification60": false,
+    "promotion": false,
+    "active_pointer_write": false,
+    "previous_pointer_write": false,
+    "answer_model_run": false,
+    "answer_release": false,
+    "live_activation": false,
+    "training_export": false
+  },
+  "owner_gate": {
+    "original_repository_replacement_authorized": false,
+    "next_action": "Owner reviews this exact recovery manifest. No replacement or activation may occur without a subsequent explicit approval bound to this manifest."
+  }
+}

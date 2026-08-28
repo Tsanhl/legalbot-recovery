@@ -1,0 +1,495 @@
+{
+  "annexes": {
+    "A": [
+      "live30-q02",
+      "live30-q03",
+      "live30-q06",
+      "live30-q07",
+      "live30-q13",
+      "live30-q15",
+      "live30-q16",
+      "live30-q17",
+      "live30-q20",
+      "live30-q21"
+    ],
+    "B": [
+      "live30-q23",
+      "live30-q24",
+      "live30-q26",
+      "live30-q27",
+      "live30-q29",
+      "live60-q31",
+      "live60-q32",
+      "live60-q35",
+      "live60-q38",
+      "live60-q40"
+    ],
+    "C": [
+      "live60-q42",
+      "live60-q43",
+      "live60-q46",
+      "live60-q48",
+      "live60-q49",
+      "live60-q51",
+      "live60-q53",
+      "live60-q56",
+      "live60-q59",
+      "live60-q60"
+    ]
+  },
+  "as_of_policy": "run_admission_europe_london",
+  "cases": [
+    {
+      "case_id": "live30-q01",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q02",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q03",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q04",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q05",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q06",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q07",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q08",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q09",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q10",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q11",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q12",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q13",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q14",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q15",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q16",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q17",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q18",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q19",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q20",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q21",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q22",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q23",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q24",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q25",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q26",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q27",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q28",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q29",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live30-q30",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q31",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q32",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q33",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q34",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q35",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q36",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q37",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q38",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q39",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q40",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q41",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q42",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q43",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q44",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q45",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q46",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q47",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q48",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q49",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q50",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "sectioned",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q51",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q52",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q53",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q54",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q55",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q56",
+      "disposition": "generate_once",
+      "expected_research_route": "sectioned",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q57",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q58",
+      "disposition": "coverage_only_not_selected",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 0,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q59",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    },
+    {
+      "case_id": "live60-q60",
+      "disposition": "generate_once",
+      "expected_research_route": "full_enquiry",
+      "pass_count": 1,
+      "schema": "legalbot.live-evaluation-run-plan-case.v1"
+    }
+  ],
+  "cross_border_limit_case_ids": [
+    "live60-q43",
+    "live60-q55",
+    "live60-q60"
+  ],
+  "eligible_for_training": false,
+  "essay_structure_id": "live60-essay-v1",
+  "generation_case_count": 30,
+  "generation_route_counts": {
+    "full_enquiry": 15,
+    "sectioned": 15
+  },
+  "generation_task_type_counts": {
+    "essay": 11,
+    "problem": 19
+  },
+  "generation_total_word_target": 114000,
+  "legal_date_timezone": "Europe/London",
+  "local_only_first_run": true,
+  "model_generation_concurrency": 1,
+  "nonselected_disposition": "coverage_only_not_selected",
+  "online_research_allowed": false,
+  "problem_structure_id": "live60-problem-v1",
+  "purpose": "evaluation_only",
+  "run_plan_id": "live60-single-pass-30-v1",
+  "schema": "legalbot.live-evaluation-run-plan.v1",
+  "seal_sha256": "2bfccfc1e9b4638f33381ef82982e7683ed352246ade6e97e19e1369214f6d83",
+  "stability_repeats": 0,
+  "suite_id": "live-evaluation-60-v1",
+  "suite_registry_canonical_sha256": "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a",
+  "training_export_allowed": false,
+  "unsupported_issue_disposition": "limited_or_held"
+}

@@ -1,0 +1,129 @@
+{
+  "all_provisions_held": true,
+  "approval_status": "mechanical_check_only",
+  "eligible_for_training": false,
+  "expert_approved": false,
+  "generation_authorised": false,
+  "o04_authorised": false,
+  "pass_rule": "exact_match_only_never_nearest_vector",
+  "qualified_count": 0,
+  "results": [
+    {
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "catalogue_self_consistent": true,
+      "chunk_count": 1,
+      "difference_class": "fetch_disabled",
+      "disposition": "hold",
+      "document_hash_matches_held_registry": true,
+      "held_id": "held-provision-01",
+      "note": "source_version_id or document representation may change without proving a substantive statutory amendment; classify before qualify",
+      "official_comparison_state": "official_fetch_disabled",
+      "official_normalised_exact_match": false,
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_representation": "legislation.gov.uk-section-data-xml",
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/1980/58/section/2/data.xml",
+      "qualified": false,
+      "structural_defect_count": 0,
+      "structural_defects": [],
+      "title": "Limitation Act 1980 section 2"
+    },
+    {
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "catalogue_self_consistent": true,
+      "chunk_count": 19,
+      "difference_class": "fetch_disabled",
+      "disposition": "return_hold_non_contiguous_or_editorial",
+      "document_hash_matches_held_registry": true,
+      "held_id": "held-provision-02",
+      "note": "source_version_id or document representation may change without proving a substantive statutory amendment; classify before qualify",
+      "official_comparison_state": "official_fetch_disabled",
+      "official_normalised_exact_match": false,
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_representation": "legislation.gov.uk-section-data-xml",
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/1980/58/section/14A/data.xml",
+      "qualified": false,
+      "structural_defect_count": 1,
+      "structural_defects": [
+        {
+          "chunk_id": "chunk-73fd50b82133e6bd94542a9e1d78ae5b06f91987",
+          "codes": [
+            "non_contiguous_s14A_10_chapeau_spliced_with_final_proviso"
+          ],
+          "ordinal": 161
+        }
+      ],
+      "title": "Limitation Act 1980 section 14A"
+    },
+    {
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "catalogue_self_consistent": true,
+      "chunk_count": 4,
+      "difference_class": "fetch_disabled",
+      "disposition": "hold",
+      "document_hash_matches_held_registry": true,
+      "held_id": "held-provision-03",
+      "note": "source_version_id or document representation may change without proving a substantive statutory amendment; classify before qualify",
+      "official_comparison_state": "official_fetch_disabled",
+      "official_normalised_exact_match": false,
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_representation": "legislation.gov.uk-section-data-xml",
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/2000/29/section/1/data.xml",
+      "qualified": false,
+      "structural_defect_count": 0,
+      "structural_defects": [],
+      "title": "Trustee Act 2000 section 1"
+    },
+    {
+      "canonicalisation_version": "whitespace_collapse_casefold_v1",
+      "catalogue_self_consistent": true,
+      "chunk_count": 17,
+      "difference_class": "fetch_disabled",
+      "disposition": "return_hold_non_contiguous_or_editorial",
+      "document_hash_matches_held_registry": true,
+      "held_id": "held-provision-04",
+      "note": "source_version_id or document representation may change without proving a substantive statutory amendment; classify before qualify",
+      "official_comparison_state": "official_fetch_disabled",
+      "official_normalised_exact_match": false,
+      "official_normalised_sha256": null,
+      "official_raw_sha256": null,
+      "official_representation": "legislation.gov.uk-section-data-xml",
+      "official_retrieval_timestamp": null,
+      "official_uri": "https://www.legislation.gov.uk/ukpga/1975/63/section/1/data.xml",
+      "qualified": false,
+      "structural_defect_count": 3,
+      "structural_defects": [
+        {
+          "chunk_id": "chunk-65e1c2ac95885e5e8e9d65e5ae138b5b6fbcde0a",
+          "codes": [
+            "non_contiguous_ipfda_s1_1_chapeau_spliced_with_concluding_words"
+          ],
+          "ordinal": 1
+        },
+        {
+          "chunk_id": "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+          "codes": [
+            "editorial_ellipsis_mixed_into_positive_text"
+          ],
+          "ordinal": 4
+        },
+        {
+          "chunk_id": "chunk-0bdcbc97ae11975ac1032cc3c6974aeaad9e43a7",
+          "codes": [
+            "repealed_or_omitted_editorial_marker"
+          ],
+          "ordinal": 11
+        }
+      ],
+      "title": "Inheritance (Provision for Family and Dependants) Act 1975 section 1"
+    }
+  ],
+  "schema": "legalbot.live60-mechanical-verification.v1",
+  "suite_id": "live-evaluation-60-v1",
+  "training_export_allowed": false
+}

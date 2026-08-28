@@ -1,0 +1,39 @@
+schema: legalbot.retrieval-policy.v1
+version: 1.1.1
+benchmark_version: 1.1.1
+canonical_benchmark: benchmarks/retrieval/v1.1.jsonl
+behaviour_benchmark: A2
+scorer: legalbot.source-locator-retrieval.v1.1.1
+positive_ranking_only: true
+gold_identity:
+  - expected_authority_id
+  - expected_source_id
+  - expected_source_version_id
+  - legal_locator
+  - proposition_span_sha256
+  - gold_spans
+  - match_mode
+match_modes:
+  source_identity_only:
+    allowed_for: explicit_authority_identifier_query
+  source_and_locator:
+    allowed_for: multi_span_substantive_or_locator_retrieval
+  source_and_span:
+    allowed_for: substantive_or_exact_span_retrieval
+gates:
+  primary_must_hit_recall_at_5: 1.0
+  positive_recall_at_10: 0.95
+  mrr: 0.8
+zero_tolerance:
+  - prohibited_lane_hit
+  - wrong_jurisdiction_hit
+  - wrong_current_version_hit
+  - private_path_hit
+additional_metrics_advisory_until_baselined:
+  - precision_at_5
+  - precision_at_10
+  - ndcg_at_10
+  - exact_span_recall
+  - mean_exact_span_recall_at_10
+  - paraphrase_worst_case_recall
+  - context_noise_fraction

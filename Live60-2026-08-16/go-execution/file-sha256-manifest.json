@@ -1,0 +1,84 @@
+{
+  "files": [
+    {
+      "bytes": 89,
+      "relative_path": "Live60-2026-08-16/go-execution/browser-recovery-report.json",
+      "sha256": "56cfd5664a54e7b2eddf2f08e9001dd8b72ef8a45370778677ac6d04fc5839bd"
+    },
+    {
+      "bytes": 10812,
+      "relative_path": "Live60-2026-08-16/go-execution/candidate-assessment-rules-2026-08-16.json",
+      "sha256": "55ec1d6cb405500b2f743a3d1627a3bbe2d0e82e5575e8cd590dc09006e3c85d"
+    },
+    {
+      "bytes": 227,
+      "relative_path": "Live60-2026-08-16/go-execution/case-proposition-currentness-records.json",
+      "sha256": "cf2e5c2b15ad133d26eca44585395bec4db8bf06b1db26a7af71dacfee1bcaa0"
+    },
+    {
+      "bytes": 172,
+      "relative_path": "Live60-2026-08-16/go-execution/contrary-authority-records.json",
+      "sha256": "d7325bd957b441c835ac1a2cdef64b57f423cbd64ee223edfde83987c8336ebd"
+    },
+    {
+      "bytes": 1776,
+      "relative_path": "Live60-2026-08-16/go-execution/four-statute-pack.json",
+      "sha256": "750a01fb0e2f35149e82d21da314ee9ea02e8dcf42c4229a0c61f5f4a6f270e6"
+    },
+    {
+      "bytes": 4465,
+      "relative_path": "Live60-2026-08-16/go-execution/gate-table.json",
+      "sha256": "51258205ee45b19e1cde9d6f415523a6acfaf9c45e83f622b549f07023cbcee8"
+    },
+    {
+      "bytes": 400,
+      "relative_path": "Live60-2026-08-16/go-execution/independent-review-adjudication-records.json",
+      "sha256": "385e44d22e2d36bc43719522c4ac11c1eaedd00e4ac1eee29d00c4c964d5e6c5"
+    },
+    {
+      "bytes": 2487,
+      "relative_path": "Live60-2026-08-16/go-execution/owner-decision-pack.json",
+      "sha256": "e44cbd0843e081169876e72fad0546bf4e8e8037ad57310fa36a37d8431bbd39"
+    },
+    {
+      "bytes": 657,
+      "relative_path": "Live60-2026-08-16/go-execution/owner-delegated-application.json",
+      "sha256": "9972da7ff07016f4e0f1530c395ed72c7254613b4ca4cef61618c314ca7013a0"
+    },
+    {
+      "bytes": 971,
+      "relative_path": "Live60-2026-08-16/go-execution/owner-go-o04-pack.json",
+      "sha256": "8ff16bcc053df417c033693749be7f7975027ceae1d93b8f0ca4c9250f16ce28"
+    },
+    {
+      "bytes": 93,
+      "relative_path": "Live60-2026-08-16/go-execution/rollback-repromotion-report.json",
+      "sha256": "f9d07c3176fe70f6009513b44ce88e0091e390b9c80f9098d43d5a70f5b862ce"
+    },
+    {
+      "bytes": 837,
+      "relative_path": "Live60-2026-08-16/go-execution/route-integrity-verified.json",
+      "sha256": "7c8cc9c939e9e70515bf4680146aa18daf1f25e4082d2924e4c5c260bbed8e05"
+    },
+    {
+      "bytes": 3545,
+      "relative_path": "Live60-2026-08-16/go-execution/run-identity-reconciliation.json",
+      "sha256": "3c5b10812a34d1cada4c181c77681d8f50ade36a9b9eb8bbae5f05c3807a968b"
+    },
+    {
+      "bytes": 810,
+      "relative_path": "Live60-2026-08-16/go-execution/selected-case-catalogue-span-coverage.json",
+      "sha256": "b9bf576e68b6b766592c0007590ee1a6956d50a5657b030d1e6eb7fe65d2101b"
+    },
+    {
+      "bytes": 180,
+      "relative_path": "Live60-2026-08-16/go-execution/stage-a-report.json",
+      "sha256": "3fdb6d4ee3096e8fdea486b4a5953f676bead623680f5cf5de18dd20ac8b6208"
+    },
+    {
+      "bytes": 3545,
+      "relative_path": "Live60-2026-08-16/go-execution/superseding-run-identity.json",
+      "sha256": "3c5b10812a34d1cada4c181c77681d8f50ade36a9b9eb8bbae5f05c3807a968b"
+    }
+  ]
+}

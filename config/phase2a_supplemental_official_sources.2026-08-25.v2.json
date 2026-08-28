@@ -1,0 +1,92 @@
+{
+  "schema": "legalbot.v111.phase2a.supplemental-official-source-plan.v1",
+  "target_ceiling": "2026-08-14T23:59:59+01:00 Europe/London",
+  "targets": [
+    {
+      "target_id": "supplemental-carriage-of-goods-by-sea-act-1992",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "ukpga:1992:50",
+      "source_title": "Carriage of Goods by Sea Act 1992",
+      "official_url": "https://www.legislation.gov.uk/ukpga/1992/50/2026-08-14/data.xml",
+      "required_locators": [
+        "section-2",
+        "section-3"
+      ],
+      "affected_rows": [
+        "live60-q49:issue-01",
+        "live60-q49:issue-02"
+      ],
+      "research_reason": "Bind title-document and carriage-contract rights and liabilities to the exact target-date consolidated official source rather than the post-target section snapshots."
+    },
+    {
+      "target_id": "supplemental-mental-capacity-act-2005",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "ukpga:2005:9",
+      "source_title": "Mental Capacity Act 2005",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2005/9/2026-08-14/data.xml",
+      "required_locators": [
+        "section-2",
+        "section-5"
+      ],
+      "affected_rows": [
+        "live30-q20:issue-01",
+        "live30-q20:issue-02",
+        "live30-q20:issue-03"
+      ],
+      "research_reason": "Bind capacity and acts connected with care or treatment to the exact target-date consolidated official source rather than the post-target section snapshots."
+    },
+    {
+      "target_id": "supplemental-procurement-act-2023",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "ukpga:2023:54",
+      "source_title": "Procurement Act 2023",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2023/54/2026-08-14/data.xml",
+      "required_locators": [
+        "section-12",
+        "section-101",
+        "section-103",
+        "section-104"
+      ],
+      "affected_rows": [
+        "live30-q21:issue-01",
+        "live30-q21:issue-05",
+        "live30-q21:issue-06",
+        "live30-q21:issue-07",
+        "live30-q21:issue-08"
+      ],
+      "research_reason": "Bind procurement objectives and statutory remedies to the exact target-date consolidated official source rather than the post-target section snapshots."
+    },
+    {
+      "target_id": "supplemental-data-use-and-access-act-2025",
+      "target_type": "point_in_time_legislation_xml",
+      "authority_identity": "ukpga:2025:18",
+      "source_title": "Data (Use and Access) Act 2025",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2025/18/2026-08-14/data.xml",
+      "required_locators": [
+        "section-80"
+      ],
+      "affected_rows": [
+        "live30-q23:issue-01",
+        "live30-q23:issue-02",
+        "live30-q23:issue-03",
+        "live30-q23:issue-04",
+        "live30-q23:issue-05",
+        "live30-q23:issue-06",
+        "live30-q23:issue-07",
+        "live30-q23:issue-09",
+        "live60-q46:issue-04",
+        "live60-q46:issue-07",
+        "live60-q51:issue-04",
+        "live60-q60:issue-19"
+      ],
+      "research_reason": "Review the exact target-date consolidated text and commencement state of the 2025 amendments before deciding whether any proposition-level source admission is material."
+    }
+  ],
+  "automatic_source_admission": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false
+}

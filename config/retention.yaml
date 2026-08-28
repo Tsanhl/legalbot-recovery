@@ -1,0 +1,8 @@
+feedback_days: 90
+incident_days: 180
+curation_days: 365
+dry_run_default: true
+never_during_live60: true
+encrypted_objects: retain_with_parent_row
+conversation_inactivity_days: 30
+conversation_hot_cache_days: 7

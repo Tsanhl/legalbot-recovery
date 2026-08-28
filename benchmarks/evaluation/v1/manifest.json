@@ -1,0 +1,38 @@
+{
+  "blocking_gate": "independent_expert_annotation_and_owner_approval",
+  "canonical_suite_sha256": "89ae4b31e48ba50225cdf69cdf4cc874d1ec75b1bfc1e3b9cd30636ac97bde9a",
+  "case_count": 240,
+  "category_counts": {
+    "core_single_authority": 80,
+    "knowledge_gap_clarification_refusal": 25,
+    "long_form": 20,
+    "multi_authority_conflict_time": 30,
+    "ocr_upload_boundary": 20,
+    "paraphrase_terminology_typo": 40,
+    "privacy_injection_lane_jurisdiction": 25
+  },
+  "development_benchmark_path": "benchmarks/retrieval/draft-v1.json",
+  "development_benchmark_sha256": "779a390d93515d24481e6185186605f1adcee3ea7f64af612a28b8317eaac270",
+  "eligible_for_training": false,
+  "promotion_eligible": false,
+  "proposed_span_integrity": {
+    "checked": 291,
+    "failures": [],
+    "passed": true
+  },
+  "purpose": "evaluation_only",
+  "schema": "legalbot.evaluation-suite-manifest.v1",
+  "split_counts": {
+    "adversarial_holdout": 48,
+    "development": 144,
+    "promotion": 48
+  },
+  "status": "needs_independent_expert_annotation",
+  "status_counts": {
+    "needs_expert_annotation": 240
+  },
+  "suite_file_sha256": "030a7fdebfe1428e491dcd564f1f9d57b7832daf753a47ed9ed28d651d704cff",
+  "suite_path": "benchmarks/evaluation/v1/draft-suite.jsonl",
+  "suite_version": "1.0.0",
+  "training_export_allowed": false
+}

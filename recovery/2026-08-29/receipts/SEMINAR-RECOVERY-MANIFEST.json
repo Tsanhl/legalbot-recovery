@@ -1,0 +1,373 @@
+{
+  "active_or_previous_written": false,
+  "artifact_count": 7,
+  "artifacts": [
+    {
+      "byte_count": 22159,
+      "classification": "deterministic-semantic",
+      "file_sha256": "b36de80280c1d324406516a61c3c12a01f3f76ed59c2ea22dce8c32f79cac525",
+      "filename": "pensions_seminar_gap_official_eu_judgments.2026-08-26.v1.json",
+      "independent_historical_proof": null,
+      "manifest_content_sha256": null,
+      "materialized": true,
+      "safe_to_overlay_in_isolation": false,
+      "source_inventory": {
+        "file_count": 27,
+        "files": [
+          {
+            "byte_count": 32099,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61975cj0043-eng.html",
+            "sha256": "61772c8a255b3a0b8e10db5a5e8c30253a810dc57870b22ae77859c32a4a77d8"
+          },
+          {
+            "byte_count": 19567,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61977cj0106-eng.html",
+            "sha256": "9a39956bdb8eb0e371dda42fdc4c665aa24e7c7eafe3bc0f58a474e479d45dcb"
+          },
+          {
+            "byte_count": 37116,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61988cj0262-eng.html",
+            "sha256": "8f332c4cf1cd057e77699182ec31311f67b5661eadc0738071c502fe8c141c9d"
+          },
+          {
+            "byte_count": 15207,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61989cj0037-eng.html",
+            "sha256": "98b705a61cafe5190eed8b12fa6fae7da50086f391ed9866a4606e4e5c0cbdf9"
+          },
+          {
+            "byte_count": 15568,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61989cj0106-eng.html",
+            "sha256": "e35f1e296af1ce31917319d78fd5a4e0f3f513cc8f39a9257e6a5884b76c2780"
+          },
+          {
+            "byte_count": 23542,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61991cj0152-eng.html",
+            "sha256": "89169f1319c2eacb8424e4eb5cdeccc3527331584d2575dac63069fe078e3c17"
+          },
+          {
+            "byte_count": 76259,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61991cj0200-eng.html",
+            "sha256": "f598e0c51e0aa4bc3ada0240f1d0a132d9892d677e47904b1c490164134f079c"
+          },
+          {
+            "byte_count": 23598,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61992cj0132-eng.html",
+            "sha256": "a5ba027b91335604ff34e39363cbdcb5164e523c3fef6e2121a5ce028fe07dfc"
+          },
+          {
+            "byte_count": 28654,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61993cj0057-eng.html",
+            "sha256": "64b9a3887c9c9ee3cee6076678bf77493cb88d9df0b3302ff5591688f07a5354"
+          },
+          {
+            "byte_count": 23316,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-61996cj0347-eng.html",
+            "sha256": "8001741d676c5dd8f708b98d76bed0fdd42785d591363cf7b0f748a207052f19"
+          },
+          {
+            "byte_count": 34890,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62000cj0164-eng.html",
+            "sha256": "2bf074300b4fc6c111a1f8e460990f3a271352cb796cba0a15756da8d1679844"
+          },
+          {
+            "byte_count": 61318,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62001cj0004-eng.html",
+            "sha256": "8a6ac246936ec874c0b7129d527168df385f57069cea4ce5fe9a388ff130a3d4"
+          },
+          {
+            "byte_count": 72726,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62001cj0256-eng.html",
+            "sha256": "9a5986c4b394481785936b0d1bb5385086d30cc9be5366b3c41b7fc5a960a93d"
+          },
+          {
+            "byte_count": 101005,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62001cj0397-eng.html",
+            "sha256": "1c7731c6e429c1b481ff61ee5698bcf536706ee51ed773ef17aba4b1b81cbfe9"
+          },
+          {
+            "byte_count": 65939,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62004cj0144-eng.html",
+            "sha256": "cf67dab17a0d9ca095fb90d2c84438adf8e83fb969a33646f99041327e1e3642"
+          },
+          {
+            "byte_count": 6060,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62004cj0227-eng.html",
+            "sha256": "d2e04ad0d302b13022d500cef50dfa5a79fd543266bc2dceb21c2daf9fdaf259"
+          },
+          {
+            "byte_count": 67464,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62004cj0300-eng.html",
+            "sha256": "c6ab3e3f8c721f78df75a5bfc86b626ccd8e1c803f93e6968447d881a72456d3"
+          },
+          {
+            "byte_count": 96463,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62004cj0344-eng.html",
+            "sha256": "76efaa132b590d0bd9e0f4bb47a071ce72536d07126b9836f1347fe57d14aebd"
+          },
+          {
+            "byte_count": 37417,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62005cj0278-eng.html",
+            "sha256": "d57d5e87d8a6348501370c0577a5740c7beea993380e970c1214137b955e44e9"
+          },
+          {
+            "byte_count": 59804,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62007cj0127-eng.html",
+            "sha256": "fc5e1397ea814a5af5f6b21a8ba6aa28e45ae38329e9dae0906cd0895d908da7"
+          },
+          {
+            "byte_count": 50621,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62007cj0555-eng.html",
+            "sha256": "1dcc5ece6023a3ba1b80b24601c251f8b6196e86d3936c7396dbab5aa8759fbb"
+          },
+          {
+            "byte_count": 36580,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62009cj0236-eng.html",
+            "sha256": "0e31e185219db409bef1f569495a7de2357bb80798a70ff44d846c5d50757a83"
+          },
+          {
+            "byte_count": 62608,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62011cj0398-eng.html",
+            "sha256": "a5b623e5e87db5cca6c22c92796550f4698c8e7008a18fb03786fd22b6b2d6a9"
+          },
+          {
+            "byte_count": 139867,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62016cj0569-eng.html",
+            "sha256": "99484f1932c2e5751d424f75e5dc041e22d47a09793e5359751a87e769e128c4"
+          },
+          {
+            "byte_count": 91585,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62017cj0017-eng.html",
+            "sha256": "41de5f37f453a696932225d3773dd1a75a39c536b9c85184801b5c3ae827975e"
+          },
+          {
+            "byte_count": 77599,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62018cj0168-eng.html",
+            "sha256": "5f164e6e8376d8ba0a0b886eb1727056e4aa6fdc41d8a70766cd9a1f6017ed4f"
+          },
+          {
+            "byte_count": 80263,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/eu-judgments/eu-celex-62018cj0171-eng.html",
+            "sha256": "005bb2b96dc6e51589d5e1a67cf1edaad9e0cc6d7cfe6fde088c4397ac7d85ba"
+          }
+        ],
+        "inventory_sha256": "e0142be9eed3f3df6d8ad5d93cb7f6fa73e4405201e1184a1627e93749d58f1f",
+        "total_bytes": 1437135
+      },
+      "writer_exec_id": "exec-0270f976-aa8f-456c-a924-896432533c5c",
+      "writer_script": "scripts/stage_pensions_eu_seminar_gap_sources.py",
+      "writer_script_sha256": "e9162d6cb7130980a4db2b32ab9eb9a3672227ca02c80a1d56b7d7408d02a3d8"
+    },
+    {
+      "byte_count": 4032,
+      "classification": "exact",
+      "file_sha256": "78157320712f436e830cb95d9036044a6737d422ba6308e21abdaf2ca6cdc161",
+      "filename": "seminar_gap_official_ewhc_divisions.2026-08-26.v1.json",
+      "independent_historical_proof": {
+        "content_sha256": "1fe5a14924ac56e67d4956a2cbf40959288e04aee8b542af9630b3f158975366",
+        "file_sha256": "78157320712f436e830cb95d9036044a6737d422ba6308e21abdaf2ca6cdc161"
+      },
+      "manifest_content_sha256": "1fe5a14924ac56e67d4956a2cbf40959288e04aee8b542af9630b3f158975366",
+      "materialized": true,
+      "safe_to_overlay_in_isolation": true,
+      "source_inventory": {
+        "file_count": 3,
+        "files": [
+          {
+            "byte_count": 32178,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/uk-judgments-round3/ewhc-admin-2003-266-data.xml",
+            "sha256": "2e82b66d90ed56c5816f627137b306940057940d60b18592d5cfaed9a194c7e8"
+          },
+          {
+            "byte_count": 32428,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/uk-judgments-round3/ewhc-admin-2010-2358-data.xml",
+            "sha256": "63ce4ba968db68011ef1bb573325b59cdf2a29c2a65df2e6aef8ff838fc3ddff"
+          },
+          {
+            "byte_count": 326999,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/uk-judgments-round3/ewhc-ch-2005-817-data.xml",
+            "sha256": "a5faf44e7a79d6fdeca67c614fc57430f82226cbcdb813933f1e431f1e2d01f7"
+          }
+        ],
+        "inventory_sha256": "5899785795d6a5276305239928edca797ae20c8a723308dee61e7b9925ac7a77",
+        "total_bytes": 391605
+      },
+      "writer_exec_id": "exec-a1bf5c40-cd87-4f58-b54b-e7bcedda3793",
+      "writer_script": "scripts/stage_seminar_ewhc_division_gaps.py",
+      "writer_script_sha256": "5d85058fbae2d2cef037cae58fd661b5b9718ab12caee91f4bde7b9038e4c9af"
+    },
+    {
+      "byte_count": 8199,
+      "classification": "exact",
+      "file_sha256": "0624086d37d57e61c841928fff5811a8841c87ca9efdab7016e3c66509d28a16",
+      "filename": "seminar_gap_official_fcl_search_recovery.2026-08-26.v1.json",
+      "independent_historical_proof": {
+        "content_sha256": "305f1bfa1f801759d6e143ed37b09df571e3a3b76937fd4af7ddbd9883126c0a",
+        "file_sha256": "0624086d37d57e61c841928fff5811a8841c87ca9efdab7016e3c66509d28a16"
+      },
+      "manifest_content_sha256": "305f1bfa1f801759d6e143ed37b09df571e3a3b76937fd4af7ddbd9883126c0a",
+      "materialized": true,
+      "safe_to_overlay_in_isolation": true,
+      "source_inventory": {
+        "file_count": 0,
+        "files": [],
+        "inventory_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "total_bytes": 0
+      },
+      "writer_exec_id": "exec-43c7ea7a-bb57-4ba1-8e2a-f4d2b849b741",
+      "writer_script": "scripts/stage_seminar_fcl_search_recovery.py",
+      "writer_script_sha256": "157f43c2d14f5d2e3a0b1b5637eed00beac2186750331acd477aeca8547c64f8"
+    },
+    {
+      "blocker": {
+        "known_historical_file_sha256": "c58b991a6f678bb07650fb6c5b9cb4cde0589ff067e1b8fc6fb672b506f93636",
+        "known_historical_manifest_content_sha256": "df3e26d29b88b734e29360db797c01379be678dd231a57e8ceb34d37dbb46400",
+        "missing_opaque_dependency": "source-resolution file SHA-256"
+      },
+      "classification": "unrecoverable",
+      "filename": "seminar_gap_official_legislation_round2.2026-08-26.v1.json",
+      "materialized": false,
+      "safe_to_overlay_in_isolation": false,
+      "writer_exec_id": "exec-9072b6e7-09ec-4086-be09-dde63c8e6fba",
+      "writer_script": "scripts/stage_seminar_legislation_gaps.py",
+      "writer_script_sha256": "8729ad839dbf4d39715b1bb915d9f6b9eec5a675f054c57cdd4ed7ad7dc2676f"
+    },
+    {
+      "byte_count": 5772,
+      "classification": "exact",
+      "file_sha256": "f887e85ea1c03b9d80632d10b5ec0f774835bf37ff16744a6b0f349f5efeec4b",
+      "filename": "seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json",
+      "independent_historical_proof": {
+        "content_sha256": "65c80041f5903979a156a5b968cbcfabff1ed80e6c3162a055f283e2462ff0df",
+        "file_sha256": "f887e85ea1c03b9d80632d10b5ec0f774835bf37ff16744a6b0f349f5efeec4b"
+      },
+      "manifest_content_sha256": "65c80041f5903979a156a5b968cbcfabff1ed80e6c3162a055f283e2462ff0df",
+      "materialized": true,
+      "safe_to_overlay_in_isolation": true,
+      "source_inventory": {
+        "file_count": 6,
+        "files": [
+          {
+            "byte_count": 2331,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga-Edw7-8-67-data.xml",
+            "sha256": "b6481c02d5d0ebd9581d2efe0d24240711a84854d23721b9a6ae09f67f21d5ab"
+          },
+          {
+            "byte_count": 88149,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga-Geo5-15-16-22-data.xml",
+            "sha256": "68f5f03fc810d4a62da908f87ec938b9d45932be603187f019905a82523ef59c"
+          },
+          {
+            "byte_count": 2389,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga-Vict-36-37-66-data.xml",
+            "sha256": "cf7b8872e8427e947d9f66b5ceac0cc14b00d0744d837c7d9e2a0705356ad9ae"
+          },
+          {
+            "byte_count": 2379,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga-Vict-38-39-87-data.xml",
+            "sha256": "4e17d01eceb5d9b9bee4b8af59ce1998e9e7ca55c3fabfead3a73323ad3b2bf9"
+          },
+          {
+            "byte_count": 114213,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga-Vict-56-57-71-data.xml",
+            "sha256": "86e795b7507f56f3b7704055405b7aaafba3040b233a45f646e3a431b1a1063b"
+          },
+          {
+            "byte_count": 2375,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga-Vict-60-61-65-data.xml",
+            "sha256": "bdc46af52b3c4bec9bcc8e094fd43c329b0361ebcbd6c9d82af7f896cca45938"
+          }
+        ],
+        "inventory_sha256": "1552db778e5f1b3dd3050a3c59fa6008bf1cf5684f9d1f6a964a6eb5639f7c12",
+        "total_bytes": 211836
+      },
+      "writer_exec_id": "exec-aa19b276-fc4b-4216-9d41-d2e93a56f23c",
+      "writer_script": "scripts/repair_seminar_legislation_enacted_gaps.py",
+      "writer_script_sha256": "4ebe7272035f9855d80962f7381a14fdde16b8ca3879f0a60d3e39d9eeaf76d5"
+    },
+    {
+      "byte_count": 4170,
+      "classification": "exact",
+      "file_sha256": "62663395ced8e1cfa2524f4697755f28b4099c94093bf0520fae04291e73ea05",
+      "filename": "seminar_gap_official_legislation_round2.2026-08-26.v3-pdf-repair.json",
+      "independent_historical_proof": {
+        "content_sha256": "b57e6e56cc408071fa2531395350b70d358f5483ca8ac9cba9c69afed7cd7a62",
+        "file_sha256": "62663395ced8e1cfa2524f4697755f28b4099c94093bf0520fae04291e73ea05"
+      },
+      "manifest_content_sha256": "b57e6e56cc408071fa2531395350b70d358f5483ca8ac9cba9c69afed7cd7a62",
+      "materialized": true,
+      "safe_to_overlay_in_isolation": true,
+      "source_inventory": {
+        "file_count": 4,
+        "files": [
+          {
+            "byte_count": 5477114,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga_18730066_en.pdf",
+            "sha256": "8fb2ce5a64376182814be826d55f9c1a2a62e2d0edafeeed9860170784b6e5ae"
+          },
+          {
+            "byte_count": 3472377,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga_18750087_en.pdf",
+            "sha256": "8aa73f22348de2790209989c0c5fa19da3712fade784063d153ec4037a4cde57"
+          },
+          {
+            "byte_count": 2310022,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga_18970065_en.pdf",
+            "sha256": "aa1be243a3d5d1d9b3d09ec7598534213feb20decf119b283180fb4a941cfe39"
+          },
+          {
+            "byte_count": 10294339,
+            "path": "/Users/hltsang/Desktop/Law/Official Legislation/seminar-gap-official-2026-08-26/legislation-round2/ukpga_19080067_en.pdf",
+            "sha256": "ce7b35e289afcb9ed465aa786b7fd9c550c4fc5db075f7c57dcb792ec5a08c2d"
+          }
+        ],
+        "inventory_sha256": "04f1ebda147618befabae427524052c36ea31eb7650d73abfce0f47acebc51b2",
+        "total_bytes": 21553852
+      },
+      "writer_exec_id": "exec-10ea305f-4bf5-40fd-82d0-90b8bb6bfdc0",
+      "writer_script": "scripts/repair_seminar_legislation_pdf_representations.py",
+      "writer_script_sha256": "9cac4e61d2fdf81e45db919f025d1c62dedf5b3a36b962c137d3241231e14f9f"
+    },
+    {
+      "blocker": {
+        "additional_missing_semantics": "exact 95 target presentation-subject/document-count bindings and 10 already-catalogued row bindings",
+        "known_historical_file_sha256": "c7595f2a44049d437a4bd2610df2909dbcb20a62ad42905dfc94ff0461c180bb",
+        "missing_opaque_dependency": "seminar-source-audit-v4 file SHA-256"
+      },
+      "classification": "unrecoverable",
+      "filename": "seminar_gap_official_uk_judgments_round2.2026-08-26.v1.json",
+      "materialized": false,
+      "safe_to_overlay_in_isolation": false,
+      "writer_exec_id": "exec-b3c03eec-dd06-4b8a-a635-3d0b63cb11f0",
+      "writer_script": "scripts/collect_seminar_uk_judgment_gaps.py",
+      "writer_script_sha256": "c3203848b51fcfd6fb1e6d7afd1ebd49b8097e5bc15f9ec21949f0eb4cb97906"
+    }
+  ],
+  "created_date": "2026-08-29",
+  "dependency_closure": {
+    "reason": "The exact EWHC/FCL children require the unrecovered UK parent; the exact legislation v2/v3 children require the unrecovered legislation v1 parent.",
+    "status": "blocked",
+    "whole_set_safe_to_apply": false
+  },
+  "deterministic_semantic_count": 1,
+  "exact_count": 4,
+  "index_or_embedding_run": false,
+  "materialized_count": 5,
+  "network_used": false,
+  "overlay_content_sha256": "46ae598143e1d47978d8e3f4bf0de6c3a0515fc925f271eb31be9c06244b5fd6",
+  "recovery_root": "/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829",
+  "safe_overlay_procedure": [
+    "Verify every line in SHA256SUMS.txt inside this evidence directory.",
+    "Do not copy any artifact into a runnable recovery worktree while either parent manifest is absent.",
+    "Recover and verify the UK round2 parent against c7595f2a... and legislation v1 against c58b991a... before child overlay.",
+    "Treat the EU artifact as deterministic-semantic until an independent historical output seal is recovered or an owner explicitly accepts that classification.",
+    "Copy only into the recovery worktree config directory using exclusive-create semantics; never overwrite an existing file.",
+    "After copying, verify exact children against the historical seals recorded here and recheck parent SHA fields.",
+    "Keep the rebuilt candidate non-ACTIVE; this overlay does not authorize scan, indexing, embedding, promotion, Phase 2A, or Phase 2B."
+  ],
+  "schema": "legalbot.disaster-recovery.seminar-manifest-overlay.v1",
+  "source_scan_run": false,
+  "source_session": "/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829/evidence/codex-sessions-2026-08/26/rollout-2026-08-26T18-53-07-01a03db3-c9d0-7a51-9a0e-a005d26cc4b3.jsonl",
+  "source_session_sha256": "89bc5c15cc91b15b376210479f6b361dd79c79b9d97e6f2c730e49cefdb50a51",
+  "unrecoverable_count": 2,
+  "write_scope": "/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829/manifests/seminar-manifest-overlay-r1"
+}

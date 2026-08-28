@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.v111-integration-state-snapshot.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "captured_at",
+    "authorizing",
+    "purpose",
+    "privacy",
+    "git",
+    "deferred_untracked_files",
+    "candidate",
+    "catalogue",
+    "historical_attestation",
+    "runtime_and_locks",
+    "owner_decision_inventory",
+    "q31_reference_inventory",
+    "verification_observations",
+    "prohibited_phase1_actions_observed"
+  ],
+  "properties": {
+    "schema": {"const": "legalbot.v111-integration-state-snapshot.v1"},
+    "captured_at": {"type": "string", "format": "date-time"},
+    "authorizing": {"const": false},
+    "purpose": {"type": "string", "minLength": 1},
+    "privacy": {"type": "object"},
+    "git": {
+      "type": "object",
+      "required": ["branch", "head", "tree", "upstream", "history", "worktrees"],
+      "properties": {
+        "branch": {"type": "string"},
+        "head": {"$ref": "#/$defs/gitObject"},
+        "tree": {"$ref": "#/$defs/gitObject"},
+        "upstream": {"type": "string"},
+        "history": {
+          "type": "object",
+          "required": ["range", "commit_count", "canonical_log_sha256"],
+          "properties": {
+            "range": {"type": "string"},
+            "commit_count": {"type": "integer", "minimum": 0},
+            "canonical_log_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "worktrees": {"type": "array", "minItems": 1}
+      }
+    },
+    "deferred_untracked_files": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["path", "size", "mode", "sha256"],
+        "properties": {
+          "path": {"type": "string"},
+          "size": {"type": "integer", "minimum": 1},
+          "mode": {"const": "100644"},
+          "sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "candidate": {"type": "object"},
+    "catalogue": {"type": "object"},
+    "historical_attestation": {"type": "object"},
+    "runtime_and_locks": {"type": "object"},
+    "owner_decision_inventory": {"type": "array"},
+    "q31_reference_inventory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["classification", "path", "lines", "disposition"],
+        "properties": {
+          "classification": {
+            "enum": [
+              "historical-diagnostic",
+              "current-q31-specific-dependency",
+              "generic-runtime-safeguard-test-with-q31-fixture",
+              "unrelated-case-id-data",
+              "unrelated-case-id-test-fixture"
+            ]
+          },
+          "path": {"type": "string"},
+          "lines": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 1}},
+          "disposition": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "verification_observations": {"type": "object"},
+    "prohibited_phase1_actions_observed": {
+      "type": "object",
+      "additionalProperties": {"const": false}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "gitObject": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+  }
+}

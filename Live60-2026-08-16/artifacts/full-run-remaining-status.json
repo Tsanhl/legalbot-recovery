@@ -1,0 +1,146 @@
+{
+  "active_pointer_present": false,
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "ai_second_reviewer_forbidden": true,
+  "any_gate_passed": false,
+  "as_of_date": "2026-08-16",
+  "candidate_stage_a": {
+    "attempted": true,
+    "blocking_reason_codes": [
+      "no_sealed_ranking_gold_overlay",
+      "no_current_date_rights_qualified_candidate",
+      "stage_a_requires_qualified_exact_spans"
+    ],
+    "candidate_built": false,
+    "passed": false,
+    "promoted": false
+  },
+  "current_issue_state": {
+    "knowledge_gap": 585,
+    "limited": 0,
+    "qualified": 0,
+    "spans_bound": 0
+  },
+  "eligible_for_training": false,
+  "fabricated_any_pass": false,
+  "generation_authorised": false,
+  "o04_authorised": false,
+  "owner_is_primary_reviewer": true,
+  "owner_live_gates": {
+    "overlay_sealed_from_owner_ticks": {
+      "ai_role": "mechanical_accuracy_verifier_only",
+      "ai_second_reviewer_forbidden": true,
+      "attempted": true,
+      "blocking_reason_codes": [
+        "no_qualified_or_limited_issue_with_exact_spans",
+        "all_issues_knowledge_gap_stage_a_cannot_pass",
+        "overlay_not_sealable"
+      ],
+      "existing_sealed_overlay_present": false,
+      "knowledge_gap_issue_count": 585,
+      "limited_issue_count": 0,
+      "owner_is_primary_reviewer": true,
+      "qualified_issue_count": 0,
+      "sealed": false,
+      "wrote_expert_qualification": false
+    },
+    "owner_O-04_exact_30_ids": {
+      "attempted": true,
+      "blocking_reason_codes": [
+        "o04_must_be_owner_issued_not_code_issued"
+      ],
+      "o04_artifact_count": 0,
+      "passed": false,
+      "wrote_o04": false
+    },
+    "owner_promote_ACTIVE": {
+      "active_pointer_present": false,
+      "attempted": true,
+      "blocking_reason_codes": [
+        "owner_promotion_not_invoked",
+        "no_passing_candidate"
+      ],
+      "passed": false,
+      "wrote_active_pointer": false
+    },
+    "readiness_v6_green": {
+      "attempted": true,
+      "blocking_reason_codes": [
+        "active_previous_rollback_drill",
+        "current_date_candidate",
+        "first_live_local_only_profile",
+        "owner_promoted_active",
+        "real_browser_recovery_drill",
+        "sealed_expert_overlay",
+        "stage_a_coverage_and_thresholds"
+      ],
+      "passed": false,
+      "readiness_report_present": true
+    },
+    "real_local_browser_recovery": {
+      "attempted": true,
+      "blocking_reason_codes": [
+        "browser_recovery_requires_real_owner_observed_reload",
+        "no_ACTIVE_ordinary_job"
+      ],
+      "browser_recovery_present": false,
+      "passed": false
+    },
+    "rollback_and_repromotion": {
+      "attempted": true,
+      "blocking_reason_codes": [
+        "no_ACTIVE_to_roll_back",
+        "rollback_drill_absent"
+      ],
+      "passed": false,
+      "previous_pointer_present": false,
+      "rollback_drill_present": false
+    },
+    "run_date_candidate_frozen": {
+      "active_pointer_present": false,
+      "attempted": true,
+      "blocking_reason_codes": [
+        "no_current_date_rights_qualified_candidate",
+        "previous_current_law_candidates_superseded_or_failed"
+      ],
+      "passed": false
+    },
+    "stage_a_all_60": {
+      "attempted": true,
+      "blocking_reason_codes": [
+        "no_sealed_ranking_gold_overlay",
+        "recall_at_5_requires_qualified_exact_spans"
+      ],
+      "passed": false
+    }
+  },
+  "path_b_overlay": {
+    "attempted": true,
+    "blocking_reason_codes": [
+      "owner_evidence_reviews_absent",
+      "selected_qualified_case_count_not_30",
+      "selected_issues_missing_positive_exact_spans",
+      "contrary_review_missing_or_unsealed",
+      "owner_decisions_missing_or_unsealed",
+      "held_statutes_still_hold",
+      "overlay_not_sealable"
+    ],
+    "held_span_repair_qualified": false,
+    "held_span_repair_schema": "legalbot.live60-held-span-contiguous-repair.v2",
+    "owner_authored_contrary_present": false,
+    "owner_authored_decisions_present": false,
+    "sealed": false,
+    "unsigned_owner_control_templates_present": true,
+    "v2_gold_eligible_repair_count": 5,
+    "wrote_expert_qualification": false
+  },
+  "previous_pointer_present": false,
+  "route": "path_b",
+  "schema": "legalbot.live60-full-run-remaining-status.v1",
+  "suite_id": "live-evaluation-60-v1",
+  "target": "full_30_answer_run",
+  "training_export_allowed": false,
+  "writes_active": false,
+  "writes_o04": false,
+  "writes_previous": false
+}

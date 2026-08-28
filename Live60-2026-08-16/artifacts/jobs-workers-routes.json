@@ -1,0 +1,26 @@
+{
+  "answer_job": "durable_fifo_one_attempt",
+  "elasticsearch_used": false,
+  "eligible_for_training": false,
+  "full_enquiry_shares_sectioned_runner": true,
+  "index_build_job": "same_worker_max_three_attempts_never_writes_active",
+  "live60_route_counts": {
+    "full_enquiry": 27,
+    "sectioned": 33
+  },
+  "research_worker": "separate_process_disabled_first_live",
+  "router_version": "legalbot-answer-router-v3",
+  "schema": "legalbot.live60-jobs-workers-routes.v1",
+  "task_type_counts": {
+    "essay": 21,
+    "problem": 39
+  },
+  "training_export_allowed": false,
+  "word_bands": [
+    "direct_0100_1200",
+    "sectioned_1000_2000",
+    "sectioned_2001_5000",
+    "full_enquiry_3000_5000",
+    "full_enquiry_5001_10000"
+  ]
+}

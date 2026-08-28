@@ -1,0 +1,39 @@
+{
+  "schema": "legalbot.public-repo-artifact-audit.v1",
+  "as_of_date": "2026-08-17",
+  "branch": "fix/live60-binding-runtime-structure-observability",
+  "head_sha_at_audit": "c05d520a12e5e0873ff3c3edefd67ed57dc1eaf6",
+  "history_rewritten": false,
+  "local_originals_deleted": false,
+  "classification": {
+    "A_source_schema_config": "tracked",
+    "B_small_test_fixture": "tracked",
+    "C_small_sanitized_audit_manifest": "tracked where useful",
+    "D_generated_run_output": "removed from merge; local originals kept",
+    "E_large_json_research_ledger": "removed from merge; local originals kept",
+    "F_xlsx_docx_binary_report": "removed from merge; local originals kept",
+    "G_licensed_or_source_full_text": "not published",
+    "H_pii_private_paths_secrets": "must not be tracked"
+  },
+  "removed_from_public_merge_count": 76,
+  "remaining_tracked_xlsx_docx_pdf_count": 0,
+  "remaining_tracked_live60_count": 41,
+  "remaining_tracked_8_17_review_count": 4,
+  "remaining_tracked_docs_reports_count": 4,
+  "secret_count": 0,
+  "absolute_private_path_count_in_remaining_live60_docs": 0,
+  "tracked_owner_home_path_count": 1,
+  "tracked_owner_home_path_files": [
+    "AGENTS.md"
+  ],
+  "notes": [
+    "git rm --cached only; working-tree originals were not deleted.",
+    "Mutable Live60 counts live in data/evaluations/live60 via CURRENT.json.",
+    "Hardcoded owner home path removed from official_search_dirs; configured source_roots are used instead.",
+    "AGENTS.md still names the configured Desktop Law source root as a clean-room rule.",
+    "Remaining 8-17 review tracking is README + SHA256SUMS only.",
+    "Remaining docs/reports dated JSON files are assessment-guidance fixtures required by tests.",
+    "False-positive encryption-key mentions in tests, examples and CI remain; they are not live secrets.",
+    "This audit is metadata only and does not contain source text, secrets, or private payloads."
+  ]
+}

@@ -1,0 +1,408 @@
+{
+  "catalogue_mutated": false,
+  "decision": "return_hold",
+  "eligible_for_training": false,
+  "note": "contiguous repair candidates accepted from official pages; catalogue parents remain immutable",
+  "o04_authorised": false,
+  "parent_chunks_immutable": true,
+  "proposed_sublocators": [
+    {
+      "chunk_id": "chunk-7e5bbeb3dff523f4e7e458a42541455da30e5023",
+      "held_id": "held-provision-01",
+      "ordinal": 6,
+      "required_sublocator": "s 2",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-7737b0284bca0851a183c789fcbf2286d50509f3",
+      "held_id": "held-provision-02",
+      "ordinal": 145,
+      "required_sublocator": "s 14A(1)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-0274df9550be6c4345418738022f638cfc103d17",
+      "held_id": "held-provision-02",
+      "ordinal": 146,
+      "required_sublocator": "s 14A(2)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-3355e7b79e3da240163b183c3e3d83d519c31569",
+      "held_id": "held-provision-02",
+      "ordinal": 147,
+      "required_sublocator": "s 14A(3)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-99f025e934d34f1959798629e5cac5b57f457ba7",
+      "held_id": "held-provision-02",
+      "ordinal": 148,
+      "required_sublocator": "s 14A(4) chapeau",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-957853af0e2427da30ad4a9e80b66de9dc91da7c",
+      "held_id": "held-provision-02",
+      "ordinal": 149,
+      "required_sublocator": "s 14A(4)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-c208d5e40fd237a59a4d006e0cc5837d43d4d2e8",
+      "held_id": "held-provision-02",
+      "ordinal": 150,
+      "required_sublocator": "s 14A(4)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-a081bd7fea3cfd2b58a6a3a7326d2c96a95c246a",
+      "held_id": "held-provision-02",
+      "ordinal": 151,
+      "required_sublocator": "s 14A(5)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-2316c16ca054635971bb6aa886c706715537fe84",
+      "held_id": "held-provision-02",
+      "ordinal": 152,
+      "required_sublocator": "s 14A(6) chapeau",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-61d28d4cdfad4ad485bf7df36d58148e9ebd8d20",
+      "held_id": "held-provision-02",
+      "ordinal": 153,
+      "required_sublocator": "s 14A(6)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-dba1d9ffb5711d522afdddf1f36a07c5f8f187ac",
+      "held_id": "held-provision-02",
+      "ordinal": 154,
+      "required_sublocator": "s 14A(6)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-d635b37a0e57015627d3cce8e24579162a5cf184",
+      "held_id": "held-provision-02",
+      "ordinal": 155,
+      "required_sublocator": "s 14A(7)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-57ab7d5bff0c9154acf2fae6ea2a032276eea215",
+      "held_id": "held-provision-02",
+      "ordinal": 156,
+      "required_sublocator": "s 14A(8) chapeau",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-4d57d7b0ede78185e7c207c3a7bb8b36a7eace60",
+      "held_id": "held-provision-02",
+      "ordinal": 157,
+      "required_sublocator": "s 14A(8)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-f5e4702802cb6848c7fa67a3dac414b8d0b52e6c",
+      "held_id": "held-provision-02",
+      "ordinal": 158,
+      "required_sublocator": "s 14A(8)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-22f00a67cc7240bb72052e2a6a5497595a34855d",
+      "held_id": "held-provision-02",
+      "ordinal": 159,
+      "required_sublocator": "s 14A(8)(c)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-e3b74c78f0c915a134223cc81956bee0f3053aae",
+      "held_id": "held-provision-02",
+      "ordinal": 160,
+      "required_sublocator": "s 14A(9)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-73fd50b82133e6bd94542a9e1d78ae5b06f91987",
+      "held_id": "held-provision-02",
+      "ordinal": 161,
+      "required_sublocator": "malformed_non_contiguous_s14A(10)_replace",
+      "structural_defect_codes": [
+        "non_contiguous_s14A_10_chapeau_spliced_with_final_proviso"
+      ]
+    },
+    {
+      "chunk_id": "chunk-3de78ede4e789c42d5c789aab0fcad7665036859",
+      "held_id": "held-provision-02",
+      "ordinal": 162,
+      "required_sublocator": "s 14A(10)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-6532d5a58b0e364e1e1b9c5c3f73f851c10cb2a2",
+      "held_id": "held-provision-02",
+      "ordinal": 163,
+      "required_sublocator": "s 14A(10)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-c27e417b3d13e833d147fa27a0317363a1742f64",
+      "held_id": "held-provision-03",
+      "ordinal": 2,
+      "required_sublocator": "s 1(1) chapeau",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-0801c6d9c8d1d3c6e64df8f9d396ec95a8680110",
+      "held_id": "held-provision-03",
+      "ordinal": 3,
+      "required_sublocator": "s 1(1)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-56f51277c8c6df1699bac4318a33ab26248c4d37",
+      "held_id": "held-provision-03",
+      "ordinal": 4,
+      "required_sublocator": "s 1(1)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-c903b02ec5754dfc0164fdd74d24e876c633743e",
+      "held_id": "held-provision-03",
+      "ordinal": 5,
+      "required_sublocator": "s 1(2)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-65e1c2ac95885e5e8e9d65e5ae138b5b6fbcde0a",
+      "held_id": "held-provision-04",
+      "ordinal": 1,
+      "required_sublocator": "replace_with_s1(1)_chapeau_and_post_list_concluding_span",
+      "structural_defect_codes": [
+        "non_contiguous_ipfda_s1_1_chapeau_spliced_with_concluding_words"
+      ]
+    },
+    {
+      "chunk_id": "chunk-e20dd33a86cc2ec78743a9eb5308a83b6165fbe0",
+      "held_id": "held-provision-04",
+      "ordinal": 2,
+      "required_sublocator": "s 1(1)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-9ecfb8074eac831f69bffe2f81d488e5e4c0f89b",
+      "held_id": "held-provision-04",
+      "ordinal": 3,
+      "required_sublocator": "s 1(1)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+      "held_id": "held-provision-04",
+      "ordinal": 4,
+      "required_sublocator": "s 1(1)(ba)_retain_annotation_separately",
+      "structural_defect_codes": [
+        "editorial_ellipsis_mixed_into_positive_text"
+      ]
+    },
+    {
+      "chunk_id": "chunk-5464e479aa18e53a072a3e88597759736f85cdb1",
+      "held_id": "held-provision-04",
+      "ordinal": 5,
+      "required_sublocator": "s 1(1)(c)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-d5a0030b3a220fc7179b7fbcb2cfef1688cae400",
+      "held_id": "held-provision-04",
+      "ordinal": 6,
+      "required_sublocator": "s 1(1)(d)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-58cb875ec7887311dca872fb385423480ace0eae",
+      "held_id": "held-provision-04",
+      "ordinal": 7,
+      "required_sublocator": "s 1(1)(e)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-8a7d845e06e33bf955a4e70a3e2a8a2a247c566d",
+      "held_id": "held-provision-04",
+      "ordinal": 8,
+      "required_sublocator": "s 1(1A) chapeau",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-8ae1290987f7283f606d59afdb2abac111126dae",
+      "held_id": "held-provision-04",
+      "ordinal": 9,
+      "required_sublocator": "s 1(1A)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-e9767f293df581a5e1b7b6f4ff390e6b58deba16",
+      "held_id": "held-provision-04",
+      "ordinal": 10,
+      "required_sublocator": "s 1(1A)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-0bdcbc97ae11975ac1032cc3c6974aeaad9e43a7",
+      "held_id": "held-provision-04",
+      "ordinal": 11,
+      "required_sublocator": "repealed_or_omitted_s1(1B)_exclude",
+      "structural_defect_codes": [
+        "repealed_or_omitted_editorial_marker"
+      ]
+    },
+    {
+      "chunk_id": "chunk-075885dcbc880979f9f738c3d11faa68660f2c8e",
+      "held_id": "held-provision-04",
+      "ordinal": 12,
+      "required_sublocator": "s 1(2) chapeau",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-66ff9222e9d809f99286be809bf79c739765f0cb",
+      "held_id": "held-provision-04",
+      "ordinal": 13,
+      "required_sublocator": "s 1(2)(a)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-5deb8468965d80338bca0cf50de831ee48a369eb",
+      "held_id": "held-provision-04",
+      "ordinal": 14,
+      "required_sublocator": "s 1(2)(aa)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-6b03f1a4fb0288feb974cca5fb24da1ae6a4b273",
+      "held_id": "held-provision-04",
+      "ordinal": 15,
+      "required_sublocator": "s 1(2)(b)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-ab5c9413e0b6ce19b14eb0962b54f621c81ceda3",
+      "held_id": "held-provision-04",
+      "ordinal": 16,
+      "required_sublocator": "s 1(2A)",
+      "structural_defect_codes": []
+    },
+    {
+      "chunk_id": "chunk-4b757e8f07c6abdefb60b009b72cefc64567e2b0",
+      "held_id": "held-provision-04",
+      "ordinal": 17,
+      "required_sublocator": "s 1(3)",
+      "structural_defect_codes": []
+    }
+  ],
+  "qualified": false,
+  "repair_span_count": 8,
+  "repairs": [
+    {
+      "action": "replace_spliced_parent_with_chapeau",
+      "gold_eligible_candidate": true,
+      "markdown_text": "section 14A For the purposes of this section a person’s knowledge includes knowledge which he might reasonably have been expected to acquire—",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-73fd50b82133e6bd94542a9e1d78ae5b06f91987",
+      "repair_span_id": "repair-span-1aab1b54afe4a5bbb5c524c36b649b7a38da6d06cc122a83cfe6685301b92c50",
+      "required_sublocator": "s 14A(10) chapeau",
+      "role": "statutory_text_contiguous_candidate",
+      "seals_expert_gold": false,
+      "text_sha256": "25f30597667081eb7f88029e9f4286ecd45fea84c0b0ee4907ced25f52a425b8"
+    },
+    {
+      "action": "replace_spliced_parent_with_final_proviso",
+      "gold_eligible_candidate": true,
+      "markdown_text": "but a person shall not be taken by virtue of this subsection to have knowledge of a fact ascertainable only with the help of expert advice so long as he has taken all reasonable steps to obtain (and, where appropriate, to act on) that advice.",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-73fd50b82133e6bd94542a9e1d78ae5b06f91987",
+      "repair_span_id": "repair-span-f6c1cac940c63b82c12b05ed399d3fa11ab12f6b6d08d8cd13cf44a566a6249b",
+      "required_sublocator": "s 14A(10) final proviso",
+      "role": "statutory_text_contiguous_candidate",
+      "seals_expert_gold": false,
+      "text_sha256": "34107f404833e4384e8124eda86e065e97c41365b961f9705c3e735976a61bd9"
+    },
+    {
+      "action": "replace_spliced_opening_with_chapeau",
+      "gold_eligible_candidate": true,
+      "markdown_text": "section 1 Where after the commencement of this Act a person dies domiciled in England and Wales and is survived by any of the following persons:—",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-65e1c2ac95885e5e8e9d65e5ae138b5b6fbcde0a",
+      "repair_span_id": "repair-span-50818e8bcc491bde6092f593f75001dab129caacf009a9e5b42ced5b2e7adc56",
+      "required_sublocator": "s 1(1) chapeau",
+      "role": "statutory_text_contiguous_candidate",
+      "seals_expert_gold": false,
+      "text_sha256": "852fb72974d4c1442788c1aae076385e48c8a68bd3125fdefdee54cba3487714"
+    },
+    {
+      "action": "replace_spliced_opening_with_concluding_words",
+      "gold_eligible_candidate": true,
+      "markdown_text": "that person may apply to the court for an order under section 2 of this Act on the ground that the disposition of the deceased’s estate effected by his will or the law relating to intestacy, or the combination of his will and that law, is not such as to make reasonable financial provision for the applicant.",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-65e1c2ac95885e5e8e9d65e5ae138b5b6fbcde0a",
+      "repair_span_id": "repair-span-c1399b445f9ba9640f4aeb797314a0ef4c356adaaa85118ec340c2109954aba1",
+      "required_sublocator": "s 1(1) concluding application words",
+      "role": "statutory_text_contiguous_candidate",
+      "seals_expert_gold": false,
+      "text_sha256": "2e078067049475d6387ca81bf1e60251629dd59c6532f8d4b96a05f635dca7ca"
+    },
+    {
+      "action": "retain_raw_and_separate_editorial_ellipsis_before_qualify",
+      "gold_eligible_candidate": false,
+      "markdown_text": "section 1 any person (not being a person included in paragraph (a) or (b) above) to whom subsection (1A) ... below applies;",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+      "repair_span_id": "repair-span-46d294e59cd0b4091c5283bf5fd1e896a0194a332213aaa00c472f729420bf28",
+      "required_sublocator": "s 1(1)(ba) raw text with editorial ellipsis mixed in",
+      "role": "statutory_text_with_editorial_annotation",
+      "seals_expert_gold": false,
+      "text_sha256": "823bd37fec8bdf3b2a3319bfd822e9b5e515e94db7d8b9644bb3a81f8f499c79"
+    },
+    {
+      "action": "exclude_editorial_ellipsis_from_positive_gold_text",
+      "gold_eligible_candidate": false,
+      "markdown_text": "...",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+      "repair_span_id": "repair-span-f52dade4147bb00155fc26c9b9f5a124ebbf00d8784793a895129bd7ed1503d3",
+      "required_sublocator": "s 1(1)(ba) editorial ellipsis marker",
+      "role": "editorial_annotation_marker",
+      "seals_expert_gold": false,
+      "text_sha256": "ab5df625bc76dbd4e163bed2dd888df828f90159bb93556525c31821b6541d46"
+    },
+    {
+      "action": "bind_official_positive_text_omitting_repealed_or_1B",
+      "gold_eligible_candidate": true,
+      "markdown_text": "section 1 any person (not being a person included in paragraph (a) or (b) above) to whom subsection (1A) below applies;",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-3fea9d80c6f7fc0011d4db8679b75fe7185c06c7",
+      "repair_span_id": "repair-span-fb7866605b0d408fd7ee5389cb19b81e374bcf8b9757fccd6e980b3ad23ea6b7",
+      "required_sublocator": "s 1(1)(ba) current positive text",
+      "role": "statutory_text_contiguous_candidate",
+      "seals_expert_gold": false,
+      "text_sha256": "386d9f0b8dba76bf99d2a643aaa730fd7b349b4384a4ec4b6463972a3471eae8"
+    },
+    {
+      "action": "exclude_from_gold_ranking_generation_and_citation",
+      "gold_eligible_candidate": false,
+      "markdown_text": "section 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+      "mutates_parent_chunk": false,
+      "parent_chunk_id": "chunk-0bdcbc97ae11975ac1032cc3c6974aeaad9e43a7",
+      "repair_span_id": "repair-span-2671f652eabd0e18cc924d34ec399525218c26c9c842ecc006acde28cf34c215",
+      "required_sublocator": "repealed_or_omitted_s1(1B)",
+      "role": "repealed_or_omitted_editorial_marker",
+      "seals_expert_gold": false,
+      "text_sha256": "48e1cee924787db0aa4f5750c838661301b0bf9ce8b6b74abcc5690fbbef2958"
+    }
+  ],
+  "schema": "legalbot.live60-held-span-contiguous-repair.v1",
+  "seals_expert_gold": false,
+  "training_export_allowed": false
+}

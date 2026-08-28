@@ -1,0 +1,31 @@
+{
+  "as_of_date": "2026-08-14",
+  "automatic_embedding": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "bulk_search": false,
+  "development30_authorized": false,
+  "discovered_at": "2026-08-25",
+  "items": [
+    {
+      "candidate_case_id": "jcpc-2024-0077",
+      "candidate_case_name": "Jardine Strategic Limited v Oasis Investments II Master Fund Ltd and others No 2 (Bermuda)",
+      "candidate_judgment_date": "2025-07-24",
+      "candidate_neutral_citation": "[2025] UKPC 34",
+      "court_weight": "JCPC_PERSUASIVE",
+      "lead_id": "later-treatment-lead-010",
+      "official_case_url": "https://jcpc.uk/cases/judgments/jcpc-2024-0077",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_PERSUASIVE_CONFIRMATION_AND_APPLICATION_OF_SEQUANA",
+      "target_neutral_citations": [
+        "[2022] UKSC 25"
+      ]
+    }
+  ],
+  "owner_later_treatment_decision_required": true,
+  "owner_source_admission_required": true,
+  "phase2b_authorized": false,
+  "purpose": "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEAD_ONLY",
+  "schema": "legalbot.v111.phase2a.targeted-later-treatment-plan.v2",
+  "technical_qualification_assigned": false
+}

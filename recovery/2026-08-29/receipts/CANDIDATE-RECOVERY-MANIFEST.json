@@ -1,0 +1,127 @@
+{
+  "member_count": 24,
+  "members": [
+    {
+      "path": "PROVENANCE.json",
+      "sha256": "bbd94c38f34411173a84965d4e0ac7aaf28081393d52551bf0d0ad467ff93a7d",
+      "size": 10013
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "454b3f2bd47f8e22bdb8301270207401f2e9922f5060b1fe17d76c1e2622c402",
+      "size": 1394
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/approved-source-manifest.json",
+      "sha256": "02a13a3641d0e406d974a1c8f1a4912ae6e761d059774bd68ff97a4cc7732e0e",
+      "size": 129579
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/assessment-guidance-bundle.json",
+      "sha256": "9192dfcbb98f7e3f1b8c5747ad6188bfe90ac77dc4a0496310ef58da8bdc93cd",
+      "size": 10023
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/lance/physical-lanes.json",
+      "sha256": "eef48735ab6dbf91cfb89e1cbb2b490baeb8c8b952ff1e5f773ec67c34732b5e",
+      "size": 230
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/manifest.json",
+      "sha256": "e28a4138e87cfeb2502e746073208ab25a647de8082a3c7fe96a44ed7d5cc74a",
+      "size": 663
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/provision-verification.v1.json",
+      "sha256": "1bb3c036a555cd67bc618a7edff1f1f5a0274ea4061c0775bccf8f722f7f88ac",
+      "size": 23167
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/quality-policy.yaml",
+      "sha256": "b6cdb92e64be227325fa39fb9c8bb45f7d19618f7dee3ce3c330e235dceda85e",
+      "size": 2446
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/retrieval-benchmark-v1.1.freeze.json",
+      "sha256": "3b3b08225f120ce7c44ffac1bc6a2ae7fbf47a03ca392ec638063d2f654cbd73",
+      "size": 1715
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/retrieval-benchmark-v1.1.jsonl",
+      "sha256": "541268593a1f22a2e497c716f9390f4c06ef433dd7cc78471c49be7b96a3989e",
+      "size": 51754
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/retrieval-policy.yaml",
+      "sha256": "802649fc9e4b6e62f88e04bed2c17ffac6aa097d8f2c5c9016ce16115c2a78d7",
+      "size": 1063
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260818-a/seal.json",
+      "sha256": "d8009de258306cb13ae2b5d0c0d03dbf725d8c0e563bccde74cedaa9acdba04a",
+      "size": 1511
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/assessment-guidance-bundle.json",
+      "sha256": "9192dfcbb98f7e3f1b8c5747ad6188bfe90ac77dc4a0496310ef58da8bdc93cd",
+      "size": 10023
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/evaluation.json",
+      "sha256": "7c8a52505010e4d6817be4e3b97892e0e4a494c15a0f1bdde206abb4ebe1aaea",
+      "size": 1992
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/lance/physical-lanes.json",
+      "sha256": "19d3c121385efb308bb9dff9cdd9e6e7642819a1fe2045175d084ae7a7ced2a0",
+      "size": 230
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/manifest.json",
+      "sha256": "acc4b0aee4f43a00b21c56663a354e4b232c0c2d82f52a792779ea3088929d00",
+      "size": 671
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/privacy-report.json",
+      "sha256": "ebd23e0f1400fd2bd076c14aeefe11dac7d2ebc100b6711436b4b0e79cf9ae4c",
+      "size": 951
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/provision-verification.v1.json",
+      "sha256": "1bb3c036a555cd67bc618a7edff1f1f5a0274ea4061c0775bccf8f722f7f88ac",
+      "size": 23167
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/quality-policy.yaml",
+      "sha256": "112f30751f9033a9e60356928c54f603579658b2b466f0b21a7f4e5e44a04c56",
+      "size": 2542
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/retrieval-benchmark-v1.1.freeze.json",
+      "sha256": "3b3b08225f120ce7c44ffac1bc6a2ae7fbf47a03ca392ec638063d2f654cbd73",
+      "size": 1715
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/retrieval-benchmark-v1.1.jsonl",
+      "sha256": "541268593a1f22a2e497c716f9390f4c06ef433dd7cc78471c49be7b96a3989e",
+      "size": 51754
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/retrieval-policy.yaml",
+      "sha256": "802649fc9e4b6e62f88e04bed2c17ffac6aa097d8f2c5c9016ce16115c2a78d7",
+      "size": 1063
+    },
+    {
+      "path": "evidence-only-members/current-law-ew-full-fp16-v111-20260827-phase2a-a/seal.json",
+      "sha256": "b7a8dfabcd5b91c4bebe81cba5817ca35a4366dd8855acd24a2aeda7f7d91b13",
+      "size": 1523
+    },
+    {
+      "path": "reconstruct_evidence_overlay.py",
+      "sha256": "36f9569b95a745d1f2cc9d21619ec3594120b5fd9345fa99af846640fea5b86d",
+      "size": 21024
+    }
+  ],
+  "non_runnable": true,
+  "schema": "legalbot.disaster-recovery.candidate-build-members.manifest.v1"
+}

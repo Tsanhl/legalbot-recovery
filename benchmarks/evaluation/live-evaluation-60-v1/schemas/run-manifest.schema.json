@@ -1,0 +1,266 @@
+{
+  "$defs": {
+    "RunProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment_rules_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assessment Rules Sha256"
+        },
+        "classifier_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Classifier Version"
+        },
+        "git_dirty": {
+          "title": "Git Dirty",
+          "type": "boolean"
+        },
+        "git_sha": {
+          "pattern": "^[0-9a-f]{7,64}$",
+          "title": "Git Sha",
+          "type": "string"
+        },
+        "index_build_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Index Build Id"
+        },
+        "model_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Version"
+        },
+        "policy_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Policy Sha256"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Version"
+        },
+        "router_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Router Version"
+        }
+      },
+      "required": [
+        "git_sha",
+        "git_dirty"
+      ],
+      "title": "RunProvenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "as_of_date": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "title": "As Of Date",
+      "type": "string"
+    },
+    "case_count": {
+      "const": 60,
+      "title": "Case Count",
+      "type": "integer"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "eligible_for_training": {
+      "const": false,
+      "title": "Eligible For Training",
+      "type": "boolean"
+    },
+    "encrypted_unreleased_retention_days": {
+      "default": 30,
+      "maximum": 365,
+      "minimum": 1,
+      "title": "Encrypted Unreleased Retention Days",
+      "type": "integer"
+    },
+    "generation_case_count": {
+      "const": 30,
+      "title": "Generation Case Count",
+      "type": "integer"
+    },
+    "generation_total_word_target": {
+      "const": 114000,
+      "title": "Generation Total Word Target",
+      "type": "integer"
+    },
+    "initial_status": {
+      "const": "created",
+      "title": "Initial Status",
+      "type": "string"
+    },
+    "legal_date_timezone": {
+      "const": "Europe/London",
+      "title": "Legal Date Timezone",
+      "type": "string"
+    },
+    "local_only": {
+      "const": true,
+      "title": "Local Only",
+      "type": "boolean"
+    },
+    "online_research_allowed": {
+      "const": false,
+      "title": "Online Research Allowed",
+      "type": "boolean"
+    },
+    "provenance": {
+      "$ref": "#/$defs/RunProvenance"
+    },
+    "purpose": {
+      "const": "evaluation_only",
+      "title": "Purpose",
+      "type": "string"
+    },
+    "run_id": {
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "run_plan_file_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Plan File Sha256",
+      "type": "string"
+    },
+    "run_plan_id": {
+      "const": "live60-single-pass-30-v1",
+      "title": "Run Plan Id",
+      "type": "string"
+    },
+    "run_plan_seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Plan Seal Sha256",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.live-evaluation-run-manifest.v2",
+      "default": "legalbot.live-evaluation-run-manifest.v2",
+      "title": "Schema",
+      "type": "string"
+    },
+    "suite_id": {
+      "const": "live-evaluation-60-v1",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_manifest_seal_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Suite Manifest Seal Sha256",
+      "type": "string"
+    },
+    "suite_registry_canonical_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Suite Registry Canonical Sha256",
+      "type": "string"
+    },
+    "suite_registry_file_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Suite Registry File Sha256",
+      "type": "string"
+    },
+    "suite_version": {
+      "const": "1.0.0",
+      "title": "Suite Version",
+      "type": "string"
+    },
+    "total_word_target": {
+      "const": 215000,
+      "title": "Total Word Target",
+      "type": "integer"
+    },
+    "training_export_allowed": {
+      "const": false,
+      "title": "Training Export Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "run_id",
+    "suite_id",
+    "suite_version",
+    "suite_manifest_seal_sha256",
+    "suite_registry_file_sha256",
+    "suite_registry_canonical_sha256",
+    "run_plan_id",
+    "run_plan_file_sha256",
+    "run_plan_seal_sha256",
+    "purpose",
+    "eligible_for_training",
+    "training_export_allowed",
+    "local_only",
+    "online_research_allowed",
+    "case_count",
+    "total_word_target",
+    "generation_case_count",
+    "generation_total_word_target",
+    "created_at",
+    "as_of_date",
+    "legal_date_timezone",
+    "initial_status",
+    "provenance"
+  ],
+  "title": "LiveSuiteRunManifest",
+  "type": "object"
+}

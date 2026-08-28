@@ -1,0 +1,196 @@
+{
+  "additionalProperties": false,
+  "description": "One immutable owner-supplied question, without expert legal gold.",
+  "properties": {
+    "acceptable_source_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Acceptable Source Ids",
+      "type": "array"
+    },
+    "as_of_policy": {
+      "default": "run_date",
+      "title": "As Of Policy",
+      "type": "string"
+    },
+    "case_id": {
+      "pattern": "^(?:live30|live60)-q[0-9]{2}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "coverage_status": {
+      "const": "unqualified",
+      "default": "unqualified",
+      "title": "Coverage Status",
+      "type": "string"
+    },
+    "eligible_for_training": {
+      "default": false,
+      "title": "Eligible For Training",
+      "type": "boolean"
+    },
+    "exact_gold_spans": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Exact Gold Spans",
+      "type": "array"
+    },
+    "expected_behaviour": {
+      "const": "answer",
+      "default": "answer",
+      "title": "Expected Behaviour",
+      "type": "string"
+    },
+    "expected_drafting_route": {
+      "const": "sectioned",
+      "default": "sectioned",
+      "title": "Expected Drafting Route",
+      "type": "string"
+    },
+    "expected_research_route": {
+      "enum": [
+        "sectioned",
+        "full_enquiry"
+      ],
+      "title": "Expected Research Route",
+      "type": "string"
+    },
+    "forbidden_lanes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Forbidden Lanes",
+      "type": "array"
+    },
+    "immutable": {
+      "default": true,
+      "title": "Immutable",
+      "type": "boolean"
+    },
+    "jurisdiction": {
+      "default": "England and Wales",
+      "title": "Jurisdiction",
+      "type": "string"
+    },
+    "known_contrary_authority_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Known Contrary Authority Ids",
+      "type": "array"
+    },
+    "must_cover_issues": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Must Cover Issues",
+      "type": "array"
+    },
+    "ordinal": {
+      "maximum": 60,
+      "minimum": 1,
+      "title": "Ordinal",
+      "type": "integer"
+    },
+    "purpose": {
+      "default": "evaluation_only",
+      "title": "Purpose",
+      "type": "string"
+    },
+    "question": {
+      "maxLength": 50000,
+      "minLength": 20,
+      "title": "Question",
+      "type": "string"
+    },
+    "question_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Question Sha256",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "schema": {
+      "enum": [
+        "legalbot.live-evaluation-case.v1",
+        "legalbot.live-evaluation-case.v2"
+      ],
+      "title": "Schema",
+      "type": "string"
+    },
+    "split": {
+      "default": "development_live",
+      "title": "Split",
+      "type": "string"
+    },
+    "structural_standard_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Structural Standard Ids",
+      "type": "array"
+    },
+    "subject": {
+      "maxLength": 120,
+      "minLength": 2,
+      "title": "Subject",
+      "type": "string"
+    },
+    "suite_id": {
+      "pattern": "^live-evaluation-(?:30|60)-v1$",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_version": {
+      "default": "1.0.0",
+      "title": "Suite Version",
+      "type": "string"
+    },
+    "task_type": {
+      "enum": [
+        "essay",
+        "problem"
+      ],
+      "title": "Task Type",
+      "type": "string"
+    },
+    "training_export_allowed": {
+      "default": false,
+      "title": "Training Export Allowed",
+      "type": "boolean"
+    },
+    "word_target": {
+      "maximum": 10000,
+      "minimum": 1000,
+      "title": "Word Target",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "suite_id",
+    "case_id",
+    "ordinal",
+    "question",
+    "question_sha256",
+    "record_sha256",
+    "task_type",
+    "subject",
+    "word_target",
+    "expected_research_route",
+    "structural_standard_ids",
+    "must_cover_issues"
+  ],
+  "title": "LiveQuestionCase",
+  "type": "object"
+}

@@ -1,0 +1,113 @@
+{
+  "case_decisions": [
+    {
+      "case_id": "dev-ucta-s2",
+      "decision": "approve"
+    },
+    {
+      "case_id": "dev-ucta-s3",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-crtpa-s1",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-sga-s14",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-sgsa-s13",
+      "decision": "approve"
+    },
+    {
+      "case_id": "dev-frustrated-contracts-s1",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-cpa1987-s2",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-limitation-s2",
+      "decision": "approve"
+    },
+    {
+      "case_id": "dev-limitation-s14a",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-ola1984-s1",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-ola1957-s2",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-trustee-act-s1",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-triple-point-identity",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-cavendish-identity",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-mbs-identity",
+      "decision": "amend"
+    },
+    {
+      "case_id": "dev-unison-id-only",
+      "decision": "approve"
+    },
+    {
+      "case_id": "prom-perpetuities-s5",
+      "decision": "approve"
+    },
+    {
+      "case_id": "prom-variation-trusts-s1",
+      "decision": "amend"
+    },
+    {
+      "case_id": "prom-family-provision-s1",
+      "decision": "amend"
+    },
+    {
+      "case_id": "prom-aja1982-s20",
+      "decision": "amend"
+    },
+    {
+      "case_id": "prom-aea1925-s46",
+      "decision": "amend"
+    },
+    {
+      "case_id": "prom-wills-act-s9",
+      "decision": "amend"
+    },
+    {
+      "case_id": "prom-khan-identity",
+      "decision": "amend"
+    },
+    {
+      "case_id": "prom-hirachand-identity",
+      "decision": "amend"
+    }
+  ],
+  "decision": "adopt_all_fact_checked_recommendations",
+  "decision_counts": {
+    "amend": 19,
+    "approve": 5,
+    "reject": 0
+  },
+  "decision_date": "2026-08-13",
+  "does_not_authorise_active_promotion": true,
+  "does_not_authorise_e2e": true,
+  "fact_checked_document": "LegalBot-Owner-Review-v1.1-fact-checked.docx",
+  "fact_checked_document_sha256": "111e1ad47cf005f5d5e7264b6816d1ef63510056453180efbde5d65ba5536658",
+  "schema": "legalbot.retrieval-owner-decision.v1.1.1",
+  "status": "adopted"
+}

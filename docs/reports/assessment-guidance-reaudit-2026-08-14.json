@@ -1,0 +1,227 @@
+{
+  "schema": "legalbot.assessment-guidance-reaudit.v1",
+  "created_at": "2026-08-14",
+  "purpose": "owner_review_only",
+  "database_mutation_performed": false,
+  "raw_feedback_included": false,
+  "policy": {
+    "exact_support_candidate": "The source span directly supports the criterion and reusable rule direction; owner confirmation remains required.",
+    "partial_support_reword": "Some direction is supported, but the current rule expands, mixes or changes the source meaning and must be split or narrowed.",
+    "unsupported_mapping_reopen": "The source span does not support the present rule criterion, subject or proposition; do not use it as marker-derived guidance."
+  },
+  "catalogue_snapshot": {
+    "approved": 25,
+    "staged": 74,
+    "rejected": 6392,
+    "approved_70_positive": 13,
+    "approved_repair_rules": 12
+  },
+  "summary": {
+    "exact_support_candidate": 4,
+    "partial_support_reword": 10,
+    "unsupported_mapping_reopen": 11,
+    "automatic_database_decisions": 0
+  },
+  "records": [
+    {
+      "rule_id": "assessment-canonical-accurate-application-v1",
+      "source_rule_id": "assessment-rule-8af8eeb98566d7622b9193707b540a2a045d3048",
+      "source_span_hash": "0704b0e5c63d78bcb8b18407e3adb226342779a637cd36b50980df62128a0ce5",
+      "rule_text_hash": "85e4dd70db7f56d15d416d4f725f1d243a5c3c99b566f3d61d5a6be5125e0390",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["mixed_unsplit_feedback", "scope_expansion"]
+    },
+    {
+      "rule_id": "assessment-canonical-analytical-comparison-v1",
+      "source_rule_id": "assessment-rule-102d130f92a6dae0caf9eb8522fbe565b14616db",
+      "source_span_hash": "07114a240d5ed5d15710d1ed3836bd3fdd3f5b7153f68195be3d36d7347a3e1b",
+      "rule_text_hash": "10e0919bb85b5c23bcbdb80df023a6705447e65e1b7bc062a6777f4928f92b90",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["vague_source", "criterion_mismatch"]
+    },
+    {
+      "rule_id": "assessment-canonical-authoritative-engagement-v1",
+      "source_rule_id": "assessment-rule-102d130f92a6dae0caf9eb8522fbe565b14616db",
+      "source_span_hash": "07114a240d5ed5d15710d1ed3836bd3fdd3f5b7153f68195be3d36d7347a3e1b",
+      "rule_text_hash": "8e23a29e192b42c5b6452480a5f3ac3ff0bd90d11c91d26bb248931892e4c217",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["vague_source", "criterion_mismatch"]
+    },
+    {
+      "rule_id": "assessment-canonical-citation-consistency-v1",
+      "source_rule_id": "assessment-rule-cd306ce39869ef585c522ec03d29d0b0d34fa92b",
+      "source_span_hash": "6f2bbd29960d558b91c27702c7a2ff9c9b8435ae9d4834c82836a2eab705cbdc",
+      "rule_text_hash": "042c34448ea9158df13bcd73993aacc3bc65b2e7ec1c00a8f8f27fdf6ab7351d",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["unsupported_pinpoint_extension"]
+    },
+    {
+      "rule_id": "assessment-canonical-clarity-concision-v1",
+      "source_rule_id": "assessment-rule-17088c6356f6310da240c9dd3e8cad3463f13286",
+      "source_span_hash": "a3c599cae3d8e39baaf01192d00088890e9b649aa45545557d4ea224dd90de15",
+      "rule_text_hash": "0fa2eab569715683468bf929ea9ffd25d4cdc90aecc575f6825aa2c417230304",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["mixed_unsplit_feedback", "criterion_inference"]
+    },
+    {
+      "rule_id": "assessment-canonical-coherent-structure-v1",
+      "source_rule_id": "assessment-rule-102d130f92a6dae0caf9eb8522fbe565b14616db",
+      "source_span_hash": "07114a240d5ed5d15710d1ed3836bd3fdd3f5b7153f68195be3d36d7347a3e1b",
+      "rule_text_hash": "a4799ff067834e70b72c95f678967303514ccef8bd54c1b35bb2242425761e74",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["vague_source", "criterion_mismatch"]
+    },
+    {
+      "rule_id": "assessment-canonical-doctrinal-precision-v1",
+      "source_rule_id": "assessment-rule-62ccca81c560bd5645a46e605788a7a30365b7e9",
+      "source_span_hash": "18ee17a6226a83c1d526e415c8b3932ec5d7549de4063a92103f9311605c947e",
+      "rule_text_hash": "346734528a00348f096111100e312dab6339b50b60c52c6aa5a50dc5c9b8bd51",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["scope_expansion", "subject_scope_missing"]
+    },
+    {
+      "rule_id": "assessment-canonical-ranked-outcomes-v1",
+      "source_rule_id": "assessment-rule-8af8eeb98566d7622b9193707b540a2a045d3048",
+      "source_span_hash": "0704b0e5c63d78bcb8b18407e3adb226342779a637cd36b50980df62128a0ce5",
+      "rule_text_hash": "c5486ba3c9a02f4d998c70f17e4ba9baf77a3260a30370dde780c1f59642d8d8",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["criterion_mismatch", "unsupported_missing_fact_extension"]
+    },
+    {
+      "rule_id": "assessment-canonical-remedy-advice-v1",
+      "source_rule_id": "assessment-rule-73b981246ce7d058e3a20c5d6b913a008fa6b259",
+      "source_span_hash": "16a99516338c713373f26f76745521012a8a57a7b6a01bab4bd6bdb470cfd06b",
+      "rule_text_hash": "54234e86e87159dc0c8c2dd0f630f12c66839d06c652755c3eaf4f56eabe66da",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["criterion_mismatch", "substantive_scope_drift"]
+    },
+    {
+      "rule_id": "assessment-canonical-scholarship-integration-v1",
+      "source_rule_id": "assessment-rule-2dc9660e4223800df02f519ed5cf187e5a9e409f",
+      "source_span_hash": "3b843a2e9f72c89906fc11ccb7f4f18cf77c592350894bc66189eca4e16b0bb1",
+      "rule_text_hash": "7413d74b3854536a8d56692f78096588718d42206d1e6c421b0c77a71c3dce41",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["student_specific_fact", "score_fragment", "criterion_mismatch"]
+    },
+    {
+      "rule_id": "assessment-canonical-thesis-counterargument-v1",
+      "source_rule_id": "assessment-rule-b69f5db3e1b6827a10733d3367f45652863cc4fc",
+      "source_span_hash": "d4dea9c4d8d8616955dbae0c7299e34172fbb828c1e223e5f48e1cdff2a3d105",
+      "rule_text_hash": "34647634911543e463788982dd5afdca1ea75c2187cd0b2f8dce48ed6e1ac467",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["mixed_unsplit_feedback", "split_required"]
+    },
+    {
+      "rule_id": "assessment-canonical-inferential-link-v1",
+      "source_rule_id": "assessment-rule-1d9705c980d28350870922786f93430b8307b06f",
+      "source_span_hash": "66b9db83516fa629e5d7cf425a16e077d4ef44d644635d8c01d48f3a6fa4799b",
+      "rule_text_hash": "37fc261767e90b6bde86015ff59a08015376cf47a7551ff2abe1ee8bfca6177d",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["criterion_mismatch", "reference_support_not_inference"]
+    },
+    {
+      "rule_id": "assessment-canonical-section-depth-v1",
+      "source_rule_id": "assessment-rule-102d130f92a6dae0caf9eb8522fbe565b14616db",
+      "source_span_hash": "07114a240d5ed5d15710d1ed3836bd3fdd3f5b7153f68195be3d36d7347a3e1b",
+      "rule_text_hash": "cabc86f5a1669dce99c8dba99296748a83085dba3094181a4fb390fd793bcf83",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["vague_source", "criterion_mismatch"]
+    },
+    {
+      "rule_id": "assessment-canonical-timely-authority-support-v1",
+      "source_rule_id": "assessment-rule-1d9705c980d28350870922786f93430b8307b06f",
+      "source_span_hash": "66b9db83516fa629e5d7cf425a16e077d4ef44d644635d8c01d48f3a6fa4799b",
+      "rule_text_hash": "54e146dde72d3e9c41bb03729e643589a0afa727035e0595810daff7807742af",
+      "disposition": "exact_support_candidate",
+      "issue_codes": []
+    },
+    {
+      "rule_id": "assessment-canonical-case-synthesis-v1",
+      "source_rule_id": "assessment-rule-0515a8d4b3595f3d87e095cb661df096742feba6",
+      "source_span_hash": "869dca10c23de859655330298e2e678160aa91f30b5ae9c66f80cf10241ca586",
+      "rule_text_hash": "e46e18cf5bd969f8018f9fbb013f2f4ee74418f3ac327efc8492066683d477c7",
+      "disposition": "exact_support_candidate",
+      "issue_codes": []
+    },
+    {
+      "rule_id": "assessment-canonical-complete-issue-coverage-v1",
+      "source_rule_id": "assessment-rule-73b981246ce7d058e3a20c5d6b913a008fa6b259",
+      "source_span_hash": "16a99516338c713373f26f76745521012a8a57a7b6a01bab4bd6bdb470cfd06b",
+      "rule_text_hash": "fd9693f800580812a89ceede8087704878b325f771aeaa629fbf2d106b071530",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["scope_expansion", "retain_narrow_element_rule"]
+    },
+    {
+      "rule_id": "assessment-canonical-explicit-reasoning-v1",
+      "source_rule_id": "assessment-rule-2a506def86233effdc377999f4954d178b4243d4",
+      "source_span_hash": "f6d7a9eb31063652dfc2a7231dc4a48833bdfd8d03e21868cf3c0f7e1254aaf0",
+      "rule_text_hash": "0c9c95d3b63ff504438a02b71a981f88428a7f7bb226ddbeb42a78194c50d8a8",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["criterion_inference", "narrow_application_support"]
+    },
+    {
+      "rule_id": "assessment-canonical-meaningful-headings-v1",
+      "source_rule_id": "assessment-rule-0515a8d4b3595f3d87e095cb661df096742feba6",
+      "source_span_hash": "869dca10c23de859655330298e2e678160aa91f30b5ae9c66f80cf10241ca586",
+      "rule_text_hash": "638aa5da0d82c376a7be8fec963b3ba540832d4315f8ae9ab6c297bdbca476ef",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["criterion_mismatch"]
+    },
+    {
+      "rule_id": "assessment-canonical-problem-pacing-v1",
+      "source_rule_id": "assessment-rule-73b981246ce7d058e3a20c5d6b913a008fa6b259",
+      "source_span_hash": "16a99516338c713373f26f76745521012a8a57a7b6a01bab4bd6bdb470cfd06b",
+      "rule_text_hash": "83169d7d13216102e906dd7f057d7e93fa44ab5df1e3f848565772e29c1ae12f",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["criterion_inference", "scope_expansion"]
+    },
+    {
+      "rule_id": "assessment-canonical-question-engagement-v1",
+      "source_rule_id": "assessment-rule-5f2f371e9b3687092bebb7207c562915a3edf94f",
+      "source_span_hash": "8446e774c6cfb8c4c53c2a863deeaf9788bccaa7354deecc7d53c2b5af2768d1",
+      "rule_text_hash": "837eb9b07745d109b9a1f270bcce0b7488aa7ad152a3ce74dca74b724ca5eee6",
+      "disposition": "exact_support_candidate",
+      "issue_codes": []
+    },
+    {
+      "rule_id": "assessment-canonical-scope-discipline-v1",
+      "source_rule_id": "assessment-rule-5f2f371e9b3687092bebb7207c562915a3edf94f",
+      "source_span_hash": "8446e774c6cfb8c4c53c2a863deeaf9788bccaa7354deecc7d53c2b5af2768d1",
+      "rule_text_hash": "801b199f11c488fb7074a639867dc7c732abc287184fb3be9cefbce1828bb8db",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["scope_inference"]
+    },
+    {
+      "rule_id": "assessment-canonical-tort-negligence-structure-v1",
+      "source_rule_id": "assessment-rule-8af8eeb98566d7622b9193707b540a2a045d3048",
+      "source_span_hash": "0704b0e5c63d78bcb8b18407e3adb226342779a637cd36b50980df62128a0ce5",
+      "rule_text_hash": "af5a405babc026e8c0b6bf34db687500a2a30973275343d3739e45234f1ec755",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["mismatched_subject_provenance", "substantive_rule_from_unrelated_feedback"]
+    },
+    {
+      "rule_id": "assessment-canonical-trusts-classification-v1",
+      "source_rule_id": "assessment-rule-62ccca81c560bd5645a46e605788a7a30365b7e9",
+      "source_span_hash": "18ee17a6226a83c1d526e415c8b3932ec5d7549de4063a92103f9311605c947e",
+      "rule_text_hash": "e2af76c2c1f242fcc43f62632b11281081190ca35eef7b53a36548fe609477fd",
+      "disposition": "unsupported_mapping_reopen",
+      "issue_codes": ["mismatched_subject_provenance", "substantive_rule_from_unrelated_feedback"]
+    },
+    {
+      "rule_id": "assessment-canonical-criminal-element-defence-v1",
+      "source_rule_id": "assessment-rule-73b981246ce7d058e3a20c5d6b913a008fa6b259",
+      "source_span_hash": "16a99516338c713373f26f76745521012a8a57a7b6a01bab4bd6bdb470cfd06b",
+      "rule_text_hash": "3318a0031cb821f3923e06e6dd428b5922c8802326192183d27ec6b1e650d007",
+      "disposition": "exact_support_candidate",
+      "issue_codes": []
+    },
+    {
+      "rule_id": "assessment-canonical-eu-quote-engagement-v1",
+      "source_rule_id": "assessment-rule-5f2f371e9b3687092bebb7207c562915a3edf94f",
+      "source_span_hash": "8446e774c6cfb8c4c53c2a863deeaf9788bccaa7354deecc7d53c2b5af2768d1",
+      "rule_text_hash": "d43fb8b33afe3f3b67bb603cb93bf1ad852e8324495ba8e055090afc644fc082",
+      "disposition": "partial_support_reword",
+      "issue_codes": ["subject_scope_extension", "case_law_extension"]
+    }
+  ]
+}

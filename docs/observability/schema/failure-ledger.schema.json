@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.log.failure-ledger.v1",
+  "title": "LegalBot failure ledger row",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "failure_id",
+    "fingerprint",
+    "state",
+    "component",
+    "user_or_owner_safe",
+    "occurrence_count",
+    "first_seen",
+    "last_seen"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.failure-ledger.v1" },
+    "failure_id": { "type": "string", "minLength": 8 },
+    "fingerprint": { "type": "string", "minLength": 64, "maxLength": 64 },
+    "state": {
+      "type": "string",
+      "enum": ["open", "retrying", "recovered", "terminal", "waived"]
+    },
+    "component": { "type": "string" },
+    "stage": { "type": ["string", "null"] },
+    "failure_code": { "type": ["string", "null"] },
+    "source_id": { "type": ["string", "null"] },
+    "job_id": { "type": ["string", "null"] },
+    "build_id": { "type": ["string", "null"] },
+    "retryable": { "type": "boolean" },
+    "blocking": { "type": "boolean" },
+    "owner_reason": { "type": ["string", "null"] },
+    "parent_failure_id": { "type": ["string", "null"] },
+    "first_event_id": { "type": ["string", "null"] },
+    "last_event_id": { "type": ["string", "null"] },
+    "occurrence_count": { "type": "integer", "minimum": 1 },
+    "first_seen": { "type": "string" },
+    "last_seen": { "type": "string" },
+    "closed_at": { "type": ["string", "null"] },
+    "waived_reason": { "type": ["string", "null"] },
+    "provenance": { "type": "object" },
+    "user_or_owner_safe": { "type": "string" },
+    "internal_detail": { "type": ["string", "null"] }
+  }
+}

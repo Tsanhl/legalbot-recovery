@@ -1,0 +1,44 @@
+{
+  "schema": "legalbot.v111-disaster-recovery.catalogue-placement.v1",
+  "status": "PLACED_NON_ACTIVE_RECOVERY_ONLY",
+  "verified_at_utc": "2026-08-28T18:44:53Z",
+  "recovery_root": "/Users/hltsang/Desktop/LegalBot-v111-Recovery-20260829",
+  "source_stage_relative_path": "work/catalogue-restore-r1/stage-20260828T182849Z-r1/catalog.sqlite3",
+  "target_relative_path": "work/posthead-replay-r6/data/catalog.sqlite3",
+  "catalogue_sha256": "fac8cf47689a4088d2224af3ec8773d5372a41874cefe620ae38f019607804e5",
+  "size_bytes": 6204092416,
+  "mode_octal": "0600",
+  "link_count": 1,
+  "target_inode_at_verification": 181518416,
+  "mtime_epoch": 1787387652,
+  "placement": {
+    "copy_mechanism": "APFS_CLONE_THEN_ATOMIC_NO_REPLACE_MOVE",
+    "target_preexisted": false,
+    "target_is_regular_file": true,
+    "target_is_symlink": false,
+    "wal_absent": true,
+    "shm_absent": true,
+    "journal_absent": true
+  },
+  "staged_verification": {
+    "pre_copy_manifest_sha256": "c420de38555e84356a0316c7b2e6c945c645fb4294654c62c95d761be8de1d69",
+    "verification_file_sha256": "721a7bc1f9832569db1999d11c40f9928fabc65ca1009f1eb2c022eca23d77ef",
+    "verification_content_sha256": "3a7a4295e0dae3b3a9815abdfe26b91e126941fda67da6827d638660295e5d30",
+    "checksums_file_sha256": "fcff6e8910fdae1e4bc88a3de531a298580d8f654de5c52425b7c8081f899b45",
+    "quick_check": "ok",
+    "foreign_key_violation_count": 0,
+    "all_table_counts_exact": true,
+    "prior_bound_full_integrity_check": "ok",
+    "new_full_integrity_check_run": false
+  },
+  "release_boundaries": {
+    "active_pointer_written": false,
+    "previous_pointer_written": false,
+    "candidate_built": false,
+    "embedding_run": false,
+    "phase2b_run": false,
+    "answer_release_run": false,
+    "promotion_run": false,
+    "original_repository_replaced": false
+  }
+}

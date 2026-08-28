@@ -1,0 +1,129 @@
+schema: legalbot.observability-slo.v1
+policy_id: local-e2e-provisional-v2
+
+# Internal engineering targets for localhost evaluation only. These values are
+# NOT an external SLA, user promise, production promotion gate or legal-quality
+# guarantee. They must be recalibrated from measured development-live baselines
+# before enforcement and then changed only through a versioned policy update.
+classification:
+  internal_only: true
+  external_sla: false
+  provisional: true
+  baseline_calibrated: false
+  enforcement: observe_only
+
+calibration:
+  suite_id: live-evaluation-60-v1
+  split: development_live
+  minimum_successful_runs_per_band: 3
+  minimum_latency_observations_per_metric_band: 3
+  minimum_terminal_samples_per_band: 20
+  required_percentiles: [p50, p95, p99]
+  freeze_after_baseline_review: true
+
+sampling:
+  debug_enabled: false
+  debug_rate: 0.0
+  info_rate: 0.10
+  warn_rate: 1.0
+  error_rate: 1.0
+  fatal_rate: 1.0
+  deterministic_key: trace_id_and_event_id
+
+queue:
+  scope: local
+  depth_warning: 4
+  depth_critical: 8
+  oldest_job_age_warning_seconds: 300
+  oldest_job_age_critical_seconds: 900
+
+success:
+  minimum_success_rate: 0.95
+  error_budget_fraction: 0.05
+  successful_terminal_statuses: [success, verified_limited]
+  error_terminal_statuses: [held_for_review, system_error]
+  excluded_terminal_statuses: [cancelled]
+
+# Bands intentionally include route as well as requested-word range. Difficult
+# 3,000–5,000 word cases can be either sectioned or full-enquiry according to
+# their issue complexity; a pure word threshold would be misleading.
+route_word_bands:
+  - id: direct_0100_1200
+    route: direct
+    word_min: 100
+    word_max: 1200
+    progress_freshness_seconds: 90
+    progress_stuck_seconds: 270
+    targets_p95_seconds:
+      queue_wait_seconds: 120
+      retrieval_seconds: 90
+      rerank_seconds: 45
+      generation_seconds: 600
+      verification_seconds: 120
+      release_seconds: 5
+      completion_seconds: 900
+      time_to_first_token_seconds: 120
+
+  - id: sectioned_1000_2000
+    route: sectioned
+    word_min: 1000
+    word_max: 2000
+    progress_freshness_seconds: 120
+    progress_stuck_seconds: 360
+    targets_p95_seconds:
+      queue_wait_seconds: 180
+      retrieval_seconds: 180
+      rerank_seconds: 90
+      generation_seconds: 1200
+      verification_seconds: 240
+      release_seconds: 8
+      completion_seconds: 1800
+      time_to_first_token_seconds: 180
+
+  - id: sectioned_2001_5000
+    route: sectioned
+    word_min: 2001
+    word_max: 5000
+    progress_freshness_seconds: 180
+    progress_stuck_seconds: 540
+    targets_p95_seconds:
+      queue_wait_seconds: 240
+      retrieval_seconds: 300
+      rerank_seconds: 150
+      generation_seconds: 2400
+      verification_seconds: 420
+      release_seconds: 10
+      completion_seconds: 3600
+      time_to_first_token_seconds: 240
+
+  - id: full_enquiry_3000_5000
+    route: full_enquiry
+    word_min: 3000
+    word_max: 5000
+    progress_freshness_seconds: 240
+    progress_stuck_seconds: 720
+    targets_p95_seconds:
+      queue_wait_seconds: 300
+      retrieval_seconds: 600
+      rerank_seconds: 300
+      generation_seconds: 3600
+      verification_seconds: 600
+      release_seconds: 15
+      completion_seconds: 5400
+      time_to_first_token_seconds: 300
+
+  - id: full_enquiry_5001_10000
+    route: full_enquiry
+    word_min: 5001
+    word_max: 10000
+    progress_freshness_seconds: 300
+    progress_stuck_seconds: 900
+    targets_p95_seconds:
+      queue_wait_seconds: 360
+      retrieval_seconds: 900
+      rerank_seconds: 450
+      generation_seconds: 7200
+      verification_seconds: 900
+      release_seconds: 20
+      completion_seconds: 10800
+      time_to_first_token_seconds: 360

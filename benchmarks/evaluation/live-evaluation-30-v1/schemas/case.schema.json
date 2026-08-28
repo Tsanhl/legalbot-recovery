@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legalbot.live-evaluation-case.v1",
+  "title": "Immutable LegalBot live-evaluation-30 case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "suite_id", "suite_version", "split", "purpose",
+    "eligible_for_training", "training_export_allowed", "immutable",
+    "case_id", "ordinal", "question", "question_sha256", "record_sha256",
+    "task_type", "subject", "jurisdiction", "as_of_policy", "word_target",
+    "expected_research_route", "expected_drafting_route", "expected_behaviour",
+    "structural_standard_ids", "must_cover_issues", "acceptable_source_ids",
+    "exact_gold_spans", "known_contrary_authority_ids", "forbidden_lanes",
+    "coverage_status"
+  ],
+  "properties": {
+    "schema": { "const": "legalbot.live-evaluation-case.v1" },
+    "suite_id": { "const": "live-evaluation-30-v1" },
+    "suite_version": { "const": "1.0.0" },
+    "split": { "const": "development_live" },
+    "purpose": { "const": "evaluation_only" },
+    "eligible_for_training": { "const": false },
+    "training_export_allowed": { "const": false },
+    "immutable": { "const": true },
+    "case_id": { "type": "string", "pattern": "^live30-q(?:0[1-9]|[12][0-9]|30)$" },
+    "ordinal": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "question": { "type": "string", "minLength": 20, "maxLength": 50000 },
+    "question_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "task_type": { "enum": ["essay", "problem", "general"] },
+    "subject": { "type": "string", "minLength": 2, "maxLength": 120 },
+    "jurisdiction": { "const": "England and Wales" },
+    "as_of_policy": { "const": "run_date" },
+    "word_target": { "enum": [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000] },
+    "expected_research_route": { "enum": ["direct", "sectioned", "full_enquiry"] },
+    "expected_drafting_route": { "enum": ["direct", "sectioned", "full_enquiry"] },
+    "expected_behaviour": { "const": "answer" },
+    "structural_standard_ids": {
+      "const": [
+        "structure.issue_spotting",
+        "structure.rule_accuracy",
+        "structure.application_or_critical_analysis",
+        "structure.authority_and_counterargument",
+        "structure.completeness_and_uncertainty",
+        "structure.structure_and_conclusion",
+        "structure.claim_evidence_binding",
+        "structure.oscola_accuracy",
+        "structure.requested_word_target"
+      ]
+    },
+    "must_cover_issues": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 180 }
+    },
+    "acceptable_source_ids": { "type": "array", "maxItems": 0 },
+    "exact_gold_spans": { "type": "array", "maxItems": 0 },
+    "known_contrary_authority_ids": { "type": "array", "maxItems": 0 },
+    "forbidden_lanes": { "type": "array", "maxItems": 0 },
+    "coverage_status": { "const": "unqualified" }
+  }
+}

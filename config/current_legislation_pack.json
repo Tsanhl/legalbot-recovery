@@ -1,0 +1,91 @@
+{
+  "schema": "legalbot.current-legislation-pack.v1",
+  "version": "core-current-law-2026-08-14",
+  "as_of_date": "2026-08-14",
+  "source": "https://www.legislation.gov.uk/",
+  "licence": {
+    "name": "Open Government Licence",
+    "version": "3.0",
+    "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+  },
+  "items": [
+    {"identity": "ukpga/Geo6/6-7/40", "title": "Law Reform (Frustrated Contracts) Act 1943", "subject_folder": "Contract law"},
+    {"identity": "ukpga/1967/7", "title": "Misrepresentation Act 1967", "subject_folder": "Contract law"},
+    {"identity": "ukpga/1977/50", "title": "Unfair Contract Terms Act 1977", "subject_folder": "Contract law"},
+    {"identity": "ukpga/1979/54", "title": "Sale of Goods Act 1979", "subject_folder": "Contract law"},
+    {"identity": "ukpga/1982/29", "title": "Supply of Goods and Services Act 1982", "subject_folder": "Contract law"},
+    {"identity": "ukpga/1999/31", "title": "Contracts (Rights of Third Parties) Act 1999", "subject_folder": "Contract law"},
+
+    {"identity": "ukpga/1987/43", "title": "Consumer Protection Act 1987", "subject_folder": "Consumer law"},
+    {"identity": "ukpga/2015/15", "title": "Consumer Rights Act 2015", "subject_folder": "Consumer law"},
+    {"identity": "ukpga/2024/13", "title": "Digital Markets, Competition and Consumers Act 2024", "subject_folder": "Consumer law"},
+
+    {"identity": "ukpga/Geo6/8-9/28", "title": "Law Reform (Contributory Negligence) Act 1945", "subject_folder": "Tort and professional negligence law"},
+    {"identity": "ukpga/Eliz2/5-6/31", "title": "Occupiers' Liability Act 1957", "subject_folder": "Tort and professional negligence law"},
+    {"identity": "ukpga/1972/35", "title": "Defective Premises Act 1972", "subject_folder": "Tort and professional negligence law"},
+    {"identity": "ukpga/1976/30", "title": "Fatal Accidents Act 1976", "subject_folder": "Tort and professional negligence law"},
+    {"identity": "ukpga/1980/58", "title": "Limitation Act 1980", "subject_folder": "Tort and professional negligence law"},
+    {"identity": "ukpga/1984/3", "title": "Occupiers' Liability Act 1984", "subject_folder": "Tort and professional negligence law"},
+
+    {"identity": "ukpga/Eliz2/5-6/11", "title": "Homicide Act 1957", "subject_folder": "Criminal law"},
+    {"identity": "ukpga/1981/47", "title": "Criminal Attempts Act 1981", "subject_folder": "Criminal law"},
+    {"identity": "ukpga/1984/60", "title": "Police and Criminal Evidence Act 1984", "subject_folder": "Criminal evidence law"},
+    {"identity": "ukpga/2003/44", "title": "Criminal Justice Act 2003", "subject_folder": "Criminal evidence law"},
+    {"identity": "ukpga/2009/25", "title": "Coroners and Justice Act 2009", "subject_folder": "Criminal law"},
+
+    {"identity": "ukpga/1992/52", "title": "Trade Union and Labour Relations (Consolidation) Act 1992", "subject_folder": "Employment and equality law"},
+    {"identity": "ukpga/1996/18", "title": "Employment Rights Act 1996", "subject_folder": "Employment and equality law"},
+    {"identity": "ukpga/1999/26", "title": "Employment Relations Act 1999", "subject_folder": "Employment and equality law"},
+    {"identity": "ukpga/2002/22", "title": "Employment Act 2002", "subject_folder": "Employment and equality law"},
+    {"identity": "ukpga/2010/15", "title": "Equality Act 2010", "subject_folder": "Employment and equality law"},
+
+    {"identity": "ukpga/Geo5/15-16/20", "title": "Law of Property Act 1925", "subject_folder": "Land law"},
+    {"identity": "ukpga/1989/34", "title": "Law of Property (Miscellaneous Provisions) Act 1989", "subject_folder": "Land law"},
+    {"identity": "ukpga/1996/47", "title": "Trusts of Land and Appointment of Trustees Act 1996", "subject_folder": "Land law"},
+    {"identity": "ukpga/2002/9", "title": "Land Registration Act 2002", "subject_folder": "Land law"},
+
+    {"identity": "ukpga/1981/54", "title": "Senior Courts Act 1981", "subject_folder": "Public and constitutional law"},
+    {"identity": "ukpga/1998/42", "title": "Human Rights Act 1998", "subject_folder": "Public and constitutional law"},
+    {"identity": "ukpga/2005/4", "title": "Constitutional Reform Act 2005", "subject_folder": "Public and constitutional law"},
+    {"identity": "ukpga/2007/15", "title": "Tribunals, Courts and Enforcement Act 2007", "subject_folder": "Public and constitutional law"},
+    {"identity": "ukpga/2022/35", "title": "Judicial Review and Courts Act 2022", "subject_folder": "Public and constitutional law"},
+
+    {"identity": "ukpga/1986/45", "title": "Insolvency Act 1986", "subject_folder": "Company law"},
+    {"identity": "ukpga/1986/46", "title": "Company Directors Disqualification Act 1986", "subject_folder": "Company law"},
+    {"identity": "ukpga/2006/46", "title": "Companies Act 2006", "subject_folder": "Company law"},
+    {"identity": "ukpga/2023/56", "title": "Economic Crime and Corporate Transparency Act 2023", "subject_folder": "Company law"},
+
+    {"identity": "ukpga/1973/18", "title": "Matrimonial Causes Act 1973", "subject_folder": "Family law"},
+    {"identity": "ukpga/1984/42", "title": "Matrimonial and Family Proceedings Act 1984", "subject_folder": "Family law"},
+    {"identity": "ukpga/1989/41", "title": "Children Act 1989", "subject_folder": "Family law"},
+    {"identity": "ukpga/1996/27", "title": "Family Law Act 1996", "subject_folder": "Family law"},
+    {"identity": "ukpga/2021/17", "title": "Domestic Abuse Act 2021", "subject_folder": "Family law"},
+    {"identity": "uksi/2010/2955", "title": "The Family Procedure Rules 2010", "subject_folder": "Family law"},
+
+    {"identity": "ukpga/Will4and1Vict/7/26", "title": "Wills Act 1837", "subject_folder": "Wills and succession law"},
+    {"identity": "ukpga/Geo5/15-16/23", "title": "Administration of Estates Act 1925", "subject_folder": "Wills and succession law"},
+    {"identity": "ukpga/1975/63", "title": "Inheritance (Provision for Family and Dependants) Act 1975", "subject_folder": "Wills and succession law"},
+    {"identity": "ukpga/1982/53", "title": "Administration of Justice Act 1982", "subject_folder": "Wills and succession law"},
+
+    {"identity": "ukpga/Geo5/15-16/19", "title": "Trustee Act 1925", "subject_folder": "Trusts law"},
+    {"identity": "ukpga/Eliz2/6-7/53", "title": "Variation of Trusts Act 1958", "subject_folder": "Trusts law"},
+    {"identity": "ukpga/2000/29", "title": "Trustee Act 2000", "subject_folder": "Trusts law"},
+    {"identity": "ukpga/2009/18", "title": "Perpetuities and Accumulations Act 2009", "subject_folder": "Trusts law"},
+
+    {"identity": "ukpga/1984/28", "title": "County Courts Act 1984", "subject_folder": "Civil litigation law"},
+    {"identity": "ukpga/1997/12", "title": "Civil Procedure Act 1997", "subject_folder": "Civil litigation law"},
+    {"identity": "uksi/1998/3132", "title": "The Civil Procedure Rules 1998", "subject_folder": "Civil litigation law"},
+
+    {"identity": "ukpga/Geo6/12-13-14/88", "title": "Registered Designs Act 1949", "subject_folder": "Intellectual property law"},
+    {"identity": "ukpga/1977/37", "title": "Patents Act 1977", "subject_folder": "Intellectual property law"},
+    {"identity": "ukpga/1988/48", "title": "Copyright, Designs and Patents Act 1988", "subject_folder": "Intellectual property law"},
+    {"identity": "ukpga/1994/26", "title": "Trade Marks Act 1994", "subject_folder": "Intellectual property law"},
+    {"identity": "uksi/2018/597/made", "title": "The Trade Secrets (Enforcement, etc.) Regulations 2018", "subject_folder": "Intellectual property law"},
+
+    {"identity": "ukpga/1996/23", "title": "Arbitration Act 1996", "subject_folder": "Commercial law"},
+    {"identity": "ukpga/2000/8", "title": "Financial Services and Markets Act 2000", "subject_folder": "Financial services law"},
+    {"identity": "ukpga/2021/22", "title": "Financial Services Act 2021", "subject_folder": "Financial services law"},
+    {"identity": "ukpga/2023/29", "title": "Financial Services and Markets Act 2023", "subject_folder": "Financial services law"},
+    {"identity": "ukpga/2025/4", "title": "Arbitration Act 2025", "subject_folder": "Commercial law"}
+  ]
+}

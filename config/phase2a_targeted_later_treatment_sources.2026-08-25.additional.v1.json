@@ -1,0 +1,57 @@
+{
+  "as_of_date": "2026-08-14",
+  "automatic_embedding": false,
+  "automatic_indexing": false,
+  "automatic_source_admission": false,
+  "bulk_search": false,
+  "development30_authorized": false,
+  "expected_item_count": 3,
+  "items": [
+    {
+      "candidate_case_id": "uksc-2023-0110",
+      "candidate_case_name": "URS Corporation Ltd v BDW Trading Ltd",
+      "candidate_neutral_citation": "[2025] UKSC 21",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-011",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2023-0110",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_AFFIRMATION_AND_APPLICATION_OF_SCOPE_OF_DUTY_PRINCIPLE",
+      "target_neutral_citations": [
+        "[2021] UKSC 20"
+      ]
+    },
+    {
+      "candidate_case_id": "jcpc-2019-0089",
+      "candidate_case_name": "Primeo Fund (in Official Liquidation) v Bank of Bermuda (Cayman) Ltd and another (Cayman Islands) — interim judgment",
+      "candidate_neutral_citation": "[2021] UKPC 22",
+      "court_weight": "JCPC_PERSUASIVE",
+      "lead_id": "later-treatment-lead-012",
+      "official_case_url": "https://www.jcpc.uk/cases/jcpc-2019-0089",
+      "official_judgment_url": "https://jcpc.uk/uploads/jcpc_2019_0089_judgment_previous_f6a9fb479e.pdf",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_PERSUASIVE_APPLICATION_OF_REFLECTIVE_LOSS_RULE",
+      "target_neutral_citations": [
+        "[2020] UKSC 31"
+      ]
+    },
+    {
+      "candidate_case_id": "uksc-2024-0155",
+      "candidate_case_name": "The Kingdom of Spain v Infrastructure Services Luxembourg S.A.R.L. and another",
+      "candidate_neutral_citation": "[2026] UKSC 9",
+      "court_weight": "UKSC_BINDING",
+      "lead_id": "later-treatment-lead-013",
+      "official_case_url": "https://www.supremecourt.uk/cases/judgments/uksc-2024-0155",
+      "owner_decision_required": true,
+      "provisional_relationship": "POTENTIAL_CONTEXTUAL_DISTINCTION_OF_CLEAR_WORDS_PRESUMPTION",
+      "target_neutral_citations": [
+        "[2021] UKSC 29"
+      ]
+    }
+  ],
+  "owner_later_treatment_decision_required": true,
+  "owner_source_admission_required": true,
+  "phase2b_authorized": false,
+  "purpose": "TARGETED_NON_BULK_OFFICIAL_PRIMARY_LATER_TREATMENT_LEADS_ONLY",
+  "schema": "legalbot.v111.phase2a.targeted-later-treatment-plan.v1",
+  "technical_qualification_assigned": false
+}

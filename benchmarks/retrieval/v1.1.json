@@ -1,0 +1,20 @@
+{
+  "amendment_diff": "benchmarks/retrieval/v1.1.AMENDMENT-DIFF.json",
+  "behaviour_cases_excluded_to": "A2",
+  "benchmark_id": "legalbot-owner-retrieval",
+  "canonical_jsonl": "benchmarks/retrieval/v1.1.jsonl",
+  "case_count": 24,
+  "corpus_or_model_frozen": false,
+  "fact_check": "benchmarks/retrieval/v1.1.FACT-CHECK.json",
+  "jsonl_sha256": "541268593a1f22a2e497c716f9390f4c06ef433dd7cc78471c49be7b96a3989e",
+  "owner_decision": "benchmarks/retrieval/v1.1.OWNER-DECISION.json",
+  "owner_freeze_manifest": "benchmarks/retrieval/v1.1.freeze.json",
+  "promotion_eligible": true,
+  "schema": "legalbot.retrieval-benchmark-pointer.v1",
+  "splits": {
+    "development": 16,
+    "promotion": 8
+  },
+  "status": "owner_frozen",
+  "version": "1.1.1"
+}

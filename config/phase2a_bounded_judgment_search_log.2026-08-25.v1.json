@@ -1,0 +1,75 @@
+{
+  "absence_of_candidate_proves_no_later_treatment": false,
+  "as_of_date": "2026-08-14",
+  "automatic_source_admission": false,
+  "development30_authorized": false,
+  "executed_at_date": "2026-08-25",
+  "method": "BOUNDED_INDIVIDUAL_EXACT_CITATION_DISCOVERY_RESTRICTED_TO_OFFICIAL_UKSC_AND_JCPC_DOMAINS",
+  "phase2b_authorized": false,
+  "records": [
+    {
+      "canonical_url": "https://www.supremecourt.uk/cases/uksc-2014-0106",
+      "candidate_later_treatment_leads_identified": [],
+      "neutral_citation": "[2016] UKSC 47",
+      "proposed_owner_outcome": "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED",
+      "queries": [
+        "site:supremecourt.uk/cases/judgments \"[2016] UKSC 47\" \"Bailey\"",
+        "site:jcpc.uk/cases/judgments \"[2016] UKSC 47\" \"Bailey\""
+      ],
+      "source_version_id": "source-version-b571262834dad57ab8f2db7a8301b71e88ddd443",
+      "title": "Bailey v Angove’s Pty Ltd"
+    },
+    {
+      "canonical_url": "https://www.supremecourt.uk/cases/uksc-2024-0089",
+      "candidate_later_treatment_leads_identified": [],
+      "neutral_citation": "[2025] UKSC 26",
+      "proposed_owner_outcome": "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED",
+      "queries": [
+        "site:supremecourt.uk/cases/judgments \"[2025] UKSC 26\" \"Standish\"",
+        "site:jcpc.uk/cases/judgments \"[2025] UKSC 26\" \"Standish\""
+      ],
+      "source_version_id": "source-version-a4ab2d79306e2644d5fd28b2113fb4c2578fa193",
+      "title": "Standish v Standish"
+    },
+    {
+      "canonical_url": "https://www.supremecourt.uk/cases/uksc-2022-0015",
+      "candidate_later_treatment_leads_identified": [],
+      "neutral_citation": "[2024] UKSC 43",
+      "proposed_owner_outcome": "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED",
+      "queries": [
+        "site:supremecourt.uk/cases/judgments \"[2024] UKSC 43\" \"Hirachand\"",
+        "site:jcpc.uk/cases/judgments \"[2024] UKSC 43\" \"Hirachand\""
+      ],
+      "source_version_id": "source-version-c107a936bfa62f723b5204a96ff1745ef8ccca15",
+      "title": "Hirachand v Hirachand"
+    },
+    {
+      "canonical_url": "https://www.supremecourt.uk/cases/uksc-2015-0233",
+      "candidate_later_treatment_leads_identified": [],
+      "neutral_citation": "[2017] UKSC 51",
+      "proposed_owner_outcome": "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED",
+      "queries": [
+        "site:supremecourt.uk/cases/judgments \"[2017] UKSC 51\" \"UNISON\"",
+        "site:jcpc.uk/cases/judgments \"[2017] UKSC 51\" \"UNISON\""
+      ],
+      "source_version_id": "source-version-53e27f7c79f05b833f8ed78811f9dbdd90e165c2",
+      "title": "R (UNISON) v Lord Chancellor"
+    },
+    {
+      "canonical_url": "https://www.supremecourt.uk/cases/uksc-2021-0181",
+      "candidate_later_treatment_leads_identified": [],
+      "neutral_citation": "[2024] UKSC 36",
+      "proposed_owner_outcome": "NO_MATERIAL_LATER_TREATMENT_IDENTIFIED",
+      "queries": [
+        "site:supremecourt.uk/cases/judgments \"[2024] UKSC 36\" \"SkyKick\"",
+        "site:jcpc.uk/cases/judgments \"[2024] UKSC 36\" \"SkyKick\""
+      ],
+      "source_version_id": "source-version-5b1044d186280b1ec5e7ac9e6776f8d5c6bd281f",
+      "title": "SkyKick UK Ltd v Sky Ltd"
+    }
+  ],
+  "record_count": 5,
+  "schema": "legalbot.v111.phase2a.bounded-judgment-search-log.v1",
+  "search_is_exhaustive": false,
+  "source_admission_authorized": false
+}

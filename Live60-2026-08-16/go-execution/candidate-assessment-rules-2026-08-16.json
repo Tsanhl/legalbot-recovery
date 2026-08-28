@@ -1,0 +1,210 @@
+{
+  "active_bundle_untouched": "owner-standards-2026-08-14.1",
+  "as_of_date": "2026-08-16",
+  "do_not_bulk_approve": true,
+  "not_live": true,
+  "oscola_fourth_edition_must_not_overwrite_oscola_5": true,
+  "rules": [
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-current-research-breadth-v1",
+      "Criterion": "research",
+      "Error to avoid": "Do not rely on a narrow case list or outdated sources where current scholarship or later authority is material.",
+      "Positive target": "Use the latest relevant primary authorities and a sufficiently broad range of approved scholarship; identify which sources are central and which are peripheral.",
+      "Task": "any",
+      "Verified basis": "LAW3011 59; LAW3607 75; essay tips."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-strongest-counterview-v1",
+      "Criterion": "counterargument",
+      "Error to avoid": "Do not present a disputed proposition as settled or omit a material opposing view.",
+      "Positive target": "Identify the strongest contrary judicial or scholarly view, explain its basis, and give a reasoned position.",
+      "Task": "essay",
+      "Verified basis": "LAW2291 63; LAW3071 72; LAW3447 71."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-authority-role-status-v1",
+      "Criterion": "authority_accuracy",
+      "Error to avoid": "Do not treat dissent, obiter, a pending appeal or a secondary source as binding law.",
+      "Positive target": "State the legal role and hierarchy of material authorities, including majority/dissent and ratio/obiter where relevant.",
+      "Task": "any",
+      "Verified basis": "LAW3447 71; LAW3607 75."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "assessment-proposed-general-pinpoint-authority-v1",
+      "Criterion": "citation_accuracy",
+      "Error to avoid": "Do not cite an entire judgment/article when the relied-on passage can be pinpointed.",
+      "Positive target": "Provide paragraph or page pinpoints for every material proposition where the source permits them.",
+      "Task": "any",
+      "Verified basis": "LAW3607 75; OSCOLA."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-rationale-implications-v1",
+      "Criterion": "analysis",
+      "Error to avoid": "Do not state doctrine or policy effects without explaining their significance to the precise question.",
+      "Positive target": "Explain why the rule or policy exists and the practical/legal implications of adopting each interpretation.",
+      "Task": "any",
+      "Verified basis": "LAW2291 63; LAW3607 75."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-scope-depth-balance-v1",
+      "Criterion": "organisation",
+      "Error to avoid": "Do not create a broad sequence of short, compressed sections that merely touch many topics.",
+      "Positive target": "Justify the chosen scope, group related issues, and develop fewer material points in sufficient depth with balanced sections.",
+      "Task": "essay",
+      "Verified basis": "Dissertation 68; LAW3607 75."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-doctrinal-terminology-v1",
+      "Criterion": "precision",
+      "Error to avoid": "Do not use a convenient label where it changes the legal or scientific category.",
+      "Positive target": "Use the correct legal, scientific and factual terminology and distinguish adjacent concepts before applying them.",
+      "Task": "any",
+      "Verified basis": "LAW2291 63; LAW2221 59."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-complete-statutory-scheme-v1",
+      "Criterion": "authority_accuracy",
+      "Error to avoid": "Do not cite one familiar section while omitting a provision or exception that changes the outcome.",
+      "Positive target": "Identify the governing provision together with material definitions, exceptions, companion sections, commencement and remedies.",
+      "Task": "problem",
+      "Verified basis": "LAW2241 68; pensions 71/general."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-source-critique-v1",
+      "Criterion": "research",
+      "Error to avoid": "Do not cite a source merely because it supports the thesis without assessing its authority or evidential limits.",
+      "Positive target": "Evaluate the reliability, status, date and limits of material sources, especially factual, technical and economic claims.",
+      "Task": "essay",
+      "Verified basis": "Essay tips; dissertation 68."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-calculation-workings-v1",
+      "Criterion": "accuracy",
+      "Error to avoid": "Do not present unexplained figures or leave obvious arithmetic errors uncorrected.",
+      "Positive target": "Show the legal basis and workings for material calculations and run an arithmetic consistency check.",
+      "Task": "problem",
+      "Verified basis": "Pensions general feedback."
+    },
+    {
+      "Band": "70+",
+      "Candidate rule ID": "audit-proposed-sustained-academic-prose-v1",
+      "Criterion": "communication",
+      "Error to avoid": "Do not let repeated bullet lists, formulaic mini-conclusions or outline-style prose replace developed analysis.",
+      "Positive target": "Use sustained academic prose, purposeful headings, transitions and editorially varied conclusions.",
+      "Task": "essay",
+      "Verified basis": "Dissertation 68; essay tips."
+    },
+    {
+      "Band": "60-69",
+      "Candidate rule ID": "audit-proposed-end-loaded-analysis-v1",
+      "Criterion": "analysis",
+      "Error to avoid": "Do not spend most of the answer describing background and postpone engagement with the proposition until the final pages.",
+      "Positive target": "Integrate evaluation and authority throughout each section.",
+      "Task": "essay",
+      "Verified basis": "LAW2291 Topic Four 62."
+    },
+    {
+      "Band": "60-69",
+      "Candidate rule ID": "audit-proposed-underspecified-authority-v1",
+      "Criterion": "authority_accuracy",
+      "Error to avoid": "Do not rely on vague case names, unsupported abbreviations or an unpinpointed source for a contested proposition.",
+      "Positive target": "State the exact provision, paragraph, legal role and relevance of each material authority.",
+      "Task": "any",
+      "Verified basis": "LAW2081 65; LAW2291 63; LAW3607 75."
+    },
+    {
+      "Band": "60-69",
+      "Candidate rule ID": "audit-proposed-insufficient-secondary-depth-v1",
+      "Criterion": "research",
+      "Error to avoid": "Do not rely almost entirely on cases/statutes for an essay requiring scholarly debate.",
+      "Positive target": "Use and synthesise approved secondary sources where the task calls for academic evaluation.",
+      "Task": "essay",
+      "Verified basis": "LAW3011 59; LAW3607 75."
+    },
+    {
+      "Band": "60-69",
+      "Candidate rule ID": "assessment-proposed-general-syllabus-scope-v1",
+      "Criterion": "thesis",
+      "Error to avoid": "Do not spend material words on remote or excluded topics while a central issue remains underdeveloped.",
+      "Positive target": "Keep the answer within the set issue and examinable scope while explaining any necessary boundary choice.",
+      "Task": "any",
+      "Verified basis": "LAW2221 59; LAW2011 70."
+    },
+    {
+      "Band": "60-69",
+      "Candidate rule ID": "audit-proposed-fence-sitting-v1",
+      "Criterion": "application",
+      "Error to avoid": "Do not list both outcomes without ranking them or explaining why uncertainty remains.",
+      "Positive target": "Give a clear but appropriately qualified conclusion and identify the fact that would change it.",
+      "Task": "problem",
+      "Verified basis": "LAW3071 72."
+    },
+    {
+      "Band": "60-69",
+      "Candidate rule ID": "assessment-proposed-general-unchecked-secondary-pinpoint-v1",
+      "Criterion": "authority_accuracy",
+      "Error to avoid": "Do not copy a pinpoint or proposition from a secondary source without checking the primary text.",
+      "Positive target": "Verify the primary source behind any pinpoint borrowed from commentary.",
+      "Task": "any",
+      "Verified basis": "Repo proposal; OSCOLA/source-verification logic."
+    },
+    {
+      "Band": "50-59",
+      "Candidate rule ID": "audit-proposed-wrong-legal-characterisation-v1",
+      "Criterion": "authority_accuracy",
+      "Error to avoid": "Do not analyse the wrong offence/claim or import an excluded doctrine because it appears factually adjacent.",
+      "Positive target": "Classify the correct claim, offence, defence or statutory route before applying its elements.",
+      "Task": "problem",
+      "Verified basis": "LAW2221 59."
+    },
+    {
+      "Band": "50-59",
+      "Candidate rule ID": "audit-proposed-missing-central-authority-v1",
+      "Criterion": "issue_spotting",
+      "Error to avoid": "Do not omit a central case/provision while discussing peripheral material.",
+      "Positive target": "Identify and apply the authority or statutory provision that directly controls the issue.",
+      "Task": "problem",
+      "Verified basis": "LAW2081 65; LAW2241 68; LAW3447 71."
+    },
+    {
+      "Band": "50-59",
+      "Candidate rule ID": "audit-proposed-fragmented-outline-prose-v1",
+      "Criterion": "communication",
+      "Error to avoid": "Do not submit an outline or briefing-note sequence in place of sustained academic analysis.",
+      "Positive target": "Convert lists and very short sections into connected analytical paragraphs unless a list is functionally necessary.",
+      "Task": "essay",
+      "Verified basis": "Dissertation 68; essay tips."
+    },
+    {
+      "Band": "50-59",
+      "Candidate rule ID": "audit-proposed-citation-format-failure-v1",
+      "Criterion": "citation_accuracy",
+      "Error to avoid": "Do not lose marks through missing pinpoints, inconsistent citations, bibliography defects or avoidable SPaG errors.",
+      "Positive target": "Complete a final OSCOLA/SPaG check against the current official guide and institutional checklist.",
+      "Task": "any",
+      "Verified basis": "Pensions general feedback; OSCOLA."
+    },
+    {
+      "Band": "50-59",
+      "Candidate rule ID": "audit-proposed-unchecked-calculation-v1",
+      "Criterion": "accuracy",
+      "Error to avoid": "Do not allow an obvious arithmetic error or unstated assumption to drive the legal conclusion.",
+      "Positive target": "Cross-check inputs, dates and arithmetic against the legal assumptions stated.",
+      "Task": "problem",
+      "Verified basis": "Pensions general feedback."
+    }
+  ],
+  "schema": "legalbot.candidate-assessment-rules.v1",
+  "seals_expert_gold": false,
+  "status": "owner_review_required"
+}

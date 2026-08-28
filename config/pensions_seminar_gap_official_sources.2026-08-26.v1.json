@@ -1,0 +1,190 @@
+{
+  "schema": "legalbot.pensions-seminar-gap-official-source-plan.v1",
+  "version": "pensions-seminar-gap-2026-08-26-v1",
+  "jurisdiction": "England and Wales",
+  "download_date": "2026-08-26",
+  "source_root_relative_directory": "Official Legislation/seminar-gap-official-2026-08-26",
+  "source": "https://www.legislation.gov.uk/",
+  "licence": {
+    "name": "Open Government Licence",
+    "version": "3.0",
+    "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+  },
+  "teaching_lane_use": "issue_discovery_only_never_legal_authority",
+  "targets": [
+    {
+      "authority_identity": "ukpga:1993:48",
+      "source_title": "Pension Schemes Act 1993",
+      "official_url": "https://www.legislation.gov.uk/ukpga/1993/48/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-1993-48-data.xml",
+      "content_sha256": "b3dde852a39e74d738d86bceeb3d6eb1a60050f07d5207dc14f4e2adefad1c97",
+      "byte_count": 3843147,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["section-1", "sections-93-101P", "sections-145-152", "sections-180-181B"]
+    },
+    {
+      "authority_identity": "ukpga:1995:26",
+      "source_title": "Pensions Act 1995",
+      "official_url": "https://www.legislation.gov.uk/ukpga/1995/26/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-1995-26-data.xml",
+      "content_sha256": "74fbaf7112b671da22ad09851cd838b0efe26071f1b035647542fe572fac12e7",
+      "byte_count": 2929793,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["sections-3-11", "sections-33-40", "sections-51-54", "sections-67-67I", "section-73", "sections-75-75A", "section-124"]
+    },
+    {
+      "authority_identity": "ukpga:2004:12",
+      "source_title": "Finance Act 2004",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2004/12/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2004-12-data.xml",
+      "content_sha256": "0e77d48efc5ec3d885ab611456e42772bc25dbf4eec58f04e806c3e4a874d716",
+      "byte_count": 9639212,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["sections-150-154", "part-4-pension-schemes"]
+    },
+    {
+      "authority_identity": "ukpga:2004:35",
+      "source_title": "Pensions Act 2004",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2004/35/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2004-35-data.xml",
+      "content_sha256": "60631c00b03d5d97778f9cb44dfe9d1f425ff0b814dc7cc2f9edc687b4592e94",
+      "byte_count": 5812905,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["sections-3-10", "sections-38-51", "sections-69-72A", "sections-90-92", "sections-126-162", "sections-188-194", "sections-221-231", "sections-241-258", "section-311", "schedule-7"]
+    },
+    {
+      "authority_identity": "ukpga:2008:30",
+      "source_title": "Pensions Act 2008",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2008/30/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2008-30-data.xml",
+      "content_sha256": "294b76a577c82049cf082f97f1f7225aa82949d5093e1375947df6dd3907175a",
+      "byte_count": 1839486,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["part-1-workplace-pension-reform", "automatic-enrolment"]
+    },
+    {
+      "authority_identity": "ukpga:2011:19",
+      "source_title": "Pensions Act 2011",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2011/19/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2011-19-data.xml",
+      "content_sha256": "fe98a6f4f05ee84692a29c5ce272d0a9afac8deeed0c1a2682b6f87504045806",
+      "byte_count": 394144,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["money-purchase-benefits", "pension-protection-fund-amendments"]
+    },
+    {
+      "authority_identity": "ukpga:2015:8",
+      "source_title": "Pension Schemes Act 2015",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2015/8/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2015-8-data.xml",
+      "content_sha256": "9164678317f76831fbe25eeb5d5fd6fef38c980be34d26b2dbdb74b6167ef501",
+      "byte_count": 511372,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["categories-of-benefits", "pension-flexibilities"]
+    },
+    {
+      "authority_identity": "ukpga:2017:17",
+      "source_title": "Pension Schemes Act 2017",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2017/17/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2017-17-data.xml",
+      "content_sha256": "364db536e5ba0d10a08b42ea267ce942871951c3777963444b91acb1816a6a83",
+      "byte_count": 498780,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["master-trusts", "authorisation", "fraud-compensation"]
+    },
+    {
+      "authority_identity": "ukpga:2021:1",
+      "source_title": "Pension Schemes Act 2021",
+      "official_url": "https://www.legislation.gov.uk/ukpga/2021/1/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/ukpga-2021-1-data.xml",
+      "content_sha256": "0037ecf010345779756e43c6afc9d8c6fb40e5df6efb970c97ad9735a9ba7311",
+      "byte_count": 1900268,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["regulator-powers", "contribution-notices", "defined-benefit-funding", "climate-change-risk", "transfer-rights", "collective-money-purchase"]
+    },
+    {
+      "authority_identity": "uksi:2005:670",
+      "source_title": "The Pension Protection Fund (Compensation) Regulations 2005",
+      "official_url": "https://www.legislation.gov.uk/uksi/2005/670/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/uksi-2005-670-data.xml",
+      "content_sha256": "b79e9423574e24c62e098b73958d0234e4cc626a77777af245aee8f3a55994c6",
+      "byte_count": 534707,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["pension-protection-fund-compensation"]
+    },
+    {
+      "authority_identity": "uksi:2005:678",
+      "source_title": "The Occupational Pension Schemes (Employer Debt) Regulations 2005",
+      "official_url": "https://www.legislation.gov.uk/uksi/2005/678/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/uksi-2005-678-data.xml",
+      "content_sha256": "77b165fcb95d7b3d2102a217f6e3a0112d769686ea0441130a04f833d117fb28",
+      "byte_count": 802790,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["section-75-debt", "multi-employer-schemes", "scheme-apportionment-arrangements"]
+    },
+    {
+      "authority_identity": "uksi:2005:900",
+      "source_title": "The Pensions Regulator (Notifiable Events) Regulations 2005",
+      "official_url": "https://www.legislation.gov.uk/uksi/2005/900/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/uksi-2005-900-data.xml",
+      "content_sha256": "857663b1229c9cadfa8df623f3c6560b3890d77f57da4b1bdab973992ff9792d",
+      "byte_count": 33993,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["employer-notifiable-events", "scheme-notifiable-events"]
+    },
+    {
+      "authority_identity": "uksi:2005:3377",
+      "source_title": "The Occupational Pension Schemes (Scheme Funding) Regulations 2005",
+      "official_url": "https://www.legislation.gov.uk/uksi/2005/3377/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/uksi-2005-3377-data.xml",
+      "content_sha256": "77859c5ef761bdd5ea78d7f99b362ec8f3bc28b499282e57b2e862d3138f5bac",
+      "byte_count": 378124,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["technical-provisions", "statement-of-funding-principles", "actuarial-valuations", "recovery-plans"]
+    },
+    {
+      "authority_identity": "uksi:2005:3378",
+      "source_title": "The Occupational Pension Schemes (Investment) Regulations 2005",
+      "official_url": "https://www.legislation.gov.uk/uksi/2005/3378/data.xml",
+      "source_root_relative_path": "Official Legislation/seminar-gap-official-2026-08-26/uksi-2005-3378-data.xml",
+      "content_sha256": "b5a6e6f1825139fa61684ad238d6938e2ee996b71838ff3224ac1012b719b578",
+      "byte_count": 281150,
+      "identity_verified_from_xml": true,
+      "currentness_status": "downloaded_latest_available_snapshot_unreviewed",
+      "seminar_locator_hints": ["investment-powers", "investment-principles", "diversification", "employer-related-investments"]
+    }
+  ],
+  "rejected_downloads": [
+    {
+      "requested_identity": "uksi:2005:607",
+      "observed_identity": "uksi:2005:607:made",
+      "observed_title": "The National Assembly for Wales (Conduct of Litigation and Exercise of Rights of Audience) Regulations 2005",
+      "reason_code": "wrong_authority_identity",
+      "source_root_status": "removed_before_scan"
+    }
+  ],
+  "automatic_source_admission": false,
+  "automatic_currentness_approval": false,
+  "automatic_gold_change": false,
+  "automatic_indexing": false,
+  "automatic_embedding": false,
+  "candidate_mutation_authorized": false,
+  "active_promotion_authorized": false,
+  "phase2b_authorized": false,
+  "development30_authorized": false,
+  "validation30_authorized": false,
+  "live_activation_authorized": false
+}

@@ -1,0 +1,19 @@
+{
+  "ai_cannot_seal_gold": true,
+  "ai_role": "mechanical_accuracy_verifier_only",
+  "ai_role_in_reviewer_enum": false,
+  "ai_second_reviewer_forbidden": true,
+  "approval_reviewer_ref": "reviewer:df8f9b06eb9dd93ea8a81184c96fc702e25a3d268da92646450f1f4e864defe8",
+  "approval_reviewer_role": "legal_reviewer",
+  "as_of_date": "2026-08-16",
+  "eligible_for_training": false,
+  "independent_second_review_status": "not_required",
+  "independent_second_reviewer_ref": null,
+  "independent_second_reviewer_role": null,
+  "o04_authorised": false,
+  "owner_is_primary_reviewer": true,
+  "schema": "legalbot.live60-owner-reviewer-identity.v1",
+  "seals_expert_gold": false,
+  "suite_id": "live-evaluation-60-v1",
+  "training_export_allowed": false
+}

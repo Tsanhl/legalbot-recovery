@@ -1,0 +1,17 @@
+{
+  "schema": "legalbot.retrieval-benchmark-pointer.v1",
+  "benchmark_id": "legalbot-owner-retrieval",
+  "version": "1.1.0",
+  "status": "owner_review_draft",
+  "case_count": 24,
+  "splits": {
+    "development": 16,
+    "promotion": 8
+  },
+  "canonical_jsonl": "benchmarks/retrieval/v1.1.jsonl",
+  "jsonl_sha256": null,
+  "owner_freeze_manifest": null,
+  "behaviour_cases_excluded_to": "A2",
+  "corpus_or_model_frozen": false,
+  "promotion_eligible": false
+}

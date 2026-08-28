@@ -1,0 +1,49 @@
+{
+  "authorizing": false,
+  "captured_at": "2026-08-22T06:43:00Z",
+  "conclusion": {
+    "authoritative_result_recovered": false,
+    "reason": "No complete or partial result artifact survives with a verifiable binding to the r3 commit, tree, candidate, scorer closure and failed execution.",
+    "r3_metrics_remain_unavailable": true,
+    "same_checkpoint_rerun_authorized": false
+  },
+  "failed_run_binding": {
+    "candidate_build_id": "current-law-ew-full-fp16-v111-20260818-a",
+    "candidate_lance_tree_sha256": "992f7c11184afc7667abedc6dca07a0b690bbcb34b0c9071cb7f5faa4d12e705",
+    "commit": "1734815d938839f1585ee4cd9b2d9d20321e94ac",
+    "failure_diagnostic_file_sha256": "5979d5f3fec38ec517338b4ec43059ec67d51c75cd851cedd5545629928ae4f7",
+    "failure_diagnostic_path": "data/evaluations/retrieval/current-law-ew-full-fp16-v111-20260818-a/v111-reattest-quality-failure-1734815-r3.json",
+    "scorer_closure_aggregate_sha256": "85ff5560be886bdcc93e92bc770e9f5927823df34f01f5bf5800c27d9a32d959",
+    "tree": "ee2c33186a055315090a79f3271533553b0c7412"
+  },
+  "probes": [
+    {
+      "location": "attached task terminal",
+      "result": "no terminal session was attached; no output capture was available"
+    },
+    {
+      "location": "repository evidence, trace, cache and run directories",
+      "result": "no raw or partial r3 result report exists; the only same-window data file was the known retrieval workload telemetry"
+    },
+    {
+      "location": "retrieval workload telemetry",
+      "result": "187 supporting workload events survive, but they contain no per-case ranks, aggregates or failed-gate identity",
+      "sha256": "a82c730e7f112ec8df8df82376b7d2c9d1417cefb9f6d7b0ee8b10f925bd28a6"
+    },
+    {
+      "location": "user temporary directory",
+      "result": "the only same-window SQLite sidecar belonged to an empty events/settings telemetry-upload queue; it contained zero event rows and no retrieval result"
+    },
+    {
+      "location": "macOS unified log",
+      "result": "no event matched the r3 candidate identity, frozen-gate exception or retrieval-gate message in the execution window"
+    },
+    {
+      "location": "test-runner capture and operating-process state",
+      "result": "no capture, live process or recoverable in-memory state remained"
+    }
+  ],
+  "schema": "legalbot.v111-phase1c-r3-result-recovery.v1",
+  "seal_sha256": "b480064700e3eee9780f9c207bb7a090c3b52d637131522ea074c57ebd89cfd4",
+  "status": "not_recovered"
+}
