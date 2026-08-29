@@ -207,6 +207,7 @@ def scan_configured_sources(
                 database,
                 resumable_rows.get(fingerprint),
                 path_fingerprint_value=fingerprint,
+                project_root=settings.project_root,
             )
             if resumable is not None and not path.is_symlink():
                 try:
@@ -329,6 +330,7 @@ def _resumable_source_scan_file(
     prior_row: Any | None,
     *,
     path_fingerprint_value: str,
+    project_root: Path,
 ) -> Any | None:
     """Return a prior successful row only when its current v10 artefacts remain exact.
 
@@ -366,7 +368,11 @@ def _resumable_source_scan_file(
         or str(current["status"]) != str(prior_row["status"])
         or str(current["version_sha256"]) != str(prior_row["content_sha256"])
         or _requires_content_reclassification(current)
-        or _requires_persistence_repair(current, str(current["processing_fingerprint"]))
+        or _requires_persistence_repair(
+            current,
+            str(current["processing_fingerprint"]),
+            project_root=project_root,
+        )
     ):
         return None
     metadata = _metadata_object(current["metadata_json"])
@@ -608,7 +614,11 @@ def _ingest_file(
         }
         and not _requires_identity_migration(existing)
         and not _requires_content_reclassification(existing)
-        and not _requires_persistence_repair(existing, processing_fingerprint)
+        and not _requires_persistence_repair(
+            existing,
+            processing_fingerprint,
+            project_root=settings.project_root,
+        )
     ):
         existing_status = (
             DocumentStatus.DUPLICATE
@@ -1661,11 +1671,28 @@ def _requires_content_reclassification(row: Any) -> bool:
     )
 
 
-def _requires_persistence_repair(row: Any, processing_fingerprint: str) -> bool:
+def _requires_persistence_repair(
+    row: Any,
+    processing_fingerprint: str,
+    *,
+    project_root: Path,
+) -> bool:
     try:
         metadata = json.loads(str(row["metadata_json"] or "{}"))
     except (TypeError, ValueError, json.JSONDecodeError):
         return True
+    canonical_relative = Path(str(row["canonical_markdown_path"] or ""))
+    canonical_path = project_root / canonical_relative
+    try:
+        canonical_missing_or_unsafe = (
+            not canonical_relative.parts
+            or canonical_relative.is_absolute()
+            or canonical_path.is_symlink()
+            or not canonical_path.is_file()
+            or canonical_path.stat().st_size <= 0
+        )
+    except OSError:
+        canonical_missing_or_unsafe = True
     return (
         not isinstance(metadata, dict)
         or metadata.get("schema") != LOCAL_SOURCE_VERSION_SCHEMA
@@ -1676,6 +1703,7 @@ def _requires_persistence_repair(row: Any, processing_fingerprint: str) -> bool:
         or metadata.get("structural_chunker_schema") != StructuralChunker.schema
         or metadata.get("selected_chunk_count") != int(row["persisted_chunk_count"])
         or Path(str(row["canonical_markdown_path"])).name != metadata.get("body_sha256")
+        or canonical_missing_or_unsafe
     )
 
 

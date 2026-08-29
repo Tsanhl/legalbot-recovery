@@ -109,6 +109,55 @@ def test_linked_resume_reprocesses_changed_bytes(
     assert retried_file["content_sha256"] != prior_file["content_sha256"]
 
 
+def test_linked_resume_rebuilds_missing_canonical_markdown(
+    tmp_path: Path, database, cipher, monkeypatch
+) -> None:
+    source_root = tmp_path / "configured sources"
+    authority_path = source_root / "Contract law" / "Cases" / "authority.md"
+    authority_path.parent.mkdir(parents=True)
+    authority_path.write_text(
+        "# Example Authority\n\nA proposition supported by the judgment.", encoding="utf-8"
+    )
+    monkeypatch.setenv("LEGALBOT_SOURCE_ROOTS", str(source_root))
+    settings = Settings(project_root=tmp_path, test_mode=True)
+    scan_configured_sources(settings, database, cipher, "missing-canonical-seed")
+    prior_file = database.source_scan_files("missing-canonical-seed")[0]
+    source_version = database.fetchone(
+        "SELECT canonical_markdown_path FROM source_versions WHERE superseded_by IS NULL"
+    )
+    assert source_version is not None
+    canonical_path = tmp_path / str(source_version["canonical_markdown_path"])
+    canonical_path.unlink()
+
+    descriptors = database.create_source_scan(
+        "missing-canonical-interrupted", settings.source_roots
+    )
+    database.start_source_scan(
+        "missing-canonical-interrupted", roots_seen=descriptors, expected_file_count=1
+    )
+    database.record_source_scan_file(
+        "missing-canonical-interrupted",
+        path_fingerprint=str(prior_file["path_fingerprint"]),
+        document_id=str(prior_file["document_id"]),
+        status=str(prior_file["status"]),
+        content_sha256=str(prior_file["content_sha256"]),
+        reason=None,
+    )
+    assert database.fail_interrupted_source_scans() == ["missing-canonical-interrupted"]
+    database.resume_source_scan(
+        "missing-canonical-interrupted",
+        "missing-canonical-retry",
+        settings.source_roots,
+    )
+
+    resumed = scan_configured_sources(settings, database, cipher, "missing-canonical-retry")
+
+    assert resumed["status"] == "complete"
+    assert resumed["resumed_files_reused"] == 0
+    assert canonical_path.is_file()
+    assert canonical_path.stat().st_size > 0
+
+
 def test_scan_accounts_every_file_encrypts_aliases_and_separates_feedback(
     tmp_path: Path, database, cipher, monkeypatch
 ) -> None:
