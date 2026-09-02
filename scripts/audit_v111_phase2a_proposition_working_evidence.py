@@ -25,10 +25,15 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+BACKEND_ROOT = PROJECT_ROOT / "backend"
+for root in (PROJECT_ROOT, BACKEND_ROOT):
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
 
 validator = importlib.import_module("scripts.validate_v111_phase2a_proposition_working_drafts")
+from app.retrieval.ge_generic_read_guard import (  # noqa: E402
+    require_generic_index_read_allowed,
+)
 
 DEFAULT_SPAN_CORPUS = PROJECT_ROOT / (
     "data/evaluations/phase2a-owner-review/"
@@ -271,6 +276,7 @@ def _audit_evidence_item(
 def _fetch_lance_rows(build_root: Path, chunk_ids: set[str]) -> dict[str, dict[str, Any]]:
     import lancedb
 
+    require_generic_index_read_allowed(build_root, expected_build_id=build_root.name)
     table = lancedb.connect(str(build_root / "lance/authority")).open_table("chunks")
     result: dict[str, dict[str, Any]] = {}
     columns = ["chunk_id", "source_version_id", "authority_identity_id", "text"]

@@ -196,6 +196,65 @@ def test_duplicate_in_flight_build_is_rejected(database, tmp_path, monkeypatch) 
     assert first["status"] == "queued"
 
 
+def test_index_runner_rejects_catalogue_drift_after_manifest_was_frozen(
+    database, tmp_path
+) -> None:
+    project = tmp_path / "project"
+    (project / "config").mkdir(parents=True)
+    (project / "config" / "official_legislation_pack.json").write_text(
+        json.dumps(
+            {
+                "schema": "legalbot.official-legislation-pack.v1",
+                "version": "test",
+                "licence": {
+                    "name": "Open Government Licence",
+                    "version": "3.0",
+                    "url": "x",
+                },
+                "items": [
+                    {"identity": "ukpga/1977/50", "title": "Unfair Contract Terms Act 1977"}
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (project / "config" / "uksc_authority_pack.json").write_text(
+        json.dumps(
+            {
+                "schema": "legalbot.uksc-authority-pack.v1",
+                "version": "test",
+                "licence": {"name": "Open Government Licence", "version": "3.0"},
+                "items": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    _seed_authority(database, project)
+    settings = _settings(project)
+    queued = enqueue_index_build(
+        settings,
+        database,
+        corpus_id="test-corpus",
+        build_id="manifest-drift",
+        skip_embedding=True,
+    )
+    frozen = database.job(queued["job_id"])
+    assert frozen is not None
+    frozen_request = json.loads(str(frozen["request_json"]))
+    assert frozen_request["approved_source_manifest_hash"] == queued["source_manifest_hash"]
+    assert frozen_request["source_version_ids"] == ["sv-ucta"]
+
+    database.execute("UPDATE source_versions SET review_status='pending' WHERE id='sv-ucta'")
+    with pytest.raises(IndexBuildStageError) as stopped:
+        IndexBuildRunner(settings, database).run_sync(queued["job_id"])
+    assert stopped.value.reason_code == "source_manifest_changed_after_enqueue"
+    assert database.job(queued["job_id"])["status"] == "failed"
+    assert database.fetchone("SELECT status FROM index_builds WHERE id='manifest-drift'")[
+        "status"
+    ] == "failed"
+    assert not (settings.index_dir / "ACTIVE.json").exists()
+
+
 def test_index_aggregate_duplicate_rolls_back_job_even_when_queue_is_full(
     database, tmp_path
 ) -> None:

@@ -15,6 +15,7 @@ import os
 import re
 import stat
 import subprocess
+import sys
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import UTC, date, datetime
@@ -25,6 +26,14 @@ from xml.etree import ElementTree as ET
 import lancedb  # type: ignore[import-untyped]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ROOT = PROJECT_ROOT / "backend"
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.retrieval.ge_generic_read_guard import (  # noqa: E402
+    require_generic_index_read_allowed,
+)
+
 BASELINE_PACKAGE_ID = "v111-phase2a-20260823-r4-ee47fda9d00a"
 BASELINE_INDEX_SHA256 = "e83681be7b737a9bd10e5886449e50da88e47e51428a53efc21836054600ac8e"
 BASELINE_REGISTRY_SHA256 = "78a738afd920ff840dcedeb0fd3fd5ca81035f499a0630d351d49e7c6cd3777a"
@@ -871,6 +880,7 @@ def build(
     if not isinstance(quarantine_records, list):
         raise ValueError("phase2a_quarantine_records_invalid")
     official_source_summary = _official_source_summary(quarantine_records)
+    require_generic_index_read_allowed(candidate_root, expected_build_id=candidate_root.name)
     table = lancedb.connect(str(candidate_root / "lance" / "authority")).open_table("chunks")
     remediation, gold_rows, candidate_rows = _remediation_rows(
         baseline_rows=baseline_rows,

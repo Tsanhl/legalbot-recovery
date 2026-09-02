@@ -1,0 +1,28 @@
+---
+description: Fail-closed official-source fill for GE knowledge gaps and wrong routes
+alwaysApply: true
+---
+
+# Factual knowledge-gap fill
+
+Whenever a GE evaluation result has a knowledge gap or a wrong-route quotation, fill the gap from official sources before other quality work. Do it immediately: search, download, and index. Do not wait for a reminder.
+
+## Do this
+
+1. Scan `known_missing_primary_authorities` and issue-relevance FAIL rows that selected an off-issue passage.
+2. Run `uv run python scripts/fill_ge_knowledge_gaps.py`. The project hook also runs this when a GE `RESULTS.jsonl` is written.
+3. Search only `legislation.gov.uk` (official title Atom feed) and Find Case Law (`caselaw.nationalarchives.gov.uk`). Accept a result only when the official title matches exactly and uniquely.
+4. Prefer official XML. Index an official PDF only when XML is missing and the PDF parses to locator-bound operative chunks.
+5. Keep create-only evaluation sidecar chunks. Exact SHA-256 bytes. Quotation must match stored text.
+
+## 100% factual means
+
+- Official identifier is already known, or an official Atom search returns exactly one matching title. Do not invent an Act, SI, or judgment URI.
+- Fail closed on HTTP 404, parse failure, empty/punctuation-only text, or chunks without a legal locator.
+- Never set `admitted`, `legal_gold`, `full_current_law_eligible`, or `qualified_legal_review` on fetch.
+- Do not write `data/catalog.sqlite3` or ACTIVE indexes.
+- Do not admit an unidentified “Mediation Act 2025”.
+- Cable & Wireless 2002 stays fail-closed after Find Case Law 404. Do not use BAILII unless the owner names that host.
+- Wrong-route quotations are negative labels. Do not index them as the missing primary.
+
+Downloaded bytes remain candidates until a later owner-signed locator receipt. AI is `mechanical_accuracy_verifier_only`, not `legal_reviewer`.

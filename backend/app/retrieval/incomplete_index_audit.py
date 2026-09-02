@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -21,6 +22,15 @@ from .source_manifest import chunk_locator_allowed
 
 AUDIT_SCHEMA = "legalbot.incomplete-index-audit.v1"
 ID_LIST_LIMIT = 100
+GE_SELECTION_POLICY = "exact-owner-approved-ge-source-versions-and-lanes"
+PHYSICAL_AUTHORITY_LANE = "authority"
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_CATALOGUE_LANES = frozenset({"primary_authority", "official_secondary"})
+_GE_SCOPE_MATERIAL_LANES = {
+    "primary_authority": "primary_authority",
+    "official_guidance": "official_guidance",
+    "official_procedure": "procedure_rule",
+}
 EXPECTED_SELECT_SQL = """
         SELECT
           d.id AS document_id, d.content_sha256 AS document_sha256,
@@ -40,7 +50,7 @@ EXPECTED_SELECT_SQL = """
         WHERE c.source_version_id = ?
           AND sv.review_status='approved'
           AND c.stream='body'
-          AND d.lane='primary_authority'
+          AND d.lane=?
           AND d.status='citable'
           AND d.retrieval_canonical=1
           AND json_extract(sv.metadata_json, '$.eligible_for_model_use')=1
@@ -56,6 +66,8 @@ class ObservedIndexRow:
     source_version_id: str
     vector_dimensions: int
     lane: str
+    material_lane: str = "primary_authority"
+    catalogue_lane: str = "primary_authority"
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,6 +77,178 @@ class ExpectedIndexRow:
     source_version_id: str
     ordinal: int
     lane: str = "authority"
+    material_lane: str = "primary_authority"
+    catalogue_lane: str = "primary_authority"
+
+
+@dataclass(frozen=True, slots=True)
+class SourceLaneBinding:
+    """One frozen source-to-lane identity used by audit and embedding."""
+
+    source_version_id: str
+    catalogue_lane: str
+    scope_lane: str
+    material_lane: str
+    physical_lane: str = PHYSICAL_AUTHORITY_LANE
+
+    def as_dict(self) -> dict[str, str]:
+        return {
+            "source_version_id": self.source_version_id,
+            "catalogue_lane": self.catalogue_lane,
+            "scope_lane": self.scope_lane,
+            "material_lane": self.material_lane,
+            "physical_lane": self.physical_lane,
+        }
+
+
+def source_lane_bindings_for_manifest(
+    manifest: Mapping[str, Any],
+) -> tuple[SourceLaneBinding, ...]:
+    """Validate and expose the exact catalogue/scope lanes frozen in a manifest.
+
+    Ordinary and previously frozen candidate manifests remain primary-authority
+    only.  The sole mixed-lane exception is the exact owner-approved GE source
+    scope, whose official-secondary members keep an official guidance or
+    procedure material label while sharing the physical legal-source table.
+    """
+
+    sources = manifest.get("sources")
+    if not isinstance(sources, list) or not sources:
+        raise ValueError("source_lane_binding_sources_invalid")
+    is_ge = manifest.get("selection_policy") == GE_SELECTION_POLICY
+    if is_ge:
+        if (
+            manifest.get("ge_expansion_mode") != "strict_successor"
+            or manifest.get("approved_legal_source_lanes_only") is not True
+            or manifest.get("successor_must_remain_non_active") is not True
+            or manifest.get("answer_release_eligible") is not False
+            or manifest.get("active_or_previous_write_authorized") is not False
+            or manifest.get("promotion_authorized") is not False
+            or manifest.get("index_enqueue_authorized") is not False
+            or manifest.get("index_build_authorized") is not False
+            or _SHA256_RE.fullmatch(
+                str(manifest.get("ge_source_scope_content_sha256") or "")
+            )
+            is None
+            or _SHA256_RE.fullmatch(
+                str(manifest.get("ge_source_scope_owner_approval_digest") or "")
+            )
+            is None
+        ):
+            raise ValueError("ge_source_lane_boundary_invalid")
+    elif manifest.get("authority_lane_only") is not True:
+        raise ValueError("ordinary_source_manifest_not_authority_lane_only")
+
+    ge_bindings: tuple[SourceLaneBinding, ...] | None = None
+    if is_ge:
+        try:
+            ge_bindings = parse_source_lane_bindings(
+                manifest.get("ge_source_lane_bindings")
+            )
+        except ValueError as exc:
+            raise ValueError("ge_source_lane_binding_invalid") from exc
+        if len(ge_bindings) != len(sources):
+            raise ValueError("ge_source_lane_inventory_invalid")
+    result: list[SourceLaneBinding] = []
+    seen: set[str] = set()
+    for ordinal, source in enumerate(sources):
+        if not isinstance(source, dict):
+            raise ValueError("source_lane_binding_member_invalid")
+        source_id = str(source.get("source_version_id") or "")
+        catalogue_lane = str(source.get("lane") or "")
+        if not source_id or source_id in seen or catalogue_lane not in _CATALOGUE_LANES:
+            raise ValueError("source_lane_binding_member_invalid")
+        seen.add(source_id)
+        if is_ge:
+            if ge_bindings is None:  # pragma: no cover - guarded above
+                raise ValueError("ge_source_lane_binding_invalid")
+            frozen = ge_bindings[ordinal]
+            scope_lane = frozen.scope_lane
+            material_lane = _GE_SCOPE_MATERIAL_LANES.get(scope_lane)
+            allowed = (
+                scope_lane == "primary_authority" and catalogue_lane == "primary_authority"
+            ) or (
+                scope_lane == "official_guidance" and catalogue_lane == "official_secondary"
+            ) or (
+                scope_lane == "official_procedure"
+                and catalogue_lane in _CATALOGUE_LANES
+            )
+            if (
+                material_lane is None
+                or not allowed
+                or frozen.source_version_id != source_id
+                or frozen.catalogue_lane != catalogue_lane
+                or frozen.material_lane != material_lane
+                or frozen.physical_lane != PHYSICAL_AUTHORITY_LANE
+                or (
+                    source.get("ge_scope_lane") is not None
+                    and source.get("ge_scope_lane") != scope_lane
+                )
+            ):
+                raise ValueError("ge_source_lane_mapping_invalid")
+        else:
+            if catalogue_lane != "primary_authority":
+                raise ValueError("ordinary_source_manifest_not_authority_lane_only")
+            scope_lane = "primary_authority"
+            material_lane = "primary_authority"
+        result.append(
+            SourceLaneBinding(
+                source_version_id=source_id,
+                catalogue_lane=catalogue_lane,
+                scope_lane=scope_lane,
+                material_lane=material_lane,
+            )
+        )
+    if is_ge:
+        expected_scope_lanes = sorted({binding.scope_lane for binding in result})
+        expected_authority_only = all(
+            binding.catalogue_lane == "primary_authority" for binding in result
+        )
+        if (
+            manifest.get("ge_source_scope_lanes") != expected_scope_lanes
+            or manifest.get("authority_lane_only") is not expected_authority_only
+            or int(manifest.get("source_count") or -1) != len(result)
+        ):
+            raise ValueError("ge_source_lane_inventory_invalid")
+    return tuple(result)
+
+
+def parse_source_lane_bindings(values: Any) -> tuple[SourceLaneBinding, ...]:
+    """Parse the exact JSON lane bindings stored in an index-build request."""
+
+    if not isinstance(values, list) or not values:
+        raise ValueError("source_lane_binding_request_invalid")
+    expected_fields = {
+        "source_version_id",
+        "catalogue_lane",
+        "scope_lane",
+        "material_lane",
+        "physical_lane",
+    }
+    bindings: list[SourceLaneBinding] = []
+    seen: set[str] = set()
+    for value in values:
+        if not isinstance(value, dict) or set(value) != expected_fields:
+            raise ValueError("source_lane_binding_request_invalid")
+        binding = SourceLaneBinding(
+            source_version_id=str(value["source_version_id"]),
+            catalogue_lane=str(value["catalogue_lane"]),
+            scope_lane=str(value["scope_lane"]),
+            material_lane=str(value["material_lane"]),
+            physical_lane=str(value["physical_lane"]),
+        )
+        if (
+            not binding.source_version_id
+            or binding.source_version_id in seen
+            or binding.catalogue_lane not in _CATALOGUE_LANES
+            or binding.scope_lane not in _GE_SCOPE_MATERIAL_LANES
+            or binding.material_lane != _GE_SCOPE_MATERIAL_LANES[binding.scope_lane]
+            or binding.physical_lane != PHYSICAL_AUTHORITY_LANE
+        ):
+            raise ValueError("source_lane_binding_request_invalid")
+        seen.add(binding.source_version_id)
+        bindings.append(binding)
+    return tuple(bindings)
 
 
 def _bounded_ids(values: Sequence[str], *, limit: int = ID_LIST_LIMIT) -> dict[str, Any]:
@@ -86,10 +270,28 @@ def load_expected_index_rows(
     source_ids: Sequence[str],
     allowlists: Mapping[str, Any],
     prompt_safe: Callable[[Any], str],
+    source_lane_bindings: Sequence[SourceLaneBinding] | None = None,
 ) -> tuple[ExpectedIndexRow, ...]:
+    if source_lane_bindings is None:
+        bindings = tuple(
+            SourceLaneBinding(
+                source_version_id=str(source_id),
+                catalogue_lane="primary_authority",
+                scope_lane="primary_authority",
+                material_lane="primary_authority",
+            )
+            for source_id in source_ids
+        )
+    else:
+        bindings = tuple(source_lane_bindings)
+    if [binding.source_version_id for binding in bindings] != [str(item) for item in source_ids]:
+        raise ValueError("source_lane_binding_source_order_mismatch")
     expected: list[ExpectedIndexRow] = []
-    for source_id in source_ids:
-        rows = database.fetchall(EXPECTED_SELECT_SQL, (source_id,))
+    for binding in bindings:
+        rows = database.fetchall(
+            EXPECTED_SELECT_SQL,
+            (binding.source_version_id, binding.catalogue_lane),
+        )
         for row in rows:
             if not chunk_locator_allowed(
                 str(row["stable_identifier"]), str(row["locator"] or ""), allowlists
@@ -102,10 +304,9 @@ def load_expected_index_rows(
                     content_sha256=hashlib.sha256(text.encode("utf-8")).hexdigest(),
                     source_version_id=str(row["source_version_id"]),
                     ordinal=int(row["ordinal"]),
-                    # EXPECTED_SELECT_SQL is deliberately restricted to
-                    # citable primary authority, which is written to the
-                    # physical authority lane.
-                    lane="authority",
+                    lane=binding.physical_lane,
+                    material_lane=binding.material_lane,
+                    catalogue_lane=binding.catalogue_lane,
                 )
             )
     return tuple(expected)
@@ -125,14 +326,29 @@ def read_lance_observations(staging: Path) -> tuple[ObservedIndexRow, ...]:
         if not dataset_path.exists():
             continue
         dataset = lance.dataset(str(dataset_path))
-        columns = ["chunk_id", "content_sha256", "source_version_id", "vector"]
+        columns = [
+            "chunk_id",
+            "content_sha256",
+            "source_version_id",
+            "vector",
+            "lane_key",
+            "catalog_lane",
+        ]
         for batch in dataset.to_batches(columns=columns):
             chunk_ids = batch.column("chunk_id").to_pylist()
             hashes = batch.column("content_sha256").to_pylist()
             sources = batch.column("source_version_id").to_pylist()
             vectors = batch.column("vector").to_pylist()
-            for chunk_id, digest, source_id, vector in zip(
-                chunk_ids, hashes, sources, vectors, strict=True
+            material_lanes = batch.column("lane_key").to_pylist()
+            catalogue_lanes = batch.column("catalog_lane").to_pylist()
+            for chunk_id, digest, source_id, vector, material_lane, catalogue_lane in zip(
+                chunk_ids,
+                hashes,
+                sources,
+                vectors,
+                material_lanes,
+                catalogue_lanes,
+                strict=True,
             ):
                 observed.append(
                     ObservedIndexRow(
@@ -141,6 +357,8 @@ def read_lance_observations(staging: Path) -> tuple[ObservedIndexRow, ...]:
                         source_version_id=str(source_id),
                         vector_dimensions=len(vector or ()),
                         lane=lane_dir.name,
+                        material_lane=str(material_lane),
+                        catalogue_lane=str(catalogue_lane),
                     )
                 )
     return tuple(observed)
@@ -163,6 +381,9 @@ def compare_index_identities(
     hash_mismatches: list[str] = []
     source_mismatches: list[str] = []
     dimension_mismatches: list[str] = []
+    physical_lane_mismatches: list[str] = []
+    material_lane_mismatches: list[str] = []
+    catalogue_lane_mismatches: list[str] = []
     for row in observed:
         wanted = expected_by_id.get(row.chunk_id)
         if wanted is None:
@@ -173,7 +394,17 @@ def compare_index_identities(
             source_mismatches.append(row.chunk_id)
         if row.vector_dimensions != vector_dimensions:
             dimension_mismatches.append(row.chunk_id)
+        if row.lane != wanted.lane:
+            physical_lane_mismatches.append(row.chunk_id)
+        if row.material_lane != wanted.material_lane:
+            material_lane_mismatches.append(row.chunk_id)
+        if row.catalogue_lane != wanted.catalogue_lane:
+            catalogue_lane_mismatches.append(row.chunk_id)
     lane_counts = Counter(row.lane for row in observed)
+    expected_catalogue_lane_counts = Counter(row.catalogue_lane for row in expected)
+    observed_catalogue_lane_counts = Counter(row.catalogue_lane for row in observed)
+    expected_material_lane_counts = Counter(row.material_lane for row in expected)
+    observed_material_lane_counts = Counter(row.material_lane for row in observed)
     source_versions = {row.source_version_id for row in observed}
     embedding_complete = (
         bool(expected)
@@ -183,12 +414,19 @@ def compare_index_identities(
         and not hash_mismatches
         and not source_mismatches
         and not dimension_mismatches
+        and not physical_lane_mismatches
+        and not material_lane_mismatches
+        and not catalogue_lane_mismatches
         and len(observed) == len(expected)
     )
     return {
         "expected_chunks": len(expected),
         "observed_total_rows": len(observed),
         "observed_rows_per_physical_lane": dict(sorted(lane_counts.items())),
+        "expected_rows_per_catalogue_lane": dict(sorted(expected_catalogue_lane_counts.items())),
+        "observed_rows_per_catalogue_lane": dict(sorted(observed_catalogue_lane_counts.items())),
+        "expected_rows_per_material_lane": dict(sorted(expected_material_lane_counts.items())),
+        "observed_rows_per_material_lane": dict(sorted(observed_material_lane_counts.items())),
         "observed_source_version_count": len(source_versions),
         "unique_chunk_ids": len(unique_ids),
         "duplicate_chunk_ids": duplicates,
@@ -197,6 +435,9 @@ def compare_index_identities(
         "content_hash_mismatches": hash_mismatches,
         "vector_dimension_mismatches": dimension_mismatches,
         "source_version_mismatches": source_mismatches,
+        "physical_lane_mismatches": physical_lane_mismatches,
+        "material_lane_mismatches": material_lane_mismatches,
+        "catalogue_lane_mismatches": catalogue_lane_mismatches,
         "embedding_complete": embedding_complete,
     }
 
@@ -263,6 +504,10 @@ def compare_ordered_index_prefix(
             fields.append("vector_dimensions")
         if actual.lane != wanted.lane:
             fields.append("lane")
+        if actual.material_lane != wanted.material_lane:
+            fields.append("material_lane")
+        if actual.catalogue_lane != wanted.catalogue_lane:
+            fields.append("catalogue_lane")
         if fields:
             mismatches.append(
                 {
@@ -375,15 +620,30 @@ def audit_incomplete_index(
         build["source_manifest_hash"] or request.get("approved_source_manifest_hash") or ""
     )
     source_manifest_match = str(manifest.get("manifest_sha256") or "") == stored_hash
+    manifest_lane_bindings = source_lane_bindings_for_manifest(manifest)
+    manifest_source_ids = tuple(binding.source_version_id for binding in manifest_lane_bindings)
+    source_version_id_binding_match = source_ids == manifest_source_ids
+    expected_lane_binding_json = [binding.as_dict() for binding in manifest_lane_bindings]
+    queued_lane_binding_raw = request.get("source_lane_bindings")
+    if queued_lane_binding_raw is None and manifest.get("selection_policy") != GE_SELECTION_POLICY:
+        # Pre-binding ordinary jobs are unambiguously authority-only and remain
+        # auditable without retroactively changing their frozen request bytes.
+        queued_lane_bindings = manifest_lane_bindings
+    else:
+        try:
+            queued_lane_bindings = parse_source_lane_bindings(queued_lane_binding_raw)
+        except ValueError:
+            queued_lane_bindings = ()
+    source_lane_binding_match = (
+        [binding.as_dict() for binding in queued_lane_bindings] == expected_lane_binding_json
+    )
     if expected_rows is None:
         expected_rows = load_expected_index_rows(
             database,
-            source_ids=source_ids
-            or tuple(
-                str(source.get("source_version_id")) for source in manifest.get("sources") or []
-            ),
+            source_ids=manifest_source_ids,
             allowlists=manifest.get("locator_allowlists") or {},
             prompt_safe=_prompt_safe_index_text,
+            source_lane_bindings=manifest_lane_bindings,
         )
     if observed_rows is None:
         observed_rows = () if not staging.is_dir() else read_lance_observations(staging)
@@ -418,6 +678,8 @@ def audit_incomplete_index(
     )
     resumable = (
         bool(source_manifest_match)
+        and bool(source_version_id_binding_match)
+        and bool(source_lane_binding_match)
         and bool(ordered_prefix["exact_ordered_prefix"])
         and (exact_embedding_complete or checkpoint_at_observed_tail)
     )
@@ -428,6 +690,9 @@ def audit_incomplete_index(
         "content_hash_mismatches": _bounded_ids(comparison["content_hash_mismatches"]),
         "vector_dimension_mismatches": _bounded_ids(comparison["vector_dimension_mismatches"]),
         "source_version_mismatches": _bounded_ids(comparison["source_version_mismatches"]),
+        "physical_lane_mismatches": _bounded_ids(comparison["physical_lane_mismatches"]),
+        "material_lane_mismatches": _bounded_ids(comparison["material_lane_mismatches"]),
+        "catalogue_lane_mismatches": _bounded_ids(comparison["catalogue_lane_mismatches"]),
     }
     report = {
         "schema": AUDIT_SCHEMA,
@@ -438,6 +703,16 @@ def audit_incomplete_index(
         "failure_reason_code": str(build["failure_reason_code"] or ""),
         "source_manifest_sha256": stored_hash,
         "source_manifest_match": source_manifest_match,
+        "source_version_id_binding_match": source_version_id_binding_match,
+        "source_lane_binding_match": source_lane_binding_match,
+        "authority_lane_only": manifest.get("authority_lane_only") is True,
+        "approved_legal_source_lanes_only": (
+            manifest.get("approved_legal_source_lanes_only") is True
+        ),
+        "allowed_catalogue_lanes": sorted(
+            {binding.catalogue_lane for binding in manifest_lane_bindings}
+        ),
+        "source_lane_bindings": expected_lane_binding_json,
         "embedding_model": str(build["embedding_model"] or ""),
         "parser_version": str(build["parser_version"] or PARSER_VERSION),
         "chunker_version": str(build["chunker_version"] or CHUNKER_VERSION),
@@ -454,6 +729,8 @@ def audit_incomplete_index(
         "resumable": resumable,
         "checkpoint_reconciliation_required": bool(
             source_manifest_match
+            and source_version_id_binding_match
+            and source_lane_binding_match
             and ordered_prefix["exact_ordered_prefix"]
             and checkpoint_prefix["checkpoint_prefix_match"]
             and checkpoint_prefix["checkpoint_trails_observed_rows"]
@@ -461,6 +738,10 @@ def audit_incomplete_index(
         "expected_chunks": comparison["expected_chunks"],
         "observed_total_rows": comparison["observed_total_rows"],
         "observed_rows_per_physical_lane": comparison["observed_rows_per_physical_lane"],
+        "expected_rows_per_catalogue_lane": comparison["expected_rows_per_catalogue_lane"],
+        "observed_rows_per_catalogue_lane": comparison["observed_rows_per_catalogue_lane"],
+        "expected_rows_per_material_lane": comparison["expected_rows_per_material_lane"],
+        "observed_rows_per_material_lane": comparison["observed_rows_per_material_lane"],
         "observed_source_version_count": comparison["observed_source_version_count"],
         "unique_chunk_ids": comparison["unique_chunk_ids"],
         "embedding_complete": exact_embedding_complete,

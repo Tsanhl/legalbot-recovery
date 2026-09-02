@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import json
 import unittest
 from collections.abc import Iterable
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
+from typing import Any
 
 from backend.app.ingestion import Jurisdiction, MaterialLane
 from backend.app.retrieval import (
@@ -54,6 +57,45 @@ class _RecordingFactory:
         session = _RecordingSession(generation_path)
         self.sessions.append(session)
         return session
+
+
+class _CreateOnlyIndexTable:
+    def __init__(self) -> None:
+        self.indices: list[SimpleNamespace] = []
+        self.fts_calls: list[dict[str, Any]] = []
+        self.vector_calls: list[dict[str, Any]] = []
+
+    def count_rows(self) -> int:
+        return 3
+
+    def list_indices(self) -> list[SimpleNamespace]:
+        return list(self.indices)
+
+    def create_fts_index(self, column: str, *, replace: bool) -> None:
+        self.fts_calls.append({"column": column, "replace": replace})
+        self.indices.append(
+            SimpleNamespace(columns=[column], index_type="FTS", name="text_idx")
+        )
+
+    def create_index(self, **kwargs: Any) -> None:
+        self.vector_calls.append(dict(kwargs))
+        self.indices.append(
+            SimpleNamespace(columns=["vector"], index_type="IVF_FLAT", name="vector_idx")
+        )
+
+
+class _CreateOnlyIndexModule:
+    def __init__(self, table: _CreateOnlyIndexTable) -> None:
+        self.table = table
+
+    def connect(self, _path: str) -> _CreateOnlyIndexModule:
+        return self
+
+    def table_names(self) -> list[str]:
+        return ["chunks"]
+
+    def open_table(self, _name: str) -> _CreateOnlyIndexTable:
+        return self.table
 
 
 class ImmutableLanceRepositoryTests(unittest.TestCase):
@@ -110,6 +152,73 @@ class ImmutableLanceRepositoryTests(unittest.TestCase):
             repository.promote("two", expected_previous="one")
             self.assertEqual(repository.read_active().build_id, "two")  # type: ignore[union-attr]
 
+    def test_generic_promote_rejects_held_ge_scope_without_pointer_writes(self) -> None:
+        with TemporaryDirectory() as directory:
+            repository = ImmutableLanceRepository(Path(directory) / "indexes")
+            repository.build(
+                build_id="held-ge",
+                chunks=(_chunk("held-ge", "Held GE material"),),
+                embedding_model="test-hash-1024",
+                reranker_model="test-reranker",
+                source_manifest_sha256="e" * 64,
+                session_factory=_RecordingFactory(),
+            )
+            (repository.builds / "held-ge" / "approved-source-manifest.json").write_text(
+                json.dumps(
+                    {
+                        "selection_policy": "exact-owner-approved-ge-source-versions-and-lanes",
+                        "successor_must_remain_non_active": True,
+                        "active_or_previous_write_authorized": False,
+                        "promotion_authorized": False,
+                        "ge_source_scope_content_sha256": "f" * 64,
+                    },
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            self.assertFalse(repository.active_pointer.exists())
+            self.assertFalse(repository.previous_pointer.exists())
+            with self.assertRaisesRegex(PermissionError, "GE held/scope"):
+                repository.promote("held-ge")
+            self.assertFalse(repository.active_pointer.exists())
+            self.assertFalse(repository.previous_pointer.exists())
+
+    def test_generic_rollback_rejects_active_held_ge_and_preserves_pointers(self) -> None:
+        with TemporaryDirectory() as directory:
+            repository = ImmutableLanceRepository(Path(directory) / "indexes")
+            factory = _RecordingFactory()
+            for build_id in ("ordinary-one", "held-ge-two"):
+                repository.build(
+                    build_id=build_id,
+                    chunks=(_chunk(build_id, f"Authority {build_id}"),),
+                    embedding_model="test-hash-1024",
+                    reranker_model="test-reranker",
+                    source_manifest_sha256="a" * 64,
+                    session_factory=factory,
+                )
+            repository.promote("ordinary-one")
+            repository.promote("held-ge-two", expected_previous="ordinary-one")
+            (repository.builds / "held-ge-two" / "build-boundary.json").write_text(
+                json.dumps(
+                    {
+                        "schema": "legalbot.index-build-boundary.v1",
+                        "build_id": "held-ge-two",
+                        "selection_policy": "exact-owner-approved-ge-source-versions-and-lanes",
+                        "successor_must_remain_non_active": True,
+                    },
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            active_before = repository.active_pointer.read_bytes()
+            previous_before = repository.previous_pointer.read_bytes()
+            with self.assertRaisesRegex(PermissionError, "GE held/scope"):
+                repository.rollback_build()
+            self.assertEqual(repository.active_pointer.read_bytes(), active_before)
+            self.assertEqual(repository.previous_pointer.read_bytes(), previous_before)
+
     def test_invalid_vector_fails_before_sealing_generation(self) -> None:
         with TemporaryDirectory() as directory:
             repository = ImmutableLanceRepository(Path(directory) / "indexes")
@@ -151,6 +260,67 @@ class ImmutableLanceRepositoryTests(unittest.TestCase):
             archived = repository.archive_incomplete_staging("keep-me")
             self.assertTrue((archived / "hours-of-work.bin").is_file())
             self.assertFalse((repository.builds / ".keep-me.incomplete").exists())
+
+    def test_generic_archive_rejects_held_ge_staging_and_preserves_all_bytes(self) -> None:
+        with TemporaryDirectory() as directory:
+            repository = ImmutableLanceRepository(Path(directory) / "indexes")
+            staging = repository.prepare_new_staging("held-ge-staging")
+            marker = staging / "hours-of-work.bin"
+            marker.write_bytes(b"durable-ge-work")
+            (staging / "build-boundary.json").write_text(
+                json.dumps(
+                    {
+                        "schema": "legalbot.index-build-boundary.v1",
+                        "build_id": "held-ge-staging",
+                        "selection_policy": "exact-owner-approved-ge-source-versions-and-lanes",
+                        "ge_held_scope": True,
+                        "successor_must_remain_non_active": True,
+                    },
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(PermissionError, "GE held/scope"):
+                repository.archive_incomplete_staging("held-ge-staging", stamp="blocked")
+            self.assertEqual(marker.read_bytes(), b"durable-ge-work")
+            self.assertFalse((repository.builds / "archive").exists())
+
+    def test_resumed_index_creation_never_replaces_existing_derived_indexes(self) -> None:
+        with TemporaryDirectory() as directory:
+            repository = ImmutableLanceRepository(Path(directory) / "indexes")
+            lance = Path(directory) / "lance"
+            (lance / "authority").mkdir(parents=True)
+            table = _CreateOnlyIndexTable()
+            module = _CreateOnlyIndexModule(table)
+
+            repository.create_lexical_indexes(lance, module)
+            repository.create_lexical_indexes(lance, module)
+            repository.create_vector_indexes(lance, module)
+            repository.create_vector_indexes(lance, module)
+
+            self.assertEqual(table.fts_calls, [{"column": "text", "replace": False}])
+            self.assertEqual(len(table.vector_calls), 1)
+            self.assertFalse(table.vector_calls[0]["replace"])
+            self.assertEqual(
+                sorted(index.index_type for index in table.indices),
+                ["FTS", "IVF_FLAT"],
+            )
+
+            incompatible = _CreateOnlyIndexTable()
+            incompatible.indices.append(
+                SimpleNamespace(
+                    columns=["vector"],
+                    index_type="HNSW",
+                    name="vector_idx",
+                )
+            )
+            with self.assertRaisesRegex(RuntimeError, "frozen IVF_FLAT"):
+                repository.create_vector_indexes(
+                    lance,
+                    _CreateOnlyIndexModule(incompatible),
+                )
+            self.assertEqual(incompatible.vector_calls, [])
 
 
 if __name__ == "__main__":

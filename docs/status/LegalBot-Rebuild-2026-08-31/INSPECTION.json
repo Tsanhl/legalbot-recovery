@@ -1,0 +1,240 @@
+{
+  "schema": "legalbot.v111.rebuild-design-inspection.v1",
+  "authorizing": false,
+  "inspected_at_utc": "2026-08-31T15:13:56.318985+00:00",
+  "code_baseline": {
+    "head": "7506208cfc27237992305b4caf1d4de9b4684b05",
+    "tree": "aa0aa137e1b7c1b40982bc7d2af5fb27e2aaf1f5",
+    "branch": "main",
+    "documentation_changes_uncommitted": true
+  },
+  "source_scan": {
+    "id": "6c01a8c611b28cde",
+    "status": "complete",
+    "expected_file_count": 3774,
+    "files_accounted": 3774,
+    "completed_at": "2026-08-28T23:46:14.460335+00:00"
+  },
+  "retrieval_models": [
+    {
+      "role": "embedding",
+      "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "file_manifest_sha256": "1d7b1bddebe83694815066f5254c5b0c7a1d05febd4e2b9e2120f2ec3fe3c018",
+      "file_count": 12,
+      "matches_pin": true
+    },
+    {
+      "role": "reranker",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+      "file_manifest_sha256": "f775cce47e7cbed490693a954aadcf6141cdf5ffa31b3e33f229adc374223e29",
+      "file_count": 14,
+      "matches_pin": true
+    }
+  ],
+  "latest_build_attempts": [
+    {
+      "id": "current-law-ew-full-fp16-v111-20260829-recovery-b",
+      "status": "failed",
+      "stage": "failed",
+      "failure_reason_code": "lease_lost"
+    },
+    {
+      "id": "current-law-ew-full-fp16-v111-20260829-recovery-a",
+      "status": "failed",
+      "stage": "failed",
+      "failure_reason_code": "canonical_markdown_missing"
+    }
+  ],
+  "workspace_artifacts": {
+    "active_pointer_present": false,
+    "previous_pointer_present": false,
+    "answer_model_directory_present": false,
+    "archival_base_directory_present": false,
+    "recovery_baseline_input_present": false
+  },
+  "question_packages": [
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-full-question-bank-draft-r3",
+      "package_content_sha256": "cc625f2b80323654fbd4c3e3a53b16ac99fe54eb460f1a20fc04461c98ce79ec",
+      "package_digest_matches_recovery_receipt": true,
+      "package_digest_recomputed": true,
+      "checksum_entries_checked": 129,
+      "checksum_mismatches": 0,
+      "private_jsonl_mode_checks": 15
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-expansion-and-pre-gold-r1",
+      "package_content_sha256": "66493d9a8dcf54f5fa563be521ce42674ff30222d54b037e76e7b0afa47f968a",
+      "package_digest_matches_recovery_receipt": true,
+      "package_digest_recomputed": true,
+      "checksum_entries_checked": 71,
+      "checksum_mismatches": 0,
+      "private_jsonl_mode_checks": 2
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-enquiries-draft-r1",
+      "package_content_sha256": "03a4d862d81e2b5a91da8bf0423f08aaf00c25297b5566708452ceced7acc0a8",
+      "package_digest_matches_recovery_receipt": true,
+      "package_digest_recomputed": true,
+      "checksum_entries_checked": 74,
+      "checksum_mismatches": 0,
+      "private_jsonl_mode_checks": 17
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-visible-development-r2",
+      "package_content_sha256": "d03fe95ee1ad72444580d7ca492f7fc947db4604d23214da8a086e3dbbecb359",
+      "package_digest_matches_recovery_receipt": true,
+      "package_digest_recomputed": true,
+      "checksum_entries_checked": 77,
+      "checksum_mismatches": 0,
+      "private_jsonl_mode_checks": 0,
+      "zip_sha256": "e95aa7f6ec544dc6c06446c48c9a87f2ef9042aafebe61f401e4ac3adfb2ae91",
+      "zip_matches_recovery_receipt": true,
+      "zip_mode": "0644"
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2",
+      "package_content_sha256": "a73ef297738cf0745d1233e8d2c4748412d534bff41afadd1086e6e349f68a91",
+      "package_digest_matches_recovery_receipt": true,
+      "package_digest_recomputed": true,
+      "checksum_entries_checked": 21,
+      "checksum_mismatches": 0,
+      "private_jsonl_mode_checks": 17,
+      "zip_sha256": "a5c782b011995932419788b0bcc66ebe10467fabd8d4244a0003a6f4efd6c267",
+      "zip_matches_recovery_receipt": true,
+      "zip_mode": "0600"
+    }
+  ],
+  "recovery_receipt_sha256": "15abb6b0e0da4f3b706ed191a7ec91fa9e9803e7680770c6500e5923e1698fde",
+  "visible_counts_by_scope": [
+    {
+      "scope": "academic_15",
+      "kind": "core",
+      "question_type": "ESSAY",
+      "count": 90
+    },
+    {
+      "scope": "academic_15",
+      "kind": "core",
+      "question_type": "GENERAL_ENQUIRY",
+      "count": 90
+    },
+    {
+      "scope": "academic_15",
+      "kind": "core",
+      "question_type": "PROBLEM_BASED",
+      "count": 90
+    },
+    {
+      "scope": "academic_15",
+      "kind": "stress",
+      "question_type": "GENERAL_ENQUIRY",
+      "count": 15
+    },
+    {
+      "scope": "academic_15",
+      "kind": "stress",
+      "question_type": "PROBLEM_BASED",
+      "count": 15
+    },
+    {
+      "scope": "academic_expansion_2",
+      "kind": "core",
+      "question_type": "ESSAY",
+      "count": 12
+    },
+    {
+      "scope": "academic_expansion_2",
+      "kind": "core",
+      "question_type": "GENERAL_ENQUIRY",
+      "count": 12
+    },
+    {
+      "scope": "academic_expansion_2",
+      "kind": "core",
+      "question_type": "PROBLEM_BASED",
+      "count": 12
+    },
+    {
+      "scope": "academic_expansion_2",
+      "kind": "stress",
+      "question_type": "GENERAL_ENQUIRY",
+      "count": 2
+    },
+    {
+      "scope": "academic_expansion_2",
+      "kind": "stress",
+      "question_type": "PROBLEM_BASED",
+      "count": 2
+    },
+    {
+      "scope": "general_17",
+      "kind": "core",
+      "question_type": "GENERAL_ENQUIRY",
+      "count": 306
+    },
+    {
+      "scope": "general_17",
+      "kind": "stress",
+      "question_type": "GENERAL_ENQUIRY",
+      "count": 25
+    }
+  ],
+  "selected_visible_counts": {
+    "ESSAY": {
+      "core": 102,
+      "stress": 0
+    },
+    "PROBLEM_BASED": {
+      "core": 102,
+      "stress": 17
+    },
+    "GENERAL_ENQUIRY": {
+      "core": 306,
+      "stress": 25
+    }
+  },
+  "selected_visible_total": 552,
+  "superseded_academic_general_total": 119,
+  "visible_jsonl_files_inspected": 68,
+  "private_custody": {
+    "counts_from_preserved_plan_metadata": {
+      "ESSAY": 102,
+      "PROBLEM_BASED": 102,
+      "GENERAL_ENQUIRY": 306
+    },
+    "selected_count_after_topic_admission": 510,
+    "private_question_content_parsed": false,
+    "private_question_content_projected": false,
+    "private_jsonl_mode_checks": 51,
+    "private_member_verification": "STREAMING_SHA256_AND_FILE_MODE_ONLY",
+    "owner_freeze_created": false
+  },
+  "gold_preparation": {
+    "existing_slots": 340,
+    "proposition_slots": 1678,
+    "completed_gold_answers_reported_by_manifest": 0,
+    "existing_slots_automatically_cover_general_r2": false
+  },
+  "limitations": [
+    "Inspection is not legal qualification, a source-root attestation, a full catalogue integrity/restore drill, an Integration pass or a scored evaluation.",
+    "Private counts come from preserved metadata; private prompts were not decoded or projected.",
+    "Two expansion topics remain blocked pending official-source admission and independent review; all execution still requires applicable owner gates.",
+    "No combined execution bank or training dataset was created.",
+    "The historical recovered-source count was not re-hashed in this inspection."
+  ],
+  "actions_performed": {
+    "documentation_and_metadata_inspection": true,
+    "source_scan": false,
+    "catalogue_repair": false,
+    "candidate_build": false,
+    "retrieval_attestation": false,
+    "answer_model_run": false,
+    "model_training": false,
+    "validation_disclosure": false,
+    "owner_signature": false,
+    "git_mutation": false,
+    "promotion": false,
+    "live_activation": false
+  }
+}

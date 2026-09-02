@@ -71,24 +71,31 @@ export interface JobRecord {
 }
 
 export interface JobProgressEvent {
-  stage: JobStage;
-  progress: number;
-  message: string | null;
-  payload: Record<string, unknown>;
+  stage: JobStage | null;
+  progress: number | null;
+  message_code: string;
+  status: "queued" | "running" | "awaiting_clarification" | "complete" | "held" | "system_error" | "cancelled" | null;
+  release_state: ReleaseState | null;
+  answer_id: string | null;
+  release_sha256: string | null;
+  status_url: string | null;
+  release_id: string | null;
+  terminal_kind: "committed" | "held" | "system_error" | "cancelled" | null;
+  reset_from_sequence: number | null;
 }
 
-export interface JobDoneEvent {
-  status: JobStatus;
-  answer_id: string | null;
-  release_state: ReleaseState | null;
-  message: string | null;
-}
+export type JobDoneEvent = JobProgressEvent;
 
 export interface JobEventEnvelope {
   schema: "legalbot.job-event.v1";
+  event_id: string;
+  job_id: string;
   sequence: number;
-  event: "progress" | "done";
+  event: "accepted" | "progress" | "stage_started" | "stage_completed" | "heartbeat" | "warning" | "cancel_requested" | "done" | "reset_required";
+  emitted_at: string;
   data: JobProgressEvent | JobDoneEvent;
+  attempt_id: string;
+  lease_generation: number;
 }
 
 export interface QualityFinding {

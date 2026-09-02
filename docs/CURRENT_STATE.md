@@ -1,652 +1,415 @@
 # LegalBot current state
 
-**Authoritative as of:** 29 August 2026
-**Product scope:** local-only, England and Wales
-**Code identity:** recovery working-tree identity pending the owner's new Git
-initialization. Pre-loss Git history is evidence-only and is not the current
-workspace authority.
-
-This is the single current architecture statement. Dated reports under
-`docs/reports/` are audit history and must not be treated as runtime
-instructions.
-
-## CURRENT 29 AUGUST 2026 — RECOVERED WORKSPACE; PHASE 1 REBASELINE REQUIRED
-
-The only writable workspace is the repository root named
-`LegalBot-v111-Recovery-20260829`. The latest provable working tree was
-recovered with its catalogue and 316 exact source files. It
-has no `ACTIVE.json`, `PREVIOUS.json` or runnable Lance candidate. Historical
-Git refs are preserved only in `recovery/2026-08-29/` and the owner will create
-the new Git repository separately.
-
-Phase 1 was historically declared complete at the r8 Integration Baseline, but
-that result cannot be represented as a current recovery pass. The old Lance
-trees and a surviving r7 attestation result are unavailable. The recovery must
-therefore establish a new clean Git HEAD, source-root/scan identity, pinned
-retrieval-model stores, one non-ACTIVE candidate, a passing frozen 24-case
-attestation and a fresh 18-check Integration verification report. Exact work is
-listed in `docs/status/V111_PHASE1_RECOVERY_READINESS_20260829.md`.
-
-The seven missing seminar configs, eight later Phase-2A source representations
-and 420 unavailable Phase-2A evidence roots are explicitly recovery gaps, but
-they are not Phase-1 blockers. Phase 2A and every later execution remain paused
-until the new Phase-1 baseline is sealed. No pre-loss Phase-2 owner packet is
-current authority for executing against this rebuilt workspace.
-
-The 28 August section below is preserved as pre-loss audit narrative. It may
-reference artifacts that did not survive recovery and must not be treated as a
-current executable gate.
-
-## CURRENT 28 AUGUST 2026 — PHASE 2A PREQUALIFICATION HOLD
-
-The owner adopted the exact final remediation packet content SHA-256
-`fd8034b33ebfb0f6fdd6cedd2426b54e368bff9c20b408f3fbd86fb40b9f1b34`
-on 28 August 2026. The owner-adoption receipt content SHA-256 is
-`9b47af237fe4a811b51a4c21f02db1702b71505128576fa54cbd4794e1e739fa`.
-It preserves one bounded Phase-2A execution chain for exact source
-materialization, one complete scan, one non-ACTIVE successor build/embedding,
-one retrieval re-attestation and one All-585 technical qualification. It does
-not authorize an answer/model run, Phase 2B, Development 30, Validation 30,
-Owner Certification 60, promotion, `ACTIVE`/`PREVIOUS`, live or export.
-
-The exact materialization plan is ready but was not executed. Its content
-SHA-256 is
-`de7b8e8c0d5d4a6e1f99f0f338d623bb7e371222b8c0341b35515fe1d1567c7b`:
-254 representations, comprising 250 index-eligible representations and four
-raw provenance companions excluded from candidate retrieval. If later
-unblocked, the proposed successor scope is the exact prior 251 sources plus
-250 newly admitted representations, for 501 sources. No source file or
-catalogue row has been materialized or mutated by this plan.
-
-A mandatory read-only prequalification was run before consuming the chain.
-The corrected immutable report is
-`data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-prequalification-blockers-r3/PREQUALIFICATION-BLOCKER-REPORT.json`,
-content SHA-256
-`5efc17b16adcae1ceb2ea1bbd7efcaba469ab0340c24b65c1e994132cb337980`.
-After applying the final packet's exact eight substantive supersessions and
-two safe-fallback rows, 146 rows still contain 193 structured support blockers:
-116 `PARTIAL` and 77 `NONE`. These are not inferred from release-only hold
-text; they are exact `support_fit` values retained by the adopted packet.
-Source presence or embedding cannot truthfully upgrade them to `FULL`.
-
-Phase 2A is therefore **blocked before materialization, scan, build and
-qualification**. The execution chain remains `AVAILABLE_UNSPENT` (one
-remaining, zero consumed). There is no `ACTIVE.json` or `PREVIOUS.json`, and no
-Phase-2A scan, successor build, embedding, retrieval re-attestation, All-585,
-answer/model or Phase-2B execution has run under this approval. A new exact
-owner-approved remediation must resolve or expressly supersede the 146 rows
-before the one-chain execution can safely start.
-
-The sealed human semantic-routing advisory is
-`data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-blocker-semantic-advisory-r1/BLOCKER-SEMANTIC-ROUTING-ADVISORY-146.json`,
-content SHA-256
-`8b1425d10eb6f2d71dff169f52e5dbd8f1871aca14139f4316586fd6e7d9a9f5`.
-It found zero strict matter-information-only fallback candidates: eight rows
-are legal/policy-evidence-only, 99 combine legal evidence with missing matter
-information, and 39 combine legal evidence with analytical, policy or
-hypothetical inputs. A human intake response may address missing facts, but it
-cannot erase a retained legal-support blocker.
-
-The exact source-topology audit partitions the 146 rows into 59 whose sources
-and locators are ready but whose propositions still require narrowing or
-exclusion, eight with source-present legal-review or identity holds, 20 with
-missing source identities, and 59 with authority-less `NONE` components. The
-create-only successor-remediation scaffold is
-`data/evaluations/phase2a-owner-review/LegalBot-Phase2A-2026-08-28-146-row-superseding-remediation-advisory-r2/EXACT-146-ROW-SUPERSEDING-REMEDIATION-ADVISORY.json`,
-content SHA-256
-`6078e556e8ee3eb551bd48d310b2a89728e317dc8c240f22030799b54e595e1d`.
-It is not approval-ready: all 146 rows remain `RETAIN_BLOCKER`, zero additional
-fallbacks are proposed, and it consumes no execution authority.
-
-Phase-2B question-bank preparation is now complete as a non-authorizing draft
-package at
-`data/evaluations/phase2b-question-drafts/LegalBot-Phase2B-2026-08-28-full-question-bank-draft-r3`.
-It contains 270 amended Development/remediation core questions, 30 visible
-stress questions and 270 unseen-custody drafts: 15 independent topics with 18
-core, two stress and 18 unseen questions per topic. All 44 audit amendments
-(32 MUST and 12 SHOULD) were applied fail-closed. The unseen drafts have no
-Markdown projection, are stored in private-mode JSONL files, have zero exact
-prompt overlap with the 300 visible questions and remain **not owner-frozen**.
-This preparation did not create gold answers, admit sources, run retrieval or a
-model, train a model, build an index, start Phase 2B, authorize Phase 2C or
-change any release pointer. Future execution is limited to at most two topics
-per administrative wave, with independent evidence/delta/result decisions and
-a separate owner freeze plus one-pass disclosure gate for unseen validation.
-
-A separate non-executing preparation package now exists at
-`data/evaluations/phase2b-question-drafts/LegalBot-Phase2B-2026-08-28-expansion-and-pre-gold-r1`.
-It proposes exact official-source scopes for Administrative Law and
-Wills/Estates (22 official legislation, procedure and judgment endpoints), and
-adds 40 visible question drafts plus 36 unseen custody drafts. If those two
-topics are later owner-approved, substantively verified and admitted, the
-future combined bank would contain 17 topics, 340 visible Development/stress
-questions and 306 unseen custody drafts. Combined leakage checks have zero
-exact prompt overlap and maximum TF-IDF similarity `0.34985735` against an
-exclusive `0.55` threshold.
-
-The same preparation package creates 340 gold-answer work slots and 1,678
-issue-bound proposition/evidence work slots across the 15 existing and two
-proposed topics. These are intentionally **pre-gold**: proposition text,
-official-source version identity, EvidenceSpan bindings, deterministic OSCOLA
-records, legal-reviewer decisions and completed gold answers all remain empty.
-No source bytes were downloaded or admitted. The separately running Phase-2A
-task was not read, invoked or consumed. Completing these slots remains blocked
-until a successful Phase-2A digest is delivered and separately owner-adopted,
-followed by the exact Phase-2B topic/resource, source-scope and private-root
-owner gates.
-
-The original combined common-public r1 package is superseded for future use by
-two physically separate r2 packages. The owner-reviewable package is
-`data/evaluations/phase2b-question-drafts/LegalBot-Phase2B-2026-08-28-common-public-visible-development-r2`,
-content SHA-256
-`d03fe95ee1ad72444580d7ca492f7fc947db4604d23214da8a086e3dbbecb359`.
-It contains 306 corrected visible core questions and 25 visible stress tests
-across all 17 prepared topics. All 34 mandatory and ten recommended audit
-amendments were applied, together with six additional contamination-only
-rewrites. Every record now has first-class jurisdiction, date/currentness,
-clarification, limitation, safety/refusal, evidence-preservation and urgent
-handoff controls. The old universal clarification requirement is removed:
-safe general guidance may be given with explicit assumptions while genuinely
-outcome-changing jurisdiction or fact gaps remain blocking.
-
-The separate private custody package is
-`data/evaluations/phase2b-question-drafts/LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2`,
-content SHA-256
-`a73ef297738cf0745d1233e8d2c4748412d534bff41afadd1086e6e349f68a91`.
-It contains 306 custody-draft questions in private-mode JSONL files, with no
-Markdown projection, and is absent from the visible package. It is not
-owner-frozen and cannot be disclosed to Development or used for scored
-validation. The visible r2 bank has zero exact overlap against the prior 340
-visible questions and maximum TF-IDF similarity `0.49984931`; private r2 has
-zero exact overlap against all 671 visible questions and maximum similarity
-`0.37406274`, both below the exclusive `0.55` threshold.
-
-Future Phase-2B testing is organised into three independent question types:
-General Enquiry, Essay and Problem Based. The corrected common-public r2 bank
-supersedes the earlier general-enquiry prompts for future independent testing;
-Essay and Problem-Based drafts remain sourced from the full r3 and expansion
-packages. Administrative Law and Wills/Estates remain draft-only and are
-ineligible for final gold answers or scored evaluation until official sources
-are admitted, versioned, proposition-checked and independently reviewed. None
-of these packages contains answers, gold propositions or EvidenceSpans. They
-did not read or consume the separately running Phase-2A chain and did not admit
-sources, scan, build or embed an index, run retrieval or a model, start Phase
-2B, promote, write `ACTIVE`/`PREVIOUS` or activate live.
-
-Live-preparation infrastructure is non-authorizing: encrypted bounded
-conversation storage and replayable browser WebSockets are implemented;
-model-backed standalone-query rewriting is encrypted/checkpointed but disabled;
-and generated gRPC stubs plus a real UDS server/client pass deadline,
-cancellation, backpressure, health and crash tests. Production gRPC/query
-rewrite activation still requires the exact Phase-2B model-transport owner
-gate. Storage capacity/backup-retention alerts and an offline catalogue
-maintenance policy are present; neither automatically deletes or compacts
-data.
-
-The 28 August catalogue backup/restore drill passed with backup SHA-256
-`7a16fc3d4b5aeedffdbf0bb36ef2ec1d12594ad84df3e863500e7f2e6cacf492`,
-`integrity_check=ok`, zero foreign-key violations and matching source/backup/
-restore logical-state digest
-`319b69f218ce82c615c8268fc99a73a2e7bb7dafa0e1c91b9c3b79a808f9108a`.
-The restore copy was temporary and the verified backup remains private mode
-0600. The resulting retention run re-hashed every stored backup, kept the
-current backup and r8 predecessor, and moved six older copies (37,224,525,824
-bytes) to recoverable macOS Trash with sealed plan/result evidence. No
-permanent deletion occurred. `data/` is now approximately 32GB, including
-approximately 13GB of retained backups. The observe-only maintenance preflight
-has every safety precondition except the configured Sunday 02:00–06:00 Hong
-Kong window; it ran no chunk classification, delete, `VACUUM` or swap.
-
-The sections below preserve the 17 August baseline and later audit trail. Where
-a historical count or gate conflicts with this section, this 28 August section
-controls.
-
-## HISTORICAL V1
-
-V1 treated overlay completeness as 305/305 selected issues with positive
-exact spans, and treated the owner reviewer identity as sufficient to make
-those spans gold. That rule is retained only as an audit path
-(`v1_requires_305_positive_spans`). It is not the current evaluation
-architecture.
-
-The 16–17 August 2026 Path-B import bound 77 selected issues to catalogue
-exact spans (200 spans) and left 508 issues as knowledge gaps. Of the frozen
-305 selected issues that is 77 qualified / 0 limited / 228 knowledge_gap.
-Those 77 mappings are preserved as mechanical exact-reuse. They are **not**
-automatically V2 `VERIFIED` gold. Stale `0/585` tick files remain audit
-history and cannot override `data/evaluations/live60/CURRENT.json`.
-
-## CURRENT V2
-
-Frozen identities remain exact: **30 selected cases** and **305 selected
-issues**. Every selected issue needs a `VERIFIED` disposition of
-`qualified`, `limited`, or `knowledge_gap`. Review complete means
-`unreviewed_issue_count == 0` plus overlay/gap/semantic seals. Evaluation
-complete means a real candidate-pinned run produced terminal jobs and
-release-gate artifacts. Production ready requires a
-`legalbot.production-promotion-attestation.v2`. Production active is only
-written by the operator `legalbot promote` control plane.
-
-Gold is a proof bundle that passes verification policy, not human identity
-and not an AI confidence score. Knowledge gaps may not keep a positive
-span. Evaluation-only authorization pins a `candidate_build_id` and must
-not write ACTIVE or issue production O-04.
-
-Mutable counts are derived from `data/evaluations/live60/CURRENT.json` and
-its hashed issue-state artifact. They are not Python constants.
-
-## Release state
-
-LegalBot is **not live-ready and has no ACTIVE index**. Source scan
-`a6200da832c587e7` is complete and reconciled (3581/3581, three roots). 75
-files are quarantined (65 processing-policy rollback refused, 9 parse
-failures, 1 symlink not followed). Those files are accounted and must not
-be approved, indexed, or treated as gold. Diagnostic slice
-`current-law-ew-core-fp16-v111-20260817` reached `built_unscored` (37 sources /
-7887 chunks) bound to that scan. It is not promotable and is not
-`CURRENT.candidate_build_id`. The sealed source-version owner pack
-`f39ac0ab4b3efdd6ba276a868186cda7bc91f67804f08d92ae4961f8c9de8e37` was
-operator-confirmed: every decision is **HOLD** (56 grouped sources, 75
-selected rows). That confirmation does not approve catalogue source
-versions, index them, or mint issue gold. Selected-issue V2 state remains
-62 qualified / 0 limited / 150 knowledge_gap / 93 HOLD (18 substantive
-semantic HOLDs and 75 owner-held source versions). Overlay completeness,
-Stage A, Live60 30, production attestation and ACTIVE remain blocked.
-
-The implemented code now contains the manifest-driven Live60 evaluation engine,
-fail-closed HTTP execution adapter, generic Live30/Live60 owner views, durable
-research/refinement state, encrypted upload lifecycle, build-keyed safe
-retrieval cache and owner-safe event/metric/trace projections. Those are
-capabilities, not evidence that the system has passed its release gates. The
-accepted Go/No-Go memo remains the controlling **NO-GO** baseline.
-
-On 16 August 2026 branch `live60-go-execution-2026-08-16` reconciled the frozen
-Live60 identity and regenerated the issue-decision pack from
-`expected_research_route` (33 sectioned / 27 full_enquiry; selected 15/15).
-Route integrity is asserted live against the registry with zero mismatches;
-the earlier coerced-route list is not kept as a frozen defect. The Desktop Law
-folder was compared to `data/catalog.sqlite3`. Official legislation.gov.uk XML
-was fetched for the four held provisions. Spliced s 14A(10) and IPFDA s 1
-parent chunks were excluded from the body stream and replaced with contiguous
-chunks; parent bytes were not deleted. The earlier owner-delegated snapshot of
-263 qualified / 180 limited / 142 knowledge_gap was not issue-specific legal
-gold and is retained only as audit history. The authoritative state at
-`9aede84` is 0 qualified / 0 limited / 585 knowledge_gap with zero bound spans.
-Path B is selected for a full 30-answer target. **V1 HISTORICAL RULE:** all 305
-issues on the selected 30 cases needed owner-reviewed positive exact spans.
-**CURRENT V2:** those 305 frozen issues need VERIFIED dispositions
-(qualified / limited / knowledge_gap). The 280 coverage-only issues
-may remain explicit knowledge gaps. The authority and supersession mapping is
-recorded in `Live60-2026-08-16/artifacts/artifact-authority-map.json`.
-Owner-authorised official acquisition on 16 August 2026 re-fetched truncated
-legislation.gov.uk XML, ingested remaining staged Acts including full UK GDPR
-and Rome I/II XML, and indexed 25 last-resort public judgment representations.
-Seven historical cases still have no public HTML (Turnbull, Cooley, Banks,
-Bolam, Collen, Haseldine, Lee-Parker). Official OSCOLA 5 PDFs were stored in
-the assessment-guidance lane and do not overwrite the OSCOLA 5 renderer.
-Twenty-two candidate assessment rules remain owner-review items; the live
-bundle is still the immutable 16-rule `owner-standards-2026-08-14.1` set.
-That does not seal an overlay, promote ACTIVE, pass Stage A, or issue O-04.
-The two run-plan SHA values in earlier review documents are the file digest
-and the object seal of the same `generation-run-plan.json`. See
-`Live60-2026-08-16/go-execution/superseding-run-identity.json`.
-
-On 17 August 2026 the owner-adopted Path-B substantive-review JSON was
-imported against a sealed 585-row export. Catalogue exact-match bound 12 of
-305 selected issues (14 spans). Official-source remaining-issue binds on the
-same day fetched legislation.gov.uk and Find Case Law bytes and imported only
-where SHA-256 matched an approved current catalogue chunk: first 47 further
-issues, then 18 more after multi-section URL splits and regulation / article /
-CPR rule extraction. Authoritative issue state is therefore 77 qualified / 0
-limited / 508 knowledge_gap. Of the 305 selected issues, 228 remain
-knowledge_gap. The imported reviewed-row SHA-256 is
-`e06d7f1179d58824c16ce2e45cbf46dcdce64365d69652729255738b9ddb1d2d`.
-The 280 coverage-only issues remain explicit knowledge gaps.
-No selected case is fully qualified, so the v1 overlay cannot seal. D1–D15 and
-contrary review remain unsigned because `CONFIRM_OWNER_AUTHORED_SEAL` is not
-owner-supplied. This does not write ACTIVE, O-04, or a Stage A pass. The
-incomplete Path-B overlay does not place ordinary LIVE serving on HOLD.
-Ordinary queries still fail closed per proposition when evidence is not
-individually runtime-eligible. Overlay seal, new overlay promotion, ACTIVE
-replacement, and O-04 stay blocked until the owner promotes. V2 overlay
-completeness is 305 verified dispositions (qualified, limited, or explicit
-knowledge_gap), not 305 positive spans. Evaluation-only authorization may pin
-a `candidate_build_id` without ACTIVE or O-04. Production remains
-`NOT_ELIGIBLE` until `legalbot promote`.
-
-The last complete source scan is `93cad83adf836e17`: all 3,419 filesystem items
-were accounted for and the manifest SHA-256 is
-`e484bf73a9c3ac503b173db7294d23f69fff0d1098bbe2de7cec95e2dccf09b3`.
-For current source versions, 617 are approved and 2,605 are rejected. Approval
-does not by itself prove present-law coverage, provision-level currentness, or
-answer quality.
-
-The configured consolidated-legislation snapshot is dated 14 August 2026.
-Exactly 65 approved run-date snapshots are active and all 65 predecessor
-snapshots are explicitly superseded. Fourteen provision qualifications were
-inherited only where the official bytes and version metadata were identical.
-Four changed provisions had structural body-span defects that are now excluded
-from retrieval: Limitation Act 1980 section 14A(10) spliced parent, and
-Inheritance (Provision for Family and Dependants) Act 1975 section 1 spliced
-opening, editorial-ellipsis mix, and dots-only omitted marker. Contiguous
-replacement chunks were inserted. Limitation Act 1980 section 2 and Trustee
-Act 2000 section 1 locators were rewritten to exact sublocators. Mechanical
-verification still does not treat official XML serialisation as exact-match
-gold. Forty-eight instruments report one or more unapplied effects, so no
-document-level approval substitutes for an issue-specific extent,
-commencement and effects check.
-
-The active provision-verification registry and its predecessor, download and
-exception reports are stored as one tracked, digest-checked archive chain. A
-fresh checkout therefore does not depend on ignored review-queue files to
-reproduce a qualification decision.
-
-## Authority and evidence truth
-
-- Physical authority, teaching and assessment lanes are separate. Teaching,
-  feedback and student work cannot independently support a material legal
-  claim.
-- Current legislation is described as a `latest_available_revised_snapshot`,
-  not a guaranteed point-in-time consolidation. Material unapplied effects or
-  unverified England-and-Wales extent require provision review or a limited
-  answer.
-- All 78 approved case source versions are present-law held. Twenty-two
-  rights-reviewed official judgments remain retrievable for identity and
-  historical text; 56 records without verified computational-use rights are
-  metadata-only and model/runtime blocked. Source-level case approval still
-  does not qualify present-law propositions. Two UNISON issue spans now have
-  owner `confirmed_current` later-treatment reviews; Triple Point stayed a
-  knowledge gap because `qualified_current` requires bound limiting-authority
-  IDs.
-- A source-level `currentness_verified=true` flag cannot establish that every
-  proposition in a historical judgment remains good law. Release requires an
-  expert later-treatment review tied to the exact evidence-span content hash
-  and proposition hash.
-- The Quistclose repair pack adds seven official OPL/OGL representations for
-  *Twinsectra*, *Menelaou* and *Bailey v Angove's*. Exact reviewed paragraphs
-  carry conservative `holding_ratio` or `obiter` roles; parser/raw material is
-  excluded from body retrieval. The Quistclose knowledge gap remains open
-  until exact proposition-level later treatment is reviewed and a new
-  candidate passes regression checks.
-- Find Case Law and Westlaw trustworthiness do not by themselves grant
-  computational full-text rights. Rights-unverified full text remains outside
-  runtime retrieval.
-- The first live candidate is authority-lane only. The 163 scholarship sources
-  (including 100 owner-supplied Westlaw copies) and 273 private-teaching
-  sources are not selected. Any future expansion into those lanes requires a
-  separate computational-use rights decision; the current privacy pass is not
-  a general licence opinion.
-
-## Assessment guidance
-
-The active assessment bundle is an immutable set of 16 drafting and repair
-rules covering 70+ targets and 60–69/50–59 anti-pattern repairs: 14 are
-owner-authored policy and two are exact marker mappings approved by the owner.
-Its version is `owner-standards-2026-08-14.1`, its SHA-256 is
-`9d5808d9275e8a91d18c9702d76ff8e5e6fbbf1388aa57e43ac4b788e96d8252`,
-and it is bound to the privacy-safe decision-manifest SHA-256
-`be5916d6e3e40febb3819d1529df6f6ab4055de98baf275f8361b0fc31dda9a2`.
-That bundle SHA is recorded with every build, answer checkpoint and evaluation
-outcome. Rules are selected atomically: no prompt may contain a truncated rule
-fragment.
-
-The earlier feedback-derived catalogue has been re-audited. The four remaining
-decisions are resolved: case synthesis and timely authority support are approved
-as exact marker mappings; the criminal-element/defence and question-engagement
-mappings are rejected and superseded by separately owner-authored replacements
-with no marker-source attribution. There are now 6,489 rejected mappings, two
-approved exact marker mappings, two approved owner replacements and no staged
-rules. Partial, vague, personal, student-specific, mixed-polarity,
-score-fragment and substantive-law mappings remain rejected.
-
-Automated academic scoring is advisory. Evidence, citation, jurisdiction,
-currentness and privacy remain hard gates. The UI and release text must not
-claim that 70+ performance is calibrated until an independent blind legal
-review validates it.
-
-## Live evaluation contracts
-
-### Historical Live30 record
-
-The supplied questions are registered exactly as
-`live-evaluation-30-v1` (canonical SHA-256
-`65709b6bda056879c591780e5e8aec5e95e72a26dec7854369e7e4175a64b3c3`):
-
-- 30 development-live cases and 115,000 requested words;
-- 16 sectioned and 14 full-enquiry routes;
-- one pass over all evidence-qualified cases;
-- two additional passes over Q1, Q3, Q7, Q9, Q13, Q17, Q25, Q27 and Q30;
-- 48 immutable terminal outcomes in total;
-- evaluation-only, with training and training export disabled.
-
-This package and its historical 48-outcome strategy remain readable and
-unchanged. Live60 supersedes only the old run strategy; it does not rewrite the
-Live30 registry, record hashes or reports. No Live30 generation run was executed.
-
-The historical Stage A contract measures route/subject handling, Recall@5/10, MRR, graded nDCG@10,
-exact-span recall, contrary-authority recall, filter correctness and per-issue
-evidence coverage. Ranking scores are emitted only against sealed expert gold.
-Stage B submits only evidence-qualified cases. Unsupported cases receive a
-deterministic no-model held outcome plus an issue and knowledge-gap record, so
-one weak subject does not abort every qualified case. Stage C reports average
-and worst-run stability.
-
-### Current Live60 contract
-
-`live-evaluation-60-v1` is the current controlled development-live contract:
-
-- 60 exact questions, 215,000 aggregate requested words, 39 problems and 21 essays;
-- the owner is the one primary qualified England-and-Wales reviewer for **v1**
-  identity-as-truth overlays (a second independent human review remains
-  optional; v1 AI checks mechanical accuracy only and cannot be a reviewer).
-  **v2** gold is a proof bundle: exact mechanical match plus an independent
-  semantic verifier invocation. Identity and `ai_confidence` are not gold;
-- exactly 30 unique selected cases, 114,000 requested words, one pass and no
-  stability repeats;
-- 15 sectioned and 15 full-enquiry selected routes;
-- every nonselected case is explicitly `coverage_only_not_selected`;
-- the Europe/London admission date is sealed independently from the registry;
-- evaluation and export are ineligible for training or training export; and
-- the first controlled run prohibits online research.
-
-Three state machines stay distinct. Ordinary runtime is `NOT_SERVING` /
-`LIVE` / `DEGRADED`. Evaluation candidates move `BUILDING` → `EVIDENCE_REVIEW`
-→ `REVIEW_COMPLETE` → `STAGE_A_READY` → `EVALUATION_READY` → `EVALUATING` →
-`EVALUATED` / `FAILED`. Production promotion is `NOT_ELIGIBLE` / `ELIGIBLE` /
-`AWAITING_OPERATOR` / `PROMOTED` / `ROLLED_BACK`. Evaluation must not require
-`owner_promoted_active`, ACTIVE, rollback drills, browser recovery, readiness
-green, or O-04. Production still does.
-
-Stale `owner-tick-progress.json` 0/585 snapshots are audit history. Mutable
-counts come from `data/evaluations/live60/CURRENT.json` and the hashed
-`issue-state.json` artifact (v1 mechanical 77 qualified / 0 limited / 508
-knowledge_gap; selected 77 / 0 / 228).
-`CurrentLiveStateResolver` ignores the stale 0/585 file. V1→V2 migration
-reuses the 77 hash-matched issues as `mechanical_exact_reused` with
-`semantic_reverify_required`. A reason string alone is not a VERIFIED
-knowledge gap. Catalogue absence is not by itself a knowledge gap.
-
-The first 30 case IDs, exact question bytes and hashes retain their Live30
-lineage. Q31-Q60 are separately hash-bound. The suite manifest, registry,
-lineage, run plan, candidate/currentness overlay and output manifests are
-independently sealed; the existence of one cannot substitute for another.
-
-The generic admin API selects `Live30AdminReader` or `LiveSuiteAdminReader` from
-the immutable run-manifest schema. It lists safe run/case state for both formats
-and decrypts only a released answer after rechecking its hard gates and artifact
-digest. It never exposes encrypted questions or held/private drafts.
-
-Execution remains blocked for **production** because there is no ACTIVE build,
-no rollback/re-promotion report, no real browser recovery report, no green
-readiness v6 report and no Live60 O-04 authorization. V1 overlay sealing still
-requires 305/305 selected positive exact spans. V2 overlay completeness is
-305 verified dispositions; 78 official candidates still HOLD pending
-materialisation, so v2 review is not complete. Evaluation-only authorization
-v2 may bind a candidate build without ACTIVE. The code must not fabricate
-ACTIVE, O-04, or a Stage A pass. Suite `verify`/`summary` and the Python
-Live60 tests may run now.
-
-Retrieval v1.1 remains immutable and owner-frozen. Candidate evaluation now
-resolves each frozen legislation authority, legal locator and span hash to the
-qualified run-date source version and records the safe binding in the sealed
-attestation; it does not rewrite the benchmark. A prospective 14 August audit
-binds 20 of 24 rows. The other four are exactly the changed provisions already
-held above, so their frozen spans cannot pass until fresh review qualifies the
-current bytes.
-
-## Research, refinements, uploads and retrieval cache
-
-The official-law updater is a separate durable control plane. `ResearchTask`,
-candidate, source-update observation, schedule and append-only event state live
-in SQLite, and a separately leased `ResearchWorker` never passes work to
-`AnswerRunner`. Admission enforces high/medium/low priorities of 90/60/20, five
-aging points per 24 hours capped at 95, FIFO within equal effective priority, a
-20-task active-capacity limit, a 20-candidate limit, two global fetches and one
-fetch per origin. Capacity overflow is retained as `deferred_capacity`.
-
-Network planning accepts only reviewed official-source adapters, fixed public
-subject taxonomy, public citations or stable authority identities. It rejects
-arbitrary URLs, raw user questions, subscription crawling and private-network
-destinations. Find Case Law remains metadata-only. Results are encrypted or
-quarantined for review and record `unchanged`, `changed`, `new`, `withdrawn` or
-`unknown` against a pinned ACTIVE identity; `changed` means bytes/metadata
-differ, not that legal effect has been determined. The worker cannot approve,
-supersede, delete, index, promote or repair an answer automatically.
-
-The 02:00 HKT daily known-source check and Sunday 03:00 HKT broader discovery
-schedules exist but are installed disabled. Operator CLI now admits jobs onto
-that SQLite queue (`legalbot research-enqueue`, `research-queue`,
-`research-worker --once`). Enqueue is local and does not require the network
-flag. The worker still requires `LEGALBOT_OFFICIAL_RESEARCH_ENABLED=true` and
-refuses the first-live profile. `scripts/start.sh` does not start it, and no
-connected task has been run. Enabling it remains conditional on a passing
-local E2E run and a separate connected canary.
-
-The former plaintext official-source gap queue has a locked one-time migration
-path into safe SQLite state with sensitive notes encrypted separately; new work
-does not write that JSON queue. The owner sees one append-only inbox with
-`debug`, `missing` and `answer_feedback` categories. Answer feedback is
-ownership-checked and any note is encrypted. Triage may link a root cause,
-repair version and regression, but it cannot mutate sources, prompts, model
-weights or ACTIVE.
-
-Uploads are encrypted at rest, content-hash and MIME/resource checked,
-request-scoped and non-authoritative. Their default retention is 30 days after
-the associated job becomes terminal; owner-pinned source review extends the
-review lifecycle without making the bytes legal authority. The source-review
-endpoint creates a quarantined intake decision only.
-
-The retrieval cache is a disposable optimization keyed by query digest, ACTIVE
-build/source manifest, jurisdiction, legal date, subject/task/lanes/filters and
-retrieval-model/policy versions. It stores only source-version/chunk IDs, ranks
-and scores, hydrates from the exact immutable ACTIVE build, bypasses uploads and
-online results and invalidates old build namespaces on promotion or rollback.
-Subject-readiness views are build-keyed diagnostics over the one authority
-store; counts never establish that a proposition is supported.
-
-## Runtime and observability
-
-The first-live topology is three loopback processes managed by
-`scripts/start.sh`:
-
-1. the pinned 4-bit MLX model sidecar on `127.0.0.1:8778`;
-2. FastAPI plus the built site on `127.0.0.1:8777`;
-3. a durable answer/index worker.
-
-The connected `ResearchWorker` is deliberately a fourth, operator-started
-process and is excluded from this first-live topology until its later canary.
-The launcher also forces `local_only` and disables the online answer adapter.
-
-Jobs use leases, heartbeats, encrypted section checkpoints, digest-checked
-resume, idempotency keys and exactly-once release. Direct and per-section repair
-checkpoints bind the question, evidence, prior draft, findings, model, prompt,
-policy and assessment bundle, preventing a crash from silently reusing drifted
-work or repeating a completed model repair.
-
-Observability has privacy-safe durable state plus owner-view projections:
-
-- event records under `logs/events/`;
-- Live60 and research metric streams under `logs/metrics/`;
-- Live60 and research trace streams under `logs/traces/`; and
-- durable evaluation/SQLite state under `data/evaluations/` and the catalogue.
-
-Routine INFO traces use deterministic 10% sampling; DEBUG is off; WARN, ERROR
-and FATAL are retained in full. A controlled Live60 evaluation retains all safe
-spans.
-Traces locate queue, retrieval, rerank, DB, opaque section generation,
-verification, repair, assembly and release delays without storing questions,
-answers, prompts, source text, paths or filenames. SLOs are provisional,
-observe-only under `local-e2e-provisional-v2` and are not an SLA or promotion
-gate until at least three independent successful runs per route/word band exist
-for calibration.
-
-The owner dashboard exposes manifest-driven run/case status, released answers
-only, evidence identities and locators, applied assessment rules, issues, gaps,
-refinements, research tasks/candidates/update observations, subject readiness,
-queue/stuck state and p50/p95/p99 stage latency. Held/private drafts remain
-encrypted.
-
-## Model state
-
-There is one archived Qwen3.5-9B Base checkpoint and one pinned 4-bit runtime
-model. The interrupted top-level duplicate Base directory is absent. No
-fine-tuned adapter or feedback-trained model exists. Evaluation output is not
-training data; a later weight-changing phase requires its own rights/privacy
-review, curated dataset, baseline comparison and explicit owner approval.
-
-## Required order from here
-
-Path B is selected for a full 30-answer run. Gold remains the exact reviewed
-authority span for a frozen issue. The 17 August 2026 official remaining-issue
-binds imported 77 selected issues with exact catalogue spans (12 from the
-earlier Path-B adoption, 47 from the first hash-matched official pass, and 18
-from a later extraction pass the same day). Authoritative issue state is
-77 qualified / 0 limited / 508 knowledge_gap. Of the 305 selected issues,
-228 remain knowledge_gap. Coverage-only issues may stay explicit gaps. No
-selected case is fully qualified. Ordinary LIVE runtime availability is
-independent of that overlay seal: a serving index may remain available while
-the Live60 candidate overlay stays UNSEALED.
-
-1. Materialise the 78 unmatched official candidates into configured source
-   roots as new source versions, then exact-match. Catalogue miss stays a
-   candidate, not an automatic knowledge_gap. Reuse the 77 hash-matched
-   issues; do not re-research them. Held statutes stay knowledge gaps with an
-   explicit hold reason and a gap-verification attestation before V2 VERIFIED.
-   Official legislation.gov.uk and Find Case Law bytes
-   were fetched for the 293-row worksheet; the latest mechanical pass
-   hash-matched 65 of those rows, of which 18 were new imports (77 selected
-   qualified in total). 150 stay keep_gap pending gap attestation (case-law later treatment, held
-   statutes, or no safe span). Triple Point (`live30-q26:issue-04`) stays a
-   gap because `qualified_current` needs bound limiting-authority IDs. Word
-   copies stay display-only. Downloaded text is not gold until the local hash
-   matches. V2 gold is a proof bundle (mechanical + independent semantic
-   verifier). The owner reviewer role label for v1 remains `legal_reviewer`.
-2. Confirm D1–D15 and the named-source-set contrary review with
-   `CONFIRM_OWNER_AUTHORED_SEAL` before any **v1** overlay seal. V2 evaluation
-   derives evidence-lifecycle decisions (D-01–D-05, D-15) and keeps D-06–D-14
-   as operator/product policy outside evaluation gold. Code will not set
-   `owner_authored: true` without that token.
-3. V2 overlay is complete when all 305 selected issues have a verified
-   disposition (`qualified`, `limited`, or explicit `knowledge_gap`) and
-   `unreviewed_issue_count == 0`. V1 sealing still requires 30/30 selected
-   cases qualified with 305 positive exact spans. Coverage-only gaps remain
-   gaps. Do not invent spans.
-4. Build a rights-qualified current-date E&W **candidate** bound to that
-   overlay; do not promote it. Stage A v2 scores only issues with positive
-   verified gold (qualified and limited). Do not fabricate Recall@5 for
-   knowledge_gap. Failures get a versioned retrieval/evidence diff, never a
-   fabricated pass.
-5. Issue evaluation-only authorization v2 pinned to `candidate_build_id`.
-   Run the 30 selected cases against that candidate: qualified → answer;
-   limited → limited answer; held → deterministic held. One held case must
-   not block the other 29. Fail-closed answer gates stay. This is not
-   production LIVE and must not write ACTIVE.
-6. Evaluation itself never writes ACTIVE. For the Live60 production profile,
-   `legalbot promote` requires a verified production-promotion attestation
-   bound to a completed V2 evaluation. The owner then observes rollback and
-   re-promotion, completes a real loopback browser recovery, obtains readiness
-   v6 green, and alone issues O-04 for the frozen 30 IDs.
-7. Review every defect as a versioned issue/refinement/regression. Only after
-   the local run passes may the separate connected-crawler canary be attempted.
-8. Conduct separate blind legal calibration before making any consistent-70+
-   claim.
+**Authoritative as of:** 2 September 2026
+
+**Product scope:** local-only owner pilot, England and Wales
+
+**Delivery sequence:** 1. system design; 2. evaluation → training/improvement →
+unseen; 3. live last
+
+## Current decision state
+
+The owner accepted the current full system-design amendments on 1 September 2026,
+approved all three recommended Phase-2 preparation decisions and then directed
+Phase 2 to start in full. Phase 1 system design remains the accepted starting
+point. Phase 2 is active at its technical-rebuild and evaluation-preparation
+prerequisites. A non-authorizing diagnostic GE planner cycle produced the 331+60
+full-review r2 pack; on 2 September 2026 the owner recorded RETURN_FOR_REVISION.
+That pack is preserved as a diagnostic record. It does not approve answers, 70+
+scores, weight training, sealed unseen, promotion or live. No authorizing
+answer-model, gold-backed evaluation, sealed Validation or live run has begun.
+
+The owner then directed completion of all system-design improvements before any
+later work. The living design was audited and amended in place. The improvement
+closes schema-selection ambiguity, separates fact origin/status, adds the missing
+conversation/job/knowledge/claim/evaluation-case/training contracts, completes the
+request-to-release integrity chain, fixes deterministic fallback precedence and
+strengthens retrieval, validation, terminal-event and run-validity rules. The
+selected contracts now have tested technical implementations. The immutable chain
+can be atomically bound to an outbox/publication record after full replay and actual
+answer-content verification, but the durable runner does not yet produce the selected
+objects. It therefore remains neither release nor evaluation evidence.
+The design stays editable and is maintained in one working set:
+
+- [full system design](V111_SYSTEM_DESIGN.md);
+- [roadmap](V111_RELEASE_ROADMAP.md);
+- [checklist](V111_REBUILD_CHECKLIST.md); and
+- [working architecture, contracts, data model, evaluation flow and schemas](system-design/README.md).
+
+Requested improvements update these files directly. The owner workflow is: ask →
+Codex investigates and prepares the improved plan/result → Codex asks only for
+necessary owner decisions → owner approves → Codex completes.
+
+Phase-2 technical implementation and the already owner-authorized non-ACTIVE
+retrieval continuation may proceed. This does not supply legal-currentness or gold
+decisions, model transport, the answer-model artifact, private review roots or the
+action-specific authorities for evaluation, training, unseen disclosure,
+promotion, Git mutation or live activation.
+
+The owner has now approved the final GE execution DOCX's recommended process:
+all 331 visible cases, 32 separately reported system scenarios, factual/legal gate
+before the 70+ quality gate, and complete reruns after any material repair. The
+[execution-readiness package](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-01-execution-readiness-r1/README.md)
+records that process approval and binds the exact case/system identities, a
+question-free unseen custody ledger, the 23-domain coverage predecision, the
+12 GiB/3 GiB resource proposal and a 331-item qualified-legal-review work order.
+It is deliberately non-authorizing: the owner did not supply the blank Section 7
+model, legal-review, private-root, signature and final execution fields merely by
+approving the process.
+
+On 2 September 2026 the owner reviewed
+[`LegalBot-GE-331-Training-and-60-Unseen-Full-Review-r2.docx`](../output/docx/LegalBot-GE-331-Training-and-60-Unseen-Full-Review-r2.docx)
+and recorded **RETURN_FOR_REVISION**. The overlay is
+[`LegalBot-GE-2026-09-02-pack-return-for-revision-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-pack-return-for-revision-r1/README.md).
+The r3 run and r2 DOCX remain immutable. The 60 diagnostic cases are exposed
+regression material, not fresh unseen and not the sealed 306 private bank.
+Evaluator, retrieval, answer-rendering and non-weight planner repair may continue.
+Answer-weight training, sealed unseen, promotion and live remain withheld.
+
+The GitHub `Tsanhl/legalbot-next` `main` tree does not contain that overlay; it
+is local. The owner-input ZIP for source-by-source currentness work is on the
+Desktop as
+`LegalBot-GE-2026-09-02-pack-return-for-revision-r1-owner-input.zip`
+(SHA-256 `bfb237123c19a62c809b50631867b0437efbabbdfc94b99027cad398b081dc30`).
+The create-only pack is
+[`LegalBot-GE-2026-09-02-owner-advisory-source-matrix-input-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-owner-advisory-source-matrix-input-r1/README.md).
+It includes the exact overlay, the 85-row approved-source-manifest extract, cases
+008/174/312 with unchanged IDs, and five **owner-advisory research** decisions.
+Those decisions are not `qualified_legal_review`, not gold, and not runtime
+admission.
+
+On 2 September 2026 the completed overlay
+[`LegalBot-GE-2026-09-02-owner-advisory-decision-overlay-r2`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-owner-advisory-decision-overlay-r2/README.md)
+was recorded as an **AI-assisted owner-advisory research decision**
+(file SHA-256 `51aecae99cf7820ebec181102ec4c0be0d3ee594ead1c6bd4f9f463a8779e816`;
+canonical content SHA-256
+`f7984a3f665ecc07127feda779945cabaa5a0a99dbbea743613424b5fec3a689`). It does not
+overwrite the 85-row matrix or original package hashes. The batch currentness
+rule holds all 85 sources at 28 August 2026, recognising legislation only as
+captured/reviewed through 14 August. Official create-only staging capture is in
+[`LegalBot-GE-2026-09-02-official-staging-intake-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-official-staging-intake-r1/README.md)
+(186 of 187 official objects captured; Cable & Wireless 2002 is not on Find Case
+Law). Runtime stays fail-closed. This overlay does **not** authorize `admitted=true`,
+`full_current_law_eligible=true`, `qualified_legal_review=true`, legal gold, a
+331 rerun, answer-weight training, unseen disclosure, promotion or live.
+
+On 2 September 2026 the owner recorded **OWNER_ADOPTION** of that exact overlay
+as an owner-adopted research and process decision. The receipt is
+[`LegalBot-GE-2026-09-02-owner-adoption-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-owner-adoption-r1/README.md)
+(`OWNER-ADOPTION.json` content SHA-256
+`f9f71c875b709c89a4af6d43f2ad9750269e1f9a46b93d29e64602e47c686543`).
+Qualified legal review, gold, admission, a 331 rerun, weight training, unseen,
+promotion and live remain false. Authorized next work is official create-only
+staging intake, point-in-time/extent/commencement/effects review, proposition
+and case-route mapping, and evaluator/retrieval/non-weight planner repair.
+
+On 2 September 2026 the owner authorized execution of that next work, still
+without a 331 rerun at that moment. The execution pack is
+[`LegalBot-GE-2026-09-02-authorized-next-work-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-authorized-next-work-r1/README.md).
+Mechanical review of 91 captured official XML pairs keeps every source on
+`HOLD_FOR_2026-08-28`. After substituting the requested dates in DocumentURIs,
+90 bodies are identical and one Act still differs
+(`ukpga/1992/52`, Trade Union and Labour Relations (Consolidation) Act 1992).
+That is a triage signal, not current-law approval. Cases 008, 174 and 312 are
+proposition-mapped from staged official bytes; none is gold. Video-will
+retrieval no longer uses the latest stored Wills Act text. Cable & Wireless
+remains fail-closed after Find Case Law 404.
+
+On 2 September 2026 the owner authorized a visible 331 diagnostic evaluation
+rerun under the factual-first gate. The authorization receipt is
+[`LegalBot-GE-2026-09-02-visible-331-rerun-authorization-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-visible-331-rerun-authorization-r1/README.md)
+(`AUTHORIZATION.json` content SHA-256
+`efa93c8b57e185949992c8bbbf43ec453d5578f66ff0261b6e8585e2684979ff`).
+The create-only run root is
+[`LegalBot-GE-2026-09-02-visible-331-diagnostic-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-visible-331-diagnostic-r1/).
+`RUN-MANIFEST.json` content SHA-256
+`d43f2a47d3f0eff35785bfd37a193ba97267206816ac78cb25b9415715b78f9f`.
+Visible results: 331 `FACTUAL_HOLD` / `NOT_ELIGIBLE`; evidence present 75;
+claim-support PASS 43 (down from 75 on r3 because wrong-route quotations are no
+longer counted as support). Case 008 now cites Equality Act 2010 ss 20, 21 and
+29 instead of ss 174, 208 and 210. Cases 174 and 312 fail closed with the named
+missing primaries rather than Arbitration Act 1996 s 9 or collapsed latest
+Wills Act s 9. The comparison receipt is
+[`LegalBot-GE-2026-09-02-visible-331-diagnostic-r1-comparison`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-visible-331-diagnostic-r1-comparison/README.md)
+(`COMPARISON.json` content SHA-256
+`d179d5d679d3dd7a04a9d88fe54750cf8146fa576365b2aed5f7ce59c74ece9c`).
+This remains Phase 2 evaluation. Owner fact-check approval is the evaluation
+method; it does not flip `qualified_legal_review`, `legal_gold`, `admitted`,
+`full_current_law_eligible`, answer-weight training, sealed unseen, promotion
+or live. The 85 sources stay on the 14 August / 28 August batch hold. The
+previous 60 diagnostic cases stay omitted from this rerun as exposed
+regression; the 306 private bank stays sealed.
+
+The owner then directed both per-locator qualification off the 28 August batch
+hold and missing-primary repair, still in evaluation. The unsigned gold draft is
+[`LegalBot-GE-2026-09-02-per-locator-gold-draft-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-per-locator-gold-draft-r1/README.md)
+(`LOCATOR-GOLD-DRAFT.json` content SHA-256
+`312baa99cc068453b96eb91665632a4e635e7a81e4d2efc817e201a74a40f67b`; 67 locators,
+60 mechanical APPROVE recommendations, all `PENDING`). The readable DOCX is
+[`LegalBot-GE-2026-09-02-Per-Locator-Gold-Draft-r1.docx`](../output/docx/LegalBot-GE-2026-09-02-Per-Locator-Gold-Draft-r1.docx).
+An unsigned overlay does not change FACTUAL_HOLD. Currentness may pass after a
+later signed receipt even when unapplied-effect counts are not zero.
+
+The owner then supplied the resolved 67-locator evaluation-gold package (66
+APPROVE, 0 HOLD, 1 REJECT) instead of ticking the unsigned draft. That draft
+remains a historical all-PENDING artifact and must not be reticked. The
+hash-bound receipt is
+[`LegalBot-GE-2026-09-02-per-locator-evaluation-gold-resolved-r2`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-per-locator-evaluation-gold-resolved-r2/README.md).
+APPROVE is locator-level evaluation gold only. Cable & Wireless is REJECT from
+the mandatory evaluation evidence route, not a finding of bad law. Case 312
+validity remains HOLD / fact-dependent and does not stall Phase 2. One held
+case no longer sets global `progress=false`.
+
+Visible diagnostic **331 r2** then ran as
+[`LegalBot-GE-2026-09-02-visible-331-diagnostic-r2`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-visible-331-diagnostic-r2/)
+(`RUN-MANIFEST.json` content SHA-256
+`d0ed806eee3ead78be77b5ca8eb150cbb7fd15f3eb9332637f230b38eef311c2`).
+Results: 38 `FACTUAL_PASS` / `PENDING_QUALIFIED_REVIEW`, 293 `FACTUAL_HOLD` /
+`NOT_ELIGIBLE`; evidence present 238; claim-support PASS 140. Progress is
+`overall_progress=true`, `RUNNING_WITH_CASE_BLOCKERS`. Case 008 uses Equality
+Act 2010 ss 20, 21, 29, Schedule 2 paragraphs 1–2 and SI 2018/952 regulation 12.
+Case 174 uses ICC article 5, Ohpen, Kajima and Churchill, not Cable & Wireless
+or Arbitration Act 1996 s 9, and remains case-held on jurisdiction scope. Case
+312 retrieved the 15 January 2024 formality bundle and stays HOLD on validity
+facts. The matched comparison and the single owner-facing report are
+[`LegalBot-GE-2026-09-02-visible-331-diagnostic-r2-comparison`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-visible-331-diagnostic-r2-comparison/README.md)
+and
+[`LegalBot-GE-2026-09-02-visible-331-diagnostic-r1-vs-r2.docx`](../output/docx/LegalBot-GE-2026-09-02-visible-331-diagnostic-r1-vs-r2.docx).
+This remains Phase 2 evaluation. `qualified_legal_review`, `answer_legal_gold`,
+`admitted`, `full_current_law_eligible`, weight training, sealed unseen,
+promotion and live remain false.
+
+Official gap bytes were chunked into the evaluation sidecar
+[`LegalBot-GE-2026-09-02-evaluation-staged-chunks-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-evaluation-staged-chunks-r1/README.md)
+(37 staged sources, 55,015 chunks). A later fail-closed fill added Rome I and
+Rome II into
+[`LegalBot-GE-2026-09-02-factual-gap-fill-r1`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-factual-gap-fill-r1/README.md)
+(`STAGED-SOURCE-MANIFEST.json` SHA-256
+`ffd4e73207fb3be5b88c79ffc830a7cc99491171b8abe1028aee0cdd46298813`; 82 + 56
+locator-bound chunks). `data/catalog.sqlite3` was not written.
+Ohpen, Kajima, Churchill, ICC HTML, SI 2018/952, SI 2020/952, SI 2022/18 and
+Wills Act 1837 as at 15 January 2024 remain in the earlier sidecar. Cable &
+Wireless remains Find Case Law HTTP 404 / fail-closed. The unsigned appendix is
+[`LegalBot-GE-2026-09-02-per-locator-gold-draft-r1-appendix`](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-per-locator-gold-draft-r1-appendix/README.md).
+Weight training, sealed unseen, promotion and live remain withheld.
+
+A fail-closed factual gap-fill lane now runs when evaluation RESULTS declare
+a missing primary or a wrong route: official hosts only, locator-bound chunks
+only, evaluation sidecar only. It does not tick gold, admit sources, write
+ACTIVE, or treat Cable & Wireless / an unidentified Mediation Act 2025 as
+captured.
+
+The owner authorized deletion only of redundant system-design histories, frozen
+design packs and design-approval receipts. Those items were moved to recoverable
+Trash. Legal sources, question sets, evaluation evidence, runtime/recovery evidence
+and release evidence remain untouched.
+
+## What is present
+
+- The accepted visible GE review set contains 331 cases: 227 amended and 104
+  retained. It is a wording/review specification, not legal gold.
+- The 32 synthetic system-behaviour scenarios are separate from the legal-quality
+  denominator.
+- All 306 private unseen GE drafts remain in separate custody. Their prompts must
+  not enter development, training or visible review materials.
+- Essay and PB packages remain present.
+- Recovered package checksum evidence remains preserved.
+- The official Law-folder assessment criteria and selected Y2/Y3 feedback provide
+  a permitted reference for raising answer quality. They are assessment guidance,
+  not legal authority and not executable instructions.
+
+## Phase-2 review method prepared
+
+Every answer must pass two ordered layers:
+
+1. **Factual/legal eligibility:** verify case and user-fact identity, jurisdiction
+   and date, current applicable authority, exact support for material propositions,
+   quotations, dates, sums, deadlines and calculations, contrary authority and
+   exceptions, deterministic citation metadata, privacy and non-invention.
+2. **Quality:** review factually eligible answers against the mode standard. PB and
+   Essay target the adapted 70+ criteria: accurate comprehensive knowledge, insight,
+   issue identification, authority and research, persuasive application, critical
+   evaluation, independent judgment and clear economical communication. GE uses a
+   practical plain-language overlay with a direct answer, necessary clarification,
+   usable options and proportionate limitations.
+
+The owner will receive readable question/answer reviews grouped by topic and one
+final approval DOCX. No failed, held or system-error case is omitted.
+
+## Current technical baseline
+
+Observed code identity on 31 August 2026: HEAD
+`7506208cfc27237992305b4caf1d4de9b4684b05`, tree
+`aa0aa137e1b7c1b40982bc7d2af5fb27e2aaf1f5`. Current documentation and review
+preparation are uncommitted working changes. Git mutation remains unauthorized.
+
+The recovered catalogue/source vault and pinned retrieval-model files are present.
+A fresh source scan accounted for 3,774 files. A 1 September backup and isolated
+restore drill passed with backup SHA-256
+`9171cd70fbaa5343391aaee368d588df5f1330b59bbad1dc56fd90f35947f743`.
+All 255 canonical body/comment/revision objects for the 85-source recovery manifest
+are present. Recovery-b completed its bounded second attempt with 149,855 chunks
+and vectors. Its sealed tree and exact database-to-Lance content, source, order,
+dimension and lane parity were replayed with zero mismatches. It remains
+`built_unscored` and non-ACTIVE; there is still no valid `ACTIVE` or `PREVIOUS`
+pointer. The pinned answer-model artifact is absent. Production UDS/gRPC model
+transport and model-backed conversation rewriting are not verified or authorized.
+
+## Phase-2 implementation state and blockers
+
+Completed technical foundations:
+
+- selected-schema manifest validation, pinned canonical JSON digests and rejection
+  of legacy schemas on new-write paths;
+- typed, canonical ConversationSnapshot, MatterFact v2, QueryPlan v2,
+  RetrievalResult, EvidencePack, ClaimSet, ValidationReport, AnswerJob,
+  VerifiedRelease and runtime-capability builders, with focused conformance tests;
+- a schema-v31 database design containing an append-only encrypted matter-fact ledger
+  whose corrections
+  supersede records rather than mutating them, with conflict, scope and
+  deterministic-derivation checks;
+- exact QueryPlan retrieval budgets connected to the existing lexical/vector RRF
+  and candidate-bound reranking runtime, with the selected final top-K bounded at
+  12 and reranking bounded at 32;
+- closed material-claim kinds, qualified authority-only evidence compilation,
+  check-specific validation digests and fail-closed verified-release construction;
+- immutable encrypted persistence for all ten objects in a complete verified
+  selected answer chain. Persistence is replay-verified and explicitly records
+  `verified_unpublished`; it cannot write the release outbox;
+- an atomic selected-publication boundary that accepts only a freshly replayed
+  chain proof, verifies the decrypted answer digest before the write lock, rechecks
+  every immutable chain/release/terminal binding inside the release transaction and
+  commits the outbox plus a no-update/no-delete publication record together. The
+  ordinary runner does not yet supply this proof, so normal live remains closed;
+- unique job/attempt/lease/event identities for WebSocket progress and terminal
+  events, including a builder for a unique terminal event bound to the actual
+  VerifiedRelease content digest. The future normal-live WebSocket path now reads
+  that persisted identity/digest and fails closed if it is absent; the separate
+  owner-evaluation compatibility lane retains its existing content-graph binding;
+- a runtime capability manifest that derives operation grants only from pinned,
+  passing evidence and rejects changed, expired or self-asserted runtime state;
+- a default-deny deletion guard on automatic upload, conversation, answer-version
+  and runtime-retention paths;
+- the fresh backup/restore drill and exact-prefix retrieval recovery described
+  above;
+- an exact 331-case visible-GE worksheet with factual-first hard gates and a
+  critical-floor 70+ practical quality policy. The 32 system scenarios remain
+  separate, are identity/order hashed with their own unscored review worksheet,
+  and the official 306 private unseen bank remains unopened. A non-authorizing
+  diagnostic planner cycle on the 331 visible cases plus 60 diagnostic probes was
+  returned for revision on 2 September 2026; those 60 cases are now exposed
+  regression material; and
+- exact whole-run reconciliation for all 331 selected EvaluationCaseResult v2
+  objects, including fixed ordered factual checks and quality dimensions,
+  failed/held/system/cancelled counts, order/version checks and
+  a case-result manifest digest. A completed run cannot omit a case or mix the 32
+  system scenarios into the legal-quality denominator. EvaluationCaseResult v1 is
+  legacy/read-only and cannot authorize a new diagnosis or closure; and
+- immutable encrypted persistence and replay verification for the selected
+  EvaluationRun plus all 331 EvaluationCaseResult objects. This selected store is
+  separate from the legacy evaluation tables and grants no run authority; and
+- immutable encrypted persistence/replay for the separate 32-result system run and
+  the GE improvement cycle, including diagnoses, diagnostic results, coverage audit
+  and explicit owner acceptance. The fixed 331 and separate 32 counts cannot be
+  changed by diagnostics;
+- an implemented GE loop contract that blocks closure on any missing approved
+  coverage cell, unresolved material diagnosis, failed diagnostic, partial rerun or
+  repeated twice-repaired failure fingerprint. Every changed binding requires a
+  fresh 331 + 32 + accumulated-diagnostics run, and unseen remains excluded;
+- a fail-closed GE coverage-authority boundary. The verifier replays the exact
+  stored owner request and resolution and issues an opaque capability bound to the
+  ordered cell topology. The topology must contain one breadth anchor for each of
+  the 17 current topic domains and each of six separate public-access domains:
+  housing, employment, family, immigration, benefits/debt and consumer. Empty
+  public-domain assignments remain missing cells and force separate diagnostics;
+  arbitrary hashes, narrow manifests, aliases, substitutions, reordering and stale
+  decisions cannot close the loop;
+- a deletion-free official-research intake bridge that verifies the complete
+  diagnosis/result/intent/candidate/retrieval/review/rights/quarantine/vault-byte
+  chain, creates canonical text and structural body chunks, and inserts only a
+  staged, currentness-unknown source version with a pending review. Legacy generic
+  intake markers cannot authorize a GE source. The bridge cannot embed, approve,
+  promote, train or write ACTIVE/PREVIOUS;
+- an exact owner-approved GE source-scope selector for separately labelled primary
+  authority, official guidance and official procedure. A scope must replay one
+  exact completed, sealed, never-promoted predecessor, preserve its ordered member
+  sequence byte-for-byte and add a nonempty, disjoint set of provenance-qualified
+  sources. Shrink, replacement, equal-set, mutation, substitution and stale replay
+  fail before a new non-ACTIVE successor can build;
+- a factory-issued evaluation-only GE index capability with replay on open and
+  every search. Generic retrieval, benchmark, research, vector-reuse, evidence,
+  live/pinned, promotion, rollback and archive paths reject a held GE tree;
+- disk/DB-recomputed GE recovery, persisted two-failure retry stopping, create-only
+  Lance indexes and actual held-tree row/source/hash/lane/vector parity. Caller
+  reports, fault injection and forged count receipts cannot authorize recovery or
+  use; and
+- a fail-closed visible-GE execution admission that requires an externally pinned
+  evaluation-harness capability manifest, the exact candidate/model/policy/case
+  artifact set and all ten candidate, transport, gold/currentness, Development
+  root, execution-authority, resource, unseen-custody, system-suite, iteration-plan
+  and diagnostic-custody capabilities.
+
+Remaining blockers:
+
+1. Complete and validate the running non-ACTIVE retrieval candidate, then run its
+   authorized retrieval re-attestation and technical qualification.
+2. Make the ordinary durable answer runner produce all selected objects and supply
+   the replayed publication proof. The atomic outbox/publication join, encrypted
+   store and verifiers now pass focused and compatibility tests, but the runner
+   still uses its legacy object-production path and cannot publish selected-chain
+   evidence.
+3. Obtain and verify the exact answer-model artifact and private UDS transport
+   capability under the model-transport owner gate.
+4. Obtain qualified case-level gold/currentness decisions, a distinct private
+   Development review root and the final evaluation execution authority.
+5. Execute all 331 visible cases and 32 separate system scenarios only after those
+   inputs pass. Persist the complete cycle, run the approved coverage audit, create
+   the smallest separate diagnostic supplement for any missing area, and repeat the
+   full run after each repair. Weight training remains a later separate decision and
+   unseen stays sealed until the improved visible result is owner-approved. The
+   returned 331+60 diagnostic pack is not that baseline, not 70+ evidence, and not
+   an unseen gate.
+
+No answer-model, evaluation, training or unseen run may be used to debug these
+blockers.
+
+## Current Phase-2 verification snapshot
+
+The focused selected-contract, matter-fact, retrieval adapter, capability,
+WebSocket and visible-GE tests pass. The final combined GE source, loop, capability,
+generic-read, recovery, strict-successor and held-index matrix passes all 130 tests. Strict
+mypy passes all 309 application modules. The clean-room checker and system-design
+checker pass. Web lint, TypeScript/Vite build and all 10 SPA tests pass.
+
+The bounded second embedding attempt completed as
+`current-law-ew-full-fp16-v111-20260829-recovery-b`: 85 sources and 149,855
+vectors, status `built_unscored`. Independent replay verified its seal, full
+checkpoint and exact database-to-Lance content/source/order/dimension/physical,
+material and catalogue-lane parity with zero mismatches. No `ACTIVE.json` or
+`PREVIOUS.json` exists.
+
+The complete 2,512-test Python suite is not green. Its first post-build run recorded
+443 failed/error nodes. The current schema-31 re-attestation defect found by that
+run was repaired and its nine tests now pass. The remaining recorded failures are
+dominated by historical Phase-2A tests whose immutable package/build inputs are
+absent after recovery cleanup or whose sealed script dependency digests differ
+after hardening. They cannot be retried away, silently re-sealed or restored from
+the historical bundle without the applicable exact owner authority. See
+[the GE verification snapshot](status/LegalBot-GE-2026-09-01-verification-r2/README.md).
+This is therefore technical GE preparation, not release qualification.
+
+## Approved Phase-2 preparation policy
+
+The design itself needs no further approval. On 1 September 2026, the owner approved
+all three recommendations listed in
+[OWNER_DECISIONS.md](system-design/OWNER_DECISIONS.md):
+
+1. use all 331 visible GE cases plus 32 separately reported system scenarios;
+2. use factual-first review, then practical GE / adapted 70+ PB and Essay quality,
+   with readable answers and one final owner approval DOCX; and
+3. allow diagnosis and non-weight improvement after the visible baseline, while
+   leaving weight training as a separate later decision and returning the improved
+   visible result before any unseen run.
+
+Public access, accounts, wider languages, a real human-referral channel, physical
+deletion policies and live deployment remain safely deferred.

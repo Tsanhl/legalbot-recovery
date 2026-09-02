@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-visible-diagnostic-supplement.v1.schema.json",
+  "title": "LegalBot Visible GE Diagnostic Supplement v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "pack_id",
+    "linked_cycle_id",
+    "fixed_pack_manifest_sha256",
+    "fixed_case_manifest_sha256",
+    "fixed_case_order_sha256",
+    "fixed_visible_denominator",
+    "system_case_count_separate",
+    "coverage_audit_sha256",
+    "coverage_gap_count",
+    "coverage_gap_manifest",
+    "coverage_gap_manifest_sha256",
+    "case_count",
+    "case_manifest_sha256",
+    "joins_fixed_visible_denominator",
+    "unseen_eligible",
+    "training_export_eligible",
+    "cases",
+    "created_at",
+    "content_sha256",
+    "source_visible_run_id",
+    "source_visible_run_sha256",
+    "source_execution_identity_sha256",
+    "source_candidate_sha256",
+    "source_repair_manifest_sha256",
+    "source_diagnosis_count",
+    "source_diagnosis_manifest",
+    "source_diagnosis_manifest_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-visible-diagnostic-supplement.v1"
+    },
+    "pack_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "linked_cycle_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "fixed_pack_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_case_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_case_order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_visible_denominator": {
+      "const": 331
+    },
+    "system_case_count_separate": {
+      "const": 32
+    },
+    "coverage_audit_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_gap_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "coverage_gap_manifest": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/coverage_gap"
+      }
+    },
+    "coverage_gap_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "case_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "case_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "joins_fixed_visible_denominator": {
+      "const": false
+    },
+    "unseen_eligible": {
+      "const": false
+    },
+    "training_export_eligible": {
+      "const": false
+    },
+    "cases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/diagnostic_case"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_visible_run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "source_visible_run_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_execution_identity_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_candidate_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_repair_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_diagnosis_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_diagnosis_manifest": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/source_diagnosis_summary"
+      }
+    },
+    "source_diagnosis_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "coverage_gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coverage_cell_id",
+        "gap_fingerprint_sha256"
+      ],
+      "properties": {
+        "coverage_cell_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "gap_fingerprint_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "diagnostic_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "diagnostic_case_id",
+        "ordinal",
+        "scenario_family_id",
+        "question_type",
+        "prompt",
+        "rationale",
+        "primary_jurisdiction",
+        "legal_currentness_cutoff",
+        "source_diagnosis_ids",
+        "coverage_cell_id",
+        "coverage_gap_fingerprint_sha256",
+        "usage_role",
+        "joins_fixed_visible_denominator",
+        "permanently_ineligible_for_unseen_validation",
+        "unseen_eligible",
+        "permanently_ineligible_for_training",
+        "training_export_eligible",
+        "user_content",
+        "content_sha256",
+        "question_version_sha256",
+        "prompt_only_projection",
+        "prompt_only_projection_sha256",
+        "legal_currentness_review_sha256",
+        "gold_review_sha256",
+        "diagnostic_provenance_kind",
+        "source_diagnosis_manifest",
+        "source_diagnosis_manifest_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "legalbot.ge-visible-diagnostic-case.v1"
+        },
+        "diagnostic_case_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scenario_family_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "question_type": {
+          "const": "GENERAL_ENQUIRY"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primary_jurisdiction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legal_currentness_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "source_diagnosis_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          }
+        },
+        "coverage_cell_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "coverage_gap_fingerprint_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "usage_role": {
+          "const": "VISIBLE_DIAGNOSTIC_SUPPLEMENT_ONLY"
+        },
+        "joins_fixed_visible_denominator": {
+          "const": false
+        },
+        "permanently_ineligible_for_unseen_validation": {
+          "const": true
+        },
+        "unseen_eligible": {
+          "const": false
+        },
+        "permanently_ineligible_for_training": {
+          "const": true
+        },
+        "training_export_eligible": {
+          "const": false
+        },
+        "user_content": {
+          "const": false
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "question_version_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "prompt_only_projection": {
+          "$ref": "#/$defs/prompt_only_projection"
+        },
+        "prompt_only_projection_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "legal_currentness_review_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "gold_review_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "diagnostic_provenance_kind": {
+          "enum": [
+            "COVERAGE_ONLY",
+            "DIAGNOSIS_DERIVED"
+          ]
+        },
+        "source_diagnosis_manifest": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/case_source_diagnosis"
+          }
+        },
+        "source_diagnosis_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "diagnostic_provenance_kind": {
+                "const": "COVERAGE_ONLY"
+              }
+            },
+            "required": [
+              "diagnostic_provenance_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "source_diagnosis_ids": {
+                "maxItems": 0
+              },
+              "source_diagnosis_manifest": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "source_diagnosis_ids": {
+                "minItems": 1
+              },
+              "source_diagnosis_manifest": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source_diagnosis_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "diagnosis_id",
+        "content_sha256"
+      ],
+      "properties": {
+        "diagnosis_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "case_source_diagnosis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "diagnosis_id",
+        "case_id",
+        "failure_fingerprint_sha256",
+        "content_sha256"
+      ],
+      "properties": {
+        "diagnosis_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "case_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "failure_fingerprint_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "prompt_only_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "diagnostic_case_id",
+        "question_type",
+        "prompt",
+        "primary_jurisdiction",
+        "legal_currentness_cutoff",
+        "question_version_sha256",
+        "contains_rationale",
+        "contains_gold",
+        "contains_diagnosis",
+        "unseen_content",
+        "content_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "legalbot.ge-diagnostic-prompt-projection.v1"
+        },
+        "diagnostic_case_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "question_type": {
+          "const": "GENERAL_ENQUIRY"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primary_jurisdiction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legal_currentness_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "question_version_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "contains_rationale": {
+          "const": false
+        },
+        "contains_gold": {
+          "const": false
+        },
+        "contains_diagnosis": {
+          "const": false
+        },
+        "unseen_content": {
+          "const": false
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

@@ -12,7 +12,7 @@ import stat
 import time
 from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager, suppress
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -24,6 +24,7 @@ from ..assessment.guidance_bundle import (
 )
 from ..config import Settings
 from ..db import Database, utc_iso
+from ..ingestion.models import MaterialLane
 from ..jobs import (
     CHUNKER_VERSION,
     INDEX_SCHEMA_VERSION,
@@ -38,6 +39,17 @@ from ..observability.events import EventStore, record_index_stage_failure
 from ..privacy import PRIVATE_QUESTION_SUMMARY
 from ..quality.policy import POLICY_SHA256
 from ..types import IndexBuildStage, JobStatus, JobType
+from .ge_index_build_authorization import (
+    VerifiedGEIndexBuildAuthorization,
+    ge_index_build_decision_binding,
+    load_verified_ge_index_build_authorization,
+)
+from .incomplete_index_audit import (
+    GE_SELECTION_POLICY,
+    SourceLaneBinding,
+    parse_source_lane_bindings,
+    source_lane_bindings_for_manifest,
+)
 from .lancedb import ImmutableLanceRepository
 from .models import VECTOR_DIMENSIONS, IndexedChunk
 from .source_manifest import (
@@ -91,6 +103,114 @@ class IndexBuildStageError(RuntimeError):
         self.stage = stage
         self.reason_code = reason_code
         super().__init__(message)
+
+
+def _ge_expansion_request_fields(
+    authorization: VerifiedGEIndexBuildAuthorization,
+) -> dict[str, Any]:
+    binding = authorization.binding
+    return {
+        "ge_expansion_mode": binding.expansion_mode,
+        "ge_predecessor_build_id": binding.predecessor_build_id,
+        "ge_predecessor_index_build_record_sha256": (
+            binding.predecessor_index_build_record_sha256
+        ),
+        "ge_predecessor_seal_sha256": binding.predecessor_seal_sha256,
+        "ge_predecessor_build_manifest_sha256": (
+            binding.predecessor_build_manifest_sha256
+        ),
+        "ge_predecessor_source_manifest_file_sha256": (
+            binding.predecessor_source_manifest_file_sha256
+        ),
+        "ge_predecessor_source_manifest_sha256": (
+            binding.predecessor_source_manifest_sha256
+        ),
+        "ge_predecessor_source_version_id_set_sha256": (
+            binding.predecessor_source_version_id_set_sha256
+        ),
+        "ge_predecessor_member_set_sha256": binding.predecessor_member_set_sha256,
+        "ge_predecessor_member_sequence_sha256": (
+            binding.predecessor_member_sequence_sha256
+        ),
+        "ge_predecessor_source_count": binding.predecessor_source_count,
+        "ge_predecessor_chunk_count": binding.predecessor_chunk_count,
+        "ge_added_source_version_id_set_sha256": (
+            binding.added_source_version_id_set_sha256
+        ),
+        "ge_added_member_set_sha256": binding.added_member_set_sha256,
+        "ge_added_source_count": binding.added_source_count,
+        "ge_added_chunk_count": binding.added_chunk_count,
+        "ge_successor_member_set_sha256": binding.successor_member_set_sha256,
+        "ge_successor_member_sequence_sha256": (
+            binding.successor_member_sequence_sha256
+        ),
+        "ge_successor_source_count": binding.successor_source_count,
+        "ge_successor_chunk_count": binding.successor_chunk_count,
+        "ge_preservation_proof_sha256": binding.preservation_proof_sha256,
+    }
+
+
+def _release_pointer_snapshot(settings: Settings) -> dict[str, Any]:
+    """Return path-free ACTIVE/PREVIOUS identities without following links."""
+
+    pointers: dict[str, dict[str, Any]] = {}
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    for name in ("ACTIVE.json", "PREVIOUS.json"):
+        path = settings.index_dir / name
+        try:
+            descriptor = os.open(path, os.O_RDONLY | no_follow)
+        except FileNotFoundError:
+            pointers[name] = {
+                "present": False,
+                "sha256": None,
+                "size": 0,
+                "mode": None,
+            }
+            continue
+        try:
+            before = os.fstat(descriptor)
+            if (
+                not stat.S_ISREG(before.st_mode)
+                or before.st_nlink != 1
+                or before.st_uid != os.getuid()
+                or stat.S_IMODE(before.st_mode) & 0o022
+                or before.st_size > 1024 * 1024
+            ):
+                raise RuntimeError("index release pointer is unsafe")
+            digest = hashlib.sha256()
+            remaining = before.st_size
+            while remaining:
+                block = os.read(descriptor, min(remaining, 64 * 1024))
+                if not block:
+                    raise RuntimeError("index release pointer was truncated")
+                digest.update(block)
+                remaining -= len(block)
+            after = os.fstat(descriptor)
+            lexical = os.stat(path, follow_symlinks=False)
+            def identity(item: os.stat_result) -> tuple[int, ...]:
+                return (
+                    item.st_dev,
+                    item.st_ino,
+                    item.st_uid,
+                    item.st_mode,
+                    item.st_size,
+                    item.st_mtime_ns,
+                    item.st_ctime_ns,
+                )
+            if identity(before) != identity(after) or identity(before) != identity(lexical):
+                raise RuntimeError("index release pointer changed during inspection")
+            pointers[name] = {
+                "present": True,
+                "sha256": digest.hexdigest(),
+                "size": before.st_size,
+                "mode": stat.S_IMODE(before.st_mode),
+            }
+        finally:
+            os.close(descriptor)
+    return {
+        "schema": "legalbot.index-release-pointer-snapshot.v1",
+        "pointers": pointers,
+    }
 
 
 @contextmanager
@@ -150,6 +270,55 @@ class IndexBuildContext:
     now: Callable[[], datetime] | None = None
     expected_lease_owner: str | None = None
     stage_deadline_at: str | None = None
+    release_pointer_snapshot: dict[str, Any] | None = None
+
+
+def _write_or_verify_index_build_boundary(staging: Path, ctx: IndexBuildContext) -> None:
+    """Create the immutable lane boundary before any derived index bytes are written."""
+
+    is_ge = ctx.manifest.get("selection_policy") == GE_SELECTION_POLICY
+    payload = {
+        "schema": "legalbot.index-build-boundary.v1",
+        "build_id": ctx.build_id,
+        "source_manifest_sha256": str(ctx.manifest.get("manifest_sha256") or ""),
+        "selection_policy": str(ctx.manifest.get("selection_policy") or ""),
+        "ge_held_scope": is_ge,
+        "ge_source_scope_content_sha256": (
+            ctx.manifest.get("ge_source_scope_content_sha256") if is_ge else None
+        ),
+        "successor_must_remain_non_active": (
+            ctx.manifest.get("successor_must_remain_non_active") is True
+        ),
+        "active_or_previous_write_authorized": (
+            ctx.manifest.get("active_or_previous_write_authorized") is True
+        ),
+        "promotion_authorized": ctx.manifest.get("promotion_authorized") is True,
+    }
+    expected = (
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    path = staging / "build-boundary.json"
+    if path.exists():
+        if path.is_symlink() or not path.is_file() or path.read_bytes() != expected:
+            raise IndexBuildStageError(
+                IndexBuildStage.EMBEDDING,
+                "index_build_boundary_changed",
+                "incomplete staging build boundary differs from the frozen request",
+            )
+        return
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o444)
+    try:
+        with os.fdopen(descriptor, "wb", closefd=False) as handle:
+            handle.write(expected)
+            handle.flush()
+            os.fsync(handle.fileno())
+    finally:
+        os.close(descriptor)
+    directory_fd = os.open(staging, os.O_RDONLY)
+    try:
+        os.fsync(directory_fd)
+    finally:
+        os.close(directory_fd)
 
 
 def enqueue_index_build(
@@ -164,6 +333,8 @@ def enqueue_index_build(
     skip_embedding: bool = False,
     reuse_vectors_from_build_id: str | None = None,
     retry_lineage_sha256: str | None = None,
+    ge_index_build_owner_decision_id: str | None = None,
+    ge_index_build_owner_decision_content_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Insert a durable index_build job. Queue carries IDs only, never document bytes."""
 
@@ -204,7 +375,35 @@ def enqueue_index_build(
         preferred_small_first=preferred_small_first,
     )
     if not manifest["sources"]:
-        raise ValueError("approved authority-lane source manifest is empty")
+        raise ValueError("approved legal-source manifest is empty")
+    lane_bindings = source_lane_bindings_for_manifest(manifest)
+    is_ge_successor = manifest.get("selection_policy") == GE_SELECTION_POLICY
+    if is_ge_successor and skip_embedding:
+        raise ValueError("ge_successor_skip_embedding_forbidden")
+    if is_ge_successor and fail_at_stage is not None:
+        raise ValueError("ge_successor_fault_injection_forbidden")
+    build_authorization: VerifiedGEIndexBuildAuthorization | None = None
+    if is_ge_successor:
+        if (
+            not ge_index_build_owner_decision_id
+            or not ge_index_build_owner_decision_content_sha256
+        ):
+            raise ValueError("ge_successor_index_build_authorization_required")
+        build_authorization = load_verified_ge_index_build_authorization(
+            settings,
+            database,
+            manifest=manifest,
+            build_id=build_id,
+            decision_id=ge_index_build_owner_decision_id,
+            decision_content_sha256=ge_index_build_owner_decision_content_sha256,
+        )
+    elif (
+        ge_index_build_owner_decision_id is not None
+        or ge_index_build_owner_decision_content_sha256 is not None
+    ):
+        raise ValueError("ge_successor_index_build_authorization_for_non_ge_manifest")
+    allowed_catalogue_lanes = sorted({binding.catalogue_lane for binding in lane_bindings})
+    lane_binding_json = [binding.as_dict() for binding in lane_bindings]
     embedding_model = (
         TEST_EMBEDDING_MODEL if settings.test_mode else _production_embedding_identity(settings)
     )
@@ -213,6 +412,14 @@ def enqueue_index_build(
     )
     if reuse_vectors_from_build_id is not None and skip_embedding:
         raise ValueError("vector reuse cannot be combined with skip-embedding")
+    if (
+        is_ge_successor
+        and reuse_vectors_from_build_id is not None
+        and build_authorization is not None
+        and reuse_vectors_from_build_id
+        != build_authorization.binding.predecessor_build_id
+    ):
+        raise ValueError("ge_successor_vector_parent_must_equal_predecessor")
     parent_vector_source = None
     if reuse_vectors_from_build_id is not None:
         parent_vector_source = verify_parent_vector_source(
@@ -226,6 +433,13 @@ def enqueue_index_build(
             chunker_identity=CHUNKER_VERSION,
             index_schema_version=INDEX_SCHEMA_VERSION,
         )
+        if (
+            is_ge_successor
+            and build_authorization is not None
+            and parent_vector_source.identity.seal_sha256
+            != build_authorization.binding.predecessor_seal_sha256
+        ):
+            raise ValueError("ge_successor_vector_parent_seal_differed")
     key = index_build_idempotency_key(
         corpus_id=corpus_id,
         approved_source_manifest_hash=str(manifest["manifest_sha256"]),
@@ -241,6 +455,15 @@ def enqueue_index_build(
         ),
     )
     key = f"{key}|{POLICY_SHA256}|{OWNER_ASSESSMENT_BUNDLE.sha256}"
+    if is_ge_successor:
+        if build_authorization is None:  # pragma: no cover - guarded above
+            raise RuntimeError("GE successor authorization disappeared")
+        key = (
+            f"{key}|ge-successor-index-build:{build_authorization.decision_id}:"
+            f"{build_authorization.resolution_content_sha256}:"
+            f"{build_authorization.binding.intake_chain_sha256}:"
+            f"{build_authorization.binding.preservation_proof_sha256}"
+        )
     if retry_lineage_sha256 is not None:
         if not re.fullmatch(r"[0-9a-f]{64}", retry_lineage_sha256):
             raise ValueError("retry lineage SHA must be a lowercase SHA-256")
@@ -286,6 +509,7 @@ def enqueue_index_build(
     from .service import _relative_path
 
     relative_path = _relative_path(settings, expected_path)
+    release_pointer_snapshot = _release_pointer_snapshot(settings)
     try:
         database.create_job(
             job_id=job_id,
@@ -302,9 +526,16 @@ def enqueue_index_build(
                 "embedding_model_version": embedding_model,
                 "rerank_version": reranker_model,
                 "source_version_ids": list(source_version_ids(manifest)),
+                "selection_policy": manifest.get("selection_policy"),
+                "source_lane_bindings": lane_binding_json,
+                "allowed_catalogue_lanes": allowed_catalogue_lanes,
                 "max_chunks": max_chunks,
                 "preferred_small_first": preferred_small_first,
-                "fail_at_stage": fail_at_stage,
+                **(
+                    {"fail_at_stage": fail_at_stage}
+                    if not is_ge_successor
+                    else {}
+                ),
                 "skip_embedding": skip_embedding,
                 "reuse_vectors_from_build_id": (
                     parent_vector_source.identity.build_id
@@ -316,10 +547,53 @@ def enqueue_index_build(
                     if parent_vector_source is not None
                     else None
                 ),
-                "authority_lane_only": True,
+                "authority_lane_only": manifest.get("authority_lane_only") is True,
+                "approved_legal_source_lanes_only": (
+                    manifest.get("approved_legal_source_lanes_only") is True
+                ),
+                "successor_must_remain_non_active": (
+                    manifest.get("successor_must_remain_non_active") is True
+                ),
+                "ge_source_scope_content_sha256": manifest.get(
+                    "ge_source_scope_content_sha256"
+                ),
+                "ge_source_scope_owner_approval_digest": manifest.get(
+                    "ge_source_scope_owner_approval_digest"
+                ),
+                "ge_index_build_owner_decision_id": (
+                    build_authorization.decision_id
+                    if build_authorization is not None
+                    else None
+                ),
+                "ge_index_build_owner_decision_request_sha256": (
+                    build_authorization.request_content_sha256
+                    if build_authorization is not None
+                    else None
+                ),
+                "ge_index_build_owner_decision_content_sha256": (
+                    build_authorization.resolution_content_sha256
+                    if build_authorization is not None
+                    else None
+                ),
+                "ge_source_intake_chain_sha256": (
+                    build_authorization.binding.intake_chain_sha256
+                    if build_authorization is not None
+                    else None
+                ),
+                "ge_source_lane_binding_sha256": (
+                    build_authorization.binding.source_lane_binding_sha256
+                    if build_authorization is not None
+                    else None
+                ),
+                **(
+                    _ge_expansion_request_fields(build_authorization)
+                    if build_authorization is not None
+                    else {}
+                ),
                 "policy_sha256": POLICY_SHA256,
                 "assessment_bundle_sha256": OWNER_ASSESSMENT_BUNDLE.sha256,
                 "retry_lineage_sha256": retry_lineage_sha256,
+                "release_pointer_snapshot_at_enqueue": release_pointer_snapshot,
             },
             route="control_plane",
             idempotency_key=key,
@@ -364,6 +638,252 @@ def enqueue_index_build(
         "parent_vector_seal_sha256": (
             parent_vector_source.identity.seal_sha256 if parent_vector_source is not None else None
         ),
+        "authority_lane_only": manifest.get("authority_lane_only") is True,
+        "approved_legal_source_lanes_only": (
+            manifest.get("approved_legal_source_lanes_only") is True
+        ),
+        "allowed_catalogue_lanes": allowed_catalogue_lanes,
+        "successor_must_remain_non_active": (
+            manifest.get("successor_must_remain_non_active") is True
+        ),
+        "ge_index_build_owner_decision_id": (
+            build_authorization.decision_id if build_authorization is not None else None
+        ),
+        "ge_index_build_owner_decision_content_sha256": (
+            build_authorization.resolution_content_sha256
+            if build_authorization is not None
+            else None
+        ),
+        "ge_source_intake_chain_sha256": (
+            build_authorization.binding.intake_chain_sha256
+            if build_authorization is not None
+            else None
+        ),
+    }
+
+
+def _require_enqueued_source_manifest_unchanged(
+    ctx: IndexBuildContext,
+    request: dict[str, Any],
+) -> None:
+    """Fail before scanning when catalogue changes alter frozen build membership."""
+
+    expected_sha256 = str(request.get("approved_source_manifest_hash") or "")
+    expected_source_ids = request.get("source_version_ids")
+    if not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+        raise IndexBuildStageError(
+            IndexBuildStage.QUEUED,
+            "source_manifest_binding_invalid",
+            "queued index build has no valid frozen source-manifest digest",
+        )
+    if (
+        not isinstance(expected_source_ids, list)
+        or any(not isinstance(value, str) or not value for value in expected_source_ids)
+        or len(set(expected_source_ids)) != len(expected_source_ids)
+    ):
+        raise IndexBuildStageError(
+            IndexBuildStage.QUEUED,
+            "source_manifest_binding_invalid",
+            "queued index build has no valid frozen source-version identity list",
+        )
+    actual_sha256 = str(ctx.manifest.get("manifest_sha256") or "")
+    actual_source_ids = list(source_version_ids(ctx.manifest))
+    if actual_sha256 != expected_sha256 or actual_source_ids != expected_source_ids:
+        raise IndexBuildStageError(
+            IndexBuildStage.QUEUED,
+            "source_manifest_changed_after_enqueue",
+            "approved source manifest changed after index-build admission",
+        )
+    actual_bindings = source_lane_bindings_for_manifest(ctx.manifest)
+    requested_bindings_raw = request.get("source_lane_bindings")
+    is_ge_successor = ctx.manifest.get("selection_policy") == GE_SELECTION_POLICY
+    if requested_bindings_raw is None and not is_ge_successor:
+        # Preserve resumability for authority-only jobs admitted before the
+        # explicit lane-binding field was introduced.
+        requested_bindings = actual_bindings
+    else:
+        try:
+            requested_bindings = parse_source_lane_bindings(requested_bindings_raw)
+        except ValueError as exc:
+            raise IndexBuildStageError(
+                IndexBuildStage.QUEUED,
+                "source_lane_binding_invalid",
+                "queued index build has no valid frozen source-lane bindings",
+            ) from exc
+    requested_allowed_lanes = request.get("allowed_catalogue_lanes")
+    actual_allowed_lanes = sorted({binding.catalogue_lane for binding in actual_bindings})
+    if requested_allowed_lanes is None and not is_ge_successor:
+        requested_allowed_lanes = actual_allowed_lanes
+    requested_authority_only = request.get("authority_lane_only")
+    requested_approved_legal_only = request.get("approved_legal_source_lanes_only")
+    requested_non_active = request.get("successor_must_remain_non_active")
+    if not is_ge_successor:
+        if requested_authority_only is None:
+            requested_authority_only = ctx.manifest.get("authority_lane_only") is True
+        if requested_approved_legal_only is None:
+            requested_approved_legal_only = (
+                ctx.manifest.get("approved_legal_source_lanes_only") is True
+            )
+        if requested_non_active is None:
+            requested_non_active = (
+                ctx.manifest.get("successor_must_remain_non_active") is True
+            )
+    if (
+        [binding.as_dict() for binding in requested_bindings]
+        != [binding.as_dict() for binding in actual_bindings]
+        or requested_allowed_lanes != actual_allowed_lanes
+        or requested_authority_only
+        is not (ctx.manifest.get("authority_lane_only") is True)
+        or requested_approved_legal_only
+        is not (ctx.manifest.get("approved_legal_source_lanes_only") is True)
+        or requested_non_active
+        is not (ctx.manifest.get("successor_must_remain_non_active") is True)
+    ):
+        raise IndexBuildStageError(
+            IndexBuildStage.QUEUED,
+            "source_lane_binding_changed_after_enqueue",
+            "approved source lane bindings changed after index-build admission",
+        )
+    if is_ge_successor:
+        if "fail_at_stage" in request:
+            raise IndexBuildStageError(
+                IndexBuildStage.QUEUED,
+                "ge_successor_fault_injection_forbidden",
+                "GE successor requests cannot carry test-only stage fault injection",
+            )
+        if bool(request.get("skip_embedding")):
+            raise IndexBuildStageError(
+                IndexBuildStage.QUEUED,
+                "ge_successor_skip_embedding_forbidden",
+                "GE successor must build and seal its exact held vector index",
+            )
+        decision_id = str(request.get("ge_index_build_owner_decision_id") or "")
+        decision_content_sha256 = str(
+            request.get("ge_index_build_owner_decision_content_sha256") or ""
+        )
+        try:
+            authorization = load_verified_ge_index_build_authorization(
+                ctx.settings,
+                ctx.database,
+                manifest=ctx.manifest,
+                build_id=ctx.build_id,
+                decision_id=decision_id,
+                decision_content_sha256=decision_content_sha256,
+            )
+        except (OSError, PermissionError, RuntimeError, ValueError) as exc:
+            raise IndexBuildStageError(
+                IndexBuildStage.QUEUED,
+                "ge_successor_index_build_authorization_invalid",
+                "GE successor build is not bound to its exact owner gate and source scope",
+            ) from exc
+        expected_expansion_fields = _ge_expansion_request_fields(authorization)
+        requested_vector_parent = request.get("reuse_vectors_from_build_id")
+        requested_parent_seal = request.get("parent_vector_seal_sha256")
+        if (
+            request.get("selection_policy") != GE_SELECTION_POLICY
+            or request.get("ge_source_scope_content_sha256")
+            != authorization.binding.source_scope_content_sha256
+            or request.get("ge_source_scope_owner_approval_digest")
+            != authorization.binding.source_scope_owner_approval_sha256
+            or request.get("approved_source_manifest_hash")
+            != authorization.binding.source_manifest_sha256
+            or request.get("ge_index_build_owner_decision_request_sha256")
+            != authorization.request_content_sha256
+            or request.get("ge_source_intake_chain_sha256")
+            != authorization.binding.intake_chain_sha256
+            or request.get("ge_source_lane_binding_sha256")
+            != authorization.binding.source_lane_binding_sha256
+            or any(
+                request.get(field) != value
+                for field, value in expected_expansion_fields.items()
+            )
+            or requested_vector_parent
+            not in {None, authorization.binding.predecessor_build_id}
+            or (
+                requested_vector_parent is not None
+                and requested_parent_seal
+                != authorization.binding.predecessor_seal_sha256
+            )
+        ):
+            raise IndexBuildStageError(
+                IndexBuildStage.QUEUED,
+                "ge_successor_index_build_authorization_invalid",
+                "GE successor owner decision changed after index-build admission",
+            )
+    elif any(
+        request.get(field) not in {None, ""}
+        for field in (
+            "ge_index_build_owner_decision_id",
+            "ge_index_build_owner_decision_request_sha256",
+            "ge_index_build_owner_decision_content_sha256",
+            "ge_source_intake_chain_sha256",
+            "ge_source_lane_binding_sha256",
+            "ge_successor_index_build_authorization_digest",
+            "ge_expansion_mode",
+            "ge_predecessor_build_id",
+            "ge_predecessor_index_build_record_sha256",
+            "ge_predecessor_seal_sha256",
+            "ge_predecessor_build_manifest_sha256",
+            "ge_predecessor_source_manifest_file_sha256",
+            "ge_predecessor_source_manifest_sha256",
+            "ge_predecessor_source_version_id_set_sha256",
+            "ge_predecessor_member_set_sha256",
+            "ge_predecessor_member_sequence_sha256",
+            "ge_predecessor_source_count",
+            "ge_predecessor_chunk_count",
+            "ge_added_source_version_id_set_sha256",
+            "ge_added_member_set_sha256",
+            "ge_added_source_count",
+            "ge_added_chunk_count",
+            "ge_successor_member_set_sha256",
+            "ge_successor_member_sequence_sha256",
+            "ge_successor_source_count",
+            "ge_successor_chunk_count",
+            "ge_preservation_proof_sha256",
+        )
+    ):
+        raise IndexBuildStageError(
+            IndexBuildStage.QUEUED,
+            "ge_successor_index_build_authorization_invalid",
+            "GE successor authorization cannot be applied to an ordinary authority build",
+        )
+    expected_pointer_snapshot = request.get("release_pointer_snapshot_at_enqueue")
+    if expected_pointer_snapshot is not None and (
+        not isinstance(expected_pointer_snapshot, dict)
+        or expected_pointer_snapshot.get("schema")
+        != "legalbot.index-release-pointer-snapshot.v1"
+        or expected_pointer_snapshot != _release_pointer_snapshot(ctx.settings)
+    ):
+        raise IndexBuildStageError(
+            IndexBuildStage.QUEUED,
+            "release_pointer_state_changed_after_enqueue",
+            "ACTIVE/PREVIOUS pointer state changed after index-build admission",
+        )
+
+
+def _integrity_source_lane_claims(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Return truthful, reproducible lane claims for the sealed evaluation."""
+
+    bindings = source_lane_bindings_for_manifest(manifest)
+    catalogue_counts: dict[str, int] = {}
+    scope_counts: dict[str, int] = {}
+    material_counts: dict[str, int] = {}
+    for binding in bindings:
+        catalogue_counts[binding.catalogue_lane] = (
+            catalogue_counts.get(binding.catalogue_lane, 0) + 1
+        )
+        scope_counts[binding.scope_lane] = scope_counts.get(binding.scope_lane, 0) + 1
+        material_counts[binding.material_lane] = material_counts.get(binding.material_lane, 0) + 1
+    return {
+        "authority_lane_only": manifest.get("authority_lane_only") is True,
+        "approved_legal_source_lanes_only": (
+            manifest.get("approved_legal_source_lanes_only") is True
+        ),
+        "allowed_catalogue_lanes": sorted(catalogue_counts),
+        "catalogue_source_counts": dict(sorted(catalogue_counts.items())),
+        "scope_source_counts": dict(sorted(scope_counts.items())),
+        "material_source_counts": dict(sorted(material_counts.items())),
+        "source_lane_bindings": [binding.as_dict() for binding in bindings],
     }
 
 
@@ -506,8 +1026,14 @@ class IndexBuildRunner:
             clock=clock,
             now=now,
             expected_lease_owner=expected_lease_owner,
+            release_pointer_snapshot=(
+                request.get("release_pointer_snapshot_at_enqueue")
+                if isinstance(request.get("release_pointer_snapshot_at_enqueue"), dict)
+                else None
+            ),
         )
         try:
+            _require_enqueued_source_manifest_unchanged(ctx, request)
             _require_index_lease_current(ctx, stage=IndexBuildStage.QUEUED)
             _verify_parent_vector_binding(ctx)
             _run_stage(ctx, IndexBuildStage.SCANNING, _stage_scanning)
@@ -557,7 +1083,7 @@ class IndexBuildRunner:
             ctx.counts["answer_release_eligible"] = False
             ctx.counts["successor_must_remain_non_active"] = True
             message = (
-                "Phase-2A successor sealed as non-ACTIVE held evidence; answer release, "
+                "Successor sealed as non-ACTIVE held evidence; answer release, "
                 "promotion and later-phase gates remain closed."
             )
         elif is_candidate:
@@ -651,6 +1177,18 @@ class IndexBuildRunner:
         from .service import _safe_failure
 
         failed_at = utc_iso()
+        try:
+            pointer_snapshot_after_failure = _release_pointer_snapshot(ctx.settings)
+            pointer_state_unchanged: bool | None = (
+                None
+                if ctx.release_pointer_snapshot is None
+                else pointer_snapshot_after_failure == ctx.release_pointer_snapshot
+            )
+            pointer_verification_error = None
+        except Exception as pointer_exc:  # preserve the substantive build failure
+            pointer_snapshot_after_failure = None
+            pointer_state_unchanged = False
+            pointer_verification_error = _safe_failure(pointer_exc)
         metrics = {
             "failure_type": type(exc).__name__,
             "failure": _safe_failure(exc),
@@ -659,10 +1197,12 @@ class IndexBuildRunner:
             "reason_code": reason,
             "timings": ctx.timings,
             "counts": ctx.counts,
+            "release_pointer_snapshot_at_enqueue": ctx.release_pointer_snapshot,
+            "release_pointer_snapshot_after_failure": pointer_snapshot_after_failure,
+            "release_pointer_state_unchanged": pointer_state_unchanged,
+            "release_pointer_verification_error": pointer_verification_error,
         }
-        active = (ctx.settings.index_dir / "ACTIVE.json").exists()
-        if active:
-            raise RuntimeError("failed index-build must never touch ACTIVE.json")
+        ctx.counts["release_pointer_state_unchanged"] = pointer_state_unchanged
         build_parameters = (
             IndexBuildStage.FAILED,
             reason,
@@ -818,7 +1358,14 @@ def _finalize_or_reconcile_candidate(
                 "vector_count": ctx.counts.get("vectors", 0),
             }
         )
-        _verify_durable_candidate_tree(ctx.settings, replay_row)
+        if getattr(ctx, "manifest", {}).get("selection_policy") == GE_SELECTION_POLICY:
+            _verify_held_ge_successor_tree(
+                ctx,
+                final,
+                expected_seal_sha256=expected_seal_sha256,
+            )
+        else:
+            _verify_durable_candidate_tree(ctx.settings, replay_row)
         return
     if not staging.is_dir() or staging.is_symlink():
         raise RuntimeError("index_build_finalization_staging_missing")
@@ -829,9 +1376,247 @@ def _finalize_or_reconcile_candidate(
     finalized_seal = final / "seal.json"
     if not finalized_seal.is_file() or _file_sha256(finalized_seal) != expected_seal_sha256:
         raise RuntimeError("index_build_finalization_rename_changed_bytes")
+    if getattr(ctx, "manifest", {}).get("selection_policy") == GE_SELECTION_POLICY:
+        _verify_held_ge_successor_tree(
+            ctx,
+            final,
+            expected_seal_sha256=expected_seal_sha256,
+        )
+
+
+def _verify_held_ge_successor_tree(
+    ctx: IndexBuildContext,
+    final: Path,
+    *,
+    expected_seal_sha256: str,
+) -> None:
+    """Verify immutable GE held evidence without opening a live-release path."""
+
+    from .service import (
+        PHYSICAL_AUTHORITY_LANE,
+        PHYSICAL_LANES,
+        _file_sha256,
+        _json_object,
+        _tree_sha256,
+    )
+
+    source_lane_claims = _integrity_source_lane_claims(ctx.manifest)
+    if (
+        ctx.manifest.get("selection_policy") != GE_SELECTION_POLICY
+        or ctx.manifest.get("successor_must_remain_non_active") is not True
+        or ctx.manifest.get("answer_release_eligible") is not False
+        or ctx.manifest.get("active_or_previous_write_authorized") is not False
+        or ctx.manifest.get("promotion_authorized") is not False
+    ):
+        raise RuntimeError("ge_held_successor_boundary_invalid")
+    paths = {
+        "manifest": final / "manifest.json",
+        "evaluation": final / "evaluation.json",
+        "privacy": final / "privacy-report.json",
+        "source": final / "approved-source-manifest.json",
+        "lane": final / "lance" / "physical-lanes.json",
+        "seal": final / "seal.json",
+    }
+    if final.is_symlink() or not final.is_dir() or any(
+        path.is_symlink() or not path.is_file() for path in paths.values()
+    ):
+        raise RuntimeError("ge_held_successor_tree_incomplete")
+    if _file_sha256(paths["seal"]) != expected_seal_sha256:
+        raise RuntimeError("ge_held_successor_seal_changed")
+    build_manifest = _json_object(paths["manifest"].read_text(encoding="utf-8"))
+    evaluation = _json_object(paths["evaluation"].read_text(encoding="utf-8"))
+    privacy = _json_object(paths["privacy"].read_text(encoding="utf-8"))
+    source = _json_object(paths["source"].read_text(encoding="utf-8"))
+    lane_manifest = _json_object(paths["lane"].read_text(encoding="utf-8"))
+    seal = _json_object(paths["seal"].read_text(encoding="utf-8"))
+    try:
+        expansion_binding = ge_index_build_decision_binding(
+            ctx.settings,
+            ctx.database,
+            source,
+            build_id=ctx.build_id,
+        )
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise RuntimeError("ge_held_successor_expansion_proof_invalid") from exc
+    lance_tree_sha256 = _tree_sha256(final / "lance")
+    integrity = evaluation.get("integrity")
+    if not isinstance(integrity, dict):
+        raise RuntimeError("ge_held_successor_integrity_missing")
+    raw_tables = lane_manifest.get("tables")
+    if not isinstance(raw_tables, dict):
+        raise RuntimeError("ge_held_successor_lane_manifest_invalid")
+    lane_counts = {
+        lane: int((raw_tables.get(lane) or {}).get("row_count", -1)) for lane in PHYSICAL_LANES
+    }
+    chunk_count = int(build_manifest.get("chunk_count") or 0)
+    if (
+        source != ctx.manifest
+        or expansion_binding.expansion_mode != "strict_successor"
+        or expansion_binding.successor_source_count
+        != int(source.get("source_count") or -1)
+        or expansion_binding.successor_chunk_count
+        != int(source.get("chunk_count") or -1)
+        or expansion_binding.predecessor_source_count < 1
+        or expansion_binding.added_source_count < 1
+        or expansion_binding.predecessor_source_count
+        + expansion_binding.added_source_count
+        != expansion_binding.successor_source_count
+        or source.get("manifest_sha256") != ctx.manifest.get("manifest_sha256")
+        or build_manifest.get("schema") != "legalbot.lance-build.v1"
+        or build_manifest.get("build_id") != ctx.build_id
+        or build_manifest.get("embedding_model") != ctx.embedding_model
+        or build_manifest.get("reranker_model") != ctx.reranker_model
+        or build_manifest.get("source_manifest_sha256") != source.get("manifest_sha256")
+        or chunk_count < 1
+        or seal.get("schema") != "legalbot.index-seal.v2"
+        or seal.get("build_id") != ctx.build_id
+        or seal.get("promotion") != "not_requested"
+        or seal.get("manifest_sha256") != _file_sha256(paths["manifest"])
+        or seal.get("evaluation_sha256") != _file_sha256(paths["evaluation"])
+        or seal.get("privacy_report_sha256") != _file_sha256(paths["privacy"])
+        or seal.get("source_manifest_file_sha256") != _file_sha256(paths["source"])
+        or seal.get("physical_lane_manifest_sha256") != _file_sha256(paths["lane"])
+        or seal.get("lance_tree_sha256") != lance_tree_sha256
+        or evaluation.get("schema") != "legalbot.index-evaluation.v2"
+        or evaluation.get("passed") is not True
+        or evaluation.get("promotion_eligible") is not False
+        or evaluation.get("scoped_corpus_id") != ctx.corpus_id
+        or privacy.get("schema") != "legalbot.privacy-report.v1"
+        or privacy.get("passed") is not True
+        or integrity.get("approved_only") is not True
+        or integrity.get("authority_lane_only")
+        is not source_lane_claims["authority_lane_only"]
+        or integrity.get("approved_legal_source_lanes_only")
+        is not source_lane_claims["approved_legal_source_lanes_only"]
+        or integrity.get("allowed_catalogue_lanes")
+        != source_lane_claims["allowed_catalogue_lanes"]
+        or integrity.get("catalogue_source_counts")
+        != source_lane_claims["catalogue_source_counts"]
+        or integrity.get("scope_source_counts") != source_lane_claims["scope_source_counts"]
+        or integrity.get("material_source_counts")
+        != source_lane_claims["material_source_counts"]
+        or integrity.get("source_lane_bindings") != source_lane_claims["source_lane_bindings"]
+        or integrity.get("successor_must_remain_non_active") is not True
+        or int(integrity.get("chunk_count") or 0) != chunk_count
+        or int(integrity.get("vector_count") or 0) != chunk_count
+        or int(integrity.get("vector_dimensions") or 0) != VECTOR_DIMENSIONS
+        or integrity.get("source_manifest_sha256") != source.get("manifest_sha256")
+        or integrity.get("source_snapshot_stable") is not True
+        or integrity.get("lance_tree_sha256") != lance_tree_sha256
+        or integrity.get("physical_lane_isolation") is not True
+        or integrity.get("physical_lane_counts") != lane_counts
+        or lane_manifest.get("schema") != "legalbot.physical-lanes.v1"
+        or lane_manifest.get("separated") is not True
+        or any(count < 0 for count in lane_counts.values())
+        or sum(lane_counts.values()) != chunk_count
+        or lane_counts.get(PHYSICAL_AUTHORITY_LANE) != chunk_count
+        or any(
+            count != 0
+            for lane, count in lane_counts.items()
+            if lane != PHYSICAL_AUTHORITY_LANE
+        )
+        or any(not (final / "lance" / lane).is_dir() for lane in PHYSICAL_LANES)
+        or any(
+            count > 0 and not (final / "lance" / lane / "chunks.lance").exists()
+            for lane, count in lane_counts.items()
+        )
+    ):
+        raise RuntimeError("ge_held_successor_tree_verification_failed")
+    _verify_held_ge_lance_inventory(
+        ctx,
+        final,
+        chunk_count=chunk_count,
+        claimed_lane_counts=lane_counts,
+    )
+    if (
+        ctx.release_pointer_snapshot is not None
+        and _release_pointer_snapshot(ctx.settings) != ctx.release_pointer_snapshot
+    ):
+        raise RuntimeError("ge_held_successor_release_pointer_state_changed")
+    repository = ImmutableLanceRepository(ctx.settings.index_dir)
+    active = repository.read_active()
+    previous = repository.read_previous()
+    if (active is not None and active.build_id == ctx.build_id) or (
+        previous is not None and previous.build_id == ctx.build_id
+    ):
+        raise RuntimeError("ge_held_successor_pointer_write_detected")
+
+
+def _verify_held_ge_lance_inventory(
+    ctx: IndexBuildContext,
+    final: Path,
+    *,
+    chunk_count: int,
+    claimed_lane_counts: dict[str, int],
+) -> None:
+    """Open the held table and prove exact chunk/source/lane row parity."""
+
+    from .incomplete_index_audit import (
+        compare_index_identities,
+        load_expected_index_rows,
+        read_lance_observations,
+        source_lane_bindings_for_manifest,
+    )
+    from .service import PHYSICAL_LANES, _prompt_safe_index_text
+
+    lance_root = final / "lance"
+    try:
+        lane_directories = {
+            path.name
+            for path in lance_root.iterdir()
+            if path.is_dir() and not path.is_symlink()
+        }
+        if lane_directories != set(PHYSICAL_LANES) or any(
+            (lance_root / lane).is_symlink() for lane in PHYSICAL_LANES
+        ):
+            raise RuntimeError("ge_held_successor_physical_lane_inventory_invalid")
+        for lane in PHYSICAL_LANES:
+            dataset = lance_root / lane / "chunks.lance"
+            claimed = claimed_lane_counts[lane]
+            if dataset.is_symlink() or (claimed > 0) is not dataset.is_dir():
+                raise RuntimeError("ge_held_successor_physical_lane_inventory_invalid")
+        bindings = source_lane_bindings_for_manifest(ctx.manifest)
+        if tuple(binding.source_version_id for binding in bindings) != ctx.source_ids:
+            raise RuntimeError("ge_held_successor_source_inventory_invalid")
+        expected = load_expected_index_rows(
+            ctx.database,
+            source_ids=ctx.source_ids,
+            allowlists=ctx.manifest.get("locator_allowlists") or {},
+            prompt_safe=_prompt_safe_index_text,
+            source_lane_bindings=bindings,
+        )
+        observed = read_lance_observations(final)
+    except RuntimeError:
+        raise
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise RuntimeError("ge_held_successor_lance_inventory_unreadable") from exc
+
+    comparison = compare_index_identities(expected, observed)
+    observed_lane_counts = dict.fromkeys(PHYSICAL_LANES, 0)
+    for row in observed:
+        if row.lane not in observed_lane_counts:
+            raise RuntimeError("ge_held_successor_physical_lane_inventory_invalid")
+        observed_lane_counts[row.lane] += 1
+    bound_source_ids = {binding.source_version_id for binding in bindings}
+    expected_source_ids = {row.source_version_id for row in expected}
+    observed_source_ids = {row.source_version_id for row in observed}
+    if (
+        int(ctx.manifest.get("chunk_count") or 0) != chunk_count
+        or len(expected) != chunk_count
+        or comparison.get("embedding_complete") is not True
+        or observed_lane_counts != claimed_lane_counts
+        or expected_source_ids != bound_source_ids
+        or observed_source_ids != bound_source_ids
+    ):
+        raise RuntimeError("ge_held_successor_lance_inventory_mismatch")
 
 
 def _verify_parent_vector_binding(ctx: IndexBuildContext) -> None:
+    is_ge_successor = ctx.manifest.get("selection_policy") == GE_SELECTION_POLICY
+    predecessor_build_id = str(ctx.manifest.get("ge_predecessor_build_id") or "")
+    predecessor_seal_sha256 = str(
+        ctx.manifest.get("ge_predecessor_seal_sha256") or ""
+    )
     if ctx.reuse_vectors_from_build_id is None:
         if ctx.parent_vector_seal_sha256 is not None:
             raise IndexBuildStageError(
@@ -840,6 +1625,12 @@ def _verify_parent_vector_binding(ctx: IndexBuildContext) -> None:
                 "parent vector seal is present without a parent build identity",
             )
         return
+    if is_ge_successor and ctx.reuse_vectors_from_build_id != predecessor_build_id:
+        raise IndexBuildStageError(
+            IndexBuildStage.EMBEDDING,
+            "ge_successor_vector_parent_must_equal_predecessor",
+            "GE successor vector reuse is restricted to its exact predecessor",
+        )
     try:
         parent = verify_parent_vector_source(
             index_root=ctx.settings.index_dir,
@@ -863,6 +1654,12 @@ def _verify_parent_vector_binding(ctx: IndexBuildContext) -> None:
             IndexBuildStage.EMBEDDING,
             "parent_vector_seal_changed",
             "sealed parent vector identity changed after enqueue",
+        )
+    if is_ge_successor and parent.identity.seal_sha256 != predecessor_seal_sha256:
+        raise IndexBuildStageError(
+            IndexBuildStage.EMBEDDING,
+            "ge_successor_vector_parent_seal_differed",
+            "GE successor vector parent is not its exact sealed predecessor",
         )
     ctx.parent_vector_source = parent
 
@@ -1251,6 +2048,7 @@ def _stage_embedding(ctx: IndexBuildContext) -> None:
         source_ids=ctx.source_ids,
         allowlists=ctx.manifest.get("locator_allowlists") or {},
         prompt_safe=_prompt_safe_index_text,
+        source_lane_bindings=source_lane_bindings_for_manifest(ctx.manifest),
     )
     expected_keys = [
         chunk_key(row.source_version_id, row.ordinal, row.chunk_id) for row in expected_rows
@@ -1314,6 +2112,7 @@ def _stage_embedding(ctx: IndexBuildContext) -> None:
         produced.key = checkpoint.last_deterministic_chunk_key
     else:
         staging = repository.prepare_new_staging(ctx.build_id)
+    _write_or_verify_index_build_boundary(staging, ctx)
     session = session_factory.create(staging / "lance")
     parent_reader = (
         ParentVectorBatchReader(ctx.parent_vector_source, lancedb_module)
@@ -1584,6 +2383,8 @@ def _stage_validating(ctx: IndexBuildContext) -> None:
         raise IndexBuildStageError(
             IndexBuildStage.VALIDATING, "lane_isolation", "physical lane isolation failed"
         )
+    source_lane_integrity = _integrity_source_lane_claims(ctx.manifest)
+    must_remain_non_active = ctx.manifest.get("successor_must_remain_non_active") is True
     expected_chunks = int(
         ctx.counts.get("chunks_present") or ctx.counts.get("chunks_expected") or 0
     )
@@ -1652,11 +2453,14 @@ def _stage_validating(ctx: IndexBuildContext) -> None:
     evaluation = {
         "schema": "legalbot.index-evaluation.v2",
         "passed": isolation,
-        "promotion_eligible": isolation and privacy_report.get("passed") is True,
+        "promotion_eligible": (
+            isolation and privacy_report.get("passed") is True and not must_remain_non_active
+        ),
         "scoped_corpus_id": ctx.corpus_id,
         "integrity": {
             "approved_only": True,
-            "authority_lane_only": True,
+            **source_lane_integrity,
+            "successor_must_remain_non_active": must_remain_non_active,
             "chunk_count": ctx.counts["chunks_written"],
             "vector_count": ctx.counts["vectors"],
             "vector_dimensions": VECTOR_DIMENSIONS,
@@ -1756,6 +2560,10 @@ def _iter_scoped_chunks(
         resume_source, resume_ordinal, _chunk_id = parse_chunk_key(after_chunk_key)
         del _chunk_id
     seen_resume_source = resume_source is None
+    lane_bindings = {
+        binding.source_version_id: binding
+        for binding in source_lane_bindings_for_manifest(ctx.manifest)
+    }
     select_sql = """
         SELECT
           d.id AS document_id, d.content_sha256 AS document_sha256,
@@ -1775,7 +2583,7 @@ def _iter_scoped_chunks(
         WHERE c.source_version_id = ?
           AND sv.review_status='approved'
           AND c.stream='body'
-          AND d.lane='primary_authority'
+          AND d.lane=?
           AND d.status='citable'
           AND d.retrieval_canonical=1
           AND json_extract(sv.metadata_json, '$.eligible_for_model_use')=1
@@ -1785,6 +2593,13 @@ def _iter_scoped_chunks(
         LIMIT ?
         """
     for source_id in ctx.source_ids:
+        binding = lane_bindings.get(source_id)
+        if binding is None:
+            raise IndexBuildStageError(
+                IndexBuildStage.EMBEDDING,
+                "source_lane_binding_missing",
+                "approved source has no frozen catalogue-lane binding",
+            )
         if resume_source is not None and not seen_resume_source:
             if source_id != resume_source:
                 continue
@@ -1795,7 +2610,12 @@ def _iter_scoped_chunks(
         while True:
             rows = ctx.database.fetchall(
                 select_sql,
-                (source_id, last_ordinal, INDEX_EMBED_BATCH_SIZE),
+                (
+                    source_id,
+                    binding.catalogue_lane,
+                    last_ordinal,
+                    INDEX_EMBED_BATCH_SIZE,
+                ),
             )
             if not rows:
                 break
@@ -1844,13 +2664,50 @@ def _iter_scoped_chunks(
                         reuse_counts["embedded"] = reuse_counts.get("embedded", 0) + 1
                 elif reuse_counts is not None:
                     reuse_counts["reused"] = reuse_counts.get("reused", 0) + 1
-                yield catalogue_row_to_indexed(row, vector)
+                indexed = catalogue_row_to_indexed(row, vector)
+                yield _apply_source_lane_binding(indexed, binding)
     if resume_source is not None and not seen_resume_source:
         raise IndexBuildStageError(
             IndexBuildStage.EMBEDDING,
             "resume_cursor_missing",
             "resume cursor does not match the frozen chunk stream",
         )
+
+
+def _apply_source_lane_binding(
+    chunk: IndexedChunk,
+    binding: SourceLaneBinding,
+) -> IndexedChunk:
+    """Keep GE guidance/procedure labels distinct inside the legal-source table."""
+
+    source_id = str(chunk.metadata.get("source_version_id") or "")
+    catalogue_lane = str(chunk.metadata.get("catalog_lane") or "")
+    if source_id != binding.source_version_id or catalogue_lane != binding.catalogue_lane:
+        raise IndexBuildStageError(
+            IndexBuildStage.EMBEDDING,
+            "source_lane_binding_mismatch",
+            "catalogue row departed from its frozen source-lane binding",
+        )
+    expected_material_lane = MaterialLane(binding.material_lane)
+    if binding.scope_lane == "official_procedure":
+        if chunk.material_lane not in {
+            MaterialLane.PRIMARY_AUTHORITY,
+            MaterialLane.OFFICIAL_GUIDANCE,
+        }:
+            raise IndexBuildStageError(
+                IndexBuildStage.EMBEDDING,
+                "source_lane_binding_mismatch",
+                "official procedure row has an incompatible catalogue material lane",
+            )
+    elif chunk.material_lane is not expected_material_lane:
+        raise IndexBuildStageError(
+            IndexBuildStage.EMBEDDING,
+            "source_lane_binding_mismatch",
+            "catalogue material lane departed from its frozen GE scope label",
+        )
+    metadata = dict(chunk.metadata)
+    metadata["ge_scope_lane"] = binding.scope_lane
+    return replace(chunk, material_lane=expected_material_lane, metadata=metadata)
 
 
 def default_session_corpus_id(*, capped: bool) -> str:

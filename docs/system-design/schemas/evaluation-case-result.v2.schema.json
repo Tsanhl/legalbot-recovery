@@ -1,0 +1,1165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/evaluation-case-result.v2.schema.json",
+  "title": "LegalBot EvaluationCaseResult v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "result_id",
+    "run_id",
+    "case_id",
+    "case_version_sha256",
+    "scenario_family_id",
+    "ordinal",
+    "job_id",
+    "release_id",
+    "terminal_state",
+    "factual_outcome",
+    "factual_report_sha256",
+    "factual_checks",
+    "quality_outcome",
+    "quality_score",
+    "quality_report_sha256",
+    "quality_dimensions",
+    "root_cause_layers",
+    "review_decision_sha256",
+    "started_at",
+    "completed_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.evaluation-case-result.v2"
+    },
+    "result_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "case_version_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "scenario_family_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "job_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "release_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "terminal_state": {
+      "enum": [
+        "completed",
+        "held",
+        "system_error",
+        "cancelled",
+        "ineligible"
+      ]
+    },
+    "factual_outcome": {
+      "enum": [
+        "FACTUAL_PASS",
+        "FACTUAL_HOLD",
+        "SYSTEM_ERROR",
+        "NOT_RUN"
+      ]
+    },
+    "factual_report_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "quality_outcome": {
+      "enum": [
+        "EXCEEDS_70_STANDARD",
+        "MEETS_70_STANDARD",
+        "BELOW_70_STANDARD",
+        "MATERIAL_IMPROVEMENT_REQUIRED",
+        "NOT_ELIGIBLE",
+        "NOT_RUN"
+      ]
+    },
+    "quality_score": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "quality_report_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "root_cause_layers": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "source_currentness",
+          "retrieval",
+          "matter_facts",
+          "prompt_code",
+          "validation_renderer",
+          "gold_rubric",
+          "model_capability",
+          "system_execution"
+        ]
+      }
+    },
+    "review_decision_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "factual_checks": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "integrity_chain"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "claim_evidence_support"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "user_fact_provenance"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "jurisdiction_scope"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "requested_date_and_currentness"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "dates_amounts_and_deadlines"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "citation_and_quotation_identity"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "contradiction_and_counterauthority"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "safety_and_urgent_action"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "outcome"
+          ],
+          "properties": {
+            "check_id": {
+              "const": "privacy_and_instruction_isolation"
+            },
+            "outcome": {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_APPLICABLE",
+                "UNREVIEWED"
+              ]
+            }
+          }
+        }
+      ],
+      "items": false
+    },
+    "quality_dimensions": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "prefixItems": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "legal_and_factual_accuracy"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 25.0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "issue_coverage_and_reasoning"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 15.0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "authority_and_currentness"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 15.0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "practical_steps_and_urgency"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 15.0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "uncertainty_limits_and_clarification"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10.0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "organisation_and_plain_language"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10.0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension_id",
+                "score"
+              ],
+              "properties": {
+                "dimension_id": {
+                  "const": "traceability_and_citations"
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10.0
+                }
+              }
+            }
+          ],
+          "items": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "const": "FACTUAL_PASS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "quality_outcome": {
+            "enum": [
+              "EXCEEDS_70_STANDARD",
+              "MEETS_70_STANDARD",
+              "BELOW_70_STANDARD",
+              "MATERIAL_IMPROVEMENT_REQUIRED"
+            ]
+          },
+          "quality_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "quality_report_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "factual_checks": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "integrity_chain"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "claim_evidence_support"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "user_fact_provenance"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "jurisdiction_scope"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "requested_date_and_currentness"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "dates_amounts_and_deadlines"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "citation_and_quotation_identity"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "contradiction_and_counterauthority"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "safety_and_urgent_action"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "privacy_and_instruction_isolation"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "PASS",
+                      "NOT_APPLICABLE"
+                    ]
+                  }
+                }
+              }
+            ],
+            "items": false
+          },
+          "quality_dimensions": {
+            "type": "array",
+            "minItems": 7,
+            "maxItems": 7,
+            "prefixItems": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "legal_and_factual_accuracy"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 25.0
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "issue_coverage_and_reasoning"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 15.0
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "authority_and_currentness"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 15.0
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "practical_steps_and_urgency"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 15.0
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "uncertainty_limits_and_clarification"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10.0
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "organisation_and_plain_language"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10.0
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dimension_id",
+                  "score"
+                ],
+                "properties": {
+                  "dimension_id": {
+                    "const": "traceability_and_citations"
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10.0
+                  }
+                }
+              }
+            ],
+            "items": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "enum": [
+              "FACTUAL_HOLD",
+              "SYSTEM_ERROR",
+              "NOT_RUN"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "quality_outcome": {
+            "enum": [
+              "NOT_ELIGIBLE",
+              "NOT_RUN"
+            ]
+          },
+          "quality_score": {
+            "type": "null"
+          },
+          "quality_dimensions": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "const": "FACTUAL_HOLD"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "factual_checks": {
+            "contains": {
+              "type": "object",
+              "required": [
+                "outcome"
+              ],
+              "properties": {
+                "outcome": {
+                  "const": "FAIL"
+                }
+              }
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "enum": [
+              "SYSTEM_ERROR",
+              "NOT_RUN"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "factual_checks": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "integrity_chain"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "claim_evidence_support"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "user_fact_provenance"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "jurisdiction_scope"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "requested_date_and_currentness"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "dates_amounts_and_deadlines"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "citation_and_quotation_identity"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "contradiction_and_counterauthority"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "safety_and_urgent_action"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "outcome"
+                ],
+                "properties": {
+                  "check_id": {
+                    "const": "privacy_and_instruction_isolation"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "UNREVIEWED"
+                    ]
+                  }
+                }
+              }
+            ],
+            "items": false
+          }
+        }
+      }
+    }
+  ]
+}

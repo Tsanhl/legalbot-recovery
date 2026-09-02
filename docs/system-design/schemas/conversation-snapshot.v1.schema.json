@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/conversation-snapshot.v1.schema.json",
+  "title": "LegalBot ConversationSnapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "snapshot_id",
+    "conversation_id",
+    "owner_scope_sha256",
+    "revision",
+    "created_at",
+    "messages",
+    "truncated",
+    "omitted_message_count",
+    "omitted_before_ordinal",
+    "truncation_reason",
+    "estimated_tokens",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.conversation-snapshot.v1"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "conversation_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "owner_scope_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "messages": {
+      "type": "array",
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message_id",
+          "ordinal",
+          "revision",
+          "role",
+          "encrypted_content_ref",
+          "content_sha256",
+          "created_at"
+        ],
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "ordinal": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "role": {
+            "enum": [
+              "user",
+              "assistant_verified",
+              "system_notice"
+            ]
+          },
+          "encrypted_content_ref": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "content_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "omitted_message_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "omitted_before_ordinal": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "truncation_reason": {
+      "enum": [
+        "none",
+        "message_limit",
+        "token_limit",
+        "expired_eligibility",
+        "scope_filter"
+      ]
+    },
+    "estimated_tokens": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 131072
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

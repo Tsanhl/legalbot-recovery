@@ -8,7 +8,10 @@ from typing import Any
 
 import pytest
 
+from app.ingestion.models import Jurisdiction, MaterialLane
 from app.retrieval.index_build import IndexBuildContext, _iter_scoped_chunks
+from app.retrieval.models import IndexedChunk
+from app.retrieval.source_manifest import approved_source_manifest_sha256
 from app.retrieval.vector_carry_forward import (
     ChunkIdentity,
     ParentVector,
@@ -236,6 +239,15 @@ def _sealed_parent(tmp_path: Path) -> tuple[Path, str]:
     (parent / "lance" / "physical-lanes.json").write_text(
         json.dumps(lane_manifest, sort_keys=True), encoding="utf-8"
     )
+    source = {
+        "schema": "legalbot.approved-source-manifest.v1",
+        "selection_policy": "synthetic-ordinary-candidate",
+        "sources": [],
+        "parser_version": "parser-v1",
+        "chunker_version": "chunker-v1",
+        "index_schema_version": "index-v1",
+    }
+    source["manifest_sha256"] = approved_source_manifest_sha256(source)
     manifest = {
         "schema": "legalbot.lance-build.v1",
         "build_id": "candidate-parent",
@@ -243,13 +255,7 @@ def _sealed_parent(tmp_path: Path) -> tuple[Path, str]:
         "chunk_count": 2,
         "vector_dimensions": 3,
         "embedding_model": "embed-model@revision;dtype=float32",
-        "source_manifest_sha256": "a" * 64,
-    }
-    source = {
-        "manifest_sha256": "a" * 64,
-        "parser_version": "parser-v1",
-        "chunker_version": "chunker-v1",
-        "index_schema_version": "index-v1",
+        "source_manifest_sha256": source["manifest_sha256"],
     }
     (parent / "manifest.json").write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
     (parent / "approved-source-manifest.json").write_text(
@@ -349,7 +355,16 @@ def test_embedding_stream_calls_embedder_only_for_changed_or_new_chunks(
         job_id="index-child",
         build_id="candidate-child",
         corpus_id="test-corpus",
-        manifest={"locator_allowlists": {}},
+        manifest={
+            "authority_lane_only": True,
+            "locator_allowlists": {},
+            "sources": [
+                {
+                    "source_version_id": "sv-ucta",
+                    "lane": "primary_authority",
+                }
+            ],
+        },
         source_ids=("sv-ucta",),
         embedding_model="test-embedding",
         reranker_model="test-reranker",
@@ -372,12 +387,30 @@ def test_embedding_stream_calls_embedder_only_for_changed_or_new_chunks(
     def lookup(chunks: list[ChunkIdentity]) -> dict[str, tuple[float, ...]]:
         return {chunks[0].chunk_id: reused_vector}
 
+    def to_indexed(row: Any, vector: tuple[float, ...]) -> IndexedChunk:
+        text = str(row["markdown_text"])
+        return IndexedChunk(
+            chunk_id=str(row["chunk_id"]),
+            text=text,
+            vector=vector,
+            jurisdiction=Jurisdiction.ENGLAND_WALES,
+            material_lane=MaterialLane.PRIMARY_AUTHORITY,
+            subject="test",
+            review_state="approved",
+            source_identity=str(row["stable_identifier"]),
+            content_sha256=hashlib.sha256(text.encode()).hexdigest(),
+            metadata={
+                "source_version_id": str(row["source_version_id"]),
+                "catalog_lane": str(row["lane"]),
+            },
+        )
+
     counts = {"reused": 0, "embedded": 0}
     output = list(
         _iter_scoped_chunks(
             ctx,
             embedder,
-            lambda row, vector: (str(row["chunk_id"]), tuple(vector)),
+            to_indexed,
             lambda row: str(row["markdown_text"]),
             parent_vector_lookup=lookup,
             reuse_counts=counts,
@@ -385,7 +418,7 @@ def test_embedding_stream_calls_embedder_only_for_changed_or_new_chunks(
     )
 
     assert len(output) == 2
-    assert output[0][1] == reused_vector
-    assert output[1][1] == (9.0, 9.0, 9.0)
+    assert output[0].vector == reused_vector
+    assert output[1].vector == (9.0, 9.0, 9.0)
     assert len(embedder.texts) == 1
     assert counts == {"reused": 1, "embedded": 1}

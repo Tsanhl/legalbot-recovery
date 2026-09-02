@@ -1,0 +1,281 @@
+{
+  "schema": "legalbot.ge-review-verification.v1",
+  "authorizing": false,
+  "status": "PASS",
+  "verified_at_utc": "2026-08-31T17:52:22.110992+00:00",
+  "run_id": "LegalBot-GE-2026-09-01-review-r3",
+  "content_checks": {
+    "path": "docs/status/LegalBot-GE-2026-09-01-review-qa-r3/CONTENT-CHECKS.json",
+    "sha256": "ec6d0a664d5d1ecf481130d5f312d8da83119d5ced1fc101fa26e3fb760adb3f",
+    "result": {
+      "authorizing": false,
+      "status": "PASS",
+      "run_id": "LegalBot-GE-2026-09-01-review-r3",
+      "manifest_file_sha256": "ae765444e0289d5de8850375aae1c9e025f8c4c1cddca7f321ba6b456fe5961c",
+      "manifest_content_sha256": "2ed009bb9d0c92ecf3b926326c04aa02dd3bec354335ff91d39ef61ce84029d6",
+      "sha256sum_entries_checked": 16,
+      "all_manifest_artifacts_match": true,
+      "visible_cases": 331,
+      "prompts_amended": 227,
+      "prompts_retained": 104,
+      "scenario_families": 257,
+      "system_cases_separate": 32,
+      "all_source_ids_and_metadata_preserved": true,
+      "all_source_and_successor_record_digests_verified": true,
+      "all_331_before_after_records_match": true,
+      "input_projection_fields": [
+        "question",
+        "task_type"
+      ],
+      "evaluator_metadata_in_projection": false,
+      "source_packages": [
+        {
+          "run_name": "LegalBot-Phase2B-2026-08-28-common-public-visible-development-r2",
+          "package_content_sha256": "d03fe95ee1ad72444580d7ca492f7fc947db4604d23214da8a086e3dbbecb359",
+          "verified_member_count": 77,
+          "private_jsonl_mode_checks": 0
+        },
+        {
+          "run_name": "LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2",
+          "package_content_sha256": "a73ef297738cf0745d1233e8d2c4748412d534bff41afadd1086e6e349f68a91",
+          "verified_member_count": 21,
+          "private_jsonl_mode_checks": 17
+        }
+      ],
+      "source_review_sha256": "d1b6f72552dee49ca6380d3016f4908453b93a67f5cb639b19bc741c168075d5",
+      "numeric_token_audit": {
+        "removed": [
+          {
+            "question_id": "private-international-law:cp-d04",
+            "tokens": [
+              "2019"
+            ]
+          }
+        ],
+        "reviewed_explanation": "2019 was part of a named Hague treaty issue cue, not a scenario date; scenario dates and source date metadata are preserved."
+      },
+      "private_unseen": {
+        "count": 306,
+        "content_version": "GE-private-r2",
+        "archive_path": "data/evaluations/phase2b-question-drafts/LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2.zip",
+        "archive_sha256": "a5c782b011995932419788b0bcc66ebe10467fabd8d4244a0003a6f4efd6c267",
+        "mode": "0600",
+        "prompts_decoded": false,
+        "content_amended": false,
+        "owner_frozen": false,
+        "semantic_independence_verified": false
+      },
+      "approved_training_examples": 0,
+      "approved_gold_answers": 0,
+      "training_run": false,
+      "evaluation_run": false,
+      "unseen_run": false,
+      "visible_zip": {
+        "path": "output/LegalBot-GE-2026-09-01-review-r3-visible.zip",
+        "sha256": "0b12e885ef48b332cfdb86761b39dc7b6467254a629fdb933b86dfa604528ac3",
+        "members": 18,
+        "crc_test": "PASS",
+        "bytes_match_pack": true,
+        "contains_private_archive_or_prompts": false,
+        "mode": "0600"
+      },
+      "pdf": {
+        "path": "output/pdf/LegalBot-GE-2026-09-01-review-r3.pdf",
+        "sha256": "5d60009e223f09b141f158bcc9566de78235eef96e31d456a591f113c879f1f6",
+        "pages": 131,
+        "visible_prompts_verified": 331,
+        "system_cases_verified": 32,
+        "fillable_fields": 726,
+        "all_decisions_unreviewed": true,
+        "content_version": "GE-visible-r3",
+        "layout_version": "1.0",
+        "run_id": "LegalBot-GE-2026-09-01-review-r3"
+      },
+      "control_predecessors_verified": 6,
+      "pre_final_control_predecessors_verified": 2,
+      "local_pack_links_checked": 13,
+      "delivery_phases": [
+        1,
+        2,
+        3
+      ],
+      "deletion_performed": false,
+      "git_mutation_performed": false
+    }
+  },
+  "visual_pdf_qa": {
+    "source_pdf_sha256": "5d60009e223f09b141f158bcc9566de78235eef96e31d456a591f113c879f1f6",
+    "pages": 131,
+    "renderer": "Poppler pdftoppm",
+    "rendered_page_count": 131,
+    "all_pages_rendered_and_visually_inspected": true,
+    "all_page_image_files_valid": true,
+    "all_pages_reviewed_on_contact_sheets": true,
+    "contact_sheets": [
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-01.png",
+        "sha256": "307acbbcc2c867748aaec713ad3997c7383ce4bfbb5c55f45faea747bc6f7472"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-02.png",
+        "sha256": "35275090114b832b9a99acd46811c010a9508dafd42a331bb601c22bf9d56e15"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-03.png",
+        "sha256": "26e38afdfb76c73bcdefe1b6cc61cd2540d1dc1c57ce99d49b2104193b682f60"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-04.png",
+        "sha256": "1acc68c77032c8d7dfbd46cc92180fcd39b5b1949eb7a753a702034367fa4eb8"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-05.png",
+        "sha256": "cfa2eabcb9763266bf286224f9f527639c2faf372d5a36b36a95263209c5f811"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-06.png",
+        "sha256": "8862ef2de69348ce5dab53cd7a0d582cf54a48e791ce67b00936c3db09ea5889"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-07.png",
+        "sha256": "431049063dcd17f81d81d8f1774a9803cca08613422cc8bfc588ffeecad6079e"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-08.png",
+        "sha256": "ba0022fa161401c9e3a5010e03b491c6bb655c24d035c2691cc92c52fdcb5b28"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/contact-09.png",
+        "sha256": "73c840c729bc97d1cb4163b1f41379a5b54e70eb72b317be723fc4a8d8d23a9a"
+      }
+    ],
+    "additional_full_size_pages_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      24,
+      59,
+      82,
+      122,
+      124,
+      131
+    ],
+    "visible_clipping_or_overlap_found": false,
+    "out_of_bounds_text_glyphs": 0,
+    "out_of_bounds_widgets": 0,
+    "layout_content_version": "GE-visible-r3",
+    "layout_version": "1.0",
+    "nonfatal_renderer_warning": "Fontconfig default configuration not found; renderer exited 0 and all output pages were inspected.",
+    "pdfium_smoke_previews": "Initial scratch previews did not draw AcroForm values; use Poppler renderings with visible saved appearances as the verification evidence. No source artifact was changed."
+  },
+  "interactive_pdf_qa": {
+    "fields": 726,
+    "decisions": 363,
+    "notes": 363,
+    "all_original_decisions_unreviewed": true,
+    "all_original_notes_empty": true,
+    "canonical_field_and_widget_values_match": true,
+    "all_widgets_have_nonempty_normal_appearance_streams": true,
+    "saved_value_readback": "PASS",
+    "synthetic_fields_tested": [
+      "decision_q001",
+      "notes_q001",
+      "decision_q002",
+      "notes_q002",
+      "decision_s032",
+      "notes_s032"
+    ],
+    "synthetic_copy": {
+      "path": "tmp/pdfs/ge-amended-review-r3/form-smoke.pdf",
+      "sha256": "fd20e4c3d796911cd67dea812a5c771665cbdea12af5e1156406d83f39e367c4",
+      "owner_decision": false,
+      "deliverable": false
+    },
+    "saved_appearance_pages_visually_reviewed": [
+      4,
+      131
+    ],
+    "saved_appearance_images": [
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/form-smoke-poppler-004.png",
+        "sha256": "59ba2cb7ad04dd02b81606a0d27c2fe142168c99686203ba7fff619b74971ff4"
+      },
+      {
+        "path": "tmp/pdfs/ge-amended-review-r3/form-smoke-poppler-131.png",
+        "sha256": "1851cda13c6d57ace7d6cde6cd0dd3fc3bf11f9aacd319775f5ab334017235f4"
+      }
+    ],
+    "source_pdf_unchanged_after_smoke_test": true
+  },
+  "control_and_builder_identities": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "7b845f046c5dac4b019a3af5287f79b6cea5ff04776b7022e099f80944daf66a"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1881a241734ac2356539b4a50b09a550838fc0a731cc1d06b7d50819040d7423"
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "sha256": "11f9781b96d873ed7ea10efbbe6284106c8b42713578d5c3a8c2cb34e91badc5"
+    },
+    {
+      "path": "docs/V111_SYSTEM_DESIGN.md",
+      "sha256": "22a52008275a7193bee752977274dc618514369a8e77d6697fd0301598d3e5f6"
+    },
+    {
+      "path": "docs/V111_RELEASE_ROADMAP.md",
+      "sha256": "9e7257f2d6b8371c8edcb8fed469b8880810bafcabd4498e2da3cbe0dd8f94d3"
+    },
+    {
+      "path": "docs/V111_REBUILD_CHECKLIST.md",
+      "sha256": "0677480cb4821f4b94bb70ccf5e8fe2ead768b5d04bfde060a93c29e530b47d4"
+    },
+    {
+      "path": "scripts/prepare_v111_ge_amended_review.py",
+      "sha256": "2839592f56bade36f707b579aeb11cbe66835ca7943538443ee3d1b5eff0e07f"
+    }
+  ],
+  "verification_commands": [
+    {
+      "command": "ruff check --no-cache scripts/prepare_v111_ge_amended_review.py",
+      "exit_code": 0,
+      "result": "All checks passed"
+    },
+    {
+      "command": "ruff format --check --no-cache scripts/prepare_v111_ge_amended_review.py",
+      "exit_code": 0,
+      "result": "1 file already formatted"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "PASS; read-only Git operation"
+    },
+    {
+      "command": "python -B scripts/check_clean_room.py",
+      "exit_code": 0,
+      "result": "Clean-room check passed: no legacy imports, databases, indexes or runtime references"
+    }
+  ],
+  "full_python_suite": "NOT_RUN: no runtime implementation or promotion in this request",
+  "web_build_and_tests": "NOT_RUN: no web implementation or promotion in this request",
+  "scope_limits": {
+    "owner_review_accepted": false,
+    "legal_gold_approved": false,
+    "source_currentness_certified": false,
+    "runtime_recertified": false,
+    "source_scan_or_index_build": false,
+    "model_or_training_execution": false,
+    "scored_evaluation": false,
+    "private_unseen_prompt_decoding": false,
+    "private_unseen_amended": false,
+    "private_unseen_independence_certified": false,
+    "promotion": false,
+    "live_activation": false,
+    "deletion_performed": false,
+    "git_mutation_performed": false
+  }
+}

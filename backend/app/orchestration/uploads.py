@@ -22,6 +22,12 @@ from sqlite3 import Row
 from ..config import Settings
 from ..crypto import KeyUnavailableError, LocalCipher
 from ..db import Database
+from ..deletion_guard import (
+    DeletionAuthorization,
+    DeletionBlockedError,
+    DeletionGuard,
+    DeletionObjectClass,
+)
 from ..ingestion.chunking import StructuralChunker
 from ..ingestion.markdown import CanonicalMarkdownConverter
 from ..ingestion.models import (
@@ -231,8 +237,10 @@ def purge_expired_uploads(
     database: Database,
     *,
     now: datetime | None = None,
+    guard: DeletionGuard | None = None,
+    authorization: DeletionAuthorization | None = None,
 ) -> int:
-    """Expire unpinned uploads and remove only unreferenced encrypted blobs."""
+    """Expire uploads without erasure unless exact owner authority is supplied."""
 
     cutoff = (now or datetime.now(UTC)).isoformat()
     rows = database.fetchall(
@@ -264,20 +272,27 @@ def purge_expired_uploads(
         )
         if still_referenced is None:
             raise RuntimeError("upload reference count disappeared")
-        if int(still_referenced["n"] or 0) == 0:
+        if int(still_referenced["n"] or 0) == 0 and authorization is not None:
             stored = Path(str(row["vault_path"]))
             try:
+                (guard or DeletionGuard()).require(
+                    object_class=DeletionObjectClass.UPLOAD_BLOB,
+                    object_id=upload_id,
+                    authorization=authorization,
+                    now=now,
+                )
                 if stored.is_absolute() or ".." in stored.parts:
                     raise ValueError
                 path = (settings.project_root / stored).resolve(strict=False)
                 if not path.is_relative_to(root):
                     raise ValueError
                 path.unlink(missing_ok=True)
-            except (OSError, ValueError):
+            except (DeletionBlockedError, OSError, ValueError):
                 # The row remains explicitly expired. A later startup retries
                 # the exact path; no broad directory deletion is attempted.
                 continue
-        expired += 1
+            else:
+                expired += 1
     return expired
 
 

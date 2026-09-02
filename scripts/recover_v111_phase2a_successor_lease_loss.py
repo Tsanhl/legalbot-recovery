@@ -228,13 +228,7 @@ def main() -> None:
             prompt_safe=_prompt_safe_index_text,
         )
         observed_rows = read_lance_observations(staging)
-        before = audit_incomplete_index(
-            settings,
-            database,
-            BUILD_ID,
-            expected_rows=expected_rows,
-            observed_rows=observed_rows,
-        )
+        before = audit_incomplete_index(settings, database, BUILD_ID)
         _write_new_json(root / "ORDERED-PREFIX-AUDIT-BEFORE.json", before)
         if (
             len(expected_rows) != EXPECTED_FROZEN_ROWS
@@ -250,11 +244,10 @@ def main() -> None:
         ):
             raise RuntimeError("first-attempt staging is not the exact recoverable prefix")
         reconciliation = reconcile_embedding_checkpoint_to_observed_prefix(
-            staging,
-            expected_rows=expected_rows,
-            observed_rows=observed_rows,
-            expected_build_id=BUILD_ID,
-            expected_source_manifest_sha256=EXPECTED_SOURCE_MANIFEST_SHA256,
+            settings,
+            database,
+            BUILD_ID,
+            expected_audit_report_sha256=str(before["report_sha256"]),
         )
         _write_new_json(root / "CHECKPOINT-RECONCILIATION.json", reconciliation)
         if (
@@ -263,13 +256,7 @@ def main() -> None:
             or reconciliation.get("new_completed_row_count") != EXPECTED_OBSERVED_ROWS
         ):
             raise RuntimeError("exact checkpoint reconciliation did not advance once")
-        after = audit_incomplete_index(
-            settings,
-            database,
-            BUILD_ID,
-            expected_rows=expected_rows,
-            observed_rows=observed_rows,
-        )
+        after = audit_incomplete_index(settings, database, BUILD_ID)
         _write_new_json(root / "ORDERED-PREFIX-AUDIT-AFTER.json", after)
         if (
             after.get("resumable") is not True
@@ -286,8 +273,10 @@ def main() -> None:
             JOB_ID,
             expected_build_id=BUILD_ID,
             expected_attempt_count=EXPECTED_ATTEMPT_COUNT,
-            audit_report=after,
-            checkpoint_reconciliation=reconciliation,
+            expected_audit_report_sha256=str(after["report_sha256"]),
+            expected_checkpoint_reconciliation_sha256=str(
+                reconciliation["checkpoint_reconciliation_sha256"]
+            ),
             workflow_seconds=EXACT_RECOVERY_WORKFLOW_SECONDS,
         )
         _write_new_json(root / "EXACT-REQUEUE.json", requeue)

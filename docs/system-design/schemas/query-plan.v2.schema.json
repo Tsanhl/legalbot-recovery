@@ -1,0 +1,436 @@
+{
+  "$id": "https://local.legalbot.invalid/schemas/query-plan.v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_authority_lanes": {
+      "items": {
+        "enum": [
+          "primary_authority",
+          "official_secondary",
+          "scholarship"
+        ]
+      },
+      "maxItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "answer_route": {
+      "enum": [
+        "direct",
+        "sectioned",
+        "full_enquiry"
+      ]
+    },
+    "budgets": {
+      "$id": "https://local.legalbot.invalid/schemas/query-budgets.v1.schema.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "context_tokens": {
+          "maximum": 131072,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "final_top_k": {
+          "maximum": 32,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "initial_clarification_questions": {
+          "maximum": 3,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "lexical_depth": {
+          "maximum": 500,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "reranker_candidates": {
+          "maximum": 128,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "vector_depth": {
+          "maximum": 500,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "lexical_depth",
+        "vector_depth",
+        "reranker_candidates",
+        "final_top_k",
+        "context_tokens",
+        "initial_clarification_questions"
+      ],
+      "title": "Query budgets",
+      "type": "object"
+    },
+    "candidate_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "config_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "contract_pack_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "conversation_snapshot": {
+      "$id": "https://local.legalbot.invalid/schemas/conversation-snapshot-ref.v1.schema.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "content_sha256": {
+          "oneOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "conversation_id": {
+          "oneOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "omitted_message_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "revision": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "conversation_id",
+        "revision",
+        "content_sha256",
+        "truncated",
+        "omitted_message_count"
+      ],
+      "title": "Conversation snapshot reference",
+      "type": "object"
+    },
+    "data_intent": {
+      "enum": [
+        "NO_RETRIEVAL",
+        "KNOWLEDGE_ONLY",
+        "MATTER_ONLY",
+        "HYBRID"
+      ]
+    },
+    "fact_snapshot_id": {
+      "oneOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "frozen_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "issue_ids": {
+      "items": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "jurisdiction": {
+      "maxLength": 120,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "jurisdiction_status": {
+      "enum": [
+        "explicit",
+        "derived_for_clarification",
+        "unresolved"
+      ]
+    },
+    "missing_facts": {
+      "items": {
+        "$id": "https://local.legalbot.invalid/schemas/missing-fact.v1.schema.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "properties": {
+          "affected_issue_ids": {
+            "items": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "blocks_definite_conclusion": {
+            "type": "boolean"
+          },
+          "fact_key": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fact_key",
+          "affected_issue_ids",
+          "blocks_definite_conclusion"
+        ],
+        "title": "Missing fact",
+        "type": "object"
+      },
+      "maxItems": 24,
+      "type": "array"
+    },
+    "original_question_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "query_plan_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "query_variants_ref": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "query_variants_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "request_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "request_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "requested_as_of_date": {
+      "oneOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "required_capabilities": {
+      "items": {
+        "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$",
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "response_disposition": {
+      "enum": [
+        "ANSWER",
+        "CLARIFY",
+        "LIMITED",
+        "REFUSE_UNSAFE",
+        "URGENT_NEXT_STEP",
+        "OUT_OF_SCOPE",
+        "SYSTEM_HOLD"
+      ]
+    },
+    "rewrite": {
+      "$id": "https://local.legalbot.invalid/schemas/query-rewrite-ref.v1.schema.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "encrypted_query_ref": {
+          "oneOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "query_sha256": {
+          "oneOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_code": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "not_needed",
+            "accepted",
+            "rejected",
+            "failed"
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "encrypted_query_ref",
+        "query_sha256",
+        "reason_code"
+      ],
+      "title": "Query rewrite reference",
+      "type": "object"
+    },
+    "risk_flags": {
+      "items": {
+        "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$",
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema": {
+      "const": "legalbot.query-plan.v2"
+    },
+    "task_type": {
+      "enum": [
+        "general",
+        "problem",
+        "essay"
+      ]
+    },
+    "request_observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "as_of_date_status": {
+      "enum": [
+        "explicit",
+        "service_default",
+        "unresolved"
+      ]
+    },
+    "schema_selection_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema",
+    "query_plan_id",
+    "request_id",
+    "request_sha256",
+    "original_question_sha256",
+    "task_type",
+    "data_intent",
+    "answer_route",
+    "jurisdiction_status",
+    "jurisdiction",
+    "requested_as_of_date",
+    "issue_ids",
+    "missing_facts",
+    "allowed_authority_lanes",
+    "query_variants_ref",
+    "query_variants_sha256",
+    "budgets",
+    "conversation_snapshot",
+    "fact_snapshot_id",
+    "candidate_id",
+    "policy_sha256",
+    "config_sha256",
+    "rewrite",
+    "frozen_at",
+    "contract_pack_id",
+    "response_disposition",
+    "risk_flags",
+    "required_capabilities",
+    "request_observed_at",
+    "as_of_date_status",
+    "schema_selection_sha256"
+  ],
+  "title": "LegalBot QueryPlan v2",
+  "type": "object",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "response_disposition": {
+            "const": "SYSTEM_HOLD"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data_intent": {
+            "const": "NO_RETRIEVAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_disposition": {
+            "const": "ANSWER"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data_intent": {
+            "not": {
+              "const": "NO_RETRIEVAL"
+            }
+          },
+          "jurisdiction_status": {
+            "not": {
+              "const": "unresolved"
+            }
+          },
+          "as_of_date_status": {
+            "not": {
+              "const": "unresolved"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

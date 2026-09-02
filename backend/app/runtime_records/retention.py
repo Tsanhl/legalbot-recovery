@@ -9,6 +9,12 @@ from typing import Any
 import yaml  # type: ignore[import-untyped]
 
 from ..db import Database
+from ..deletion_guard import (
+    DeletionAuthorization,
+    DeletionBlockedError,
+    DeletionGuard,
+    DeletionObjectClass,
+)
 
 DEFAULT_RETENTION_PATH = Path("config/retention.yaml")
 
@@ -26,6 +32,8 @@ def cleanup_runtime_records(
     *,
     dry_run: bool = True,
     live60_in_progress: bool = False,
+    guard: DeletionGuard | None = None,
+    authorization: DeletionAuthorization | None = None,
 ) -> dict[str, Any]:
     if live60_in_progress:
         return {
@@ -50,19 +58,29 @@ def cleanup_runtime_records(
         row = database.fetchone(sql, (f"-{days} day",))
         count = int(row[0]) if row is not None else 0
         deleted[table] = count
-        if not dry_run and count:
-            delete_sql = (
-                f"DELETE FROM {table} WHERE created_at < datetime('now', ?)"
-                if table != "runtime_curation"
-                else "DELETE FROM runtime_curation WHERE updated_at < datetime('now', ?)"
+        if not dry_run and count and authorization is not None:
+            date_column = "updated_at" if table == "runtime_curation" else "created_at"
+            rows = database.fetchall(
+                f"SELECT id FROM {table} WHERE {date_column} < datetime('now', ?)",
+                (f"-{days} day",),
             )
-            database.execute(delete_sql, (f"-{days} day",))
+            for row in rows:
+                identifier = str(row["id"])
+                try:
+                    (guard or DeletionGuard()).require(
+                        object_class=DeletionObjectClass.RUNTIME_RECORD,
+                        object_id=identifier,
+                        authorization=authorization,
+                    )
+                except DeletionBlockedError:
+                    continue
+                database.execute(f"DELETE FROM {table} WHERE id=?", (identifier,))
     if not dry_run:
         database._connection.commit()
     return {
         "schema": "legalbot.runtime-retention-cleanup.v1",
-        "ran": not dry_run,
+        "ran": not dry_run and authorization is not None,
         "dry_run": dry_run,
-        "reason": None,
+        "reason": None if dry_run or authorization is not None else "owner_authorization_missing",
         "deleted": deleted,
     }

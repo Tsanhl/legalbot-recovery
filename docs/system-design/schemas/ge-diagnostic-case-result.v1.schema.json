@@ -1,0 +1,503 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-diagnostic-case-result.v1.schema.json",
+  "title": "LegalBot GE Diagnostic Case Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "result_id",
+    "diagnostic_pack_id",
+    "diagnostic_case_id",
+    "diagnostic_case_sha256",
+    "ordinal",
+    "factual_checks",
+    "factual_report_sha256",
+    "factual_outcome",
+    "quality_dimensions",
+    "quality_report_sha256",
+    "quality_score",
+    "quality_outcome",
+    "root_cause_layers",
+    "scored_in_fixed_visible_denominator",
+    "scored_in_system_denominator",
+    "unseen_eligible",
+    "training_export_eligible",
+    "started_at",
+    "completed_at",
+    "content_sha256",
+    "source_visible_run_id",
+    "source_visible_run_sha256",
+    "source_execution_identity_sha256",
+    "source_candidate_sha256",
+    "source_repair_manifest_sha256",
+    "question_version_sha256",
+    "prompt_only_projection_sha256",
+    "legal_currentness_review_sha256",
+    "gold_review_sha256",
+    "diagnostic_provenance_kind",
+    "source_diagnosis_ids",
+    "source_diagnosis_manifest_sha256",
+    "relevant_change_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-diagnostic-case-result.v1"
+    },
+    "result_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "diagnostic_pack_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "diagnostic_case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "diagnostic_case_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "factual_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "integrity_chain",
+        "claim_evidence_support",
+        "user_fact_provenance",
+        "jurisdiction_scope",
+        "requested_date_and_currentness",
+        "dates_amounts_and_deadlines",
+        "citation_and_quotation_identity",
+        "contradiction_and_counterauthority",
+        "safety_and_urgent_action",
+        "privacy_and_instruction_isolation"
+      ],
+      "properties": {
+        "integrity_chain": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "claim_evidence_support": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "user_fact_provenance": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "jurisdiction_scope": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "requested_date_and_currentness": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "dates_amounts_and_deadlines": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "citation_and_quotation_identity": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "contradiction_and_counterauthority": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "safety_and_urgent_action": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "privacy_and_instruction_isolation": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        }
+      }
+    },
+    "factual_report_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "factual_outcome": {
+      "enum": [
+        "FACTUAL_PASS",
+        "FACTUAL_HOLD"
+      ]
+    },
+    "quality_dimensions": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "legal_and_factual_accuracy",
+            "issue_coverage_and_reasoning",
+            "authority_and_currentness",
+            "practical_steps_and_urgency",
+            "uncertainty_limits_and_clarification",
+            "organisation_and_plain_language",
+            "traceability_and_citations"
+          ],
+          "properties": {
+            "legal_and_factual_accuracy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 25
+            },
+            "issue_coverage_and_reasoning": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 15
+            },
+            "authority_and_currentness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 15
+            },
+            "practical_steps_and_urgency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 15
+            },
+            "uncertainty_limits_and_clarification": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "organisation_and_plain_language": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "traceability_and_citations": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "quality_report_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "quality_score": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "quality_outcome": {
+      "enum": [
+        "EXCEEDS_70_STANDARD",
+        "MEETS_70_STANDARD",
+        "BELOW_70_STANDARD",
+        "MATERIAL_IMPROVEMENT_REQUIRED",
+        "NOT_ELIGIBLE"
+      ]
+    },
+    "root_cause_layers": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "source_currentness",
+          "retrieval",
+          "matter_facts",
+          "prompt_code",
+          "validation_renderer",
+          "gold_rubric",
+          "model_capability",
+          "system_execution"
+        ]
+      }
+    },
+    "scored_in_fixed_visible_denominator": {
+      "const": false
+    },
+    "scored_in_system_denominator": {
+      "const": false
+    },
+    "unseen_eligible": {
+      "const": false
+    },
+    "training_export_eligible": {
+      "const": false
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_visible_run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "source_visible_run_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_execution_identity_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_candidate_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_repair_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "question_version_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "prompt_only_projection_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "legal_currentness_review_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "gold_review_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "diagnostic_provenance_kind": {
+      "enum": [
+        "COVERAGE_ONLY",
+        "DIAGNOSIS_DERIVED"
+      ]
+    },
+    "source_diagnosis_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+      }
+    },
+    "source_diagnosis_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relevant_change_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "const": "FACTUAL_PASS"
+          }
+        },
+        "required": [
+          "factual_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "quality_dimensions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "legal_and_factual_accuracy",
+              "issue_coverage_and_reasoning",
+              "authority_and_currentness",
+              "practical_steps_and_urgency",
+              "uncertainty_limits_and_clarification",
+              "organisation_and_plain_language",
+              "traceability_and_citations"
+            ],
+            "properties": {
+              "legal_and_factual_accuracy": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 25
+              },
+              "issue_coverage_and_reasoning": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 15
+              },
+              "authority_and_currentness": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 15
+              },
+              "practical_steps_and_urgency": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 15
+              },
+              "uncertainty_limits_and_clarification": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "organisation_and_plain_language": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "traceability_and_citations": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10
+              }
+            }
+          },
+          "quality_report_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "quality_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "quality_outcome": {
+            "enum": [
+              "EXCEEDS_70_STANDARD",
+              "MEETS_70_STANDARD",
+              "BELOW_70_STANDARD",
+              "MATERIAL_IMPROVEMENT_REQUIRED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "const": "FACTUAL_HOLD"
+          }
+        },
+        "required": [
+          "factual_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "quality_dimensions": {
+            "type": "null"
+          },
+          "quality_report_sha256": {
+            "type": "null"
+          },
+          "quality_score": {
+            "type": "null"
+          },
+          "quality_outcome": {
+            "const": "NOT_ELIGIBLE"
+          },
+          "root_cause_layers": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "const": "FACTUAL_PASS"
+          },
+          "quality_outcome": {
+            "enum": [
+              "EXCEEDS_70_STANDARD",
+              "MEETS_70_STANDARD"
+            ]
+          }
+        },
+        "required": [
+          "factual_outcome",
+          "quality_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "root_cause_layers": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "root_cause_layers": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

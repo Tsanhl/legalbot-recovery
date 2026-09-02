@@ -1,0 +1,16 @@
+{
+  "authorizing": false,
+  "purpose": "Preserve immediately preceding control documents before final QA status update",
+  "files": [
+    {
+      "source": "docs/CURRENT_STATE.md",
+      "copy": "pre-final-controls/CURRENT_STATE.md",
+      "sha256": "651af364a6ad139d66f49b6b21b3d3efd993864e8b28dd01f8c1d241b72e4571"
+    },
+    {
+      "source": "docs/V111_REBUILD_CHECKLIST.md",
+      "copy": "pre-final-controls/V111_REBUILD_CHECKLIST.md",
+      "sha256": "0a394e4684930154e5d4e4b03d70cb569fb57e459a02194b1ecf2edd668a2d2d"
+    }
+  ]
+}

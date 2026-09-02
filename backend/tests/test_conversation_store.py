@@ -11,6 +11,7 @@ from app.conversations import (
     ConversationQuotaError,
     ConversationStore,
 )
+from app.deletion_guard import DeletionAuthorization, DeletionGuard, DeletionObjectClass
 
 
 def _policy(**updates: int) -> ConversationPolicy:
@@ -107,7 +108,7 @@ def test_session_quota_and_immutable_message_content_fail_closed(database, ciphe
         )
 
 
-def test_expired_session_is_rejected_and_purged(database, cipher) -> None:
+def test_expired_session_is_retained_without_exact_deletion_authority(database, cipher) -> None:
     store = _store(database, cipher)
     start = datetime(2026, 1, 1, tzinfo=UTC)
     conversation_id = store.create_session("conversation-owner-4", now=start)
@@ -115,7 +116,27 @@ def test_expired_session_is_rejected_and_purged(database, cipher) -> None:
 
     with pytest.raises(ConversationExpiredError):
         store.window(conversation_id, now=start + timedelta(days=31))
-    assert store.purge_expired(now=start + timedelta(days=31)) == 1
+    assert store.purge_expired(now=start + timedelta(days=31)) == 0
+    retained = database.fetchone(
+        "SELECT id,status FROM conversation_sessions WHERE id=?", (conversation_id,)
+    )
+    assert retained is not None and retained["status"] == "expired"
+    authorization = DeletionAuthorization(
+        authorization_id="synthetic-conversation-delete",
+        owner_decision_sha256="1" * 64,
+        object_class=DeletionObjectClass.CONVERSATION_SESSION,
+        object_ids=(conversation_id,),
+        issued_at=start + timedelta(days=30),
+        expires_at=start + timedelta(days=32),
+    )
+    store.deletion_guard = DeletionGuard()
+    assert (
+        store.purge_expired(
+            now=start + timedelta(days=31),
+            authorization=authorization,
+        )
+        == 1
+    )
     assert (
         database.fetchone("SELECT id FROM conversation_sessions WHERE id=?", (conversation_id,))
         is None

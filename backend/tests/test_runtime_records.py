@@ -37,12 +37,20 @@ def test_schema_version_creates_runtime_tables(tmp_path: Path) -> None:
     row = database.fetchone("SELECT value FROM schema_meta WHERE key='schema_version'")
     assert row is not None
     assert row["value"] == str(SCHEMA_VERSION)
-    assert SCHEMA_VERSION == 25
+    assert SCHEMA_VERSION == 31
     for table in (
         "runtime_feedback",
         "runtime_incidents",
         "runtime_regressions",
         "runtime_curation",
+        "selected_answer_publications",
+        "selected_ge_system_run_contracts",
+        "selected_ge_system_case_contracts",
+        "ge_visible_diagnostic_supplement_contracts",
+        "ge_cycle_assessment_contracts",
+        "ge_cycle_diagnosis_contracts",
+        "ge_diagnostic_case_result_contracts",
+        "ge_cycle_owner_acceptance_contracts",
     ):
         present = database.fetchone(
             "SELECT name FROM sqlite_master WHERE type='table' AND name=?",

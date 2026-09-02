@@ -1,0 +1,1785 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://legalbot.local/schemas/ge-cycle-assessment.v2.schema.json",
+  "title": "LegalBot General Enquiry Cycle Assessment v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "assessment_id",
+    "loop_id",
+    "cycle_id",
+    "cycle_number",
+    "predecessor_assessment_sha256",
+    "status",
+    "fixed_pack_manifest_sha256",
+    "fixed_case_manifest_sha256",
+    "fixed_case_order_sha256",
+    "fixed_visible_denominator",
+    "system_case_count_separate",
+    "visible_run_id",
+    "visible_run_sha256",
+    "system_run_id",
+    "system_run_sha256",
+    "execution_identity_sha256",
+    "repair_manifest_sha256",
+    "candidate_sha256",
+    "baseline_candidate_sha256",
+    "successor_candidate_sha256",
+    "successor_candidate_plan_sha256",
+    "candidate_state",
+    "promotion_authorized",
+    "visible_factual_pass_count",
+    "visible_quality_70_and_critical_floor_pass_count",
+    "quality_critical_floors",
+    "system_pass_count",
+    "diagnostic_case_count",
+    "diagnostic_pass_count",
+    "diagnosis_count",
+    "diagnosis_manifest_sha256",
+    "gap_count",
+    "gap_manifest_sha256",
+    "open_material_diagnosis_count",
+    "diagnostic_pack_sha256",
+    "coverage_audit_sha256",
+    "coverage_audit",
+    "coverage_manifest_sha256",
+    "coverage_predecision_sha256",
+    "coverage_breadth_policy_id",
+    "coverage_breadth_policy_sha256",
+    "coverage_required_domain_set_sha256",
+    "coverage_cell_manifest_sha256",
+    "coverage_cell_order_sha256",
+    "coverage_topology_sha256",
+    "coverage_owner_request_sha256",
+    "coverage_owner_resolution_sha256",
+    "missing_coverage_cell_count",
+    "diagnostic_result_manifest_sha256",
+    "diagnostic_cases_join_fixed_denominator",
+    "unseen_opened",
+    "full_331_plus_32_rerun_required",
+    "failure_fingerprint_attempt_counts",
+    "open_failure_fingerprints",
+    "repeated_failure_fingerprints",
+    "automatic_retry_allowed",
+    "next_action",
+    "blockers",
+    "exit_checks",
+    "decision_basis",
+    "decision_basis_sha256",
+    "owner_acceptance_sha256",
+    "weight_training_policy",
+    "assessment_builder_actions_performed",
+    "assessed_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-cycle-assessment.v2"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "loop_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "cycle_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "cycle_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "predecessor_assessment_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "STOP_REPEATED_FINGERPRINT",
+        "IMPROVEMENT_REQUIRED",
+        "FULL_RERUN_REQUIRED",
+        "AWAITING_OWNER_ACCEPTANCE",
+        "GE_COMPLETE_OWNER_ACCEPTED"
+      ]
+    },
+    "fixed_pack_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_case_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_case_order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_visible_denominator": {
+      "const": 331
+    },
+    "system_case_count_separate": {
+      "const": 32
+    },
+    "visible_run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "visible_run_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "system_run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "system_run_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "execution_identity_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repair_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "candidate_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "baseline_candidate_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "successor_candidate_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "successor_candidate_plan_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "candidate_state": {
+      "const": "NON_ACTIVE"
+    },
+    "promotion_authorized": {
+      "const": false
+    },
+    "visible_factual_pass_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 331
+    },
+    "visible_quality_70_and_critical_floor_pass_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 331
+    },
+    "quality_critical_floors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legal_and_factual_accuracy",
+        "authority_and_currentness",
+        "practical_steps_and_urgency"
+      ],
+      "properties": {
+        "legal_and_factual_accuracy": {
+          "const": 17.5
+        },
+        "authority_and_currentness": {
+          "const": 10.5
+        },
+        "practical_steps_and_urgency": {
+          "const": 9.0
+        }
+      }
+    },
+    "system_pass_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32
+    },
+    "diagnostic_case_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "diagnostic_pass_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "diagnosis_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "diagnosis_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "gap_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "gap_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "open_material_diagnosis_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "diagnostic_pack_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "diagnostic_result_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "diagnostic_cases_join_fixed_denominator": {
+      "const": false
+    },
+    "unseen_opened": {
+      "type": "boolean"
+    },
+    "full_331_plus_32_rerun_required": {
+      "type": "boolean"
+    },
+    "failure_fingerprint_attempt_counts": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9a-f]{64}$": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "open_failure_fingerprints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "repeated_failure_fingerprints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "automatic_retry_allowed": {
+      "type": "boolean"
+    },
+    "next_action": {
+      "enum": [
+        "OWNER_REVIEW_NO_AUTOMATIC_RETRY",
+        "FOLLOW_STATUS_AND_EXIT_CHECKS"
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DIAGNOSTIC_SUPPLEMENT_NOT_CLOSED",
+          "FULL_331_PLUS_32_RERUN_REQUIRED",
+          "MISSING_GE_COVERAGE_AREAS",
+          "OPEN_MATERIAL_DIAGNOSIS_OR_GAP",
+          "REPEATED_FAILURE_FINGERPRINT_AFTER_REPAIR",
+          "SYSTEM_SUITE_NOT_CLOSED",
+          "THIRD_AUTOMATIC_ATTEMPT_FORBIDDEN",
+          "UNDIAGNOSED_FAILURE",
+          "UNSEEN_CUSTODY_BREACH",
+          "VISIBLE_70_STANDARD_NOT_CLOSED",
+          "VISIBLE_FACTUAL_GATE_NOT_CLOSED"
+        ]
+      }
+    },
+    "exit_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_fixed_visible_pack",
+        "all_331_factual_pass",
+        "all_331_meet_70_and_critical_floors",
+        "all_32_system_pass",
+        "all_diagnostics_pass",
+        "no_open_material_diagnoses_or_gaps",
+        "no_missing_coverage_areas",
+        "full_changed_binding_rerun_complete",
+        "unseen_unopened",
+        "explicit_owner_acceptance"
+      ],
+      "properties": {
+        "exact_fixed_visible_pack": {
+          "type": "boolean"
+        },
+        "all_331_factual_pass": {
+          "type": "boolean"
+        },
+        "all_331_meet_70_and_critical_floors": {
+          "type": "boolean"
+        },
+        "all_32_system_pass": {
+          "type": "boolean"
+        },
+        "all_diagnostics_pass": {
+          "type": "boolean"
+        },
+        "no_open_material_diagnoses_or_gaps": {
+          "type": "boolean"
+        },
+        "full_changed_binding_rerun_complete": {
+          "type": "boolean"
+        },
+        "unseen_unopened": {
+          "type": "boolean"
+        },
+        "explicit_owner_acceptance": {
+          "type": "boolean"
+        },
+        "no_missing_coverage_areas": {
+          "type": "boolean"
+        }
+      }
+    },
+    "decision_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "loop_id",
+        "cycle_id",
+        "cycle_number",
+        "predecessor_assessment_sha256",
+        "fixed_pack_manifest_sha256",
+        "fixed_case_manifest_sha256",
+        "fixed_case_order_sha256",
+        "fixed_visible_denominator",
+        "system_case_count_separate",
+        "visible_run_sha256",
+        "system_run_sha256",
+        "execution_identity_sha256",
+        "baseline_candidate_sha256",
+        "evaluated_candidate_sha256",
+        "successor_candidate_sha256",
+        "successor_candidate_plan_sha256",
+        "repair_manifest_sha256",
+        "diagnosis_manifest_sha256",
+        "gap_manifest_sha256",
+        "diagnostic_pack_sha256",
+        "coverage_audit_sha256",
+        "coverage_manifest_sha256",
+        "coverage_predecision_sha256",
+        "coverage_breadth_policy_id",
+        "coverage_breadth_policy_sha256",
+        "coverage_required_domain_set_sha256",
+        "coverage_cell_manifest_sha256",
+        "coverage_cell_order_sha256",
+        "coverage_topology_sha256",
+        "coverage_owner_request_sha256",
+        "coverage_owner_resolution_sha256",
+        "missing_coverage_cell_count",
+        "diagnostic_result_manifest_sha256",
+        "visible_factual_pass_count",
+        "visible_quality_70_and_critical_floor_pass_count",
+        "system_pass_count",
+        "diagnostic_pass_count",
+        "diagnostic_case_count",
+        "open_material_diagnosis_count",
+        "repeated_failure_fingerprints",
+        "failure_fingerprint_attempt_counts",
+        "open_failure_fingerprints",
+        "unseen_opened",
+        "blockers_before_owner_acceptance",
+        "content_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "legalbot.ge-cycle-decision-basis.v1"
+        },
+        "loop_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "cycle_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "cycle_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "predecessor_assessment_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fixed_pack_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fixed_case_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fixed_case_order_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fixed_visible_denominator": {
+          "const": 331
+        },
+        "system_case_count_separate": {
+          "const": 32
+        },
+        "visible_run_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "system_run_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "execution_identity_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "baseline_candidate_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "evaluated_candidate_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "successor_candidate_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "successor_candidate_plan_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "repair_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "diagnosis_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "gap_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "diagnostic_pack_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostic_result_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "visible_factual_pass_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 331
+        },
+        "visible_quality_70_and_critical_floor_pass_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 331
+        },
+        "system_pass_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "diagnostic_pass_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "diagnostic_case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "open_material_diagnosis_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repeated_failure_fingerprints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "failure_fingerprint_attempt_counts": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9a-f]{64}$": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "open_failure_fingerprints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "unseen_opened": {
+          "type": "boolean"
+        },
+        "blockers_before_owner_acceptance": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "DIAGNOSTIC_SUPPLEMENT_NOT_CLOSED",
+              "FULL_331_PLUS_32_RERUN_REQUIRED",
+              "MISSING_GE_COVERAGE_AREAS",
+              "OPEN_MATERIAL_DIAGNOSIS_OR_GAP",
+              "REPEATED_FAILURE_FINGERPRINT_AFTER_REPAIR",
+              "SYSTEM_SUITE_NOT_CLOSED",
+              "THIRD_AUTOMATIC_ATTEMPT_FORBIDDEN",
+              "UNDIAGNOSED_FAILURE",
+              "UNSEEN_CUSTODY_BREACH",
+              "VISIBLE_70_STANDARD_NOT_CLOSED",
+              "VISIBLE_FACTUAL_GATE_NOT_CLOSED"
+            ]
+          }
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_audit_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "missing_coverage_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_predecision_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_breadth_policy_id": {
+          "const": "ge-coverage-breadth-2026-09-01-v1"
+        },
+        "coverage_breadth_policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_required_domain_set_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_cell_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_cell_order_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_topology_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_owner_request_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_owner_resolution_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "decision_basis_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "owner_acceptance_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "weight_training_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "separate_owner_authorization_required",
+        "evaluation_content_allowed",
+        "unseen_content_allowed",
+        "user_content_allowed",
+        "training_performed_by_assessment"
+      ],
+      "properties": {
+        "separate_owner_authorization_required": {
+          "const": true
+        },
+        "evaluation_content_allowed": {
+          "const": false
+        },
+        "unseen_content_allowed": {
+          "const": false
+        },
+        "user_content_allowed": {
+          "const": false
+        },
+        "training_performed_by_assessment": {
+          "const": false
+        }
+      }
+    },
+    "assessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "assessment_builder_actions_performed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network",
+        "model",
+        "catalogue_write",
+        "chunking",
+        "embedding",
+        "index_write",
+        "promotion",
+        "training",
+        "unseen_run"
+      ],
+      "properties": {
+        "network": {
+          "const": false
+        },
+        "model": {
+          "const": false
+        },
+        "catalogue_write": {
+          "const": false
+        },
+        "chunking": {
+          "const": false
+        },
+        "embedding": {
+          "const": false
+        },
+        "index_write": {
+          "const": false
+        },
+        "promotion": {
+          "const": false
+        },
+        "training": {
+          "const": false
+        },
+        "unseen_run": {
+          "const": false
+        }
+      }
+    },
+    "coverage_audit_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "coverage_manifest_sha256",
+        "coverage_predecision_sha256",
+        "breadth_policy_id",
+        "breadth_policy_sha256",
+        "required_domain_set_sha256",
+        "cell_manifest_sha256",
+        "cell_order_sha256",
+        "topology_sha256",
+        "owner_decision_id",
+        "owner_request_sha256",
+        "owner_resolution_sha256",
+        "coverage_manifest",
+        "fixed_pack_manifest_sha256",
+        "visible_case_count_reviewed",
+        "system_case_count_reviewed",
+        "diagnostic_pack_sha256",
+        "unseen_inspected",
+        "cell_results",
+        "missing_cell_count",
+        "missing_cells",
+        "audited_at",
+        "content_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "legalbot.ge-coverage-audit.v2"
+        },
+        "coverage_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_predecision_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "breadth_policy_id": {
+          "const": "ge-coverage-breadth-2026-09-01-v1"
+        },
+        "breadth_policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "required_domain_set_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "cell_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "cell_order_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "topology_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "owner_decision_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        "owner_request_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "owner_resolution_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage_manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema",
+            "manifest_id",
+            "coverage_predecision_sha256",
+            "coverage_predecision",
+            "breadth_policy_id",
+            "breadth_policy_sha256",
+            "required_domain_ids",
+            "required_domain_set_sha256",
+            "cell_manifest_sha256",
+            "cell_order_sha256",
+            "topology_sha256",
+            "owner_decision_id",
+            "owner_request_sha256",
+            "owner_resolution_sha256",
+            "owner_approval_sha256",
+            "cell_count",
+            "cells",
+            "approved_at",
+            "unseen_eligible",
+            "training_export_eligible",
+            "content_sha256"
+          ],
+          "properties": {
+            "schema": {
+              "const": "legalbot.ge-coverage-cell-manifest.v2"
+            },
+            "manifest_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            },
+            "coverage_predecision_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "coverage_predecision": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "schema",
+                "manifest_id",
+                "authorization_state",
+                "breadth_policy_id",
+                "breadth_policy_sha256",
+                "required_domain_ids",
+                "required_domain_set_sha256",
+                "breadth_floor_satisfied",
+                "cell_count",
+                "cell_manifest_sha256",
+                "cell_order_sha256",
+                "topology_sha256",
+                "cells",
+                "owner_decision_id",
+                "owner_request_sha256",
+                "owner_resolution_sha256",
+                "unseen_inspected",
+                "training_export_authorized",
+                "proposed_at",
+                "content_sha256"
+              ],
+              "properties": {
+                "schema": {
+                  "const": "legalbot.ge-coverage-topology-predecision.v1"
+                },
+                "manifest_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                },
+                "authorization_state": {
+                  "const": "AWAITING_OWNER_ACCEPTANCE"
+                },
+                "breadth_policy_id": {
+                  "const": "ge-coverage-breadth-2026-09-01-v1"
+                },
+                "breadth_policy_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "required_domain_ids": {
+                  "type": "array",
+                  "minItems": 23,
+                  "maxItems": 23,
+                  "prefixItems": [
+                    {
+                      "const": "topic:administrative-law"
+                    },
+                    {
+                      "const": "topic:ai-and-data-protection"
+                    },
+                    {
+                      "const": "topic:business-and-company-law"
+                    },
+                    {
+                      "const": "topic:commercial-law"
+                    },
+                    {
+                      "const": "topic:competition-law"
+                    },
+                    {
+                      "const": "topic:contemporary-biolaw-and-regulation"
+                    },
+                    {
+                      "const": "topic:contract-law"
+                    },
+                    {
+                      "const": "topic:criminal-law"
+                    },
+                    {
+                      "const": "topic:eu-internal-market-law"
+                    },
+                    {
+                      "const": "topic:international-commercial-mediation"
+                    },
+                    {
+                      "const": "topic:land-law"
+                    },
+                    {
+                      "const": "topic:law-and-medicine"
+                    },
+                    {
+                      "const": "topic:pensions-law"
+                    },
+                    {
+                      "const": "topic:private-international-law"
+                    },
+                    {
+                      "const": "topic:tort-law"
+                    },
+                    {
+                      "const": "topic:trusts-law"
+                    },
+                    {
+                      "const": "topic:wills-and-estates"
+                    },
+                    {
+                      "const": "public:housing"
+                    },
+                    {
+                      "const": "public:employment"
+                    },
+                    {
+                      "const": "public:family"
+                    },
+                    {
+                      "const": "public:immigration"
+                    },
+                    {
+                      "const": "public:benefits-debt"
+                    },
+                    {
+                      "const": "public:consumer"
+                    }
+                  ],
+                  "items": false
+                },
+                "required_domain_set_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "breadth_floor_satisfied": {
+                  "const": true
+                },
+                "cell_count": {
+                  "type": "integer",
+                  "minimum": 23
+                },
+                "cell_manifest_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "cell_order_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "topology_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "cells": {
+                  "type": "array",
+                  "minItems": 23,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "schema",
+                      "coverage_cell_id",
+                      "ordinal",
+                      "coverage_domain_id",
+                      "breadth_anchor",
+                      "topic",
+                      "issue",
+                      "scenario_family_id",
+                      "urgency",
+                      "safety",
+                      "currentness",
+                      "system_behaviour",
+                      "assigned_case_ids",
+                      "content_sha256"
+                    ],
+                    "properties": {
+                      "schema": {
+                        "const": "legalbot.ge-coverage-cell.v1"
+                      },
+                      "coverage_cell_id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                      },
+                      "ordinal": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "coverage_domain_id": {
+                        "enum": [
+                          "topic:administrative-law",
+                          "topic:ai-and-data-protection",
+                          "topic:business-and-company-law",
+                          "topic:commercial-law",
+                          "topic:competition-law",
+                          "topic:contemporary-biolaw-and-regulation",
+                          "topic:contract-law",
+                          "topic:criminal-law",
+                          "topic:eu-internal-market-law",
+                          "topic:international-commercial-mediation",
+                          "topic:land-law",
+                          "topic:law-and-medicine",
+                          "topic:pensions-law",
+                          "topic:private-international-law",
+                          "topic:tort-law",
+                          "topic:trusts-law",
+                          "topic:wills-and-estates",
+                          "public:housing",
+                          "public:employment",
+                          "public:family",
+                          "public:immigration",
+                          "public:benefits-debt",
+                          "public:consumer"
+                        ]
+                      },
+                      "breadth_anchor": {
+                        "type": "boolean"
+                      },
+                      "topic": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "issue": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "scenario_family_id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                      },
+                      "urgency": {
+                        "enum": [
+                          "routine",
+                          "time_sensitive",
+                          "urgent"
+                        ]
+                      },
+                      "safety": {
+                        "enum": [
+                          "ordinary",
+                          "safety_sensitive"
+                        ]
+                      },
+                      "currentness": {
+                        "enum": [
+                          "stable",
+                          "currentness_sensitive"
+                        ]
+                      },
+                      "system_behaviour": {
+                        "enum": [
+                          "answer",
+                          "system"
+                        ]
+                      },
+                      "assigned_case_ids": {
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                        }
+                      },
+                      "content_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                },
+                "owner_decision_id": {
+                  "type": "null"
+                },
+                "owner_request_sha256": {
+                  "type": "null"
+                },
+                "owner_resolution_sha256": {
+                  "type": "null"
+                },
+                "unseen_inspected": {
+                  "const": false
+                },
+                "training_export_authorized": {
+                  "const": false
+                },
+                "proposed_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "breadth_policy_id": {
+              "const": "ge-coverage-breadth-2026-09-01-v1"
+            },
+            "breadth_policy_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "required_domain_ids": {
+              "type": "array",
+              "minItems": 23,
+              "maxItems": 23,
+              "prefixItems": [
+                {
+                  "const": "topic:administrative-law"
+                },
+                {
+                  "const": "topic:ai-and-data-protection"
+                },
+                {
+                  "const": "topic:business-and-company-law"
+                },
+                {
+                  "const": "topic:commercial-law"
+                },
+                {
+                  "const": "topic:competition-law"
+                },
+                {
+                  "const": "topic:contemporary-biolaw-and-regulation"
+                },
+                {
+                  "const": "topic:contract-law"
+                },
+                {
+                  "const": "topic:criminal-law"
+                },
+                {
+                  "const": "topic:eu-internal-market-law"
+                },
+                {
+                  "const": "topic:international-commercial-mediation"
+                },
+                {
+                  "const": "topic:land-law"
+                },
+                {
+                  "const": "topic:law-and-medicine"
+                },
+                {
+                  "const": "topic:pensions-law"
+                },
+                {
+                  "const": "topic:private-international-law"
+                },
+                {
+                  "const": "topic:tort-law"
+                },
+                {
+                  "const": "topic:trusts-law"
+                },
+                {
+                  "const": "topic:wills-and-estates"
+                },
+                {
+                  "const": "public:housing"
+                },
+                {
+                  "const": "public:employment"
+                },
+                {
+                  "const": "public:family"
+                },
+                {
+                  "const": "public:immigration"
+                },
+                {
+                  "const": "public:benefits-debt"
+                },
+                {
+                  "const": "public:consumer"
+                }
+              ],
+              "items": false
+            },
+            "required_domain_set_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "cell_manifest_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "cell_order_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "topology_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "owner_decision_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            },
+            "owner_request_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "owner_resolution_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "owner_approval_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "cell_count": {
+              "type": "integer",
+              "minimum": 23
+            },
+            "cells": {
+              "type": "array",
+              "minItems": 23,
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "schema",
+                  "coverage_cell_id",
+                  "ordinal",
+                  "coverage_domain_id",
+                  "breadth_anchor",
+                  "topic",
+                  "issue",
+                  "scenario_family_id",
+                  "urgency",
+                  "safety",
+                  "currentness",
+                  "system_behaviour",
+                  "assigned_case_ids",
+                  "content_sha256"
+                ],
+                "properties": {
+                  "schema": {
+                    "const": "legalbot.ge-coverage-cell.v1"
+                  },
+                  "coverage_cell_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                  },
+                  "ordinal": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "coverage_domain_id": {
+                    "enum": [
+                      "topic:administrative-law",
+                      "topic:ai-and-data-protection",
+                      "topic:business-and-company-law",
+                      "topic:commercial-law",
+                      "topic:competition-law",
+                      "topic:contemporary-biolaw-and-regulation",
+                      "topic:contract-law",
+                      "topic:criminal-law",
+                      "topic:eu-internal-market-law",
+                      "topic:international-commercial-mediation",
+                      "topic:land-law",
+                      "topic:law-and-medicine",
+                      "topic:pensions-law",
+                      "topic:private-international-law",
+                      "topic:tort-law",
+                      "topic:trusts-law",
+                      "topic:wills-and-estates",
+                      "public:housing",
+                      "public:employment",
+                      "public:family",
+                      "public:immigration",
+                      "public:benefits-debt",
+                      "public:consumer"
+                    ]
+                  },
+                  "breadth_anchor": {
+                    "type": "boolean"
+                  },
+                  "topic": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "issue": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "scenario_family_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                  },
+                  "urgency": {
+                    "enum": [
+                      "routine",
+                      "time_sensitive",
+                      "urgent"
+                    ]
+                  },
+                  "safety": {
+                    "enum": [
+                      "ordinary",
+                      "safety_sensitive"
+                    ]
+                  },
+                  "currentness": {
+                    "enum": [
+                      "stable",
+                      "currentness_sensitive"
+                    ]
+                  },
+                  "system_behaviour": {
+                    "enum": [
+                      "answer",
+                      "system"
+                    ]
+                  },
+                  "assigned_case_ids": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                    }
+                  },
+                  "content_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "approved_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "unseen_eligible": {
+              "const": false
+            },
+            "training_export_eligible": {
+              "const": false
+            },
+            "content_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "fixed_pack_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "visible_case_count_reviewed": {
+          "const": 331
+        },
+        "system_case_count_reviewed": {
+          "const": 32
+        },
+        "diagnostic_pack_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unseen_inspected": {
+          "const": false
+        },
+        "cell_results": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "coverage_cell_id",
+              "coverage_domain_id",
+              "coverage_cell_sha256",
+              "covered_case_ids",
+              "assigned_case_ids",
+              "missing",
+              "gap_fingerprint_sha256"
+            ],
+            "properties": {
+              "coverage_cell_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+              },
+              "coverage_domain_id": {
+                "enum": [
+                  "topic:administrative-law",
+                  "topic:ai-and-data-protection",
+                  "topic:business-and-company-law",
+                  "topic:commercial-law",
+                  "topic:competition-law",
+                  "topic:contemporary-biolaw-and-regulation",
+                  "topic:contract-law",
+                  "topic:criminal-law",
+                  "topic:eu-internal-market-law",
+                  "topic:international-commercial-mediation",
+                  "topic:land-law",
+                  "topic:law-and-medicine",
+                  "topic:pensions-law",
+                  "topic:private-international-law",
+                  "topic:tort-law",
+                  "topic:trusts-law",
+                  "topic:wills-and-estates",
+                  "public:housing",
+                  "public:employment",
+                  "public:family",
+                  "public:immigration",
+                  "public:benefits-debt",
+                  "public:consumer"
+                ]
+              },
+              "coverage_cell_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "covered_case_ids": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                }
+              },
+              "assigned_case_ids": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                }
+              },
+              "missing": {
+                "type": "boolean"
+              },
+              "gap_fingerprint_sha256": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "missing": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "missing"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "gap_fingerprint_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "gap_fingerprint_sha256": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "missing_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing_cells": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "coverage_cell_id",
+              "coverage_domain_id",
+              "gap_fingerprint_sha256",
+              "assigned_case_ids"
+            ],
+            "properties": {
+              "coverage_cell_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+              },
+              "coverage_domain_id": {
+                "enum": [
+                  "topic:administrative-law",
+                  "topic:ai-and-data-protection",
+                  "topic:business-and-company-law",
+                  "topic:commercial-law",
+                  "topic:competition-law",
+                  "topic:contemporary-biolaw-and-regulation",
+                  "topic:contract-law",
+                  "topic:criminal-law",
+                  "topic:eu-internal-market-law",
+                  "topic:international-commercial-mediation",
+                  "topic:land-law",
+                  "topic:law-and-medicine",
+                  "topic:pensions-law",
+                  "topic:private-international-law",
+                  "topic:tort-law",
+                  "topic:trusts-law",
+                  "topic:wills-and-estates",
+                  "public:housing",
+                  "public:employment",
+                  "public:family",
+                  "public:immigration",
+                  "public:benefits-debt",
+                  "public:consumer"
+                ]
+              },
+              "gap_fingerprint_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "assigned_case_ids": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                }
+              }
+            }
+          }
+        },
+        "audited_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "missing_coverage_cell_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "coverage_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_predecision_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_breadth_policy_id": {
+      "const": "ge-coverage-breadth-2026-09-01-v1"
+    },
+    "coverage_breadth_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_required_domain_set_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_cell_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_cell_order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_topology_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_owner_request_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_owner_resolution_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "STOP_REPEATED_FINGERPRINT"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "automatic_retry_allowed": {
+            "const": false
+          },
+          "next_action": {
+            "const": "OWNER_REVIEW_NO_AUTOMATIC_RETRY"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "automatic_retry_allowed": {
+            "const": true
+          },
+          "next_action": {
+            "const": "FOLLOW_STATUS_AND_EXIT_CHECKS"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "GE_COMPLETE_OWNER_ACCEPTED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "owner_acceptance_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "blockers": {
+            "maxItems": 0
+          },
+          "exit_checks": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "exact_fixed_visible_pack",
+              "all_331_factual_pass",
+              "all_331_meet_70_and_critical_floors",
+              "all_32_system_pass",
+              "all_diagnostics_pass",
+              "no_open_material_diagnoses_or_gaps",
+              "no_missing_coverage_areas",
+              "full_changed_binding_rerun_complete",
+              "unseen_unopened",
+              "explicit_owner_acceptance"
+            ],
+            "properties": {
+              "exact_fixed_visible_pack": {
+                "const": true
+              },
+              "all_331_factual_pass": {
+                "const": true
+              },
+              "all_331_meet_70_and_critical_floors": {
+                "const": true
+              },
+              "all_32_system_pass": {
+                "const": true
+              },
+              "all_diagnostics_pass": {
+                "const": true
+              },
+              "no_open_material_diagnoses_or_gaps": {
+                "const": true
+              },
+              "full_changed_binding_rerun_complete": {
+                "const": true
+              },
+              "unseen_unopened": {
+                "const": true
+              },
+              "explicit_owner_acceptance": {
+                "const": true
+              },
+              "no_missing_coverage_areas": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

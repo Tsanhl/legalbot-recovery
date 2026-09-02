@@ -13,6 +13,7 @@ import pytest
 
 from app.api.main import app
 from app.config import Settings
+from app.deletion_guard import DeletionAuthorization, DeletionGuard, DeletionObjectClass
 from app.orchestration.contracts import ModelDraft
 from app.orchestration.runner import AnswerRunner
 from app.orchestration.upload_vault import write_encrypted_upload
@@ -546,7 +547,7 @@ def test_legacy_plaintext_upload_is_migrated_under_encrypted_marker(
     assert validate_upload_references(settings, database, cipher, ["legacy-upload"])
 
 
-def test_unpinned_expired_upload_is_removed_but_pinned_upload_is_retained(
+def test_unpinned_expired_upload_requires_exact_deletion_authority(
     tmp_path: Path, database: Any, cipher: Any
 ) -> None:
     settings = _settings(tmp_path)
@@ -570,10 +571,31 @@ def test_unpinned_expired_upload_is_removed_but_pinned_upload_is_retained(
         / database.fetchone("SELECT vault_path FROM uploads WHERE id=?", (pinned_id,))["vault_path"]
     )
 
-    assert purge_expired_uploads(settings, database) == 1
+    assert purge_expired_uploads(settings, database) == 0
     assert (
         database.fetchone("SELECT status FROM uploads WHERE id=?", (expired_id,))["status"]
         == "expired"
+    )
+    assert expired_path.exists()
+    assert pinned_path.exists()
+    current = datetime.now(UTC)
+    authorization = DeletionAuthorization(
+        authorization_id="synthetic-upload-delete",
+        owner_decision_sha256="2" * 64,
+        object_class=DeletionObjectClass.UPLOAD_BLOB,
+        object_ids=(expired_id,),
+        issued_at=current - timedelta(minutes=1),
+        expires_at=current + timedelta(minutes=1),
+    )
+    assert (
+        purge_expired_uploads(
+            settings,
+            database,
+            guard=DeletionGuard(),
+            authorization=authorization,
+            now=current,
+        )
+        == 1
     )
     assert not expired_path.exists()
     assert pinned_path.exists()

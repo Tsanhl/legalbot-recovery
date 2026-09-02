@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/evidence-pack.v1.schema.json",
+  "title": "LegalBot EvidencePack v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "evidence_pack_id",
+    "query_plan_id",
+    "candidate_id",
+    "index_generation_sha256",
+    "relevance_policy_sha256",
+    "requested_as_of_date",
+    "selected",
+    "gaps",
+    "created_at",
+    "content_sha256",
+    "query_plan_sha256",
+    "retrieval_result_sha256",
+    "fact_snapshot_sha256",
+    "issue_coverage"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.evidence-pack.v1"
+    },
+    "evidence_pack_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "query_plan_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "index_generation_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relevance_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "requested_as_of_date": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "selected": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://local.legalbot.invalid/schemas/evidence-span-ref.v1.schema.json",
+        "title": "Evidence span reference",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "source_version_id",
+          "chunk_id",
+          "content_sha256",
+          "locator",
+          "jurisdiction",
+          "lane",
+          "legal_role",
+          "currentness_status",
+          "effective_from",
+          "effective_to",
+          "reviewed_as_of",
+          "extent_status",
+          "commencement_status",
+          "qualification_receipt_sha256",
+          "retrieval_route",
+          "retrieval_score",
+          "selection_reason",
+          "score_system"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "source_version_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "chunk_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "content_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "jurisdiction": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "lane": {
+            "enum": [
+              "primary_authority",
+              "official_secondary",
+              "scholarship"
+            ]
+          },
+          "legal_role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "currentness_status": {
+            "enum": [
+              "qualified_current",
+              "qualified_historical"
+            ]
+          },
+          "effective_from": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "effective_to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewed_as_of": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "extent_status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "commencement_status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "qualification_receipt_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "retrieval_route": {
+            "enum": [
+              "exact_authority_identity",
+              "exact_legislation_reference",
+              "hybrid_rrf"
+            ]
+          },
+          "retrieval_score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "selection_reason": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+          },
+          "score_system": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://local.legalbot.invalid/schemas/evidence-gap.v1.schema.json",
+        "title": "Evidence gap",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "code"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "query_plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "retrieval_result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fact_snapshot_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "issue_coverage": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "status",
+          "evidence_ids",
+          "gap_codes"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "status": {
+            "enum": [
+              "satisfied",
+              "partial",
+              "gap",
+              "not_applicable"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "gap_codes": {
+            "type": "array",
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

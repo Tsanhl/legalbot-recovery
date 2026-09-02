@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-system-case-result.v1.schema.json",
+  "title": "LegalBot GE System Case Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "result_id",
+    "run_id",
+    "system_case_id",
+    "system_case_sha256",
+    "ordinal",
+    "category",
+    "outcome",
+    "expected_behaviour_checks",
+    "prohibited_behaviour_checks",
+    "system_report_sha256",
+    "root_cause_layers",
+    "scored_in_fixed_visible_denominator",
+    "started_at",
+    "completed_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-system-case-result.v1"
+    },
+    "result_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "system_case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "system_case_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 32
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "SYSTEM_ERROR"
+      ]
+    },
+    "expected_behaviour_checks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "criterion",
+          "met"
+        ],
+        "properties": {
+          "criterion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "met": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "prohibited_behaviour_checks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "criterion",
+          "observed"
+        ],
+        "properties": {
+          "criterion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "system_report_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "root_cause_layers": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "source_currentness",
+          "retrieval",
+          "matter_facts",
+          "prompt_code",
+          "validation_renderer",
+          "gold_rubric",
+          "model_capability",
+          "system_execution"
+        ]
+      }
+    },
+    "scored_in_fixed_visible_denominator": {
+      "const": false
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "root_cause_layers": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "FAIL"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "expected_behaviour_checks": {
+            "minItems": 1
+          },
+          "prohibited_behaviour_checks": {
+            "minItems": 1
+          },
+          "root_cause_layers": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "SYSTEM_ERROR"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "expected_behaviour_checks": {
+            "maxItems": 0
+          },
+          "prohibited_behaviour_checks": {
+            "maxItems": 0
+          },
+          "root_cause_layers": {
+            "minItems": 1,
+            "contains": {
+              "const": "system_execution"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

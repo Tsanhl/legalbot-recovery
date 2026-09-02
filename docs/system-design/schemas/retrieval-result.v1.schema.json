@@ -1,0 +1,392 @@
+{
+  "$id": "https://local.legalbot.invalid/schemas/retrieval-result.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "candidate_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "candidates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_record_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+            "type": "string"
+          },
+          "disposition": {
+            "enum": [
+              "selected",
+              "rejected"
+            ]
+          },
+          "evidence_span_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+            "type": "string"
+          },
+          "fused_rank": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "issue_ids": {
+            "items": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "lexical_rank": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "locator": {
+            "maxLength": 512,
+            "minLength": 1,
+            "type": "string"
+          },
+          "reason_codes": {
+            "items": {
+              "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$",
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "rerank_score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "source_version_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+            "type": "string"
+          },
+          "vector_rank": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reranker_rank": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "selected_rank": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "chunk_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "qualification_status": {
+            "enum": [
+              "qualified",
+              "rejected_identity",
+              "rejected_jurisdiction",
+              "rejected_date",
+              "rejected_currentness",
+              "rejected_lane",
+              "rejected_relevance",
+              "rejected_duplicate",
+              "rejected_budget",
+              "not_checked"
+            ]
+          },
+          "currentness_status": {
+            "enum": [
+              "qualified_current",
+              "qualified_historical",
+              "held_unknown",
+              "rejected_stale",
+              "not_checked"
+            ]
+          },
+          "qualification_receipt_sha256": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "candidate_record_id",
+          "evidence_span_id",
+          "source_version_id",
+          "locator",
+          "issue_ids",
+          "disposition",
+          "reason_codes",
+          "chunk_sha256",
+          "qualification_status",
+          "currentness_status",
+          "qualification_receipt_sha256"
+        ],
+        "type": "object"
+      },
+      "maxItems": 512,
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "degraded": {
+      "type": "boolean"
+    },
+    "issue_gaps": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "issue_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+            "type": "string"
+          },
+          "reason_code": {
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "issue_id",
+          "reason_code"
+        ],
+        "type": "object"
+      },
+      "maxItems": 32,
+      "type": "array"
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "query_plan_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "query_plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "retrieval_result_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "routes": {
+      "additionalProperties": false,
+      "properties": {
+        "lexical": {
+          "enum": [
+            "used",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "reranker": {
+          "enum": [
+            "used",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "vector": {
+          "enum": [
+            "used",
+            "failed",
+            "not_applicable"
+          ]
+        }
+      },
+      "required": [
+        "lexical",
+        "vector",
+        "reranker"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "legalbot.retrieval-result.v1"
+    },
+    "selected_evidence_ids": {
+      "items": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "issue_allocations": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "status",
+          "selected_evidence_ids",
+          "selected_token_count",
+          "reason_codes"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "status": {
+            "enum": [
+              "satisfied",
+              "partial",
+              "gap",
+              "not_applicable"
+            ]
+          },
+          "selected_evidence_ids": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "selected_token_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason_codes": {
+            "type": "array",
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+            }
+          }
+        }
+      }
+    },
+    "timing_ms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lexical",
+        "vector",
+        "fusion",
+        "reranker",
+        "qualification",
+        "selection",
+        "total"
+      ],
+      "properties": {
+        "lexical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vector": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fusion": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reranker": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "qualification": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "selection": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "resource_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_count",
+        "selected_count",
+        "selected_token_count",
+        "peak_memory_bytes"
+      ],
+      "properties": {
+        "candidate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "selected_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "selected_token_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "peak_memory_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema",
+    "retrieval_result_id",
+    "query_plan_id",
+    "query_plan_sha256",
+    "candidate_id",
+    "candidate_sha256",
+    "policy_sha256",
+    "routes",
+    "candidates",
+    "selected_evidence_ids",
+    "issue_gaps",
+    "degraded",
+    "created_at",
+    "issue_allocations",
+    "timing_ms",
+    "resource_use",
+    "content_sha256"
+  ],
+  "title": "LegalBot RetrievalResult v1",
+  "type": "object"
+}

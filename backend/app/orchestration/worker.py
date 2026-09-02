@@ -75,7 +75,11 @@ class DurableAnswerWorker:
             monotonic_now = time.monotonic()
             if monotonic_now >= self._next_upload_purge_at:
                 try:
-                    purge_expired_uploads(self.services.settings, self.services.database)
+                    purge_expired_uploads(
+                        self.services.settings,
+                        self.services.database,
+                        guard=self.services.deletion_guard,
+                    )
                 except Exception as exc:
                     # Upload expiry is maintenance, not authority retrieval or
                     # answer generation. Preserve service availability but make

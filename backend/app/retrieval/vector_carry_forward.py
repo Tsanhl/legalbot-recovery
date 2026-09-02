@@ -17,6 +17,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from .ge_generic_read_guard import require_generic_index_read_allowed
+
 INDEX_SEAL_SCHEMA = "legalbot.index-seal.v2"
 VECTOR_CARRY_FORWARD_SCHEMA = "legalbot.vector-carry-forward-plan.v1"
 VECTOR_REUSE_REPORT_SCHEMA = "legalbot.vector-reuse-report.v1"
@@ -245,6 +247,10 @@ def verify_parent_vector_source(
         or (index_root / "builds" / f".{parent_build_id}.incomplete").exists()
     ):
         raise VectorCarryForwardError("parent vector build is not a final immutable generation")
+    require_generic_index_read_allowed(
+        build_path,
+        expected_build_id=parent_build_id,
+    )
 
     seal_path = build_path / "seal.json"
     manifest_path = build_path / "manifest.json"
@@ -338,6 +344,10 @@ class ParentVectorBatchReader:
     """Bounded Lance lookup; it never copies a parent index or keeps all vectors in RAM."""
 
     def __init__(self, source: VerifiedParentVectorSource, lancedb_module: Any) -> None:
+        require_generic_index_read_allowed(
+            source.build_path,
+            expected_build_id=source.identity.build_id,
+        )
         self.source = source
         self._tables: list[Any] = []
         for lane in source.physical_lanes:

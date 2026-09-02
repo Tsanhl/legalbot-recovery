@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/query-plan.v1.schema.json",
+  "title": "LegalBot QueryPlan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "query_plan_id",
+    "request_id",
+    "request_sha256",
+    "original_question_sha256",
+    "task_type",
+    "data_intent",
+    "answer_route",
+    "jurisdiction_status",
+    "jurisdiction",
+    "requested_as_of_date",
+    "issue_ids",
+    "missing_facts",
+    "allowed_authority_lanes",
+    "query_variants_ref",
+    "query_variants_sha256",
+    "budgets",
+    "conversation_snapshot",
+    "fact_snapshot_id",
+    "candidate_id",
+    "policy_sha256",
+    "config_sha256",
+    "rewrite",
+    "frozen_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.query-plan.v1"
+    },
+    "query_plan_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "original_question_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "task_type": {
+      "enum": [
+        "general",
+        "problem",
+        "essay"
+      ]
+    },
+    "data_intent": {
+      "enum": [
+        "KNOWLEDGE_ONLY",
+        "MATTER_ONLY",
+        "HYBRID"
+      ]
+    },
+    "answer_route": {
+      "enum": [
+        "direct",
+        "sectioned",
+        "full_enquiry"
+      ]
+    },
+    "jurisdiction_status": {
+      "enum": [
+        "explicit",
+        "derived_for_clarification",
+        "unresolved"
+      ]
+    },
+    "jurisdiction": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "requested_as_of_date": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "issue_ids": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+      }
+    },
+    "missing_facts": {
+      "type": "array",
+      "maxItems": 24,
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://local.legalbot.invalid/schemas/missing-fact.v1.schema.json",
+        "title": "Missing fact",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_key",
+          "affected_issue_ids",
+          "blocks_definite_conclusion"
+        ],
+        "properties": {
+          "fact_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "affected_issue_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "blocks_definite_conclusion": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "allowed_authority_lanes": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "primary_authority",
+          "official_secondary",
+          "scholarship"
+        ]
+      }
+    },
+    "query_variants_ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "query_variants_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "budgets": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://local.legalbot.invalid/schemas/query-budgets.v1.schema.json",
+      "title": "Query budgets",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lexical_depth",
+        "vector_depth",
+        "reranker_candidates",
+        "final_top_k",
+        "context_tokens",
+        "initial_clarification_questions"
+      ],
+      "properties": {
+        "lexical_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 500
+        },
+        "vector_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 500
+        },
+        "reranker_candidates": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 128
+        },
+        "final_top_k": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "context_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 131072
+        },
+        "initial_clarification_questions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      }
+    },
+    "conversation_snapshot": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://local.legalbot.invalid/schemas/conversation-snapshot-ref.v1.schema.json",
+      "title": "Conversation snapshot reference",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conversation_id",
+        "revision",
+        "content_sha256",
+        "truncated",
+        "omitted_message_count"
+      ],
+      "properties": {
+        "conversation_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "content_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "omitted_message_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "fact_snapshot_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "rewrite": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://local.legalbot.invalid/schemas/query-rewrite-ref.v1.schema.json",
+      "title": "Query rewrite reference",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "encrypted_query_ref",
+        "query_sha256",
+        "reason_code"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_needed",
+            "accepted",
+            "rejected",
+            "failed"
+          ]
+        },
+        "encrypted_query_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "query_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_code": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        }
+      }
+    },
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

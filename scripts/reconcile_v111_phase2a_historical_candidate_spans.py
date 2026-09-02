@@ -17,6 +17,7 @@ import json
 import os
 import re
 import stat
+import sys
 import unicodedata
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
@@ -25,6 +26,15 @@ from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 import lancedb  # type: ignore[import-untyped]
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ROOT = PROJECT_ROOT / "backend"
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.retrieval.ge_generic_read_guard import (  # noqa: E402
+    require_generic_index_read_allowed,
+)
 
 EXPECTED_HISTORICAL_REVIEW_SHA256 = (
     "e06d7f1179d58824c16ce2e45cbf46dcdce64365d69652729255738b9ddb1d2d"
@@ -408,6 +418,7 @@ def reconcile(
         by_title[str(source.get("title") or "").strip().casefold()].append(source)
         by_url[_base_official_url(str(source.get("canonical_url") or ""))].append(source)
 
+    require_generic_index_read_allowed(candidate_root, expected_build_id=candidate_root.name)
     table = lancedb.connect(str(candidate_root / "lance" / "authority")).open_table("chunks")
     row_cache: dict[str, list[dict[str, Any]]] = {}
     reconciled: list[dict[str, Any]] = []

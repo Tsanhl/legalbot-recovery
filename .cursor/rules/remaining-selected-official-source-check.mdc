@@ -14,6 +14,7 @@ When the owner is checking the remaining selected Path-B issues (currently 293 k
 - Download official XML/HTML into the configured source roots so local catalogue bytes can be compared.
 - Use WebSearch, WebFetch, or the browser tools for those hosts.
 - Cloud or local subagents doing this check must be allowed network access to those hosts.
+- When a GE result names a knowledge gap or wrong route, run `scripts/fill_ge_knowledge_gaps.py` rather than waiting for a local quote.
 
 ## What still is not gold
 

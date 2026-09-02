@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from .crypto import LocalCipher
     from .orchestration.retry_policy import RetryDecision
 
-SCHEMA_VERSION = 25
+SCHEMA_VERSION = 31
 PUBLIC_RELEASE_STATES = ("verified_full", "verified_concise", "verified_limited")
 _SQLITE_CONNECTION_IDENTITY_LOCK = threading.Lock()
 
@@ -496,6 +496,340 @@ CREATE TABLE IF NOT EXISTS runtime_objects (
 CREATE INDEX IF NOT EXISTS idx_runtime_objects_namespace
   ON runtime_objects(namespace, created_at DESC);
 
+CREATE TABLE IF NOT EXISTS selected_answer_contract_chains (
+  job_id TEXT PRIMARY KEY REFERENCES jobs(id),
+  request_id TEXT NOT NULL,
+  terminal_event_id TEXT NOT NULL UNIQUE,
+  chain_sha256 TEXT NOT NULL UNIQUE,
+  schema_selection_sha256 TEXT NOT NULL,
+  release_sha256 TEXT NOT NULL UNIQUE,
+  answer_job_sha256 TEXT NOT NULL UNIQUE,
+  object_count INTEGER NOT NULL CHECK(object_count = 10),
+  status TEXT NOT NULL CHECK(status = 'verified_unpublished'),
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS selected_answer_contract_objects (
+  job_id TEXT NOT NULL REFERENCES selected_answer_contract_chains(job_id),
+  ordinal INTEGER NOT NULL CHECK(ordinal BETWEEN 1 AND 10),
+  role TEXT NOT NULL CHECK(role IN (
+    'conversation_snapshot','fact_snapshot','query_plan','retrieval_result',
+    'evidence_pack','claim_set','validation_report','verified_release',
+    'terminal_event','answer_job'
+  )),
+  schema_name TEXT NOT NULL,
+  contract_sha256 TEXT NOT NULL,
+  object_key TEXT NOT NULL REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(job_id, role),
+  UNIQUE(job_id, ordinal),
+  UNIQUE(job_id, contract_sha256),
+  UNIQUE(job_id, object_key)
+);
+CREATE INDEX IF NOT EXISTS idx_selected_answer_contract_objects_job
+  ON selected_answer_contract_objects(job_id, ordinal);
+
+CREATE TABLE IF NOT EXISTS selected_answer_release_bindings (
+  job_id TEXT PRIMARY KEY REFERENCES selected_answer_contract_chains(job_id),
+  release_id TEXT NOT NULL UNIQUE,
+  release_sha256 TEXT NOT NULL UNIQUE,
+  answer_id TEXT NOT NULL UNIQUE,
+  answer_content_sha256 TEXT NOT NULL,
+  release_state TEXT NOT NULL CHECK(release_state IN (
+    'verified_full','verified_concise','verified_limited'
+  )),
+  attempt_id TEXT NOT NULL,
+  lease_generation INTEGER NOT NULL CHECK(lease_generation >= 1),
+  terminal_sequence INTEGER NOT NULL CHECK(terminal_sequence >= 1),
+  terminal_event_id TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL
+);
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_contract_chains_no_update
+BEFORE UPDATE ON selected_answer_contract_chains
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer contract chain is immutable');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_contract_chains_no_delete
+BEFORE DELETE ON selected_answer_contract_chains
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer contract chain cannot be deleted');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_contract_objects_no_update
+BEFORE UPDATE ON selected_answer_contract_objects
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer contract object binding is immutable');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_contract_objects_no_delete
+BEFORE DELETE ON selected_answer_contract_objects
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer contract object binding cannot be deleted');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_release_bindings_no_update
+BEFORE UPDATE ON selected_answer_release_bindings
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer release binding is immutable');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_release_bindings_no_delete
+BEFORE DELETE ON selected_answer_release_bindings
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer release binding cannot be deleted');
+END;
+
+CREATE TABLE IF NOT EXISTS selected_answer_publications (
+  job_id TEXT PRIMARY KEY REFERENCES selected_answer_contract_chains(job_id),
+  outbox_id TEXT NOT NULL UNIQUE REFERENCES release_outbox(id),
+  chain_sha256 TEXT NOT NULL UNIQUE,
+  release_id TEXT NOT NULL UNIQUE,
+  release_sha256 TEXT NOT NULL UNIQUE,
+  terminal_event_id TEXT NOT NULL UNIQUE,
+  answer_job_sha256 TEXT NOT NULL UNIQUE,
+  answer_id TEXT NOT NULL UNIQUE,
+  answer_content_sha256 TEXT NOT NULL,
+  release_state TEXT NOT NULL CHECK(release_state IN (
+    'verified_full','verified_concise','verified_limited'
+  )),
+  normal_live_authority_sha256 TEXT NOT NULL,
+  published_at TEXT NOT NULL
+);
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_publications_no_update
+BEFORE UPDATE ON selected_answer_publications
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer publication is immutable');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_answer_publications_no_delete
+BEFORE DELETE ON selected_answer_publications
+BEGIN
+  SELECT RAISE(ABORT, 'selected answer publication cannot be deleted');
+END;
+
+CREATE TABLE IF NOT EXISTS selected_evaluation_run_contracts (
+  run_id TEXT PRIMARY KEY,
+  run_sha256 TEXT NOT NULL UNIQUE,
+  lane TEXT NOT NULL CHECK(lane='visible_development'),
+  case_count INTEGER NOT NULL CHECK(case_count=331),
+  case_result_manifest_sha256 TEXT NOT NULL UNIQUE,
+  run_validity TEXT NOT NULL CHECK(run_validity IN ('PASS','FAIL')),
+  run_object_key TEXT NOT NULL UNIQUE REFERENCES runtime_objects(object_key),
+  status TEXT NOT NULL CHECK(status IN ('completed_valid','completed_invalid')),
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS selected_evaluation_case_contracts (
+  run_id TEXT NOT NULL REFERENCES selected_evaluation_run_contracts(run_id),
+  ordinal INTEGER NOT NULL CHECK(ordinal BETWEEN 1 AND 331),
+  case_id TEXT NOT NULL,
+  case_version_sha256 TEXT NOT NULL,
+  result_id TEXT NOT NULL,
+  result_sha256 TEXT NOT NULL,
+  terminal_state TEXT NOT NULL CHECK(terminal_state IN (
+    'completed','held','system_error','cancelled','ineligible'
+  )),
+  object_key TEXT NOT NULL REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(run_id, ordinal),
+  UNIQUE(run_id, case_id),
+  UNIQUE(run_id, result_id),
+  UNIQUE(run_id, result_sha256),
+  UNIQUE(run_id, object_key)
+);
+CREATE INDEX IF NOT EXISTS idx_selected_evaluation_case_contracts_run
+  ON selected_evaluation_case_contracts(run_id, ordinal);
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_evaluation_run_contracts_no_update
+BEFORE UPDATE ON selected_evaluation_run_contracts
+BEGIN
+  SELECT RAISE(ABORT, 'selected evaluation run contract is immutable');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_evaluation_run_contracts_no_delete
+BEFORE DELETE ON selected_evaluation_run_contracts
+BEGIN
+  SELECT RAISE(ABORT, 'selected evaluation run contract cannot be deleted');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_evaluation_case_contracts_no_update
+BEFORE UPDATE ON selected_evaluation_case_contracts
+BEGIN
+  SELECT RAISE(ABORT, 'selected evaluation case contract is immutable');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_evaluation_case_contracts_no_delete
+BEFORE DELETE ON selected_evaluation_case_contracts
+BEGIN
+  SELECT RAISE(ABORT, 'selected evaluation case contract cannot be deleted');
+END;
+
+CREATE TABLE IF NOT EXISTS selected_ge_system_run_contracts (
+  run_id TEXT PRIMARY KEY,
+  run_sha256 TEXT NOT NULL UNIQUE,
+  linked_visible_run_id TEXT NOT NULL REFERENCES selected_evaluation_run_contracts(run_id),
+  candidate_sha256 TEXT NOT NULL,
+  system_manifest_sha256 TEXT NOT NULL,
+  system_order_sha256 TEXT NOT NULL,
+  result_manifest_sha256 TEXT NOT NULL UNIQUE,
+  result_count INTEGER NOT NULL CHECK(result_count=32),
+  run_validity TEXT NOT NULL CHECK(run_validity IN ('PASS','FAIL')),
+  run_object_key TEXT NOT NULL UNIQUE REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS selected_ge_system_case_contracts (
+  run_id TEXT NOT NULL REFERENCES selected_ge_system_run_contracts(run_id),
+  ordinal INTEGER NOT NULL CHECK(ordinal BETWEEN 1 AND 32),
+  system_case_id TEXT NOT NULL,
+  result_id TEXT NOT NULL,
+  result_sha256 TEXT NOT NULL,
+  outcome TEXT NOT NULL CHECK(outcome IN ('PASS','FAIL','SYSTEM_ERROR')),
+  object_key TEXT NOT NULL REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(run_id, ordinal),
+  UNIQUE(run_id, system_case_id),
+  UNIQUE(run_id, result_id),
+  UNIQUE(run_id, result_sha256),
+  UNIQUE(run_id, object_key)
+);
+CREATE INDEX IF NOT EXISTS idx_selected_ge_system_cases_run
+  ON selected_ge_system_case_contracts(run_id, ordinal);
+
+CREATE TABLE IF NOT EXISTS ge_visible_diagnostic_supplement_contracts (
+  pack_id TEXT PRIMARY KEY,
+  pack_sha256 TEXT NOT NULL UNIQUE,
+  linked_cycle_id TEXT NOT NULL,
+  fixed_pack_manifest_sha256 TEXT NOT NULL,
+  case_manifest_sha256 TEXT NOT NULL UNIQUE,
+  case_count INTEGER NOT NULL CHECK(case_count>=0),
+  object_key TEXT NOT NULL UNIQUE REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ge_cycle_assessment_contracts (
+  assessment_id TEXT PRIMARY KEY,
+  assessment_sha256 TEXT NOT NULL UNIQUE,
+  loop_id TEXT NOT NULL,
+  cycle_number INTEGER NOT NULL CHECK(cycle_number>=1),
+  predecessor_assessment_sha256 TEXT,
+  status TEXT NOT NULL CHECK(status IN (
+    'IMPROVEMENT_REQUIRED','FULL_RERUN_REQUIRED','STOP_REPEATED_FINGERPRINT',
+    'AWAITING_OWNER_ACCEPTANCE','GE_COMPLETE_OWNER_ACCEPTED'
+  )),
+  visible_run_id TEXT NOT NULL REFERENCES selected_evaluation_run_contracts(run_id),
+  system_run_id TEXT NOT NULL REFERENCES selected_ge_system_run_contracts(run_id),
+  evaluated_candidate_sha256 TEXT NOT NULL,
+  diagnosis_count INTEGER NOT NULL CHECK(diagnosis_count>=0),
+  diagnosis_manifest_sha256 TEXT NOT NULL,
+  open_material_diagnosis_count INTEGER NOT NULL CHECK(open_material_diagnosis_count>=0),
+  diagnostic_supplement_sha256 TEXT,
+  decision_basis_sha256 TEXT NOT NULL UNIQUE,
+  owner_acceptance_sha256 TEXT,
+  object_key TEXT NOT NULL UNIQUE REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL,
+  UNIQUE(loop_id, cycle_number)
+);
+CREATE INDEX IF NOT EXISTS idx_ge_cycle_assessments_loop
+  ON ge_cycle_assessment_contracts(loop_id, cycle_number);
+
+CREATE TABLE IF NOT EXISTS ge_cycle_diagnosis_contracts (
+  assessment_id TEXT NOT NULL REFERENCES ge_cycle_assessment_contracts(assessment_id),
+  ordinal INTEGER NOT NULL CHECK(ordinal>=1),
+  diagnosis_id TEXT NOT NULL,
+  diagnosis_sha256 TEXT NOT NULL,
+  failure_fingerprint_sha256 TEXT NOT NULL,
+  case_id TEXT NOT NULL,
+  case_kind TEXT NOT NULL CHECK(case_kind IN ('visible','system','diagnostic')),
+  failure_class TEXT NOT NULL CHECK(failure_class IN ('factual','quality','system')),
+  materiality TEXT NOT NULL CHECK(materiality IN (
+    'material','potentially_material','non_material'
+  )),
+  status TEXT NOT NULL CHECK(status IN ('open','resolved')),
+  object_key TEXT NOT NULL REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(assessment_id, ordinal),
+  UNIQUE(assessment_id, diagnosis_id),
+  UNIQUE(assessment_id, diagnosis_sha256),
+  UNIQUE(assessment_id, object_key)
+);
+CREATE INDEX IF NOT EXISTS idx_ge_cycle_diagnoses_fingerprint
+  ON ge_cycle_diagnosis_contracts(failure_fingerprint_sha256, assessment_id);
+
+CREATE TABLE IF NOT EXISTS ge_diagnostic_case_result_contracts (
+  assessment_id TEXT NOT NULL REFERENCES ge_cycle_assessment_contracts(assessment_id),
+  pack_id TEXT NOT NULL REFERENCES ge_visible_diagnostic_supplement_contracts(pack_id),
+  ordinal INTEGER NOT NULL CHECK(ordinal>=1),
+  diagnostic_case_id TEXT NOT NULL,
+  result_sha256 TEXT NOT NULL,
+  factual_outcome TEXT NOT NULL CHECK(factual_outcome IN ('FACTUAL_PASS','FACTUAL_HOLD')),
+  quality_outcome TEXT NOT NULL CHECK(quality_outcome IN (
+    'EXCEEDS_70_STANDARD','MEETS_70_STANDARD','BELOW_70_STANDARD',
+    'MATERIAL_IMPROVEMENT_REQUIRED','NOT_ELIGIBLE'
+  )),
+  object_key TEXT NOT NULL REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(assessment_id, ordinal),
+  UNIQUE(assessment_id, diagnostic_case_id),
+  UNIQUE(assessment_id, result_sha256),
+  UNIQUE(assessment_id, object_key)
+);
+
+CREATE TABLE IF NOT EXISTS ge_cycle_owner_acceptance_contracts (
+  assessment_id TEXT PRIMARY KEY REFERENCES ge_cycle_assessment_contracts(assessment_id),
+  owner_decision_id TEXT NOT NULL UNIQUE,
+  acceptance_sha256 TEXT NOT NULL UNIQUE,
+  decision_basis_sha256 TEXT NOT NULL UNIQUE,
+  object_key TEXT NOT NULL UNIQUE REFERENCES runtime_objects(object_key),
+  created_at TEXT NOT NULL
+);
+
+CREATE TRIGGER IF NOT EXISTS trg_selected_ge_system_runs_no_update
+BEFORE UPDATE ON selected_ge_system_run_contracts
+BEGIN SELECT RAISE(ABORT, 'selected GE system run is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_selected_ge_system_runs_no_delete
+BEFORE DELETE ON selected_ge_system_run_contracts
+BEGIN SELECT RAISE(ABORT, 'selected GE system run cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS trg_selected_ge_system_cases_no_update
+BEFORE UPDATE ON selected_ge_system_case_contracts
+BEGIN SELECT RAISE(ABORT, 'selected GE system result is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_selected_ge_system_cases_no_delete
+BEFORE DELETE ON selected_ge_system_case_contracts
+BEGIN SELECT RAISE(ABORT, 'selected GE system result cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_diagnostic_supplements_no_update
+BEFORE UPDATE ON ge_visible_diagnostic_supplement_contracts
+BEGIN SELECT RAISE(ABORT, 'GE diagnostic supplement is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_diagnostic_supplements_no_delete
+BEFORE DELETE ON ge_visible_diagnostic_supplement_contracts
+BEGIN SELECT RAISE(ABORT, 'GE diagnostic supplement cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_cycle_assessments_no_update
+BEFORE UPDATE ON ge_cycle_assessment_contracts
+BEGIN SELECT RAISE(ABORT, 'GE cycle assessment is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_cycle_assessments_no_delete
+BEFORE DELETE ON ge_cycle_assessment_contracts
+BEGIN SELECT RAISE(ABORT, 'GE cycle assessment cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_cycle_diagnoses_no_update
+BEFORE UPDATE ON ge_cycle_diagnosis_contracts
+BEGIN SELECT RAISE(ABORT, 'GE cycle diagnosis is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_cycle_diagnoses_no_delete
+BEFORE DELETE ON ge_cycle_diagnosis_contracts
+BEGIN SELECT RAISE(ABORT, 'GE cycle diagnosis cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_diagnostic_results_no_update
+BEFORE UPDATE ON ge_diagnostic_case_result_contracts
+BEGIN SELECT RAISE(ABORT, 'GE diagnostic result is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_diagnostic_results_no_delete
+BEFORE DELETE ON ge_diagnostic_case_result_contracts
+BEGIN SELECT RAISE(ABORT, 'GE diagnostic result cannot be deleted'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_cycle_owner_acceptances_no_update
+BEFORE UPDATE ON ge_cycle_owner_acceptance_contracts
+BEGIN SELECT RAISE(ABORT, 'GE cycle owner acceptance is immutable'); END;
+CREATE TRIGGER IF NOT EXISTS trg_ge_cycle_owner_acceptances_no_delete
+BEFORE DELETE ON ge_cycle_owner_acceptance_contracts
+BEGIN SELECT RAISE(ABORT, 'GE cycle owner acceptance cannot be deleted'); END;
+
 CREATE TABLE IF NOT EXISTS service_heartbeats (
   service_key TEXT PRIMARY KEY,
   instance_id TEXT NOT NULL,
@@ -679,6 +1013,38 @@ BEFORE UPDATE OF assistant_message_id ON conversation_job_bindings
 WHEN OLD.assistant_message_id IS NOT NULL
 BEGIN
   SELECT RAISE(ABORT, 'conversation assistant binding is immutable');
+END;
+
+CREATE TABLE IF NOT EXISTS matter_fact_records (
+  id TEXT PRIMARY KEY,
+  conversation_id TEXT NOT NULL REFERENCES conversation_sessions(id) ON DELETE CASCADE,
+  owner_scope_sha256 TEXT NOT NULL,
+  fact_key TEXT NOT NULL,
+  data_type TEXT NOT NULL,
+  encrypted_value BLOB,
+  value_sha256 TEXT,
+  origin TEXT NOT NULL,
+  status TEXT NOT NULL,
+  revision INTEGER NOT NULL CHECK(revision >= 1),
+  supersedes_fact_id TEXT REFERENCES matter_fact_records(id),
+  conflict_group_id TEXT,
+  affected_issue_ids_json TEXT NOT NULL,
+  effective_from TEXT,
+  effective_to TEXT,
+  as_of_status TEXT NOT NULL,
+  derivation_rule_sha256 TEXT,
+  fact_refs_json TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  UNIQUE(conversation_id, owner_scope_sha256, fact_key, revision)
+);
+CREATE INDEX IF NOT EXISTS idx_matter_fact_records_scope
+  ON matter_fact_records(conversation_id, owner_scope_sha256, fact_key, revision);
+CREATE INDEX IF NOT EXISTS idx_matter_fact_records_supersedes
+  ON matter_fact_records(supersedes_fact_id);
+CREATE TRIGGER IF NOT EXISTS trg_matter_fact_records_no_update
+BEFORE UPDATE ON matter_fact_records
+BEGIN
+  SELECT RAISE(ABORT, 'matter fact record is immutable; append a new revision');
 END;
 
 CREATE TABLE IF NOT EXISTS claims (
@@ -5424,6 +5790,7 @@ class Database:
         evaluation_authority_verifier: Callable[[], object] | None = None,
         normal_live_authority: Mapping[str, Any] | None = None,
         normal_live_authority_verifier: Callable[[], Mapping[str, Any]] | None = None,
+        selected_publication_verifier: Callable[[], Mapping[str, Any]] | None = None,
     ) -> None:
         if release_state not in PUBLIC_RELEASE_STATES:
             self.execute(
@@ -5441,6 +5808,11 @@ class Database:
         # exact DB frontier CAS plus a fast same-process monitor guard.
         preverified_evaluation_authority = (
             evaluation_authority_verifier() if evaluation_authority_verifier is not None else None
+        )
+        preverified_selected_publication = (
+            selected_publication_verifier()
+            if selected_publication_verifier is not None
+            else None
         )
         now = utc_iso()
         with self.transaction() as conn:
@@ -5549,13 +5921,17 @@ class Database:
             elif evaluation_authority_verifier is not None:
                 raise RuntimeError("ordinary work cannot use an evaluation authority verifier")
             normal_live_authority_sha256: str | None = None
-            if not evaluation_bound:
+            if not evaluation_bound and preverified_selected_publication is None:
                 raise RuntimeError(
                     "TECHNICAL_IMPLEMENTATION_REQUIRED:"
                     "normal_live_release_content_certification_missing"
                 )
             if evaluation_bound:
-                if normal_live_authority is not None or normal_live_authority_verifier is not None:
+                if (
+                    normal_live_authority is not None
+                    or normal_live_authority_verifier is not None
+                    or preverified_selected_publication is not None
+                ):
                     raise RuntimeError("evaluation work cannot use normal-live authority")
             else:
                 if normal_live_authority is None or normal_live_authority_verifier is None:
@@ -5629,6 +6005,77 @@ class Database:
                     raise RuntimeError("normal-live release authority is absent or stale")
             key = hashlib.sha256(f"release-v1\0{job_id}".encode()).hexdigest()
             release_audience = "owner_evaluation" if evaluation_bound else "normal_live"
+            selected_chain_sha256: str | None = None
+            selected_release_id: str | None = None
+            selected_release_sha256: str | None = None
+            selected_terminal_event_id: str | None = None
+            selected_answer_job_sha256: str | None = None
+            if not evaluation_bound:
+                proof = dict(preverified_selected_publication or {})
+                proof_material = dict(proof)
+                supplied_proof_sha256 = str(proof_material.pop("content_sha256", ""))
+                expected_proof_sha256 = hashlib.sha256(
+                    (
+                        json.dumps(
+                            proof_material,
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        )
+                        + "\n"
+                    ).encode("utf-8")
+                ).hexdigest()
+                expected_outbox_id = f"release-{key[:40]}"
+                selected = conn.execute(
+                    """
+                    SELECT c.chain_sha256,c.schema_selection_sha256,
+                           c.answer_job_sha256,c.object_count,c.status,
+                           b.release_id,b.release_sha256,b.answer_id,
+                           b.answer_content_sha256,b.release_state,b.attempt_id,
+                           b.lease_generation,b.terminal_sequence,b.terminal_event_id
+                    FROM selected_answer_contract_chains c
+                    JOIN selected_answer_release_bindings b ON b.job_id=c.job_id
+                    WHERE c.job_id=?
+                    """,
+                    (job_id,),
+                ).fetchone()
+                if (
+                    proof.get("schema")
+                    != "legalbot.selected-answer-publication-proof.v1"
+                    or supplied_proof_sha256 != expected_proof_sha256
+                    or proof.get("job_id") != job_id
+                    or proof.get("answer_id") != answer_id
+                    or proof.get("release_state") != release_state
+                    or proof.get("outbox_id") != expected_outbox_id
+                    or proof.get("chain_status") != "verified_unpublished"
+                    or int(proof.get("object_count") or 0) != 10
+                    or selected is None
+                    or selected["chain_sha256"] != proof.get("chain_sha256")
+                    or selected["schema_selection_sha256"]
+                    != proof.get("schema_selection_sha256")
+                    or selected["answer_job_sha256"] != proof.get("answer_job_sha256")
+                    or int(selected["object_count"]) != int(proof["object_count"])
+                    or selected["status"] != proof.get("chain_status")
+                    or selected["release_id"] != proof.get("release_id")
+                    or selected["release_sha256"] != proof.get("release_sha256")
+                    or selected["answer_id"] != proof.get("answer_id")
+                    or selected["answer_content_sha256"]
+                    != proof.get("answer_content_sha256")
+                    or selected["release_state"] != proof.get("release_state")
+                    or selected["attempt_id"] != proof.get("attempt_id")
+                    or int(selected["lease_generation"])
+                    != int(proof.get("lease_generation") or 0)
+                    or int(selected["terminal_sequence"])
+                    != int(proof.get("terminal_sequence") or 0)
+                    or selected["terminal_event_id"] != proof.get("terminal_event_id")
+                ):
+                    raise RuntimeError("selected answer publication proof is absent or stale")
+                selected_chain_sha256 = str(proof["chain_sha256"])
+                selected_release_id = str(proof["release_id"])
+                selected_release_sha256 = str(proof["release_sha256"])
+                selected_terminal_event_id = str(proof["terminal_event_id"])
+                selected_answer_job_sha256 = str(proof["answer_job_sha256"])
+                released_answer_sha256 = str(proof["answer_content_sha256"])
             existing = conn.execute(
                 "SELECT id,job_id,answer_id, release_state, release_audience, "
                 "evaluation_authority_sha256, normal_live_authority_sha256, "
@@ -5777,6 +6224,43 @@ class Database:
                 or persisted["published_at"] in (None, "")
             ):
                 raise RuntimeError("atomic release outbox binding differs")
+            if not evaluation_bound:
+                existing_publication = conn.execute(
+                    "SELECT * FROM selected_answer_publications WHERE job_id=?",
+                    (job_id,),
+                ).fetchone()
+                publication_values = (
+                    job_id,
+                    str(persisted["id"]),
+                    selected_chain_sha256,
+                    selected_release_id,
+                    selected_release_sha256,
+                    selected_terminal_event_id,
+                    selected_answer_job_sha256,
+                    answer_id,
+                    released_answer_sha256,
+                    release_state,
+                    normal_live_authority_sha256,
+                    str(persisted["published_at"]),
+                )
+                if existing is None:
+                    conn.execute(
+                        """
+                        INSERT INTO selected_answer_publications(
+                          job_id,outbox_id,chain_sha256,release_id,release_sha256,
+                          terminal_event_id,answer_job_sha256,answer_id,
+                          answer_content_sha256,release_state,
+                          normal_live_authority_sha256,published_at
+                        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                        """,
+                        publication_values,
+                    )
+                    existing_publication = conn.execute(
+                        "SELECT * FROM selected_answer_publications WHERE job_id=?",
+                        (job_id,),
+                    ).fetchone()
+                if existing_publication is None or tuple(existing_publication) != publication_values:
+                    raise RuntimeError("atomic selected publication binding differs")
             if existing is None:
                 updated_answer = conn.execute(
                     """
@@ -9323,27 +9807,64 @@ class Database:
             ),
         )
 
-    def purge_expired_unreleased_versions(self) -> int:
+    def purge_expired_unreleased_versions(
+        self,
+        *,
+        guard: Any | None = None,
+        authorization: Any | None = None,
+    ) -> int:
+        """Physically erase exact expired versions only under owner capability."""
+
+        from .deletion_guard import (
+            DeletionBlockedError,
+            DeletionGuard,
+            DeletionObjectClass,
+        )
+
         now = utc_iso()
+        rows = self.fetchall(
+            """
+            SELECT id FROM answer_versions
+            WHERE (release_state IS NULL OR release_state='held_for_review')
+              AND purge_after < ?
+            ORDER BY id
+            """,
+            (now,),
+        )
+        if authorization is None:
+            return 0
+        authorized_ids: list[str] = []
+        deletion_guard = guard if isinstance(guard, DeletionGuard) else DeletionGuard()
+        for row in rows:
+            identifier = str(row["id"])
+            try:
+                deletion_guard.require(
+                    object_class=DeletionObjectClass.ANSWER_VERSION,
+                    object_id=identifier,
+                    authorization=authorization,
+                )
+            except DeletionBlockedError:
+                continue
+            authorized_ids.append(identifier)
+        if not authorized_ids:
+            return 0
+        placeholders = ",".join("?" for _ in authorized_ids)
         with self.transaction() as conn:
             conn.execute(
-                """
+                f"""
                 UPDATE answer_versions SET parent_version_id=NULL
-                WHERE parent_version_id IN (
-                  SELECT id FROM answer_versions
-                  WHERE (release_state IS NULL OR release_state='held_for_review')
-                    AND purge_after < ?
-                )
+                WHERE parent_version_id IN ({placeholders})
                 """,
-                (now,),
+                tuple(authorized_ids),
             )
             cursor = conn.execute(
-                """
+                f"""
                 DELETE FROM answer_versions
-                WHERE (release_state IS NULL OR release_state='held_for_review')
+                WHERE id IN ({placeholders})
+                  AND (release_state IS NULL OR release_state='held_for_review')
                   AND purge_after < ?
                 """,
-                (now,),
+                (*authorized_ids, now),
             )
             return int(cursor.rowcount)
 

@@ -402,6 +402,10 @@ export function LegalBotApp() {
           const envelope = JSON.parse(String(raw.data)) as JobEventEnvelope;
           if (
             envelope.schema !== "legalbot.job-event.v1"
+            || envelope.job_id !== activeJobId
+            || !envelope.event_id
+            || !envelope.attempt_id
+            || !Number.isSafeInteger(envelope.lease_generation)
             || !Number.isSafeInteger(envelope.sequence)
             || envelope.sequence < lastSequence
           ) throw new Error("invalid websocket event envelope");
@@ -409,19 +413,23 @@ export function LegalBotApp() {
           if (!current) return;
           if (envelope.event === "progress") {
             const event = envelope.data as JobProgressEvent;
-            setStage(event.stage);
-            setProgress(event.progress);
-            setStageDetail(event.message || "");
+            if (event.stage) setStage(event.stage);
+            if (event.progress !== null) setProgress(event.progress);
+            setStageDetail(event.message_code);
+            return;
+          }
+          if (envelope.event === "reset_required") {
+            void hydrate();
             return;
           }
           const event = envelope.data as JobDoneEvent;
-          if (event.status === "complete") {
+          if (event.status === "complete" && event.terminal_kind === "committed") {
             terminal = true;
             void loadReleased(event.answer_id);
           }
-          else if (event.status === "held_for_review") endWithoutAnswer("held_for_review", event.message);
-          else if (event.status === "cancelled") endWithoutAnswer("cancelled", event.message);
-          else endWithoutAnswer("system_error", event.message);
+          else if (event.status === "held") endWithoutAnswer("held_for_review", event.message_code);
+          else if (event.status === "cancelled") endWithoutAnswer("cancelled", event.message_code);
+          else endWithoutAnswer("system_error", event.message_code);
         } catch {
           setServiceError("A WebSocket progress update could not be read. The durable job remains available.");
           void hydrate();

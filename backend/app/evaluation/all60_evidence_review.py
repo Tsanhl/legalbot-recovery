@@ -31,6 +31,7 @@ from ..quality.ai_evidence_reviewer import (
 from ..quality.draft_identity import source_draft_sha256
 from ..quality.evidence import is_substantively_related, substantive_tokens
 from ..quality.policy import POLICY_SHA256
+from ..retrieval.ge_generic_read_guard import require_generic_index_read_allowed
 from ..retrieval.source_manifest import (
     MANIFEST_SCHEMA,
     OFFICIAL_JUDGMENT_LICENCE_PREFIXES,
@@ -171,6 +172,7 @@ def _json_object(path: Path, *, label: str) -> dict[str, Any]:
 
 
 def _load_candidate_rows(root: Path, chunk_ids: Sequence[str]) -> dict[str, dict[str, Any]]:
+    require_generic_index_read_allowed(root, expected_build_id=root.name)
     authority = root / "lance" / "authority"
     if not authority.is_dir() or authority.is_symlink():
         raise ValueError("all-60 candidate authority lane is missing")

@@ -57,6 +57,34 @@ def _sidecars(catalogue: Path) -> list[str]:
     ]
 
 
+def _safe_sidecar_state(catalogue: Path) -> dict[str, dict[str, int | str]]:
+    """Accept no sidecars or the preserved zero-WAL/orphan-SHM recovery state."""
+
+    state: dict[str, dict[str, int | str]] = {}
+    for suffix in ("-wal", "-shm", "-journal"):
+        path = Path(f"{catalogue}{suffix}")
+        if not path.exists():
+            continue
+        metadata = path.stat(follow_symlinks=False)
+        if path.is_symlink() or not stat.S_ISREG(metadata.st_mode):
+            raise RuntimeError("catalogue sidecar is not a regular owner file")
+        state[suffix] = {
+            "size": metadata.st_size,
+            "mode": oct(stat.S_IMODE(metadata.st_mode)),
+            "inode": metadata.st_ino,
+            "mtime_ns": metadata.st_mtime_ns,
+        }
+    if "-journal" in state:
+        raise RuntimeError("catalogue rollback journal is present")
+    if "-wal" in state and int(state["-wal"]["size"]) != 0:
+        raise RuntimeError("catalogue WAL contains uncheckpointed bytes")
+    if "-shm" in state and (
+        "-wal" not in state or int(state["-shm"]["size"]) > 1024 * 1024
+    ):
+        raise RuntimeError("catalogue SHM is not the bounded orphan recovery state")
+    return state
+
+
 def _open_processes(catalogue: Path) -> tuple[int, ...]:
     lsof = shutil.which("lsof")
     if lsof is None:
@@ -202,7 +230,8 @@ def _write_private_create_only(path: Path, content: bytes) -> None:
             handle.flush()
             os.fsync(handle.fileno())
     except BaseException:
-        path.unlink(missing_ok=True)
+        # Preserve any partial create-only file for diagnosis. Cleanup remains
+        # subject to a later exact owner deletion authorization.
         raise
 
 
@@ -214,17 +243,17 @@ def create_backup_and_restore_drill(catalogue: Path, output: Path) -> dict[str, 
     backup_root = DEFAULT_BACKUP_ROOT.resolve(strict=True)
     if output.parent.resolve(strict=True) != backup_root or output.exists():
         raise ValueError("output must be one new direct child of data/backups")
-    sidecars_before = _sidecars(catalogue)
     open_processes = _open_processes(catalogue)
-    if sidecars_before or open_processes:
-        raise RuntimeError("backup requires no SQLite sidecars and no open process")
+    sidecars_before = _safe_sidecar_state(catalogue)
+    if open_processes:
+        raise RuntimeError("backup requires no open catalogue process")
 
     started_at = _utc_now()
     source_sha256_before = _sha256(catalogue)
     output.mkdir(mode=0o700)
     output.chmod(0o700)
     backup_path = output / "catalog.sqlite3"
-    restore_path = output / ".restore-drill.sqlite3"
+    restore_path = output / "restore-drill.sqlite3"
     source = sqlite3.connect(f"file:{catalogue}?mode=ro&immutable=1", uri=True)
     try:
         source.execute("PRAGMA query_only=ON")
@@ -239,8 +268,9 @@ def create_backup_and_restore_drill(catalogue: Path, output: Path) -> dict[str, 
     source_sha256_after = _sha256(catalogue)
     if source_sha256_before != source_sha256_after:
         raise RuntimeError("catalogue bytes changed during backup")
-    if _sidecars(catalogue):
-        raise RuntimeError("SQLite sidecar appeared during backup")
+    sidecars_after = _safe_sidecar_state(catalogue)
+    if sidecars_after != sidecars_before:
+        raise RuntimeError("SQLite sidecar identity changed during backup")
 
     backup = sqlite3.connect(f"file:{backup_path}?mode=ro&immutable=1", uri=True)
     try:
@@ -263,7 +293,14 @@ def create_backup_and_restore_drill(catalogue: Path, output: Path) -> dict[str, 
         raise RuntimeError("restored catalogue logical state differs from backup")
     restored_sha256 = _sha256(restore_path)
     restore_size = restore_path.stat().st_size
-    restore_path.unlink()
+    restore_metadata = restore_path.stat(follow_symlinks=False)
+    if (
+        not stat.S_ISREG(restore_metadata.st_mode)
+        or stat.S_IMODE(restore_metadata.st_mode) != 0o600
+        or restore_metadata.st_uid != os.getuid()
+        or restore_metadata.st_nlink != 1
+    ):
+        raise RuntimeError("restore drill target is not one private owner file")
 
     backup_metadata = backup_path.stat(follow_symlinks=False)
     if (
@@ -285,6 +322,7 @@ def create_backup_and_restore_drill(catalogue: Path, output: Path) -> dict[str, 
         "preconditions": {
             "open_process_count": len(open_processes),
             "sqlite_sidecars": sidecars_before,
+            "sqlite_sidecars_unchanged": sidecars_after == sidecars_before,
             **writer_state,
         },
         "source": {
@@ -303,7 +341,8 @@ def create_backup_and_restore_drill(catalogue: Path, output: Path) -> dict[str, 
         },
         "restore_drill": {
             "executed": True,
-            "isolated_restore_file_retained": False,
+            "isolated_restore_file_retained": True,
+            "relative_path": _relative(restore_path),
             "restored_sha256": restored_sha256,
             "restored_size": restore_size,
             "integrity_check": integrity,
@@ -340,7 +379,7 @@ def finalize_existing_backup(catalogue: Path, output: Path) -> dict[str, Any]:
         raise ValueError("output must be one direct child of data/backups")
     backup_path = output / "catalog.sqlite3"
     receipt_path = output / "BACKUP-RESTORE-RECEIPT.json"
-    restore_path = output / ".restore-drill.sqlite3"
+    restore_path = output / "restore-drill.sqlite3"
     if (
         not backup_path.is_file()
         or backup_path.is_symlink()
@@ -348,10 +387,10 @@ def finalize_existing_backup(catalogue: Path, output: Path) -> dict[str, Any]:
         or restore_path.exists()
     ):
         raise ValueError("existing backup is not resumable")
-    sidecars = _sidecars(catalogue)
+    sidecars = _safe_sidecar_state(catalogue)
     open_processes = _open_processes(catalogue)
-    if sidecars or open_processes:
-        raise RuntimeError("finalization requires no SQLite sidecars and no open process")
+    if open_processes:
+        raise RuntimeError("finalization requires no open catalogue process")
 
     started_at = _utc_now()
     source = sqlite3.connect(f"file:{catalogue}?mode=ro&immutable=1", uri=True)
@@ -385,7 +424,6 @@ def finalize_existing_backup(catalogue: Path, output: Path) -> dict[str, Any]:
     backup_sha256 = _sha256(backup_path)
     restored_sha256 = _sha256(restore_path)
     restored_size = restore_path.stat().st_size
-    restore_path.unlink()
     backup_metadata = backup_path.stat(follow_symlinks=False)
     if (
         not stat.S_ISREG(backup_metadata.st_mode)
@@ -443,7 +481,8 @@ def finalize_existing_backup(catalogue: Path, output: Path) -> dict[str, Any]:
         },
         "restore_drill": {
             "executed": True,
-            "isolated_restore_file_retained": False,
+            "isolated_restore_file_retained": True,
+            "relative_path": _relative(restore_path),
             "restored_sha256": restored_sha256,
             "restored_size": restored_size,
             "integrity_check": integrity,

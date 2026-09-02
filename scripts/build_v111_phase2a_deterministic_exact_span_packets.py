@@ -35,6 +35,9 @@ for root in (PROJECT_ROOT, BACKEND_ROOT):
         sys.path.insert(0, str(root))
 
 from app.privacy import scrub_pii  # noqa: E402
+from app.retrieval.ge_generic_read_guard import (  # noqa: E402
+    require_generic_index_read_allowed,
+)
 from app.retrieval.source_manifest import approved_source_manifest_sha256  # noqa: E402
 
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
@@ -645,6 +648,7 @@ def _load_catalogue_chunks(
 def _load_lance_chunks(build_root: Path, chunk_ids: Sequence[str]) -> dict[str, dict[str, Any]]:
     import lancedb
 
+    require_generic_index_read_allowed(build_root, expected_build_id=build_root.name)
     database = lancedb.connect(str(build_root / "lance/authority"))
     if database.table_names() != ["chunks"]:
         raise ValueError("phase2a_deterministic_span_lance_table_invalid")

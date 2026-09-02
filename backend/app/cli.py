@@ -115,6 +115,11 @@ def parser() -> argparse.ArgumentParser:
     )
     recover_embedding.add_argument("build_id")
     recover_embedding.add_argument(
+        "--expected-audit-report-sha256",
+        required=True,
+        help="Exact report_sha256 from a fresh audit-incomplete-index result",
+    )
+    recover_embedding.add_argument(
         "--continue-build",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -791,6 +796,7 @@ def main(argv: Sequence[str] | None = None) -> None:
             database,
             args.build_id,
             continue_build=bool(args.continue_build),
+            expected_audit_report_sha256=str(args.expected_audit_report_sha256),
         )
         print(json.dumps(result, indent=2, sort_keys=True, default=str))
     elif args.command == "resume-index-build":

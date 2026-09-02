@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/matter-fact-snapshot.v2.schema.json",
+  "title": "LegalBot MatterFactSnapshot v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "snapshot_id",
+    "conversation_id",
+    "owner_scope_sha256",
+    "conversation_revision",
+    "created_at",
+    "facts",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.matter-fact-snapshot.v2"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "conversation_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "owner_scope_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "conversation_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "facts": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_id",
+          "fact_key",
+          "data_type",
+          "encrypted_value_ref",
+          "value_sha256",
+          "origin",
+          "status",
+          "revision",
+          "supersedes_fact_id",
+          "conflict_group_id",
+          "affected_issue_ids",
+          "temporal_scope",
+          "derivation_rule_sha256",
+          "created_at",
+          "fact_refs"
+        ],
+        "properties": {
+          "fact_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "fact_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "data_type": {
+            "enum": [
+              "date",
+              "datetime",
+              "money",
+              "integer",
+              "decimal",
+              "boolean",
+              "text",
+              "identifier",
+              "location",
+              "party_role",
+              "duration"
+            ]
+          },
+          "encrypted_value_ref": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value_sha256": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "origin": {
+            "enum": [
+              "user_statement",
+              "document_extraction",
+              "deterministic_derivation",
+              "user_confirmation",
+              "system_placeholder"
+            ]
+          },
+          "status": {
+            "enum": [
+              "stated",
+              "extracted",
+              "confirmed",
+              "disputed",
+              "unknown",
+              "superseded",
+              "rejected",
+              "scope_stale"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "supersedes_fact_id": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "conflict_group_id": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "affected_issue_ids": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "temporal_scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "effective_from",
+              "effective_to",
+              "as_of_status"
+            ],
+            "properties": {
+              "effective_from": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "effective_to": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "as_of_status": {
+                "enum": [
+                  "current",
+                  "historical",
+                  "unknown",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "derivation_rule_sha256": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fact_refs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_kind",
+                "source_id",
+                "source_revision",
+                "content_sha256",
+                "safe_locator"
+              ],
+              "properties": {
+                "source_kind": {
+                  "enum": [
+                    "message",
+                    "upload",
+                    "fact"
+                  ]
+                },
+                "source_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+                },
+                "source_revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "safe_locator": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 255
+                }
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "origin": {
+                  "const": "deterministic_derivation"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "derivation_rule_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "unknown"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "encrypted_value_ref": {
+                  "type": "null"
+                },
+                "value_sha256": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

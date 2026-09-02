@@ -27,6 +27,7 @@ from .models import (
     SearchQuery,
     ensure_vector,
 )
+from .planned import retrieval_item_from_query_plan
 
 __all__ = [
     "VECTOR_DIMENSIONS",
@@ -53,4 +54,5 @@ __all__ = [
     "enforce_candidates",
     "ensure_vector",
     "reciprocal_rank_fusion",
+    "retrieval_item_from_query_plan",
 ]

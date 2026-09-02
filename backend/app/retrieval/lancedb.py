@@ -18,6 +18,9 @@ from typing import Any
 from .interfaces import LanceSessionFactory
 from .models import VECTOR_DIMENSIONS, IndexedChunk
 
+_GE_SELECTION_POLICY = "exact-owner-approved-ge-source-versions-and-lanes"
+_BUILD_BOUNDARY_FILENAME = "build-boundary.json"
+
 
 @dataclass(frozen=True, slots=True)
 class IndexBuildManifest:
@@ -94,6 +97,7 @@ class ImmutableLanceRepository:
         staging_path = self.builds / f".{build_id}.incomplete"
         if not staging_path.exists():
             raise FileNotFoundError(f"incomplete build missing: {build_id}")
+        self._require_generic_control_allowed(staging_path, operation="archive")
         archive_root = self.builds / "archive"
         archive_root.mkdir(parents=True, exist_ok=True)
         suffix = stamp or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
@@ -166,6 +170,29 @@ class ImmutableLanceRepository:
     def _create_indexes(
         self, lance_path: Path, lancedb_module: Any, *, kind: str
     ) -> dict[str, int]:
+        def existing_index_types(table: Any, column: str) -> tuple[str, ...]:
+            list_indices = getattr(table, "list_indices", None)
+            if not callable(list_indices):
+                return ()
+            matching: list[str] = []
+            for value in list_indices():
+                if isinstance(value, dict):
+                    raw_columns = value.get("columns")
+                    raw_type = value.get("index_type") or value.get("type")
+                else:
+                    raw_columns = getattr(value, "columns", None)
+                    raw_type = getattr(value, "index_type", None) or getattr(
+                        value, "type", None
+                    )
+                columns = (
+                    tuple(str(item) for item in raw_columns)
+                    if isinstance(raw_columns, list | tuple)
+                    else ()
+                )
+                if columns == (column,):
+                    matching.append(str(raw_type or ""))
+            return tuple(matching)
+
         counts: dict[str, int] = {}
         for lane_dir in sorted(path for path in lance_path.iterdir() if path.is_dir()):
             connection = lancedb_module.connect(str(lane_dir))
@@ -181,15 +208,28 @@ class ImmutableLanceRepository:
                 row_count = len(table.to_pandas())
             counts[lane_dir.name] = row_count
             if kind == "lexical":
-                table.create_fts_index("text", replace=True)
+                existing = existing_index_types(table, "text")
+                if len(existing) > 1 or (
+                    existing and "fts" not in existing[0].casefold()
+                ):
+                    raise RuntimeError("existing lexical index is not the frozen FTS index")
+                if not existing:
+                    table.create_fts_index("text", replace=False)
             else:
-                table.create_index(
-                    metric="cosine",
-                    num_partitions=max(1, min(256, int(math.sqrt(row_count or 1)) or 1)),
-                    vector_column_name="vector",
-                    index_type="IVF_FLAT",
-                    replace=True,
-                )
+                existing = existing_index_types(table, "vector")
+                normalised = existing[0].casefold().replace("_", "") if existing else ""
+                if len(existing) > 1 or (existing and "ivfflat" not in normalised):
+                    raise RuntimeError("existing vector index is not the frozen IVF_FLAT index")
+                if not existing:
+                    table.create_index(
+                        metric="cosine",
+                        num_partitions=max(
+                            1, min(256, int(math.sqrt(row_count or 1)) or 1)
+                        ),
+                        vector_column_name="vector",
+                        index_type="IVF_FLAT",
+                        replace=False,
+                    )
         return counts
 
     def build(
@@ -243,7 +283,9 @@ class ImmutableLanceRepository:
         )
 
     def promote(self, build_id: str, *, expected_previous: str | None = None) -> ActiveGeneration:
+        self._validate_build_id(build_id)
         build_path = self.builds / build_id
+        self._require_generic_control_allowed(build_path, operation="promote")
         manifest_path = build_path / "manifest.json"
         if not manifest_path.exists():
             raise FileNotFoundError(f"sealed build not found: {build_id}")
@@ -286,6 +328,13 @@ class ImmutableLanceRepository:
         if previous is None:
             raise FileNotFoundError("PREVIOUS pointer is missing; rollback refused")
         current = self.read_active()
+        self._require_generic_control_allowed(
+            self.builds / previous.build_id, operation="rollback"
+        )
+        if current is not None:
+            self._require_generic_control_allowed(
+                self.builds / current.build_id, operation="rollback"
+            )
         manifest_path = self.builds / previous.build_id / "manifest.json"
         if not manifest_path.exists():
             raise FileNotFoundError(f"previous sealed build not found: {previous.build_id}")
@@ -301,11 +350,94 @@ class ImmutableLanceRepository:
         self._atomic_replace(self.active_pointer, self._encode(asdict(restored)))
         return restored
 
+    def _require_generic_control_allowed(self, build_path: Path, *, operation: str) -> None:
+        """Keep held GE scope outside every generic pointer/archive seam."""
+
+        if operation not in {"promote", "rollback", "archive"}:
+            raise ValueError("unknown index control operation")
+        if self._is_ge_held_or_scope_build(build_path):
+            raise PermissionError(
+                f"GE held/scope index build cannot use generic {operation} control"
+            )
+
+    def _is_ge_held_or_scope_build(self, build_path: Path) -> bool:
+        if build_path.exists() and (build_path.is_symlink() or not build_path.is_dir()):
+            raise RuntimeError("index build path is not a regular directory")
+
+        def read_object(path: Path, *, label: str) -> dict[str, Any] | None:
+            if not path.exists():
+                return None
+            if path.is_symlink() or not path.is_file():
+                raise RuntimeError(f"{label} is not a regular immutable file")
+            try:
+                value = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise RuntimeError(f"{label} is invalid") from exc
+            if not isinstance(value, dict):
+                raise RuntimeError(f"{label} is not an object")
+            return value
+
+        def marks_ge(value: dict[str, Any]) -> bool:
+            return bool(
+                value.get("selection_policy") == _GE_SELECTION_POLICY
+                or value.get("ge_held_scope") is True
+                or value.get("successor_must_remain_non_active") is True
+                or (
+                    value.get("active_or_previous_write_authorized") is False
+                    and value.get("promotion_authorized") is False
+                    and value.get("ge_source_scope_content_sha256") is not None
+                )
+            )
+
+        boundary = read_object(
+            build_path / _BUILD_BOUNDARY_FILENAME, label="index build boundary"
+        )
+        if boundary is not None:
+            if boundary.get("schema") != "legalbot.index-build-boundary.v1":
+                raise RuntimeError("index build boundary schema is invalid")
+            if marks_ge(boundary):
+                return True
+        source_manifest = read_object(
+            build_path / "approved-source-manifest.json",
+            label="approved source manifest",
+        )
+        if source_manifest is not None and marks_ge(source_manifest):
+            return True
+        evaluation = read_object(build_path / "evaluation.json", label="index evaluation")
+        integrity = evaluation.get("integrity") if evaluation is not None else None
+        if isinstance(integrity, dict) and marks_ge(integrity):
+            return True
+
+        # Pre-boundary incomplete builds can still be identified from their
+        # immutable checkpoint and the create-only approved manifest snapshot.
+        checkpoint = read_object(
+            build_path / "lance" / "embedding-progress.v1.json",
+            label="embedding checkpoint",
+        )
+        source_sha256 = (
+            str(checkpoint.get("source_manifest_sha256") or "")
+            if checkpoint is not None
+            else ""
+        )
+        if re.fullmatch(r"[0-9a-f]{64}", source_sha256):
+            review_root = self.root.parent / "review_queue"
+            if review_root.is_dir() and not review_root.is_symlink():
+                for path in sorted(review_root.glob("approved-source-manifest-*.json")):
+                    reviewed = read_object(path, label="approved source manifest snapshot")
+                    if (
+                        reviewed is not None
+                        and reviewed.get("manifest_sha256") == source_sha256
+                        and marks_ge(reviewed)
+                    ):
+                        return True
+        return False
+
     def _read_pointer(self, path: Path, *, label: str) -> ActiveGeneration | None:
         if not path.exists():
             return None
         payload = json.loads(path.read_text(encoding="utf-8"))
         active = ActiveGeneration(**payload)
+        self._validate_build_id(active.build_id)
         manifest_path = self.builds / active.build_id / "manifest.json"
         if (
             not manifest_path.exists()
