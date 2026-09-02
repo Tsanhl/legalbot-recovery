@@ -1,5 +1,14 @@
 """Encrypted, bounded conversation persistence for the owner-only UI."""
 
+from .contract_snapshot import freeze_conversation_snapshot
+from .matter_facts import (
+    AsOfStatus,
+    FactDataType,
+    FactOrigin,
+    FactStatus,
+    MatterFactRef,
+    MatterFactStore,
+)
 from .query_rewrite import (
     QUERY_REWRITE_VERSION,
     ConversationQueryRewriter,
@@ -19,6 +28,7 @@ from .store import (
 
 __all__ = [
     "QUERY_REWRITE_VERSION",
+    "AsOfStatus",
     "ConversationExpiredError",
     "ConversationMessage",
     "ConversationNotFoundError",
@@ -28,6 +38,12 @@ __all__ = [
     "ConversationRewriteResult",
     "ConversationStore",
     "ConversationWindow",
+    "FactDataType",
+    "FactOrigin",
+    "FactStatus",
     "InMemoryConversationCache",
     "JsonRewriteModel",
+    "MatterFactRef",
+    "MatterFactStore",
+    "freeze_conversation_snapshot",
 ]

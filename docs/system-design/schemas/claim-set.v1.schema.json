@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/claim-set.v1.schema.json",
+  "title": "LegalBot ClaimSet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "claim_set_id",
+    "job_id",
+    "draft_id",
+    "draft_sha256",
+    "query_plan_sha256",
+    "fact_snapshot_sha256",
+    "evidence_pack_sha256",
+    "claims",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.claim-set.v1"
+    },
+    "claim_set_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "draft_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "draft_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "query_plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fact_snapshot_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_pack_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "kind",
+          "encrypted_text_ref",
+          "text_sha256",
+          "material",
+          "materiality_basis",
+          "issue_ids",
+          "fact_ids",
+          "evidence_ids",
+          "depends_on_claim_ids",
+          "gap_codes"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "kind": {
+            "enum": [
+              "user_fact",
+              "legal_rule",
+              "application",
+              "limitation"
+            ]
+          },
+          "encrypted_text_ref": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+          },
+          "text_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "material": {
+            "type": "boolean"
+          },
+          "materiality_basis": {
+            "enum": [
+              "issue_element",
+              "outcome_premise",
+              "remedy_or_deadline",
+              "scope_or_limitation",
+              "non_material_explanation"
+            ]
+          },
+          "issue_ids": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "fact_ids": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "evidence_ids": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "depends_on_claim_ids": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            }
+          },
+          "gap_codes": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "user_fact"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "fact_ids": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "legal_rule"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence_ids": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "application"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "fact_ids": {
+                  "minItems": 1
+                },
+                "evidence_ids": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "limitation"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "gap_codes": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

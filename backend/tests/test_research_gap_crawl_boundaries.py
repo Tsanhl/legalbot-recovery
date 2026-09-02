@@ -41,11 +41,17 @@ from app.research.worker import (
     PermanentResearchError,
     ResearchWorker,
 )
+from app.retrieval.source_manifest import approved_source_manifest_sha256
 
 _REGISTRY_PATH = Path(__file__).resolve().parents[2] / "config" / "official_sources.json"
 _QUERY_SHA256 = hashlib.sha256(b"contract").hexdigest()
 _PROPOSITION_SHA256 = hashlib.sha256(b"missing statutory proposition").hexdigest()
-_SOURCE_MANIFEST_SHA256 = "a" * 64
+_SOURCE_MANIFEST_BASE = {
+    "schema": "legalbot.approved-source-manifest.v1",
+    "selection_policy": "synthetic-ordinary-candidate",
+    "sources": [],
+}
+_SOURCE_MANIFEST_SHA256 = approved_source_manifest_sha256(_SOURCE_MANIFEST_BASE)
 _CHUNK_ID = "chunk-gap-proof-1"
 
 
@@ -72,6 +78,14 @@ def _ensure_candidate_tree(tmp_path: Path, build_id: str) -> None:
             }
         ],
     )
+    source_manifest = {
+        **_SOURCE_MANIFEST_BASE,
+        "manifest_sha256": _SOURCE_MANIFEST_SHA256,
+    }
+    source_manifest_path = build_root / "approved-source-manifest.json"
+    source_manifest_path.write_text(
+        json.dumps(source_manifest, sort_keys=True) + "\n", encoding="utf-8"
+    )
     manifest = {
         "schema": "legalbot.index-manifest.v2",
         "build_id": build_id,
@@ -85,6 +99,7 @@ def _ensure_candidate_tree(tmp_path: Path, build_id: str) -> None:
         "schema": "legalbot.index-seal.v2",
         "build_id": build_id,
         "manifest_sha256": _file_sha256(manifest_path),
+        "source_manifest_file_sha256": _file_sha256(source_manifest_path),
         "lance_tree_sha256": _tree_sha256(build_root / "lance"),
     }
     (build_root / "seal.json").write_text(json.dumps(seal, sort_keys=True) + "\n", encoding="utf-8")
@@ -164,7 +179,7 @@ def _sealed_candidate(database: Database, build_id: str = "candidate-gap-base") 
             f"data/indexes/builds/{build_id}",
             "embedding-model@revision-1",
             "reranker-model@revision-1",
-            "a" * 64,
+            _SOURCE_MANIFEST_SHA256,
             utc_iso(),
         ),
     )
@@ -277,7 +292,7 @@ def test_gap_is_encrypted_semantically_deduplicated_and_pins_candidate(
     )
     assert task["knowledge_gap_id"] == first["id"]
     assert task["pinned_index_build_id"] == "candidate-gap-base"
-    assert task["source_manifest_sha256"] == "a" * 64
+    assert task["source_manifest_sha256"] == _SOURCE_MANIFEST_SHA256
 
 
 @pytest.mark.parametrize("trigger", [ResearchTrigger.MANUAL, ResearchTrigger.ENQUIRY])

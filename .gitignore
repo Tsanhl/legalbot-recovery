@@ -70,6 +70,9 @@ recovery/**/*.bundle
 
 # Owner-review Word packs. Generate locally; do not publish in the source tree.
 *.docx
+# Generated review, render and QA artifacts remain local even when their
+# extensions are otherwise source-control eligible.
+output/
 
 # Owner final-check packs. JSON is the import surface; generate locally.
 LegalBot-Live60-Path-B-Final-Check-*/

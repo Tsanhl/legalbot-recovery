@@ -1,0 +1,122 @@
+{
+  "schema": "legalbot.v111.ge-review-qa.v1",
+  "authorizing": false,
+  "created_at_utc": "2026-08-31T15:45:01.677195+00:00",
+  "delivered_run": "LegalBot-GE-2026-08-31-review-r2",
+  "review_pack_manifest_sha256": "728d20468e10527aea04a3922d803483349d3382912bc7787e3a982a2c0acd05",
+  "pdf": {
+    "path": "output/pdf/LegalBot-GE-2026-08-31-review-r2.pdf",
+    "sha256": "3d8a4e80ca1a5a4f265bd040b16d6619c4ed90ab98fed2140339fd31eef99ce1",
+    "pages": 53,
+    "unique_question_ids_verified": 331,
+    "complete_prompt_texts_verified": 331,
+    "glyphs_outside_page_bounds": 0,
+    "rendered_pages": 53,
+    "contact_sheets_visually_reviewed": 4,
+    "full_page_views_reviewed": [
+      1,
+      2,
+      3,
+      53
+    ],
+    "visual_defects_remaining": 0
+  },
+  "visible_core": 306,
+  "visible_stress": 25,
+  "visible_bytes_equal_original": true,
+  "decision_slots_unreviewed": 331,
+  "source_integrity": [
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-visible-development-r2",
+      "package_content_sha256": "d03fe95ee1ad72444580d7ca492f7fc947db4604d23214da8a086e3dbbecb359",
+      "verified_member_count": 77,
+      "private_jsonl_mode_checks": 0
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2",
+      "package_content_sha256": "a73ef297738cf0745d1233e8d2c4748412d534bff41afadd1086e6e349f68a91",
+      "verified_member_count": 21,
+      "private_jsonl_mode_checks": 17
+    }
+  ],
+  "private_zip_sha256": "a5c782b011995932419788b0bcc66ebe10467fabd8d4244a0003a6f4efd6c267",
+  "private_zip_mode": "0600",
+  "private_prompt_content_decoded": false,
+  "private_prompt_projection_created": false,
+  "superseded_preview": {
+    "run_id": "LegalBot-GE-2026-08-31-review-r1",
+    "preserved": true,
+    "reason": "Widen the Stress table column to keep its heading on one line; no question changes."
+  },
+  "checks": {
+    "clean_room": "PASS",
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "git_diff_check": "PASS",
+    "full_python_suite": "NOT_RUN_design_and_review_preparation_only",
+    "web_build_tests": "NOT_RUN_no_web_changes_or_promotion"
+  },
+  "design_history_original_hashes_match": true,
+  "artifacts": [
+    {
+      "path": "data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/FULL-GE-SET.md",
+      "sha256": "a56343616e1d9aae0e4caf18e9e36f42c12d94fcc5cdd2c44f56e7597a5dd8cd"
+    },
+    {
+      "path": "data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/PACK-MANIFEST.json",
+      "sha256": "728d20468e10527aea04a3922d803483349d3382912bc7787e3a982a2c0acd05"
+    },
+    {
+      "path": "data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/README.md",
+      "sha256": "ca0d74d34c2de6f4e1e7afb14d16f22df6831a33dc22d8a27285a879bfbac69c"
+    },
+    {
+      "path": "data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/REVIEW-DECISIONS.json",
+      "sha256": "3b49eb10176d0d675fc1a6b80d590113f0e2cf3128ad5c15519560ae3ae1b227"
+    },
+    {
+      "path": "data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/UNSEEN-CUSTODY-REVIEW.md",
+      "sha256": "412e9f03c040b485cc8dc349707786a4b7724b66ad7a4858811ba0ae493e018f"
+    },
+    {
+      "path": "data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/VISIBLE-GE-SET.jsonl",
+      "sha256": "d1b6f72552dee49ca6380d3016f4908453b93a67f5cb639b19bc741c168075d5"
+    }
+  ],
+  "design_and_builder": [
+    {
+      "path": "docs/V111_SYSTEM_DESIGN.md",
+      "sha256": "8e914278738bb4573181d6a0c89435c54d269d84e28c7dbccdacd7a98585aef1"
+    },
+    {
+      "path": "docs/V111_RELEASE_ROADMAP.md",
+      "sha256": "cee19ae2ea00f23c9b90fa786879e65c6c1814e139ba43e3aa3ace466fb7de84"
+    },
+    {
+      "path": "docs/V111_REBUILD_CHECKLIST.md",
+      "sha256": "df13795073b70ff3342c0df0ada06cdd7a8b1f2013cc8666ffcab02c9f976811"
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "sha256": "a2eb6a158be0870f6300946b8e27dea8e19d9a64b6a19320ee634a814b16f3eb"
+    },
+    {
+      "path": "README.md",
+      "sha256": "40c37b665d045f5abc5ce0d203aac7153b193e51e7e17dbf960a894920f334b8"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "80c2254028490e11a76a2de5f5c7d7f1f201cad3889ef74288af6c5ae7c0d240"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "ca4d0d2c2822f9dbdb00b08abf200e984a68463a6a78ce59fa72ecd3e4f529bc"
+    },
+    {
+      "path": "scripts/prepare_v111_ge_owner_review.py",
+      "sha256": "ec9e7919218ad94d249232990c60cc0dc7a44f36d603ed23bb7390c5039ee977"
+    }
+  ],
+  "runtime_execution": false,
+  "owner_acceptance": false
+}

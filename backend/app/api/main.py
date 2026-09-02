@@ -32,6 +32,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE
 from ..config import settings
+from ..contracts import canonical_json_bytes
 from ..db import JobQueueCapacityError, SourceScanConflictError, SourceScanStateError
 from ..evaluation.live_suite_admission import (
     Live60AdmissionBinding,
@@ -368,6 +369,165 @@ def _row(row: Any) -> dict[str, Any]:
     return request_row(row)
 
 
+def _job_attempt_identity(job: Any) -> tuple[str, int]:
+    generation = max(1, int(job["attempt_count"] or 0))
+    digest = hashlib.sha256(
+        f"legalbot-job-attempt-v1\0{job['id']}\0{generation}".encode()
+    ).hexdigest()
+    return f"attempt-{digest[:32]}", generation
+
+
+def _job_event_id(*, job_id: str, attempt_id: str, sequence: int, event: str) -> str:
+    digest = hashlib.sha256(
+        f"legalbot-browser-job-event-v1\0{job_id}\0{attempt_id}\0{sequence}\0{event}".encode()
+    ).hexdigest()
+    return f"event-{digest[:40]}"
+
+
+def _browser_progress_event(*, job: Any, event: Any) -> dict[str, Any]:
+    attempt_id, generation = _job_attempt_identity(job)
+    sequence = int(event["sequence"])
+    stage = str(event["stage"] or "unknown").casefold()
+    stage = re.sub(r"[^a-z0-9._:-]+", "_", stage).strip("_.:-") or "unknown"
+    return {
+        "schema": "legalbot.job-event.v1",
+        "event_id": _job_event_id(
+            job_id=str(job["id"]),
+            attempt_id=attempt_id,
+            sequence=sequence,
+            event="progress",
+        ),
+        "job_id": str(job["id"]),
+        "sequence": sequence,
+        "event": "progress",
+        "emitted_at": str(event["created_at"]),
+        "data": {
+            "stage": stage,
+            "progress": float(event["progress"]),
+            "message_code": f"job.stage.{stage}",
+            "status": None,
+            "release_state": None,
+            "answer_id": None,
+            "release_sha256": None,
+            "status_url": f"/api/v1/jobs/{job['id']}",
+            "release_id": None,
+            "terminal_kind": None,
+            "reset_from_sequence": None,
+        },
+        "attempt_id": attempt_id,
+        "lease_generation": generation,
+    }
+
+
+def _browser_terminal_event(
+    *,
+    job: Any,
+    sequence: int,
+    release_outbox: Any | None,
+    selected_chain: Any | None,
+) -> dict[str, Any]:
+    attempt_id, generation = _job_attempt_identity(job)
+    raw_status = str(job["status"])
+    status_map = {
+        "complete": "complete",
+        "held_for_review": "held",
+        "system_error": "system_error",
+        "failed": "system_error",
+        "dlq": "system_error",
+        "cancelled": "cancelled",
+    }
+    terminal_map = {
+        "complete": "committed",
+        "held_for_review": "held",
+        "system_error": "system_error",
+        "failed": "system_error",
+        "dlq": "system_error",
+        "cancelled": "cancelled",
+    }
+    status_value = status_map.get(raw_status, "system_error")
+    terminal_kind = terminal_map.get(raw_status, "system_error")
+    answer_id: str | None = None
+    release_state: str | None = None
+    release_id: str | None = None
+    release_sha256: str | None = None
+    message_code = f"job.terminal.{terminal_kind}"
+    terminal_event_id = _job_event_id(
+        job_id=str(job["id"]),
+        attempt_id=attempt_id,
+        sequence=sequence,
+        event="done",
+    )
+    if terminal_kind == "committed":
+        candidate_answer_id = job["answer_id"]
+        candidate_state = job["release_state"]
+        if (
+            candidate_answer_id is None
+            or candidate_state not in {"verified_full", "verified_concise", "verified_limited"}
+            or release_outbox is None
+        ):
+            status_value = "system_error"
+            terminal_kind = "system_error"
+            message_code = "job.terminal.release_binding_missing"
+        else:
+            answer_id = str(candidate_answer_id)
+            release_state = str(candidate_state)
+            audience = str(release_outbox["release_audience"] or "")
+            if audience == "owner_evaluation" and release_outbox["answer_sha256"] is not None:
+                release_id = str(release_outbox["id"])
+                binding = {
+                    "schema": "legalbot.browser-release-binding.v1",
+                    "job_id": str(job["id"]),
+                    "answer_id": answer_id,
+                    "answer_sha256": str(release_outbox["answer_sha256"]),
+                    "release_id": release_id,
+                    "release_state": release_state,
+                }
+                release_sha256 = hashlib.sha256(canonical_json_bytes(binding)).hexdigest()
+            elif (
+                audience == "normal_live"
+                and selected_chain is not None
+                and selected_chain["status"] == "verified_unpublished"
+                and selected_chain["job_id"] == job["id"]
+                and selected_chain["answer_id"] == answer_id
+                and selected_chain["release_state"] == release_state
+                and selected_chain["attempt_id"] == attempt_id
+                and int(selected_chain["lease_generation"]) == generation
+                and int(selected_chain["terminal_sequence"]) == sequence
+            ):
+                release_id = str(selected_chain["release_id"])
+                release_sha256 = str(selected_chain["release_sha256"])
+                terminal_event_id = str(selected_chain["terminal_event_id"])
+            else:
+                answer_id = None
+                release_state = None
+                status_value = "system_error"
+                terminal_kind = "system_error"
+                message_code = "job.terminal.release_binding_missing"
+    return {
+        "schema": "legalbot.job-event.v1",
+        "event_id": terminal_event_id,
+        "job_id": str(job["id"]),
+        "sequence": sequence,
+        "event": "done",
+        "emitted_at": str(job["updated_at"]),
+        "data": {
+            "stage": None,
+            "progress": 1.0,
+            "message_code": message_code,
+            "status": status_value,
+            "release_state": release_state,
+            "answer_id": answer_id,
+            "release_sha256": release_sha256,
+            "status_url": f"/api/v1/jobs/{job['id']}",
+            "release_id": release_id,
+            "terminal_kind": terminal_kind,
+            "reset_from_sequence": None,
+        },
+        "attempt_id": attempt_id,
+        "lease_generation": generation,
+    }
+
+
 def _owner_safe_summary(value: Any, *, owner_identifiers: tuple[str, ...], limit: int) -> str:
     """Keep normal admin JSON free of local owner identifiers."""
 
@@ -468,7 +628,7 @@ def _released_job_message(job: Any) -> str | None:
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     services = build_services(settings)
     app.state.services = services
-    services.database.purge_expired_unreleased_versions()
+    services.database.purge_expired_unreleased_versions(guard=services.deletion_guard)
     services.database.fail_interrupted_source_scans()
     yield
     services.database.close()
@@ -1407,43 +1567,55 @@ async def job_events_websocket(websocket: WebSocket, job_id: str) -> None:
                     """,
                     (job_id, sequence),
                 ).fetchall()
+                last_event_row = connection.execute(
+                    "SELECT MAX(sequence) AS sequence FROM job_events WHERE job_id=?",
+                    (job_id,),
+                ).fetchone()
+                last_persisted_sequence = int(
+                    last_event_row["sequence"]
+                    if last_event_row is not None and last_event_row["sequence"] is not None
+                    else 0
+                )
                 if _is_released_owner_canary_job(row):
                     events = []
                 for event in events:
                     sequence = int(event["sequence"])
-                    outgoing.append(
-                        {
-                            "schema": "legalbot.job-event.v1",
-                            "sequence": sequence,
-                            "event": "progress",
-                            "data": {
-                                "stage": event["stage"],
-                                "progress": event["progress"],
-                                "message": event["message"],
-                                "payload": json.loads(event["payload_json"]),
-                            },
-                        }
-                    )
+                    outgoing.append(_browser_progress_event(job=row, event=event))
                 terminal = row["status"] in {
                     "complete",
                     "held_for_review",
                     "system_error",
+                    "failed",
+                    "dlq",
                     "cancelled",
                 }
                 if terminal:
-                    outgoing.append(
-                        {
-                            "schema": "legalbot.job-event.v1",
-                            "sequence": sequence,
-                            "event": "done",
-                            "data": {
-                                "status": row["status"],
-                                "answer_id": row["answer_id"],
-                                "release_state": row["release_state"],
-                                "message": _released_job_message(row),
-                            },
-                        }
-                    )
+                    terminal_sequence = last_persisted_sequence + 1
+                    if sequence < terminal_sequence:
+                        outbox = connection.execute(
+                            "SELECT * FROM release_outbox WHERE job_id=?",
+                            (job_id,),
+                        ).fetchone()
+                        selected_chain = connection.execute(
+                            """
+                            SELECT c.*,b.release_id,b.answer_id,b.answer_content_sha256,
+                                   b.release_state,b.attempt_id,b.lease_generation,
+                                   b.terminal_sequence
+                            FROM selected_answer_contract_chains c
+                            JOIN selected_answer_release_bindings b ON b.job_id=c.job_id
+                            WHERE c.job_id=?
+                            """,
+                            (job_id,),
+                        ).fetchone()
+                        outgoing.append(
+                            _browser_terminal_event(
+                                job=row,
+                                sequence=terminal_sequence,
+                                release_outbox=outbox,
+                                selected_chain=selected_chain,
+                            )
+                        )
+                        sequence = terminal_sequence
             for event in outgoing:
                 await websocket.send_json(event)
             if terminal:

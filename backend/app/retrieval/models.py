@@ -120,6 +120,9 @@ class RetrievalPlanItem:
     limit: int = 30
     cacheable: bool = True
     query_rewrite_version: str = "none-v1"
+    lexical_depth: int | None = None
+    vector_depth: int | None = None
+    reranker_candidates: int | None = None
 
 
 def ensure_vector(vector: Sequence[float]) -> tuple[float, ...]:

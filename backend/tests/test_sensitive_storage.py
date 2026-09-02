@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
+from app.deletion_guard import DeletionAuthorization, DeletionGuard, DeletionObjectClass
 from app.quality.policy import POLICY_VERSION
 from app.types import EvidenceSpan
 
@@ -211,7 +212,24 @@ def test_expiry_detaches_surviving_children_before_parent_purge(database, cipher
         "UPDATE answer_versions SET purge_after=? WHERE id='expired-parent'", (expired,)
     )
 
-    assert database.purge_expired_unreleased_versions() == 1
+    assert database.purge_expired_unreleased_versions() == 0
+    assert database.answer("expired-parent") is not None
+    current = datetime.now(UTC)
+    authorization = DeletionAuthorization(
+        authorization_id="synthetic-answer-delete",
+        owner_decision_sha256="3" * 64,
+        object_class=DeletionObjectClass.ANSWER_VERSION,
+        object_ids=("expired-parent",),
+        issued_at=current - timedelta(minutes=1),
+        expires_at=current + timedelta(minutes=1),
+    )
+    assert (
+        database.purge_expired_unreleased_versions(
+            guard=DeletionGuard(),
+            authorization=authorization,
+        )
+        == 1
+    )
     assert database.answer("expired-parent") is None
     child = database.answer("released-child")
     assert child is not None and child["parent_version_id"] is None

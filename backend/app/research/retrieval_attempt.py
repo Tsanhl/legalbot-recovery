@@ -25,6 +25,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..config import Settings
 from ..db import Database
 from ..privacy import scrub_pii
+from ..retrieval.ge_generic_read_guard import require_generic_index_read_allowed
 
 RETRIEVAL_ATTEMPT_SCHEMA = "legalbot.research.candidate-retrieval-attempt.v2"
 RETRIEVAL_ATTEMPT_TOOLCHAIN_VERSION = "legalbot.research.pinned-retrieval-executor.v1"
@@ -395,6 +396,10 @@ def _json_object(path: Path, *, label: str) -> dict[str, Any]:
 
 def _verified_candidate_root(settings: Settings, binding: RetrievalAttemptBinding) -> Path:
     root = settings.index_dir / "builds" / binding.candidate_build_id
+    require_generic_index_read_allowed(
+        root,
+        expected_build_id=binding.candidate_build_id,
+    )
     if root.is_symlink() or not root.is_dir():
         raise ValueError("sealed candidate build root is missing")
     manifest_path = root / "manifest.json"
@@ -550,6 +555,11 @@ def execute_candidate_retrieval_attempt(
     code invokes the executor, reconciles every returned hit to the sealed
     Lance authority lane, then derives all durable identities itself.
     """
+
+    require_generic_index_read_allowed(
+        settings.index_dir / "builds" / binding.candidate_build_id,
+        expected_build_id=binding.candidate_build_id,
+    )
 
     proposition_sha256 = binding.proposition_sha256 or ""
     normalised_query = " ".join(canonical_query.split())

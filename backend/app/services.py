@@ -10,6 +10,7 @@ from .config import Settings
 from .conversations import ConversationStore
 from .crypto import LocalCipher
 from .db import Database
+from .deletion_guard import DeletionGuard
 from .observability.runtime import RuntimeObservability
 from .orchestration.contracts import EvidenceRetriever
 from .orchestration.gaps import GapQueue
@@ -34,6 +35,7 @@ class Services:
     runner: AnswerRunner
     conversations: ConversationStore
     freshness: KnowledgeFreshnessCoordinator
+    deletion_guard: DeletionGuard
     retriever_factory: PinnedRetrieverFactory | None = None
 
 
@@ -60,10 +62,14 @@ def build_services(settings: Settings) -> Services:
     database = Database(settings.database_path)
     database.initialize()
     cipher = LocalCipher.from_local_key(create=True)
+    deletion_guard = DeletionGuard(audit_dir=settings.logs_dir / "deletion-attempts")
     with _sensitive_state_startup_lock(settings.data_dir / ".sensitive-state-migration.lock"):
         database.migrate_sensitive_content(cipher)
         migrate_legacy_uploads(settings, database, cipher)
-        purge_expired_uploads(settings, database)
+        # Expiry remains a non-destructive eligibility state. Physical deletion
+        # requires a separate exact owner authorization and is never attempted
+        # during ordinary startup.
+        purge_expired_uploads(settings, database, guard=deletion_guard)
         legacy_research_queue = settings.gap_queue_dir / "official-source-candidates.json"
         if legacy_research_queue.is_file():
             LegacyResearchGapImporter(
@@ -84,7 +90,12 @@ def build_services(settings: Settings) -> Services:
                 ),
             )
     observability = RuntimeObservability(settings, database, component="api")
-    conversations = ConversationStore.from_settings(database, cipher, settings)
+    conversations = ConversationStore.from_settings(
+        database,
+        cipher,
+        settings,
+        deletion_guard=deletion_guard,
+    )
     conversations.purge_expired()
     research_control = ResearchControlPlane(settings, database, cipher=cipher)
     freshness = KnowledgeFreshnessCoordinator(
@@ -136,6 +147,7 @@ def build_services(settings: Settings) -> Services:
         runner=runner,
         conversations=conversations,
         freshness=freshness,
+        deletion_guard=deletion_guard,
         retriever_factory=retriever_factory,
     )
 

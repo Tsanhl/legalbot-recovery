@@ -498,11 +498,13 @@ async def test_worker_runs_upload_expiry_without_process_restart(
         database=database,
         observability=None,
         runner=SimpleNamespace(),
+        deletion_guard=object(),
     )
     worker = DurableAnswerWorker(services, worker_id="worker-upload-purge", poll_seconds=0.01)
     calls: list[Path] = []
 
-    def purge_once(observed_settings: Settings, _database: Any) -> int:
+    def purge_once(observed_settings: Settings, _database: Any, *, guard: object) -> int:
+        assert guard is services.deletion_guard
         calls.append(observed_settings.project_root)
         worker.stop()
         return 0

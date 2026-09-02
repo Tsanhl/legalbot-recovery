@@ -10,6 +10,7 @@ from typing import Any
 from ..config import Settings
 from ..db import Database, utc_iso
 from ..ingestion.models import MaterialLane
+from .ge_generic_read_guard import require_generic_index_read_allowed
 from .hybrid import DeterministicHashEmbedding, HybridRetriever
 from .lancedb import ImmutableLanceRepository
 from .models import QueryFilters, SearchQuery
@@ -124,6 +125,10 @@ def run_retrieval_smoke(
     if target_id:
         candidate = repository.builds / target_id
         if (candidate / "lance").exists():
+            require_generic_index_read_allowed(
+                candidate,
+                expected_build_id=target_id,
+            )
             build_path = candidate
     if build_path is None:
         used_fixture = True

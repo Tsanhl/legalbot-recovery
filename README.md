@@ -7,13 +7,117 @@ legal evidence, private teaching material and assessment guidance in separate
 lanes, binds every material claim to exact source spans, and renders OSCOLA 5
 citations deterministically.
 
-Current recovery status (29 August 2026): this clean project was reconstructed
-from the last provable v1.11 working tree. It is non-ACTIVE and intentionally
-contains no Git metadata or runnable Lance candidate. The catalogue and 316
-exact source files are present, while unrecoverable historical artifacts remain
-explicit gaps. Phase 1 must be re-baselined before any later phase is resumed.
-See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) and
-[`docs/status/V111_PHASE1_RECOVERY_READINESS_20260829.md`](docs/status/V111_PHASE1_RECOVERY_READINESS_20260829.md).
+Current focus (2 September 2026): **the current system design is accepted and
+remains editable; Phase 2 has started at its technical-rebuild and
+evaluation-preparation prerequisites**. A non-authorizing diagnostic GE planner
+cycle was returned for revision on 2 September 2026. The owner adopted the r2
+overlay as a research and process decision only: batch currentness hold,
+official staging intake and 008/174/312 route notes. The owner authorized
+execution of that next work, then authorized a visible 331 diagnostic
+evaluation rerun under the factual-first gate. This remains evaluation. It is not gold, admission, qualified legal
+review, weight training, unseen, promotion or live. The owner then adopted the
+resolved 67-locator evaluation-gold package (66 APPROVE, 0 HOLD, 1 REJECT).
+That is locator-level evaluation gold only. Visible diagnostic 331 r2 has run;
+one held case no longer stalls Phase 2. Do not retick the unsigned draft.
+Knowledge gaps and wrong routes now trigger fail-closed official-source sidecar
+fill; that is not gold.
+Phase 1 is complete. The
+[working design](docs/V111_SYSTEM_DESIGN.md)
+and [supporting contracts](docs/system-design/README.md) use one current version,
+without repeated design archives or frozen approval packs. The completed design
+improvement audit added explicit invariants, one selected
+[schema registry](docs/system-design/SCHEMA_REGISTRY.md), MatterFact v2,
+conversation/job/knowledge/claim/evaluation-case/training contracts, a complete
+request-to-release integrity chain, deterministic fallback precedence and stricter
+retrieval, validation, WebSocket and run-validity rules.
+The owner also accepted
+the [GE-visible-r3 review](data/evaluations/general-enquiries/LegalBot-GE-2026-09-01-owner-review-r1/README.md)
+as a wording/review specification: all 331 cases remain, with 227 amended, 104
+retained and 32 separate system scenarios. Neither acceptance is legal gold or run
+authority. The selected-schema registry, canonical digests, default-deny deletion
+guard, terminal WebSocket identity and visible-GE factual/quality harness are now
+implemented technical foundations. The selected ConversationSnapshot, MatterFact
+v2 ledger, QueryPlan v2, RetrievalResult/EvidencePack, ClaimSet, ValidationReport,
+AnswerJob, VerifiedRelease and capability-manifest builders also pass focused
+tests, and QueryPlan budgets now constrain the hybrid retrieval runtime. A
+schema-v31 store can persist and reopen all ten selected-chain objects as encrypted,
+immutable `verified_unpublished` evidence after replaying the full integrity
+proof. The database can also bind a replayed chain, the actual decrypted answer
+digest, VerifiedRelease, terminal event and normal-live authority into one immutable
+outbox/publication transaction. The ordinary durable answer runner does not yet
+produce the selected objects or supply that proof, so this technical seam does not
+authorize or constitute an evaluation or release.
+The same selected store can persist and reopen one fully reconciled visible GE
+EvaluationRun and all 331 encrypted EvaluationCaseResult v2 objects without using
+the legacy evaluation tables or granting run authority. Each v2 result seals the
+fixed ordered factual checks and quality dimensions; v1 is retained for audit only
+and cannot support a new diagnosis or cycle closure.
+The selected contract bundle now also covers the separately counted 32-case system
+run, visible diagnostic supplements/results and the GE cycle assessment. The
+implemented cycle binds stable failure fingerprints, an approved coverage audit,
+missing-area questions outside both fixed denominators, full 331 + 32 + accumulated
+diagnostic reruns, explicit owner acceptance and the two-repair stop rule. Coverage
+approval is an opaque verifier-issued authority over one exact ordered topology,
+not a caller-supplied digest. Its mandatory breadth floor contains the 17 current
+topic domains plus six separate public-access domains: housing, employment, family,
+immigration, benefits/debt and consumer. An unassigned public-access domain remains
+an open cell and requires a separate diagnostic; it cannot be omitted or aliased to
+a current topic. A deletion-free research bridge can move an owner-reviewed official quarantine object
+through deterministic canonical text and body chunks into a staged source version.
+The downstream scope must replay the complete diagnosed-gap, research, review,
+quarantine, chunk and source-record chain. A GE index must then prove one exact
+sealed non-ACTIVE predecessor, preserve its complete ordered source membership and
+add at least one separately qualified source before it can prepare a new non-ACTIVE
+successor. Generic retrieval, benchmark, research, vector-reuse, promotion,
+rollback, archive and live paths reject held GE trees; only the capability-bound GE
+evaluation loader can read one.
+These controls have not executed a real GE cycle and do not open unseen custody.
+**No deletion is permitted without an exact
+scoped owner authorization. Automatic retention paths now retain data unless the
+deletion guard accepts that exact object.**
+
+The owner has approved the final evaluation DOCX's recommended 331 + 32,
+factual-first, 70+ process. On 2 September 2026 the owner also recorded
+**RETURN_FOR_REVISION** for the 331+60 diagnostic full-review r2 pack. See
+[the return-for-revision overlay](data/evaluations/general-enquiries/LegalBot-GE-2026-09-02-pack-return-for-revision-r1/README.md).
+The current
+[execution-readiness package](data/evaluations/general-enquiries/LegalBot-GE-2026-09-01-execution-readiness-r1/README.md)
+binds that approval to an exact 23-domain topology request, unseen custody ledger,
+resource proposal and 331-item qualified-legal-review work order. It records the
+remaining gates without treating a process approval as a legal-currentness
+judgment, trusted signature, private-root capability, model capability or run
+authority.
+
+Recovered baseline (observed 31 August 2026):
+The owner's sequence is **1. System design; 2. Evaluation -> training/improvement
+-> unseen testing; 3. Live (last)**. GE runs first; PB and Essay remain supported.
+Git metadata, the recovered catalogue/source vault and both hash-verified retrieval
+models are present. A fresh scan accounted for 3,774 files and a fresh catalogue
+backup/restore drill passed. The missing canonical objects are repaired and
+verified. Recovery-b completed its bounded second attempt with 85 sources and
+149,855 vectors. Its sealed tree, complete checkpoint and exact database-to-Lance
+row/source/content/dimension/lane parity pass with zero mismatches. It remains
+`built_unscored`, and there is no ACTIVE/PREVIOUS pointer. The complete Python suite
+is not green because historical Phase-2A packages/builds are absent or retain stale
+sealed dependency digests; the exact failure inventory is in the
+[GE verification snapshot](docs/status/LegalBot-GE-2026-09-01-verification-r2/README.md).
+The pinned answer-model artifact is absent. Historical gaps remain explicit.
+
+The Essay, Problem Based and General Enquiry draft sets are present and their
+recovered package checksums pass. The preserved predecessor GE review pack is
+[available here](data/evaluations/general-enquiries/LegalBot-GE-2026-08-31-review-r2/README.md):
+331 visible questions, plus separately verified custody of all 306 unseen drafts.
+They are not completed gold or training data; unseen prompts are absent from the
+visible review materials.
+The full design and next steps are in
+[`docs/V111_SYSTEM_DESIGN.md`](docs/V111_SYSTEM_DESIGN.md) and
+[`docs/V111_REBUILD_CHECKLIST.md`](docs/V111_REBUILD_CHECKLIST.md).
+[`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) records current observations.
+The technical rebuild/verification is a prerequisite within phase 2, before
+model evaluation. Detailed legacy gate names remain compatibility controls, not
+additional delivery phases. The commands
+below document the application lifecycle; they do not bypass owner gates or
+instruct starting models, evaluation, promotion or live during the design stage.
 
 The default production endpoints are:
 

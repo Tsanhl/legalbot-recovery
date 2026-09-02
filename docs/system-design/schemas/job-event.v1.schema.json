@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/job-event.v1.schema.json",
+  "title": "LegalBot browser job event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "event_id",
+    "job_id",
+    "sequence",
+    "event",
+    "emitted_at",
+    "data",
+    "attempt_id",
+    "lease_generation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.job-event.v1"
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event": {
+      "enum": [
+        "accepted",
+        "progress",
+        "stage_started",
+        "stage_completed",
+        "heartbeat",
+        "warning",
+        "cancel_requested",
+        "done",
+        "reset_required"
+      ]
+    },
+    "emitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "data": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://local.legalbot.invalid/schemas/job-event-data.v1.schema.json",
+      "title": "Safe browser event data",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "message_code",
+        "release_id",
+        "terminal_kind",
+        "reset_from_sequence"
+      ],
+      "properties": {
+        "stage": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "progress": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "message_code": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "queued",
+            "running",
+            "awaiting_clarification",
+            "complete",
+            "held",
+            "system_error",
+            "cancelled",
+            null
+          ]
+        },
+        "release_state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "verified_full",
+            "verified_concise",
+            "verified_limited",
+            null
+          ]
+        },
+        "answer_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "release_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "release_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminal_kind": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "committed",
+            "held",
+            "system_error",
+            "cancelled",
+            null
+          ]
+        },
+        "reset_from_sequence": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    "attempt_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "lease_generation": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "const": "done"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "properties": {
+              "terminal_kind": {
+                "enum": [
+                  "committed",
+                  "held",
+                  "system_error",
+                  "cancelled"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "const": "reset_required"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "properties": {
+              "reset_from_sequence": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

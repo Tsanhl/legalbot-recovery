@@ -1,0 +1,531 @@
+{
+  "type": "object",
+  "required": [
+    "schema",
+    "authorizing",
+    "inspected_at_utc",
+    "code_baseline",
+    "source_scan",
+    "retrieval_models",
+    "latest_build_attempts",
+    "workspace_artifacts",
+    "question_packages",
+    "recovery_receipt_sha256",
+    "visible_counts_by_scope",
+    "selected_visible_counts",
+    "selected_visible_total",
+    "superseded_academic_general_total",
+    "visible_jsonl_files_inspected",
+    "private_custody",
+    "gold_preparation",
+    "limitations",
+    "actions_performed"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.v111.rebuild-design-inspection.v1"
+    },
+    "authorizing": {
+      "const": false
+    },
+    "inspected_at_utc": {
+      "type": "string"
+    },
+    "code_baseline": {
+      "type": "object",
+      "required": [
+        "head",
+        "tree",
+        "branch",
+        "documentation_changes_uncommitted"
+      ],
+      "properties": {
+        "head": {
+          "type": "string"
+        },
+        "tree": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "documentation_changes_uncommitted": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_scan": {
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "expected_file_count",
+        "files_accounted",
+        "completed_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "expected_file_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "files_accounted": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completed_at": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "retrieval_models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "revision",
+          "file_manifest_sha256",
+          "file_count",
+          "matches_pin"
+        ],
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "file_manifest_sha256": {
+            "type": "string"
+          },
+          "file_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "matches_pin": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "latest_build_attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "stage",
+          "failure_reason_code"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "failure_reason_code": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "workspace_artifacts": {
+      "type": "object",
+      "required": [
+        "active_pointer_present",
+        "previous_pointer_present",
+        "answer_model_directory_present",
+        "archival_base_directory_present",
+        "recovery_baseline_input_present"
+      ],
+      "properties": {
+        "active_pointer_present": {
+          "type": "boolean"
+        },
+        "previous_pointer_present": {
+          "type": "boolean"
+        },
+        "answer_model_directory_present": {
+          "type": "boolean"
+        },
+        "archival_base_directory_present": {
+          "type": "boolean"
+        },
+        "recovery_baseline_input_present": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "question_packages": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "run_name",
+              "package_content_sha256",
+              "package_digest_matches_recovery_receipt",
+              "package_digest_recomputed",
+              "checksum_entries_checked",
+              "checksum_mismatches",
+              "private_jsonl_mode_checks"
+            ],
+            "properties": {
+              "run_name": {
+                "type": "string"
+              },
+              "package_content_sha256": {
+                "type": "string"
+              },
+              "package_digest_matches_recovery_receipt": {
+                "type": "boolean"
+              },
+              "package_digest_recomputed": {
+                "type": "boolean"
+              },
+              "checksum_entries_checked": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum_mismatches": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "private_jsonl_mode_checks": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "run_name",
+              "package_content_sha256",
+              "package_digest_matches_recovery_receipt",
+              "package_digest_recomputed",
+              "checksum_entries_checked",
+              "checksum_mismatches",
+              "private_jsonl_mode_checks",
+              "zip_sha256",
+              "zip_matches_recovery_receipt",
+              "zip_mode"
+            ],
+            "properties": {
+              "run_name": {
+                "type": "string"
+              },
+              "package_content_sha256": {
+                "type": "string"
+              },
+              "package_digest_matches_recovery_receipt": {
+                "type": "boolean"
+              },
+              "package_digest_recomputed": {
+                "type": "boolean"
+              },
+              "checksum_entries_checked": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum_mismatches": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "private_jsonl_mode_checks": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "zip_sha256": {
+                "type": "string"
+              },
+              "zip_matches_recovery_receipt": {
+                "type": "boolean"
+              },
+              "zip_mode": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "recovery_receipt_sha256": {
+      "type": "string"
+    },
+    "visible_counts_by_scope": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "scope",
+          "kind",
+          "question_type",
+          "count"
+        ],
+        "properties": {
+          "scope": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "question_type": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "selected_visible_counts": {
+      "type": "object",
+      "required": [
+        "ESSAY",
+        "PROBLEM_BASED",
+        "GENERAL_ENQUIRY"
+      ],
+      "properties": {
+        "ESSAY": {
+          "type": "object",
+          "required": [
+            "core",
+            "stress"
+          ],
+          "properties": {
+            "core": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "stress": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "PROBLEM_BASED": {
+          "type": "object",
+          "required": [
+            "core",
+            "stress"
+          ],
+          "properties": {
+            "core": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "stress": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "GENERAL_ENQUIRY": {
+          "type": "object",
+          "required": [
+            "core",
+            "stress"
+          ],
+          "properties": {
+            "core": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "stress": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "selected_visible_total": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "superseded_academic_general_total": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "visible_jsonl_files_inspected": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "private_custody": {
+      "type": "object",
+      "required": [
+        "counts_from_preserved_plan_metadata",
+        "selected_count_after_topic_admission",
+        "private_question_content_parsed",
+        "private_question_content_projected",
+        "private_jsonl_mode_checks",
+        "private_member_verification",
+        "owner_freeze_created"
+      ],
+      "properties": {
+        "counts_from_preserved_plan_metadata": {
+          "type": "object",
+          "required": [
+            "ESSAY",
+            "PROBLEM_BASED",
+            "GENERAL_ENQUIRY"
+          ],
+          "properties": {
+            "ESSAY": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "PROBLEM_BASED": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "GENERAL_ENQUIRY": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "selected_count_after_topic_admission": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "private_question_content_parsed": {
+          "const": false
+        },
+        "private_question_content_projected": {
+          "const": false
+        },
+        "private_jsonl_mode_checks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "private_member_verification": {
+          "type": "string"
+        },
+        "owner_freeze_created": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "gold_preparation": {
+      "type": "object",
+      "required": [
+        "existing_slots",
+        "proposition_slots",
+        "completed_gold_answers_reported_by_manifest",
+        "existing_slots_automatically_cover_general_r2"
+      ],
+      "properties": {
+        "existing_slots": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "proposition_slots": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completed_gold_answers_reported_by_manifest": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "existing_slots_automatically_cover_general_r2": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "actions_performed": {
+      "type": "object",
+      "required": [
+        "documentation_and_metadata_inspection",
+        "source_scan",
+        "catalogue_repair",
+        "candidate_build",
+        "retrieval_attestation",
+        "answer_model_run",
+        "model_training",
+        "validation_disclosure",
+        "owner_signature",
+        "git_mutation",
+        "promotion",
+        "live_activation"
+      ],
+      "properties": {
+        "documentation_and_metadata_inspection": {
+          "type": "boolean"
+        },
+        "source_scan": {
+          "type": "boolean"
+        },
+        "catalogue_repair": {
+          "type": "boolean"
+        },
+        "candidate_build": {
+          "type": "boolean"
+        },
+        "retrieval_attestation": {
+          "type": "boolean"
+        },
+        "answer_model_run": {
+          "type": "boolean"
+        },
+        "model_training": {
+          "type": "boolean"
+        },
+        "validation_disclosure": {
+          "type": "boolean"
+        },
+        "owner_signature": {
+          "type": "boolean"
+        },
+        "git_mutation": {
+          "type": "boolean"
+        },
+        "promotion": {
+          "type": "boolean"
+        },
+        "live_activation": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalBot v1.11 rebuild-design inspection"
+}

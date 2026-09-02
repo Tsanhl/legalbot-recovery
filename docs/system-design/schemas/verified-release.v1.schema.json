@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/verified-release.v1.schema.json",
+  "title": "LegalBot VerifiedRelease v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "release_id",
+    "job_id",
+    "answer_id",
+    "release_state",
+    "answer_content_sha256",
+    "request_sha256",
+    "query_plan_sha256",
+    "conversation_snapshot_sha256",
+    "fact_snapshot_sha256",
+    "evidence_pack_sha256",
+    "candidate_sha256",
+    "model_sha256",
+    "prompt_sha256",
+    "renderer_sha256",
+    "policy_bundle_sha256",
+    "verification_report_sha256",
+    "repair_count",
+    "parent_answer_id",
+    "outbox_id",
+    "committed_at",
+    "content_sha256",
+    "conversation_revision",
+    "retrieval_result_sha256",
+    "claim_set_sha256",
+    "validation_report_id",
+    "response_disposition",
+    "requested_as_of_date",
+    "jurisdiction",
+    "terminal_event_id",
+    "release_reason_codes",
+    "schema_selection_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.verified-release.v1"
+    },
+    "release_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "answer_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "release_state": {
+      "enum": [
+        "verified_full",
+        "verified_concise",
+        "verified_limited"
+      ]
+    },
+    "answer_content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "query_plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "conversation_snapshot_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "fact_snapshot_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_pack_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "candidate_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "model_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "renderer_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policy_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "verification_report_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repair_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "parent_answer_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "outbox_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "committed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "conversation_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "retrieval_result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "claim_set_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "validation_report_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "response_disposition": {
+      "enum": [
+        "ANSWER",
+        "CLARIFY",
+        "LIMITED",
+        "REFUSE_UNSAFE",
+        "URGENT_NEXT_STEP",
+        "OUT_OF_SCOPE"
+      ]
+    },
+    "requested_as_of_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "jurisdiction": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "terminal_event_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "release_reason_codes": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+      }
+    },
+    "schema_selection_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

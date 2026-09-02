@@ -1,5 +1,12 @@
 # LegalBot v1.11 Phase 1 recovery readiness
 
+31 August update: this is the preserved 29 August checklist. Git metadata, both
+pinned retrieval models and completed source-scan records are now present;
+the new candidate and sealed baseline are still missing. Current work is tracked
+in [the rebuild checklist](../V111_REBUILD_CHECKLIST.md) and
+[current state](../CURRENT_STATE.md). The dated missing-input statements below
+are historical, not instructions to repeat completed work.
+
 Status: **historically complete at r8; current recovered workspace requires a new Phase 1 baseline**.
 
 This checklist is limited to Phase 1. Missing Phase-2A seminar manifests,

@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/evaluation-case-result.v1.schema.json",
+  "title": "LegalBot EvaluationCaseResult v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "result_id",
+    "run_id",
+    "case_id",
+    "case_version_sha256",
+    "scenario_family_id",
+    "ordinal",
+    "job_id",
+    "release_id",
+    "terminal_state",
+    "factual_outcome",
+    "factual_report_sha256",
+    "quality_outcome",
+    "quality_score",
+    "quality_report_sha256",
+    "root_cause_layers",
+    "review_decision_sha256",
+    "started_at",
+    "completed_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.evaluation-case-result.v1"
+    },
+    "result_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "case_version_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "scenario_family_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "job_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "release_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "terminal_state": {
+      "enum": [
+        "completed",
+        "held",
+        "system_error",
+        "cancelled",
+        "ineligible"
+      ]
+    },
+    "factual_outcome": {
+      "enum": [
+        "FACTUAL_PASS",
+        "FACTUAL_HOLD",
+        "SYSTEM_ERROR",
+        "NOT_RUN"
+      ]
+    },
+    "factual_report_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "quality_outcome": {
+      "enum": [
+        "EXCEEDS_70_STANDARD",
+        "MEETS_70_STANDARD",
+        "BELOW_70_STANDARD",
+        "MATERIAL_IMPROVEMENT_REQUIRED",
+        "NOT_ELIGIBLE",
+        "NOT_RUN"
+      ]
+    },
+    "quality_score": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "quality_report_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "root_cause_layers": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "source_currentness",
+          "retrieval",
+          "matter_facts",
+          "prompt_code",
+          "validation_renderer",
+          "gold_rubric",
+          "model_capability",
+          "system_execution"
+        ]
+      }
+    },
+    "review_decision_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "const": "FACTUAL_PASS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "quality_outcome": {
+            "enum": [
+              "EXCEEDS_70_STANDARD",
+              "MEETS_70_STANDARD",
+              "BELOW_70_STANDARD",
+              "MATERIAL_IMPROVEMENT_REQUIRED"
+            ]
+          },
+          "quality_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "quality_report_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "factual_outcome": {
+            "enum": [
+              "FACTUAL_HOLD",
+              "SYSTEM_ERROR",
+              "NOT_RUN"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "quality_outcome": {
+            "enum": [
+              "NOT_ELIGIBLE",
+              "NOT_RUN"
+            ]
+          },
+          "quality_score": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

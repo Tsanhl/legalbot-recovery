@@ -13,6 +13,12 @@ from uuid import uuid4
 from ..config import Settings
 from ..crypto import LocalCipher
 from ..db import PUBLIC_RELEASE_STATES, Database
+from ..deletion_guard import (
+    DeletionAuthorization,
+    DeletionBlockedError,
+    DeletionGuard,
+    DeletionObjectClass,
+)
 
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$")
 _MAX_MESSAGE_CHARACTERS = 200_000
@@ -175,6 +181,7 @@ class ConversationStore:
         *,
         policy: ConversationPolicy | None = None,
         cache: ConversationCache | None = None,
+        deletion_guard: DeletionGuard | None = None,
     ) -> None:
         self.database = database
         self.cipher = cipher
@@ -183,6 +190,7 @@ class ConversationStore:
             ttl_seconds=self.policy.hot_cache_ttl_seconds,
             max_sessions=self.policy.hot_cache_max_sessions,
         )
+        self.deletion_guard = deletion_guard or DeletionGuard()
 
     @classmethod
     def from_settings(
@@ -190,6 +198,8 @@ class ConversationStore:
         database: Database,
         cipher: LocalCipher,
         settings: Settings,
+        *,
+        deletion_guard: DeletionGuard | None = None,
     ) -> ConversationStore:
         policy = ConversationPolicy(
             retention_days=settings.conversation_retention_days,
@@ -199,7 +209,7 @@ class ConversationStore:
             window_max_tokens=settings.conversation_window_max_tokens,
             session_message_quota=settings.conversation_session_message_quota,
         )
-        return cls(database, cipher, policy=policy)
+        return cls(database, cipher, policy=policy, deletion_guard=deletion_guard)
 
     def create_session(
         self,
@@ -543,15 +553,41 @@ class ConversationStore:
             raise ConversationNotFoundError(identifier)
         self.cache.invalidate(identifier)
 
-    def purge_expired(self, *, now: datetime | None = None) -> int:
+    def purge_expired(
+        self,
+        *,
+        now: datetime | None = None,
+        authorization: DeletionAuthorization | None = None,
+    ) -> int:
         stamp = _utc(now).isoformat()
         rows = self.database.fetchall(
             "SELECT id FROM conversation_sessions WHERE expires_at<=?", (stamp,)
         )
-        if not rows:
-            return 0
-        with self.database.transaction() as connection:
-            connection.execute("DELETE FROM conversation_sessions WHERE expires_at<=?", (stamp,))
         for row in rows:
-            self.cache.invalidate(str(row["id"]))
-        return len(rows)
+            self.database.execute(
+                "UPDATE conversation_sessions SET status='expired' WHERE id=? AND status='active'",
+                (str(row["id"]),),
+            )
+        if authorization is None:
+            return 0
+        deleted = 0
+        for row in rows:
+            identifier = str(row["id"])
+            try:
+                self.deletion_guard.require(
+                    object_class=DeletionObjectClass.CONVERSATION_SESSION,
+                    object_id=identifier,
+                    authorization=authorization,
+                    now=now,
+                )
+            except DeletionBlockedError:
+                continue
+            with self.database.transaction() as connection:
+                cursor = connection.execute(
+                    "DELETE FROM conversation_sessions WHERE id=? AND expires_at<=?",
+                    (identifier, stamp),
+                )
+            if cursor.rowcount:
+                self.cache.invalidate(identifier)
+                deleted += 1
+        return deleted

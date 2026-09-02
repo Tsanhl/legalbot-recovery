@@ -65,6 +65,7 @@ from .explicit_reference import (
     legislation_locator_within,
 )
 from .filters import chunk_matches
+from .ge_generic_read_guard import require_generic_index_read_allowed
 from .hybrid import (
     DeterministicHashEmbedding,
     HybridRetriever,
@@ -1149,6 +1150,11 @@ class HybridRetrievalService:
     def _ensure_verified_build(self, row: Mapping[str, Any]) -> _VerifiedBuildCapability:
         build_id = str(row["id"])
         build_path = self.settings.index_dir / "builds" / build_id
+        if (build_path / "approved-source-manifest.json").exists():
+            require_generic_index_read_allowed(
+                build_path,
+                expected_build_id=build_id,
+            )
         catalogue_binding = _runtime_catalogue_binding_sha256(row)
         with self._runtime_lock:
             existing = self._verified_build
@@ -1516,6 +1522,9 @@ class HybridRetrievalService:
             limit=limit,
             cacheable=cacheable,
             query_rewrite_version=item.query_rewrite_version,
+            lexical_depth=item.lexical_depth,
+            vector_depth=item.vector_depth,
+            reranker_candidates=item.reranker_candidates,
         )
         self.last_retrieval_code = None
         raise_if_retrieval_budget_exhausted()
@@ -1548,7 +1557,34 @@ class HybridRetrievalService:
             subjects=_query_subjects(subject),
             review_states=frozenset({"approved"}),
         )
-        search_query = _bounded_search_query(query, filters, limit=limit)
+        if any(
+            value is not None
+            for value in (item.lexical_depth, item.vector_depth, item.reranker_candidates)
+        ):
+            if None in (item.lexical_depth, item.vector_depth, item.reranker_candidates):
+                raise ValueError("selected retrieval budgets must be supplied as one complete set")
+            lexical_depth = int(item.lexical_depth or 0)
+            vector_depth = int(item.vector_depth or 0)
+            reranker_candidates = int(item.reranker_candidates or 0)
+            if (
+                lexical_depth < limit
+                or vector_depth < limit
+                or reranker_candidates < limit
+                or reranker_candidates > LIVE_RERANK_CANDIDATE_LIMIT
+            ):
+                raise ValueError("selected retrieval budgets exceed the runtime bounds")
+            search_query = SearchQuery(
+                query,
+                filters,
+                limit=limit,
+                candidate_limit=max(lexical_depth, vector_depth),
+                lexical_candidate_limit=lexical_depth,
+                vector_candidate_limit=vector_depth,
+                rerank_candidate_limit=reranker_candidates,
+            )
+            search_query.validate()
+        else:
+            search_query = _bounded_search_query(query, filters, limit=limit)
         cache_key: str | None = None
         cached_hits: tuple[SearchHit, ...] | None = None
         if cacheable:

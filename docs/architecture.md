@@ -1,5 +1,15 @@
 # Evidence-first architecture
 
+The complete rebuild design is [V111_SYSTEM_DESIGN.md](V111_SYSTEM_DESIGN.md).
+Delivery now has three phases: system design; GE-first evaluation/training/unseen
+(PB/Essay retained); live last. Legacy phase names below identify retained control
+contracts, not additional delivery phases. The complete design adds scoped
+structured matter-facts lookup as an explicit unimplemented adapter alongside
+existing legal-source retrieval and encrypted conversation storage.
+This page describes the retained architecture; component presence is not proof
+of a running or certified system. See [CURRENT_STATE.md](CURRENT_STATE.md) for
+the current non-ACTIVE state and missing runtime artifacts.
+
 ## Immutable layers
 
 1. Raw source bytes are written once under a SHA-256 vault key.
@@ -12,7 +22,8 @@ Vectors and lexical indexes are rebuildable from Markdown. They are never the so
 
 ### Canonical Markdown provenance schemas
 
-`legalbot.canonical-markdown.v2` headers contain only stable provenance. Audit-only fields such as
+The current converter uses `legalbot.canonical-markdown.v3`; v2 is a retained
+historical schema. Canonical headers contain stable provenance. Audit-only fields such as
 `retrieved_at` and scan-run identifiers are excluded, so identical parsed content, classification
 and source identity always produce identical body, comment and revision bytes and SHA-256 keys.
 The separate `legalbot.provenance-audit.v1` JSON object retains the full provenance record,
@@ -43,6 +54,23 @@ owner admission. `source_date` describes the official record while
 `last_updated` describes the observed/ingested version; retrieval collapses
 eligible duplicates to the newest approved authority version before scoring.
 
+For the GE loop, an official-source addition must replay the exact diagnosed
+result, research/retrieval evidence, reviews, quarantine/vault bytes, staged and
+approved rows and chunks. Its index is a strict non-ACTIVE successor of one exact
+sealed predecessor: all predecessor source members remain byte-identical and in
+order, and at least one separately qualified source is appended. Held GE trees are
+readable only through the verifier-issued evaluation capability; generic retrieval,
+benchmark, research, vector-reuse, evidence, live and direct-Lance paths reject
+them before opening the index.
+
+GE coverage is also capability-bound. A trusted verifier replays the exact stored
+owner request and resolution before issuing an opaque authorization over the
+ordered topology. The required floor is 23 distinct domains: all 17 fixed-bank
+topics plus separate housing, employment, family, immigration, benefits/debt and
+consumer domains. Empty public-domain assignments remain explicit gaps and require
+separate visible diagnostics; a narrower, reordered or aliased manifest cannot
+close the loop.
+
 There is no in-place vector update or generic write-then-delete path. The legal
 equivalent is a new immutable generation, full verification and an explicit
 owner-approved pointer switch.
@@ -58,10 +86,10 @@ owner-approved pointer switch.
 
 ## Local runtime topology and transport
 
-Production uses three loopback processes. FastAPI serves `/api/v1`, `/`,
+The target local deployment uses an API, durable worker and model sidecar. FastAPI serves `/api/v1`, `/`,
 `/admin`, and hashed Vite assets from the same origin at `127.0.0.1:8777`. The
-versioned MLX model interface is reachable only by FastAPI at
-`127.0.0.1:8778`. `scripts/start.sh` validates the built UI and pinned model
+existing versioned MLX HTTP adapter targets the loopback model interface at
+`127.0.0.1:8778`; generation belongs to the durable worker. `scripts/start.sh` validates the built UI and pinned model
 artifact before starting the model runtime, API and durable worker, and
 terminates the group if any process exits.
 
@@ -82,9 +110,10 @@ that boundary, because only deterministically validated claims may be shown.
 The Phase-2B replacement model contract is protobuf server-streaming gRPC over
 a private Unix-domain socket. It records time-to-first-token and sentence-level
 evidence/standards/knowledge-hurdle diagnostics internally, but does not make a
-sentence releaseable merely because it streamed. During Phase 2A the current
-loopback HTTP model adapter remains the honest active transport; no UDS, gRPC
-server or secret is provisioned before the exact owner gate.
+sentence releaseable merely because it streamed. The HTTP adapter remains in
+code but no answer runtime is currently active. Production UDS/gRPC activation
+and model-backed rewriting remain disabled until the exact Phase-2B owner gate;
+synthetic transport preparation does not confer that authority.
 
 `docs/CURRENT_STATE.md` is the authoritative live architecture. Dated reports
 are historical snapshots and must identify their code commit.

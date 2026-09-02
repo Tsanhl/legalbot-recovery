@@ -1,0 +1,95 @@
+{
+  "authorizing": false,
+  "status": "PASS",
+  "run_id": "LegalBot-GE-2026-09-01-review-r3",
+  "manifest_file_sha256": "ae765444e0289d5de8850375aae1c9e025f8c4c1cddca7f321ba6b456fe5961c",
+  "manifest_content_sha256": "2ed009bb9d0c92ecf3b926326c04aa02dd3bec354335ff91d39ef61ce84029d6",
+  "sha256sum_entries_checked": 16,
+  "all_manifest_artifacts_match": true,
+  "visible_cases": 331,
+  "prompts_amended": 227,
+  "prompts_retained": 104,
+  "scenario_families": 257,
+  "system_cases_separate": 32,
+  "all_source_ids_and_metadata_preserved": true,
+  "all_source_and_successor_record_digests_verified": true,
+  "all_331_before_after_records_match": true,
+  "input_projection_fields": [
+    "question",
+    "task_type"
+  ],
+  "evaluator_metadata_in_projection": false,
+  "source_packages": [
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-visible-development-r2",
+      "package_content_sha256": "d03fe95ee1ad72444580d7ca492f7fc947db4604d23214da8a086e3dbbecb359",
+      "verified_member_count": 77,
+      "private_jsonl_mode_checks": 0
+    },
+    {
+      "run_name": "LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2",
+      "package_content_sha256": "a73ef297738cf0745d1233e8d2c4748412d534bff41afadd1086e6e349f68a91",
+      "verified_member_count": 21,
+      "private_jsonl_mode_checks": 17
+    }
+  ],
+  "source_review_sha256": "d1b6f72552dee49ca6380d3016f4908453b93a67f5cb639b19bc741c168075d5",
+  "numeric_token_audit": {
+    "removed": [
+      {
+        "question_id": "private-international-law:cp-d04",
+        "tokens": [
+          "2019"
+        ]
+      }
+    ],
+    "reviewed_explanation": "2019 was part of a named Hague treaty issue cue, not a scenario date; scenario dates and source date metadata are preserved."
+  },
+  "private_unseen": {
+    "count": 306,
+    "content_version": "GE-private-r2",
+    "archive_path": "data/evaluations/phase2b-question-drafts/LegalBot-Phase2B-2026-08-28-common-public-private-unseen-r2.zip",
+    "archive_sha256": "a5c782b011995932419788b0bcc66ebe10467fabd8d4244a0003a6f4efd6c267",
+    "mode": "0600",
+    "prompts_decoded": false,
+    "content_amended": false,
+    "owner_frozen": false,
+    "semantic_independence_verified": false
+  },
+  "approved_training_examples": 0,
+  "approved_gold_answers": 0,
+  "training_run": false,
+  "evaluation_run": false,
+  "unseen_run": false,
+  "visible_zip": {
+    "path": "output/LegalBot-GE-2026-09-01-review-r3-visible.zip",
+    "sha256": "0b12e885ef48b332cfdb86761b39dc7b6467254a629fdb933b86dfa604528ac3",
+    "members": 18,
+    "crc_test": "PASS",
+    "bytes_match_pack": true,
+    "contains_private_archive_or_prompts": false,
+    "mode": "0600"
+  },
+  "pdf": {
+    "path": "output/pdf/LegalBot-GE-2026-09-01-review-r3.pdf",
+    "sha256": "5d60009e223f09b141f158bcc9566de78235eef96e31d456a591f113c879f1f6",
+    "pages": 131,
+    "visible_prompts_verified": 331,
+    "system_cases_verified": 32,
+    "fillable_fields": 726,
+    "all_decisions_unreviewed": true,
+    "content_version": "GE-visible-r3",
+    "layout_version": "1.0",
+    "run_id": "LegalBot-GE-2026-09-01-review-r3"
+  },
+  "control_predecessors_verified": 6,
+  "pre_final_control_predecessors_verified": 2,
+  "local_pack_links_checked": 13,
+  "delivery_phases": [
+    1,
+    2,
+    3
+  ],
+  "deletion_performed": false,
+  "git_mutation_performed": false
+}

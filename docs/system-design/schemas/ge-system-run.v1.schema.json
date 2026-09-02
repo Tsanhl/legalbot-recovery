@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-system-run.v1.schema.json",
+  "title": "LegalBot Completed GE System Run v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "run_id",
+    "linked_visible_run_id",
+    "candidate_sha256",
+    "fixed_visible_denominator",
+    "system_case_count",
+    "system_cases_separate_from_visible_denominator",
+    "system_manifest_sha256",
+    "system_order_sha256",
+    "result_manifest_sha256",
+    "result_count",
+    "counts",
+    "run_validity",
+    "visible_execution_identity_sha256",
+    "repair_manifest_sha256",
+    "candidate_state",
+    "promotion_authorized",
+    "started_at",
+    "completed_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-system-run.v1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "linked_visible_run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "candidate_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixed_visible_denominator": {
+      "const": 331
+    },
+    "system_case_count": {
+      "const": 32
+    },
+    "system_cases_separate_from_visible_denominator": {
+      "const": true
+    },
+    "system_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "system_order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_count": {
+      "const": 32
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "PASS",
+        "FAIL",
+        "SYSTEM_ERROR"
+      ],
+      "properties": {
+        "PASS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "FAIL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "SYSTEM_ERROR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        }
+      }
+    },
+    "run_validity": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "visible_execution_identity_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repair_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "candidate_state": {
+      "const": "NON_ACTIVE"
+    },
+    "promotion_authorized": {
+      "const": false
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "counts": {
+            "properties": {
+              "SYSTEM_ERROR": {
+                "const": 0
+              }
+            },
+            "required": [
+              "SYSTEM_ERROR"
+            ]
+          }
+        },
+        "required": [
+          "counts"
+        ]
+      },
+      "then": {
+        "properties": {
+          "run_validity": {
+            "const": "PASS"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "run_validity": {
+            "const": "FAIL"
+          }
+        }
+      }
+    }
+  ]
+}

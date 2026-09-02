@@ -1,0 +1,193 @@
+{
+  "$id": "https://local.legalbot.invalid/schemas/validation-report.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "advisory_review": {
+      "additionalProperties": false,
+      "properties": {
+        "report_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "UNCERTAIN",
+            "NOT_RUN"
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "report_sha256"
+      ],
+      "type": "object"
+    },
+    "checks": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_ids": {
+            "items": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "check_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "identity",
+              "fact_provenance",
+              "evidence_support",
+              "currentness",
+              "quotation",
+              "citation",
+              "date_amount",
+              "contradiction",
+              "privacy",
+              "output_shape"
+            ]
+          },
+          "material": {
+            "type": "boolean"
+          },
+          "reason_code": {
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$",
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "validator_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "input_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "output_sha256": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "check_id",
+          "kind",
+          "result",
+          "material",
+          "reason_code",
+          "affected_ids",
+          "validator_sha256",
+          "input_sha256",
+          "output_sha256"
+        ],
+        "type": "object"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "draft_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "draft_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "final_disposition": {
+      "enum": [
+        "verified_full",
+        "verified_concise",
+        "verified_limited",
+        "held",
+        "system_error"
+      ]
+    },
+    "repair_parent_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "legalbot.validation-report.v1"
+    },
+    "validation_report_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "validator_bundle_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "claim_set_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidence_pack_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fact_snapshot_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema",
+    "validation_report_id",
+    "draft_id",
+    "draft_sha256",
+    "validator_bundle_sha256",
+    "checks",
+    "advisory_review",
+    "repair_parent_id",
+    "final_disposition",
+    "created_at",
+    "claim_set_sha256",
+    "evidence_pack_sha256",
+    "fact_snapshot_sha256",
+    "policy_sha256"
+  ],
+  "title": "LegalBot ValidationReport v1",
+  "type": "object"
+}

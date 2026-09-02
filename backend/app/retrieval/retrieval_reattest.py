@@ -26,7 +26,7 @@ from typing import Any, Protocol, cast
 
 from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE
 from ..config import Settings
-from ..db import utc_iso
+from ..db import SCHEMA_VERSION, utc_iso
 from ..privacy import safe_summary
 from ..quality.policy import POLICY_SHA256
 from .retrieval_v1 import (
@@ -54,6 +54,10 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _GIT_SHA = re.compile(r"^[0-9a-f]{40}(?:[0-9a-f]{24})?$")
 _REATTEST_CATALOGUE_SCHEMA_VERSION = "19"
 _REATTEST_CATALOGUE_JOURNAL_MODE = "wal"
+_REATTEST_COMPATIBLE_CATALOGUE_SCHEMA_VERSIONS = frozenset(
+    str(version)
+    for version in range(int(_REATTEST_CATALOGUE_SCHEMA_VERSION), SCHEMA_VERSION + 1)
+)
 
 _REATTESTATION_SCHEMA_STATEMENTS = {
     "retrieval_attestation_history": """
@@ -430,17 +434,7 @@ def _require_reattest_base_catalogue(
 def _require_exact_reattestation_schema(connection: Any) -> None:
     _require_reattest_base_catalogue(
         connection,
-        allowed_schema_versions=frozenset(
-            {
-                _REATTEST_CATALOGUE_SCHEMA_VERSION,
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-            }
-        ),
+        allowed_schema_versions=_REATTEST_COMPATIBLE_CATALOGUE_SCHEMA_VERSIONS,
     )
 
     expected_types = {

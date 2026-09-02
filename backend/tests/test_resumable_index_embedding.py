@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -10,6 +11,7 @@ from app.db import JobQueueCapacityError
 from app.jobs import INDEX_STAGE_SECONDS, INDEX_WORKFLOW_SECONDS
 from app.retrieval.embedding_progress import (
     build_checkpoint,
+    checkpoint_path,
     chunk_key,
     identities_match,
     load_checkpoint,
@@ -33,6 +35,7 @@ from app.retrieval.index_build import (
     enqueue_index_build,
 )
 from app.retrieval.index_recovery import (
+    _actual_checkpoint_reconciliation,
     attest_allowed,
     rearm_index_job_deadlines,
     reconcile_embedding_checkpoint_to_observed_prefix,
@@ -106,6 +109,69 @@ def _queued_build(database, tmp_path: Path, *, build_id: str, **kwargs):
         **kwargs,
     )
     return settings, queued
+
+
+def _sealed_audit_report(**values: object) -> dict[str, object]:
+    report = {"schema": "legalbot.incomplete-index-audit.v1", **values}
+    encoded = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    ).encode("utf-8")
+    report["report_sha256"] = hashlib.sha256(encoded).hexdigest()
+    return report
+
+
+def _lease_loss_audit_report(
+    settings, build_id: str, source_manifest_sha256: str
+) -> dict[str, object]:
+    staging = settings.index_dir / "builds" / f".{build_id}.incomplete"
+    save_checkpoint(
+        staging,
+        build_checkpoint(
+            build_id=build_id,
+            source_manifest_sha256=source_manifest_sha256,
+            ordered_chunk_stream_sha256="b" * 64,
+            parser_version="parser",
+            chunker_version="chunker",
+            index_schema_version="schema",
+            embedding_model="embed",
+            dtype="float16",
+            vector_dimensions=VECTOR_DIMENSIONS,
+            batch_size=8,
+            policy_sha256="2" * 64,
+            assessment_bundle_sha256="3" * 64,
+            provision_verification_sha256="4" * 64,
+            completed_row_count=2,
+            last_deterministic_chunk_key="source\t1\tchunk",
+            rolling_digest="c" * 64,
+            physical_lane_counts={"authority": 2},
+        ),
+    )
+    checkpoint = load_checkpoint(staging)
+    assert checkpoint is not None
+    return _sealed_audit_report(
+        build_id=build_id,
+        source_manifest_match=True,
+        source_version_id_binding_match=True,
+        source_lane_binding_match=True,
+        exact_ordered_prefix=True,
+        checkpoint_prefix_match=True,
+        checkpoint_reconciliation_required=False,
+        observed_total_rows=2,
+        ordered_prefix_verified_row_count=2,
+        ordered_prefix_rolling_digest="c" * 64,
+        ordered_prefix_last_deterministic_chunk_key="source\t1\tchunk",
+        source_manifest_sha256=source_manifest_sha256,
+        checkpoint={
+            "present": True,
+            "completed_row_count": 2,
+            "checkpoint_sha256": checkpoint.checkpoint_sha256,
+            "last_deterministic_chunk_key": "source\t1\tchunk",
+        },
+    )
 
 
 def test_embedding_budget_is_stage_specific_not_a_global_two_hour_bump() -> None:
@@ -316,24 +382,27 @@ def test_resumed_vector_counts_include_nonreuse_prefix_and_fail_closed_on_unknow
         )
 
 
-def test_checkpoint_reconciliation_advances_only_across_exact_prefix(tmp_path: Path) -> None:
+def test_checkpoint_reconciliation_advances_only_from_fresh_disk_db_audit(
+    database, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.retrieval import index_recovery as recovery_module
     from app.retrieval.embedding_progress import ordered_stream_digest, update_rolling_digest
 
+    settings, queued = _queued_build(
+        database, tmp_path, build_id="prefix-build", skip_embedding=False
+    )
     expected = (
         ExpectedIndexRow("chunk-0", "h0", "source-a", 0),
         ExpectedIndexRow("chunk-1", "h1", "source-a", 1),
     )
-    observed = (
-        ObservedIndexRow("chunk-0", "h0", "source-a", VECTOR_DIMENSIONS, "authority"),
-        ObservedIndexRow("chunk-1", "h1", "source-a", VECTOR_DIMENSIONS, "authority"),
-    )
-    staging = tmp_path / ".prefix-build.incomplete"
+    staging = settings.index_dir / "builds" / ".prefix-build.incomplete"
+    source_manifest_sha256 = str(queued["source_manifest_hash"])
     first_digest = update_rolling_digest("", chunk_id="chunk-0", content_sha256="h0")
     save_checkpoint(
         staging,
         build_checkpoint(
             build_id="prefix-build",
-            source_manifest_sha256="0" * 64,
+            source_manifest_sha256=source_manifest_sha256,
             ordered_chunk_stream_sha256=ordered_stream_digest(
                 [chunk_key(row.source_version_id, row.ordinal, row.chunk_id) for row in expected]
             ),
@@ -353,13 +422,76 @@ def test_checkpoint_reconciliation_advances_only_across_exact_prefix(tmp_path: P
             physical_lane_counts={"authority": 1, "teaching": 0, "assessment": 0},
         ),
     )
+    initial_checkpoint = load_checkpoint(staging)
+    assert initial_checkpoint is not None
+    initial_checkpoint_bytes = checkpoint_path(staging).read_bytes()
+    final_digest = update_rolling_digest(
+        first_digest, chunk_id="chunk-1", content_sha256="h1"
+    )
+    before_report = _sealed_audit_report(
+        build_id="prefix-build",
+        source_manifest_sha256=source_manifest_sha256,
+        source_manifest_match=True,
+        source_version_id_binding_match=True,
+        source_lane_binding_match=True,
+        exact_ordered_prefix=True,
+        checkpoint_prefix_match=True,
+        checkpoint_reconciliation_required=True,
+        observed_total_rows=2,
+        ordered_prefix_verified_row_count=2,
+        ordered_prefix_rolling_digest=final_digest,
+        ordered_prefix_last_deterministic_chunk_key=chunk_key(
+            "source-a", 1, "chunk-1"
+        ),
+        ordered_prefix_lane_counts={"authority": 2, "teaching": 0, "assessment": 0},
+        checkpoint={
+            "present": True,
+            "completed_row_count": 1,
+            "checkpoint_sha256": initial_checkpoint.checkpoint_sha256,
+            "last_deterministic_chunk_key": initial_checkpoint.last_deterministic_chunk_key,
+        },
+    )
+
+    def actual_audit(*_args: object) -> dict[str, object]:
+        current = load_checkpoint(staging)
+        assert current is not None
+        if current.completed_row_count == 1:
+            return before_report
+        return _sealed_audit_report(
+            build_id="prefix-build",
+            source_manifest_sha256=source_manifest_sha256,
+            source_manifest_match=True,
+            source_version_id_binding_match=True,
+            source_lane_binding_match=True,
+            exact_ordered_prefix=True,
+            checkpoint_prefix_match=True,
+            checkpoint_reconciliation_required=False,
+            observed_total_rows=2,
+            ordered_prefix_verified_row_count=2,
+            ordered_prefix_rolling_digest=final_digest,
+            ordered_prefix_last_deterministic_chunk_key=chunk_key(
+                "source-a", 1, "chunk-1"
+            ),
+            ordered_prefix_lane_counts={
+                "authority": 2,
+                "teaching": 0,
+                "assessment": 0,
+            },
+            checkpoint={
+                "present": True,
+                "completed_row_count": 2,
+                "checkpoint_sha256": current.checkpoint_sha256,
+                "last_deterministic_chunk_key": current.last_deterministic_chunk_key,
+            },
+        )
+
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", actual_audit)
 
     result = reconcile_embedding_checkpoint_to_observed_prefix(
-        staging,
-        expected_rows=expected,
-        observed_rows=observed,
-        expected_build_id="prefix-build",
-        expected_source_manifest_sha256="0" * 64,
+        settings,
+        database,
+        "prefix-build",
+        expected_audit_report_sha256=str(before_report["report_sha256"]),
     )
 
     assert result["changed"] is True
@@ -368,15 +500,18 @@ def test_checkpoint_reconciliation_advances_only_across_exact_prefix(tmp_path: P
     assert result["uncheckpointed_rows_reconciled"] == 1
     reconciled = load_checkpoint(staging)
     assert reconciled is not None and reconciled.completed_row_count == 2
+    preserved = staging / str(result["preserved_checkpoint_label"])
+    assert preserved.read_bytes() == initial_checkpoint_bytes
 
-    with pytest.raises(RuntimeError, match="exact expected ordered prefix"):
+    checkpoint_bytes_before_forgery = checkpoint_path(staging).read_bytes()
+    with pytest.raises(RuntimeError, match="audit differs"):
         reconcile_embedding_checkpoint_to_observed_prefix(
-            staging,
-            expected_rows=expected,
-            observed_rows=(observed[1], observed[0]),
-            expected_build_id="prefix-build",
-            expected_source_manifest_sha256="0" * 64,
+            settings,
+            database,
+            "prefix-build",
+            expected_audit_report_sha256="f" * 64,
         )
+    assert checkpoint_path(staging).read_bytes() == checkpoint_bytes_before_forgery
 
 
 def _mark_posthoc_timeout(
@@ -406,7 +541,11 @@ def _mark_posthoc_timeout(
     )
 
 
-def test_complete_staging_recovers_without_reembedding(database, tmp_path) -> None:
+def test_complete_staging_recovers_without_reembedding(
+    database, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.retrieval import index_recovery as recovery_module
+
     settings, queued = _queued_build(
         database,
         tmp_path,
@@ -424,21 +563,22 @@ def test_complete_staging_recovers_without_reembedding(database, tmp_path) -> No
         (queued["job_id"],),
     )
     assert [str(row["status"]) for row in failed_before] == ["failed"]
-    report = {
-        "embedding_complete": True,
-        "source_manifest_match": True,
-        "observed_total_rows": 2,
-        "expected_chunks": 2,
-        "observed_source_version_count": 1,
-        "observed_rows_per_physical_lane": {"authority": 2},
-        "report_sha256": "a" * 64,
-    }
+    report = _sealed_audit_report(
+        build_id="recover-complete",
+        embedding_complete=True,
+        source_manifest_match=True,
+        observed_total_rows=2,
+        expected_chunks=2,
+        observed_source_version_count=1,
+        observed_rows_per_physical_lane={"authority": 2},
+    )
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", lambda *_args: report)
     result = recover_index_embedding(
         settings,
         database,
         "recover-complete",
         continue_build=True,
-        audit_report=report,
+        expected_audit_report_sha256=str(report["report_sha256"]),
     )
     assert result["recovered"] is True
     assert result["status"] == "queued"
@@ -463,7 +603,11 @@ def test_complete_staging_recovers_without_reembedding(database, tmp_path) -> No
     assert counts["chunks_written"] == 2
 
 
-def test_partial_staging_cannot_be_marked_complete(database, tmp_path) -> None:
+def test_partial_staging_cannot_be_marked_complete(
+    database, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.retrieval import index_recovery as recovery_module
+
     settings, queued = _queued_build(
         database,
         tmp_path,
@@ -475,19 +619,21 @@ def test_partial_staging_cannot_be_marked_complete(database, tmp_path) -> None:
         IndexBuildRunner(settings, database).run_sync(queued["job_id"])
     _mark_posthoc_timeout(database, "recover-partial", queued["job_id"])
     (settings.index_dir / "builds" / ".recover-partial.incomplete").mkdir(parents=True)
+    report = _sealed_audit_report(
+        build_id="recover-partial",
+        embedding_complete=False,
+        source_manifest_match=True,
+        observed_total_rows=1,
+        expected_chunks=2,
+    )
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", lambda *_args: report)
     with pytest.raises(RuntimeError, match="not an exact complete embedding"):
         recover_index_embedding(
             settings,
             database,
             "recover-partial",
             continue_build=False,
-            audit_report={
-                "embedding_complete": False,
-                "source_manifest_match": True,
-                "observed_total_rows": 1,
-                "expected_chunks": 2,
-                "report_sha256": "b" * 64,
-            },
+            expected_audit_report_sha256=str(report["report_sha256"]),
         )
     assert (settings.index_dir / "builds" / ".recover-partial.incomplete").is_dir()
 
@@ -628,7 +774,11 @@ def test_retry_resets_deadlines_and_preserves_failed_attempts(database, tmp_path
     assert rearm["workflow_deadline_at"] != "2000-01-01T00:00:00+00:00"
 
 
-def test_recovery_refuses_foreign_lease_without_partial_mutation(database, tmp_path) -> None:
+def test_recovery_refuses_foreign_lease_without_partial_mutation(
+    database, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.retrieval import index_recovery as recovery_module
+
     settings, queued = _queued_build(
         database,
         tmp_path,
@@ -655,20 +805,22 @@ def test_recovery_refuses_foreign_lease_without_partial_mutation(database, tmp_p
     build_before = dict(
         database.fetchone("SELECT * FROM index_builds WHERE id='recover-foreign-lease'")
     )
+    report = _sealed_audit_report(
+        build_id="recover-foreign-lease",
+        embedding_complete=True,
+        source_manifest_match=True,
+        observed_total_rows=2,
+        expected_chunks=2,
+        observed_source_version_count=1,
+        observed_rows_per_physical_lane={"authority": 2},
+    )
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", lambda *_args: report)
     with pytest.raises(RuntimeError, match="worker lease"):
         recover_index_embedding(
             settings,
             database,
             "recover-foreign-lease",
-            audit_report={
-                "embedding_complete": True,
-                "source_manifest_match": True,
-                "observed_total_rows": 2,
-                "expected_chunks": 2,
-                "observed_source_version_count": 1,
-                "observed_rows_per_physical_lane": {"authority": 2},
-                "report_sha256": "d" * 64,
-            },
+            expected_audit_report_sha256=str(report["report_sha256"]),
         )
     job_after = database.job(queued["job_id"])
     assert job_after["status"] == "failed"
@@ -688,8 +840,10 @@ def test_recovery_refuses_foreign_lease_without_partial_mutation(database, tmp_p
 
 
 def test_exact_lease_loss_requeue_preserves_build_and_arms_24_hour_boundary(
-    database, tmp_path
+    database, tmp_path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    from app.retrieval import index_recovery as recovery_module
+
     settings, queued = _queued_build(
         database,
         tmp_path,
@@ -705,26 +859,23 @@ def test_exact_lease_loss_requeue_preserves_build_and_arms_24_hour_boundary(
         reason_code="lease_lost",
         message="Injected lease loss",
     )
+    report = _lease_loss_audit_report(
+        settings, "lease-loss-same-build", str(queued["source_manifest_hash"])
+    )
+    reconciliation = _actual_checkpoint_reconciliation(
+        report, expected_build_id="lease-loss-same-build"
+    )
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", lambda *_args: report)
     result = resume_lease_lost_index_build(
         settings,
         database,
         queued["job_id"],
         expected_build_id="lease-loss-same-build",
         expected_attempt_count=1,
-        audit_report={
-            "source_manifest_match": True,
-            "exact_ordered_prefix": True,
-            "checkpoint_prefix_match": True,
-            "checkpoint_reconciliation_required": False,
-            "observed_total_rows": 2,
-            "checkpoint": {"completed_row_count": 2, "checkpoint_sha256": "a" * 64},
-            "report_sha256": "b" * 64,
-        },
-        checkpoint_reconciliation={
-            "build_id": "lease-loss-same-build",
-            "exact_ordered_prefix": True,
-            "changed": True,
-        },
+        expected_audit_report_sha256=str(report["report_sha256"]),
+        expected_checkpoint_reconciliation_sha256=str(
+            reconciliation["reconciliation_sha256"]
+        ),
     )
 
     assert result["queued_for_exact_second_attempt"] is True
@@ -742,6 +893,74 @@ def test_exact_lease_loss_requeue_preserves_build_and_arms_24_hour_boundary(
     )
     assert build["status"] == "queued"
     assert build["failure_reason_code"] is None
+
+
+def test_lease_loss_resume_recomputes_audit_and_reconciliation_before_mutation(
+    database, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.retrieval import index_recovery as recovery_module
+
+    settings, queued = _queued_build(
+        database,
+        tmp_path,
+        build_id="lease-loss-forged-proof",
+        skip_embedding=False,
+    )
+    worker_id = "lease-loss-forged-proof-worker"
+    claimed = database.claim_next_job(worker_id, job_types=("index_build",))
+    assert claimed is not None
+    assert database.terminalize_owned_index_execution(
+        queued["job_id"],
+        worker_id,
+        reason_code="lease_lost",
+        message="Injected lease loss",
+    )
+    report = _lease_loss_audit_report(
+        settings, "lease-loss-forged-proof", str(queued["source_manifest_hash"])
+    )
+    reconciliation = _actual_checkpoint_reconciliation(
+        report, expected_build_id="lease-loss-forged-proof"
+    )
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", lambda *_args: report)
+    job_before = dict(database.job(queued["job_id"]))
+    build_before = dict(
+        database.fetchone(
+            "SELECT * FROM index_builds WHERE id=?", ("lease-loss-forged-proof",)
+        )
+    )
+
+    with pytest.raises(RuntimeError, match="audit differs"):
+        resume_lease_lost_index_build(
+            settings,
+            database,
+            queued["job_id"],
+            expected_build_id="lease-loss-forged-proof",
+            expected_attempt_count=1,
+            expected_audit_report_sha256="f" * 64,
+            expected_checkpoint_reconciliation_sha256=str(
+                reconciliation["reconciliation_sha256"]
+            ),
+        )
+    with pytest.raises(RuntimeError, match="reconciliation differs"):
+        resume_lease_lost_index_build(
+            settings,
+            database,
+            queued["job_id"],
+            expected_build_id="lease-loss-forged-proof",
+            expected_attempt_count=1,
+            expected_audit_report_sha256=str(report["report_sha256"]),
+            expected_checkpoint_reconciliation_sha256="e" * 64,
+        )
+
+    assert dict(database.job(queued["job_id"])) == job_before
+    assert (
+        dict(
+            database.fetchone(
+                "SELECT * FROM index_builds WHERE id=?", ("lease-loss-forged-proof",)
+            )
+        )
+        == build_before
+    )
 
 
 def test_generic_resume_refuses_rows_beyond_checkpoint(
@@ -763,10 +982,11 @@ def test_generic_resume_refuses_rows_beyond_checkpoint(
     monkeypatch.setattr(
         recovery_module,
         "audit_incomplete_index",
-        lambda *_args, **_kwargs: {
-            "checkpoint_reconciliation_required": True,
-            "resumable": False,
-        },
+        lambda *_args, **_kwargs: _sealed_audit_report(
+            build_id="resume-trailing-checkpoint",
+            checkpoint_reconciliation_required=True,
+            resumable=False,
+        ),
     )
 
     with pytest.raises(RuntimeError, match="reconcile the ordered prefix"):
@@ -849,7 +1069,11 @@ def test_retry_conflict_preserves_old_staging_and_idempotency(database, tmp_path
     )
 
 
-def test_failed_and_recovered_builds_cannot_write_active(database, tmp_path) -> None:
+def test_failed_and_recovered_builds_cannot_write_active(
+    database, tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.retrieval import index_recovery as recovery_module
+
     settings, queued = _queued_build(
         database,
         tmp_path,
@@ -862,20 +1086,22 @@ def test_failed_and_recovered_builds_cannot_write_active(database, tmp_path) -> 
     assert not (settings.index_dir / "ACTIVE.json").exists()
     _mark_posthoc_timeout(database, "no-active", queued["job_id"])
     (settings.index_dir / "builds" / ".no-active.incomplete").mkdir(parents=True)
+    report = _sealed_audit_report(
+        build_id="no-active",
+        embedding_complete=True,
+        source_manifest_match=True,
+        observed_total_rows=2,
+        expected_chunks=2,
+        observed_source_version_count=1,
+        observed_rows_per_physical_lane={"authority": 2},
+    )
+    monkeypatch.setattr(recovery_module, "audit_incomplete_index", lambda *_args: report)
     recover_index_embedding(
         settings,
         database,
         "no-active",
         continue_build=True,
-        audit_report={
-            "embedding_complete": True,
-            "source_manifest_match": True,
-            "observed_total_rows": 2,
-            "expected_chunks": 2,
-            "observed_source_version_count": 1,
-            "observed_rows_per_physical_lane": {"authority": 2},
-            "report_sha256": "c" * 64,
-        },
+        expected_audit_report_sha256=str(report["report_sha256"]),
     )
     assert not (settings.index_dir / "ACTIVE.json").exists()
     assert database.active_index_id() is None

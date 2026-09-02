@@ -21,6 +21,11 @@ from ..jobs import (
     INDEX_SCHEMA_VERSION,
     PARSER_VERSION,
 )
+from .ge_source_scope import (
+    is_ge_source_scope_corpus,
+    load_ge_source_scope,
+    select_ge_source_scope_rows,
+)
 from .phase2a_dynamic_scope import (
     is_dynamic_phase2a_scope_corpus,
     load_dynamic_phase2a_scope,
@@ -346,6 +351,15 @@ def select_approved_authority_rows(
     max_chunks: int | None = None,
     preferred_small_first: bool = False,
 ) -> list[dict[str, Any]]:
+    if is_ge_source_scope_corpus(corpus_id):
+        ge_rows, _scope = select_ge_source_scope_rows(
+            database,
+            settings,
+            corpus_id=str(corpus_id),
+            max_chunks=max_chunks,
+            preferred_small_first=preferred_small_first,
+        )
+        return ge_rows
     if is_phase2a_frozen_scope_corpus(corpus_id):
         frozen_rows, _scope = select_phase2a_frozen_scope_rows(
             database,
@@ -478,9 +492,12 @@ def build_approved_source_manifest(
 ) -> dict[str, Any]:
     from .provision_verification import load_provision_verifications
 
+    ge_source_scope = None
     frozen_scope = None
     dynamic_phase2a_scope = None
-    if is_phase2a_frozen_scope_corpus(corpus_id):
+    if is_ge_source_scope_corpus(corpus_id):
+        ge_source_scope = load_ge_source_scope(settings, database, corpus_id)
+    elif is_phase2a_frozen_scope_corpus(corpus_id):
         frozen_scope = load_phase2a_frozen_scope(settings)
     elif is_dynamic_phase2a_scope_corpus(corpus_id):
         dynamic_phase2a_scope = load_dynamic_phase2a_scope(settings, corpus_id)
@@ -500,6 +517,16 @@ def build_approved_source_manifest(
     chunk_total = 0
     for row in rows:
         chunk_total += int(row["body_chunk_count"])
+        predecessor_member = row.get("ge_predecessor_source_member")
+        if ge_source_scope is not None and predecessor_member is not None:
+            if (
+                not isinstance(predecessor_member, dict)
+                or str(predecessor_member.get("source_version_id") or "")
+                != str(row["source_version_id"])
+            ):
+                raise ValueError("GE predecessor source member replay differed")
+            sources.append(dict(predecessor_member))
+            continue
         try:
             metadata = json.loads(row["metadata_json"] or "{}")
         except (TypeError, json.JSONDecodeError):
@@ -589,8 +616,17 @@ def build_approved_source_manifest(
             ]
             source["phase2a_member_schema"] = "legalbot.v111.phase2a.source-manifest-member.v1"
             source["phase2a_member_content_sha256"] = source_manifest_member_sha256(source)
+        if ge_source_scope is not None:
+            source["ge_scope_lane"] = row["ge_scope_lane"]
+            source["ge_scope_record_content_sha256"] = row[
+                "ge_scope_record_content_sha256"
+            ]
         sources.append(source)
-    required = required_source_families(packs, corpus_id=corpus_id)
+    required = (
+        ()
+        if ge_source_scope is not None
+        else required_source_families(packs, corpus_id=corpus_id)
+    )
     selected_families = sorted(selected_source_families(sources))
     omitted = [family for family in required if family not in set(selected_families)]
     slice_policy = load_current_law_slice_policy(settings) if slice_mode else None
@@ -616,21 +652,25 @@ def build_approved_source_manifest(
         "schema": MANIFEST_SCHEMA,
         "corpus_id": corpus_id,
         "created_at": utc_iso(),
-        "authority_lane_only": True,
+        "authority_lane_only": all(source["lane"] == AUTHORITY_LANE for source in sources),
         "exclude_find_case_law_full_text": True,
         "exclude_teaching_as_authority": True,
         "exclude_assessment_as_authority": True,
         "historical_default_excluded": True,
         "selection_policy": (
-            "exact-owner-approved-dynamic-phase2a-successor-scope"
-            if dynamic_phase2a_scope is not None
+            "exact-owner-approved-ge-source-versions-and-lanes"
+            if ge_source_scope is not None
             else (
-                "exact-owner-approved-held-phase2a-successor-scope"
-                if frozen_scope is not None
+                "exact-owner-approved-dynamic-phase2a-successor-scope"
+                if dynamic_phase2a_scope is not None
                 else (
-                    "subject-policy-current-law-slice"
-                    if slice_mode
-                    else "current-legislation-and-rights-reviewed-official-judgments"
+                    "exact-owner-approved-held-phase2a-successor-scope"
+                    if frozen_scope is not None
+                    else (
+                        "subject-policy-current-law-slice"
+                        if slice_mode
+                        else "current-legislation-and-rights-reviewed-official-judgments"
+                    )
                 )
             )
         ),
@@ -669,7 +709,114 @@ def build_approved_source_manifest(
         "omitted_required_families": omitted,
         "sources": sources,
     }
-    if frozen_scope is not None:
+    if ge_source_scope is not None:
+        predecessor = ge_source_scope["predecessor"]
+        predecessor_members = predecessor["source_members"]
+        predecessor_count = int(ge_source_scope["predecessor_source_count"])
+        added_ids = [
+            str(source["source_version_id"]) for source in ge_source_scope["sources"]
+        ]
+        if (
+            payload["source_count"] != ge_source_scope["source_count"]
+            or payload["chunk_count"] != ge_source_scope["chunk_count"]
+            or payload["omitted_required_families"]
+            or sources[:predecessor_count] != predecessor_members
+            or [str(source["source_version_id"]) for source in sources]
+            != ge_source_scope["successor_source_version_ids"]
+            or [
+                str(source["source_version_id"])
+                for source in sources[predecessor_count:]
+            ]
+            != added_ids
+        ):
+            raise ValueError("GE source manifest departed from its approved scope")
+        payload.update(
+            {
+                "ge_source_scope_schema": ge_source_scope["schema"],
+                "ge_expansion_mode": ge_source_scope["expansion_mode"],
+                "ge_source_scope_content_sha256": ge_source_scope[
+                    "scope_content_sha256"
+                ],
+                "ge_source_scope_owner_approval_digest": ge_source_scope[
+                    "owner_approval_digest"
+                ],
+                "ge_source_scope_lanes": ge_source_scope["scope_lanes"],
+                "ge_source_version_id_set_sha256": ge_source_scope[
+                    "source_version_id_set_sha256"
+                ],
+                "ge_predecessor_build_id": ge_source_scope[
+                    "predecessor_build_id"
+                ],
+                "ge_predecessor_seal_sha256": ge_source_scope[
+                    "predecessor_seal_sha256"
+                ],
+                "ge_predecessor_build_manifest_sha256": ge_source_scope[
+                    "predecessor_build_manifest_sha256"
+                ],
+                "ge_predecessor_source_manifest_file_sha256": ge_source_scope[
+                    "predecessor_source_manifest_file_sha256"
+                ],
+                "ge_predecessor_source_manifest_sha256": ge_source_scope[
+                    "predecessor_source_manifest_sha256"
+                ],
+                "ge_predecessor_index_build_record_sha256": ge_source_scope[
+                    "predecessor_index_build_record_sha256"
+                ],
+                "ge_predecessor_source_count": ge_source_scope[
+                    "predecessor_source_count"
+                ],
+                "ge_predecessor_chunk_count": ge_source_scope[
+                    "predecessor_chunk_count"
+                ],
+                "ge_predecessor_source_version_id_set_sha256": ge_source_scope[
+                    "predecessor_source_version_id_set_sha256"
+                ],
+                "ge_predecessor_member_set_sha256": ge_source_scope[
+                    "predecessor_member_set_sha256"
+                ],
+                "ge_predecessor_member_sequence_sha256": ge_source_scope[
+                    "predecessor_member_sequence_sha256"
+                ],
+                "ge_added_source_count": ge_source_scope["added_source_count"],
+                "ge_added_chunk_count": ge_source_scope["added_chunk_count"],
+                "ge_added_source_version_id_set_sha256": ge_source_scope[
+                    "added_source_version_id_set_sha256"
+                ],
+                "ge_added_member_set_sha256": ge_source_scope[
+                    "added_member_set_sha256"
+                ],
+                "ge_successor_member_set_sha256": ge_source_scope[
+                    "successor_member_set_sha256"
+                ],
+                "ge_successor_member_sequence_sha256": ge_source_scope[
+                    "successor_member_sequence_sha256"
+                ],
+                "ge_preservation_proof_sha256": ge_source_scope[
+                    "preservation_proof_sha256"
+                ],
+                "ge_source_lane_bindings": ge_source_scope[
+                    "source_lane_bindings"
+                ],
+                "approved_legal_source_lanes_only": True,
+                "evaluation_content_included": False,
+                "unseen_content_included": False,
+                "user_content_included": False,
+                "training_content_included": False,
+                "index_enqueue_authorized": False,
+                "index_build_authorized": False,
+                "answer_release_eligible": False,
+                "successor_must_remain_non_active": True,
+                "active_or_previous_write_authorized": False,
+                "phase2b_authorized": False,
+                "development30_authorized": False,
+                "validation30_authorized": False,
+                "promotion_authorized": False,
+                "training_authorized": False,
+                "unseen_run_authorized": False,
+                "live_activation_authorized": False,
+            }
+        )
+    elif frozen_scope is not None:
         if (
             payload["source_count"] != frozen_scope["source_count"]
             or payload["chunk_count"] != frozen_scope["chunk_count"]

@@ -29,6 +29,14 @@ from typing import Any
 import lancedb
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ROOT = PROJECT_ROOT / "backend"
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.retrieval.ge_generic_read_guard import (  # noqa: E402
+    require_generic_index_read_allowed,
+)
+
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 OUTPUT_REVIEW_ROOT = REVIEW_ROOT
 
@@ -816,6 +824,7 @@ def _verify_candidate_sources(candidate: Mapping[str, Any]) -> list[dict[str, An
 
 
 def _verify_candidate_chunks() -> list[dict[str, Any]]:
+    require_generic_index_read_allowed(CANDIDATE_ROOT, expected_build_id=CANDIDATE_ROOT_NAME)
     table = lancedb.connect(str(CANDIDATE_ROOT / "lance/authority")).open_table("chunks")
     source_version_id = CANDIDATE_SOURCE_SPECS["arbitration_act_1996"]["source_version_id"]
     rows = (

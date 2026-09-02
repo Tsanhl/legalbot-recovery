@@ -28,6 +28,7 @@ from .explicit_reference import (
     CandidateLegislationReferenceResolver,
     legislation_locator_within,
 )
+from .ge_generic_read_guard import require_generic_index_read_allowed
 from .hybrid import HybridRetriever
 from .models import QueryFilters, SearchHit, SearchQuery
 from .service import (
@@ -587,6 +588,10 @@ def _candidate_chunk_rows(
     manifest: Mapping[str, Any],
     rows: Sequence[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
+    require_generic_index_read_allowed(
+        build_path,
+        expected_build_id=build_path.name,
+    )
     authority_ids = {str(row.get("expected_authority_id") or "") for row in rows}
     raw_sources = manifest.get("sources")
     sources = raw_sources if isinstance(raw_sources, list) else []
@@ -627,6 +632,10 @@ def bind_retrieval_rows_to_candidate(
     project_root: Path | None = None,
     qualification_path: Path | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    require_generic_index_read_allowed(
+        build_path,
+        expected_build_id=build_id,
+    )
     manifest_path = build_path / "approved-source-manifest.json"
     provision_path = build_path / "provision-verification.v1.json"
     seal_path = build_path / "seal.json"
@@ -1030,6 +1039,10 @@ def _candidate_bound_retrieval_date(
 def _search_retriever(
     settings: Settings, build_path: Path, *, test_mode: bool, as_of_date: date
 ) -> HybridRetriever:
+    require_generic_index_read_allowed(
+        build_path,
+        expected_build_id=build_path.name,
+    )
     embedder = _embedding_provider(
         settings, TEST_EMBEDDING_MODEL if test_mode else _production_embedding_identity(settings)
     )
@@ -1061,13 +1074,14 @@ def run_retrieval_v1(
     test_mode: bool | None = None,
     result_observer: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
+    build_path = settings.index_dir / "builds" / build_id
+    require_generic_index_read_allowed(build_path, expected_build_id=build_id)
     jsonl = jsonl_path or settings.project_root / FROZEN_JSONL_RELATIVE
     if not set(splits) <= {"development", "promotion"}:
         raise BenchmarkNotFrozenError("v1.1 contains only development and promotion ranking cases")
     freeze = verify_owner_freeze(settings.project_root, jsonl)
     rows = load_retrieval_v1_jsonl(jsonl, str(freeze["jsonl_sha256"]))
     selected = [row for row in rows if row.get("split") in set(splits)]
-    build_path = settings.index_dir / "builds" / build_id
     if not (build_path / "lance").exists():
         raise FileNotFoundError(f"candidate lance tree missing: {build_path}")
     bound_rows, candidate_binding = bind_retrieval_rows_to_candidate(

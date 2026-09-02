@@ -1,0 +1,223 @@
+{
+  "$id": "https://local.legalbot.invalid/schemas/evaluation-run.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authorization_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "candidate_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "case_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "case_manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "case_order_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "exposure_ledger_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "gold_currentness_decision_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "lane": {
+      "enum": [
+        "visible_development",
+        "sealed_unseen",
+        "synthetic_system",
+        "retrieval_attestation"
+      ]
+    },
+    "private_root_capability_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "result_counts": {
+      "additionalProperties": false,
+      "properties": {
+        "cancelled": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "completed": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "held": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "ineligible": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "system_error": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "completed",
+        "held",
+        "system_error",
+        "cancelled",
+        "ineligible"
+      ],
+      "type": "object"
+    },
+    "run_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$",
+      "type": "string"
+    },
+    "runtime_config_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "legalbot.evaluation-run.v1"
+    },
+    "started_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "contract_pack_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "schema_selection_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "input_projection_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "scoring_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "factual_gate_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "quality_gate_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "model_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "renderer_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "validator_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "case_result_manifest_sha256": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "case_result_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "question_mode": {
+      "enum": [
+        "general_enquiry",
+        "problem_based",
+        "essay",
+        "mixed",
+        "synthetic_system",
+        "retrieval"
+      ]
+    },
+    "run_status": {
+      "enum": [
+        "planned",
+        "authorized",
+        "running",
+        "completed",
+        "aborted",
+        "invalid"
+      ]
+    },
+    "run_validity": {
+      "enum": [
+        "not_assessed",
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "resource_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema",
+    "run_id",
+    "lane",
+    "authorization_sha256",
+    "case_manifest_sha256",
+    "case_order_sha256",
+    "case_count",
+    "candidate_sha256",
+    "runtime_config_sha256",
+    "gold_currentness_decision_sha256",
+    "private_root_capability_sha256",
+    "exposure_ledger_sha256",
+    "result_counts",
+    "started_at",
+    "completed_at",
+    "contract_pack_sha256",
+    "schema_selection_sha256",
+    "input_projection_sha256",
+    "scoring_policy_sha256",
+    "factual_gate_policy_sha256",
+    "quality_gate_policy_sha256",
+    "model_sha256",
+    "prompt_sha256",
+    "renderer_sha256",
+    "validator_bundle_sha256",
+    "case_result_manifest_sha256",
+    "case_result_count",
+    "question_mode",
+    "run_status",
+    "run_validity",
+    "resource_policy_sha256"
+  ],
+  "title": "LegalBot EvaluationRun v1",
+  "type": "object"
+}
