@@ -1,5 +1,9 @@
 # LegalBot current state
 
+## Website model selection — 23 September 2026
+
+The website's owner development chat lets an authorized owner select Qwen, a linked loopback model, OpenAI, Claude, Gemini or Codex. The selection is sent to the backend's shared retrieval, guidance and review route. It uses a model or credential configured **on the server**: choosing Codex does not connect a visitor's local Codex installation, and choosing Claude does not connect a visitor's Claude account. Remote API routes require server API keys and per-submission consent. The owner development route also requires a pinned non-ACTIVE candidate authority and access key; it is not a public self-service feature. API and worker health alone do not prove model or legal-source readiness. The website now states these limits next to the route selector and in its health footer. A supported legal answer still requires qualifying source evidence and publication checks.
+
 ## Four-case drafting update — 23 September 2026
 
 The owner requested four full exposed answers for quality review and scoped non-weight system improvement. The [four-case review](testing/FOUR_CASE_REVIEW_2026-09-23.md) records the targeted authority, doctrine and remedy checks. The active assessment guide is `.3`; the older `.2` diagnostic receipts remain historical. No four-case answer is legal gold, training data or a released API answer. The actual API source qualification and publication trace remain incomplete.

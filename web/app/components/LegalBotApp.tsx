@@ -6,6 +6,7 @@ import type {
   AnswerFeedbackRating,
   AttachmentRecord,
   ConversationSummary,
+  DevelopmentRouteId,
   HealthRecord,
   JobDoneEvent,
   JobEventEnvelope,
@@ -26,6 +27,15 @@ const TASKS: Array<{ value: TaskMode; label: string; description: string }> = [
   { value: "problem", label: "Problem", description: "Issues, rules, application and outcome" },
   { value: "general", label: "General", description: "Clear, authoritative explanation" },
 ];
+
+const DEVELOPMENT_ROUTE_DETAILS: Record<DevelopmentRouteId, string> = {
+  qwen_local: "Uses the model running on this server, if started and pinned. It does not use a visitor's computer.",
+  local_endpoint: "Uses a pinned loopback model endpoint on this server, if configured.",
+  hosted_api: "Uses this server's OpenAI API key; a visitor's ChatGPT subscription is not connected.",
+  anthropic_api: "Uses this server's Claude API key; a visitor's Claude account is not connected.",
+  gemini_api: "Uses this server's Gemini API key; a visitor's Gemini account is not connected.",
+  codex_bridge: "Uses the signed-in Codex CLI on this server, if configured; a visitor's local Codex is not connected.",
+};
 
 const JURISDICTIONS: Array<{ value: Jurisdiction; label: string }> = [
   { value: "England and Wales", label: "England & Wales" },
@@ -260,7 +270,7 @@ export function LegalBotApp() {
   const [developmentChat, setDevelopmentChat] = useState(false);
   const [developmentAuthoritySha, setDevelopmentAuthoritySha] = useState("");
   const [developmentAccessKey, setDevelopmentAccessKey] = useState("");
-  const [developmentRoute, setDevelopmentRoute] = useState<"qwen_local" | "local_endpoint" | "hosted_api" | "anthropic_api" | "gemini_api" | "codex_bridge">("qwen_local");
+  const [developmentRoute, setDevelopmentRoute] = useState<DevelopmentRouteId>("qwen_local");
   const [developmentRemoteConsent, setDevelopmentRemoteConsent] = useState(false);
   const [taskMode, setTaskMode] = useState<TaskMode>("auto");
   const [jurisdiction, setJurisdiction] = useState<Jurisdiction>("England and Wales");
@@ -696,8 +706,8 @@ export function LegalBotApp() {
         <footer className="sidebar-footer">
           <div className={`system-dot ${systemReady ? "ready" : ""}`} />
           <div>
-            <strong>{developmentChat && systemReady ? "Development backend connected" : systemReady ? "Local system ready" : serviceError ? "API unavailable" : "Checking local system"}</strong>
-            <span>{developmentChat ? "Route checked on submission" : health?.model_id || "Qwen legal model"}</span>
+            <strong>{systemReady ? "API and worker ready" : serviceError ? "API unavailable" : "Checking API and worker"}</strong>
+            <span>{developmentChat ? "Model and legal sources checked on submission" : health?.model_id ? `${health.model_id} selected; answer readiness checked on submission` : "Model and legal sources checked on submission"}</span>
           </div>
         </footer>
       </aside>
@@ -804,7 +814,7 @@ export function LegalBotApp() {
                 <label>Model
                   <select aria-label="Development model route" value={developmentRoute} onChange={(event) => {
                     developmentHistory.current = [];
-                    setDevelopmentRoute(event.target.value as typeof developmentRoute);
+                    setDevelopmentRoute(event.target.value as DevelopmentRouteId);
                   }}>
                     <option value="qwen_local">Own local Qwen</option>
                     <option value="local_endpoint">Linked local model</option>
@@ -824,7 +834,7 @@ export function LegalBotApp() {
                   <label><input type="checkbox" checked={developmentRemoteConsent} onChange={(event) => setDevelopmentRemoteConsent(event.target.checked)} />
                     Send this question and selected evidence to the remote model</label>
                 )}
-                <span>Isolated candidate and reviewed index only. Text questions; no uploads or conversation history.</span>
+                <span>{DEVELOPMENT_ROUTE_DETAILS[developmentRoute]} Owner-only development route: a pinned authority, access key and reviewed candidate index are required. Text questions only; no uploads.</span>
               </>
             )}
           </div>

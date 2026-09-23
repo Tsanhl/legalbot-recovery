@@ -214,6 +214,11 @@ test("development chat sends the selected Codex route and carries a case follow-
   await page.getByLabel("Specify jurisdiction").fill("India, Maharashtra");
   await page.getByLabel("Law as of date").fill("2026-09-23");
   await page.getByLabel("Owner development chat").check();
+  await expect(page.getByText("API and worker ready", { exact: true })).toBeVisible();
+  await page.getByLabel("Development model route").selectOption("codex_bridge");
+  await expect(page.getByText(/Uses the signed-in Codex CLI on this server/)).toBeVisible();
+  await page.getByLabel("Development model route").selectOption("anthropic_api");
+  await expect(page.getByText(/Uses this server's Claude API key/)).toBeVisible();
   await page.getByLabel("Development model route").selectOption("codex_bridge");
   await page.getByLabel("Development authority SHA-256").fill("a".repeat(64));
   await page.getByLabel("Development owner access key").fill("local-test-access-key");

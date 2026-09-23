@@ -7,6 +7,7 @@ import type {
   AttachmentRecord,
   ConversationSummary,
   CoverageRecord,
+  DevelopmentRouteId,
   EvaluationIssueRecord,
   FailureLedgerRecord,
   HealthRecord,
@@ -43,7 +44,7 @@ export const API_BASE = configuredBase || "/api/v1";
 export interface DevelopmentChatConnection {
   authoritySha256: string;
   accessKey: string;
-  routeId: "qwen_local" | "local_endpoint" | "hosted_api" | "anthropic_api" | "gemini_api" | "codex_bridge";
+  routeId: DevelopmentRouteId;
   remoteConsent: boolean;
 }
 
