@@ -1,5 +1,17 @@
 # LegalBot v1.11 recovery-workspace agent rules
 
+## 23 September UI continuation: preserve the running fixture
+
+The owner asked for a Codex model selector beside **Words**, offering 6 Sol,
+6 Astra and 6 Luna, without interrupting the current answer attempt. The UI
+selector and next-launch signed-in route definitions are implemented. The
+current r28 authority was issued before those extra routes and must not be
+mutated while jobs run; it displays Sol/Luna as next-session choices. r28 has
+shown an actual saved Astra draft in a session-owned **unverified model draft**
+panel. This preview is not released legal advice or a completed quality pass.
+Do not stop, restart, or reinterpret the running/queued r28 jobs merely to
+activate the new selector. Keep their attempts and drafts preserved.
+
 ## Latest owner direction: execute the targeted continuation guide
 
 The owner explicitly resumed work under
@@ -17,8 +29,8 @@ BM25/vector indexing and RAG. See the sanitized assessment in the ignored r26
 state. The executed PDF bytes are not bound to the private permission gate;
 external-model use, public hosting and weight training are not expressly covered
 by the quoted purpose. The owner's latest audience direction is invited friends
-only, which requires access control before any internet deployment. No ACTIVE/public promotion,
-Git commit/push or training has occurred in this continuation. This direction
+only, which requires access control before any internet deployment. No
+ACTIVE/public promotion or training has occurred in this continuation. This direction
 supersedes older dated status lines below.
 
 ## 23 September: shared chat implementation authorised (current)

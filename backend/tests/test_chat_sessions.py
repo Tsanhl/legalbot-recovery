@@ -6,6 +6,7 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
+from scripts.ge_prepare_development_chat import codex_routes
 from test_ge_development_chat_authority import _fixture
 
 from app.api.main import app
@@ -15,6 +16,7 @@ from app.conversations.store import ConversationStore
 from app.db import utc_iso
 from app.evaluation.ge_development_chat_authority import GE_SESSION_CHAT_SCHEMA, _load_authority
 from app.evaluation.live_suite import sealed_sha256
+from app.model_routes import RoutedModelGateway
 
 
 def v2(tmp_path, database, cipher):
@@ -58,6 +60,43 @@ def v2(tmp_path, database, cipher):
         retriever=SimpleNamespace(active_build_id=lambda: None),
     )
     return services, request, path
+
+
+def test_signed_in_session_offers_three_distinct_codex_models():
+    routes = codex_routes("gpt-6-astra", "chatgpt_signin", session_ui=True)
+    assert {route["model_id"] for route in routes} == {
+        "gpt-6-sol", "gpt-6-astra", "gpt-6-luna"
+    }
+    assert len({route["route_id"] for route in routes}) == 3
+    assert all(route["kind"] == "codex_bridge" and route["auth_mode"] == "chatgpt_signin" for route in routes)
+    assert len(codex_routes("gpt-6-astra", "chatgpt_signin", session_ui=False)) == 1
+    assert len(codex_routes("gpt-6-astra", "dedicated_api_key", session_ui=True)) == 1
+
+
+def test_each_codex_choice_binds_its_own_pinned_gateway(tmp_path, database, cipher):
+    services, _, path = v2(tmp_path, database, cipher)
+    authority = json.loads(path.read_bytes())
+    routes = codex_routes("gpt-6-astra", "chatgpt_signin", session_ui=True)
+    authority["routes"].extend(routes)
+    authority["seal_sha256"] = sealed_sha256(authority)
+    raw = canonical_json_bytes(authority)
+    path.write_bytes(raw)
+    settings = replace(
+        services.settings,
+        development_chat_authority_sha256=hashlib.sha256(raw).hexdigest(),
+    )
+    vault = ConnectionStore(database, cipher)
+    session, _ = vault.create_session()
+    gateway = RoutedModelGateway(settings)
+    for route in routes:
+        connection = vault.create(session, route, secret=None, remember=False)
+        token = gateway.select(
+            route["route_id"], connection_id=connection["id"], connection_store=vault
+        )
+        try:
+            assert gateway.selected_model_id == route["model_id"]
+        finally:
+            gateway.reset(token)
 
 
 def test_credentials_encrypted_expired_and_revoked(database, cipher):
@@ -180,6 +219,70 @@ async def test_actual_api_saves_clarification_followup_and_blocks_other_session(
             assert window["messages"][-1]["content"] == follow["question"]
             # Direct intake cannot forge the facade's authenticated session state.
             assert (await owner.post("/api/v1/questions", json=follow)).status_code == 403
+    finally:
+        app.state.services = previous
+
+
+@pytest.mark.asyncio
+async def test_saved_held_draft_is_visible_only_to_its_local_session(
+    tmp_path, database, cipher
+):
+    services, original, _ = v2(tmp_path, database, cipher)
+    previous = getattr(app.state, "services", None)
+    app.state.services = services
+    transport = httpx.ASGITransport(app=app, client=("127.0.0.1", 1234))
+    draft_text = "## Draft\nThe retailer may owe a refund. [Unverified citation]"
+    try:
+        async with (
+            httpx.AsyncClient(transport=transport, base_url="http://127.0.0.1:8777") as owner,
+            httpx.AsyncClient(transport=transport, base_url="http://127.0.0.1:8777") as other,
+        ):
+            await owner.post("/api/v1/chat/session", json={})
+            await other.post("/api/v1/chat/session", json={})
+            connection = (await owner.post(
+                "/api/v1/chat/connections", json={"route_id": "qwen_local"}
+            )).json()
+            payload = {
+                **original.model_dump(mode="json"),
+                "connection_id": connection["id"],
+                "conversation_id": "conversation-draft-preview",
+                "question": "I bought faulty goods. Can I get a refund?",
+            }
+            accepted = await owner.post(
+                "/api/v1/chat/questions", json=payload,
+                headers={"X-Idempotency-Key": "draft-preview-test"},
+            )
+            assert accepted.status_code == 202, accepted.text
+            job_id = accepted.json()["job_id"]
+            before = await owner.get(f"/api/v1/chat/jobs/{job_id}/draft-preview")
+            assert before.json() == {"available": False, "reason": "no_saved_draft_yet"}
+            database.store_answer_version(
+                answer_id="draft-preview-answer",
+                job_id=job_id,
+                version_number=1,
+                version_kind="structured",
+                encrypted_content=cipher.encrypt_text(draft_text),
+                word_count=9,
+                policy_version="test",
+                model_version="qwen-local-test",
+                index_build_id=services.settings.development_candidate_build_id,
+            )
+            database.execute(
+                "UPDATE jobs SET status='held_for_review',stage='held_for_review',user_message=? WHERE id=?",
+                ("The answer is incomplete because evidence checks failed.", job_id),
+            )
+            shown = await owner.get(f"/api/v1/chat/jobs/{job_id}/draft-preview")
+            assert shown.status_code == 200
+            assert shown.headers["cache-control"] == "no-store"
+            assert shown.json()["content"] == draft_text
+            assert shown.json()["not_released_answer"] is True
+            assert shown.json()["not_conversation_history"] is True
+            assert (await other.get(f"/api/v1/chat/jobs/{job_id}/draft-preview")).status_code == 404
+            conversation = (await owner.get(
+                "/api/v1/chat/conversations/conversation-draft-preview"
+            )).json()
+            assert all(draft_text not in message["content"] for message in conversation["messages"])
+            assert conversation["messages"][-1]["display_origin"] == "host_status"
     finally:
         app.state.services = previous
 

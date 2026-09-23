@@ -176,8 +176,8 @@ def test_codex_reasoning_profile_is_explicit_and_digest_bound(tmp_path):
     gateway = CodexBridgeGateway(Settings(project_root=tmp_path), {
         'model_id': 'gpt-5.5', 'auth_mode': 'chatgpt_signin',
     })
-    assert gateway._reasoning_effort('draft') == 'xhigh'
-    assert gateway._reasoning_effort('repair') == 'xhigh'
+    assert gateway._reasoning_effort('draft') == 'high'
+    assert gateway._reasoning_effort('repair') == 'high'
     assert gateway._reasoning_effort('semantic_verify') == 'medium'
     from app.model_routes import HostedEvidenceGateway
     assert gateway._generation_config_sha256() != HostedEvidenceGateway._generation_config_sha256(gateway)

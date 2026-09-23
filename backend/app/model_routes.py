@@ -310,12 +310,12 @@ class CodexBridgeGateway(HostedEvidenceGateway):
 
     @staticmethod
     def _reasoning_effort(mode: str) -> str:
-        return "xhigh" if mode in {"draft", "repair"} else "medium"
+        return "high" if mode in {"draft", "repair"} else "medium"
 
     def _generation_config_sha256(self) -> str:
         return hashlib.sha256(json.dumps({
             "base_profile_sha256": super()._generation_config_sha256(),
-            "draft_and_repair_reasoning": "xhigh", "review_reasoning": "medium",
+            "draft_and_repair_reasoning": "high", "review_reasoning": "medium",
             "web_search": "disabled",
         }, sort_keys=True).encode()).hexdigest()
 

@@ -531,6 +531,14 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .connection-panel button { cursor: pointer; background: var(--green-pale); }
 .connection-panel label { flex-wrap: wrap; }
 .connection-panel select { max-width: 100%; }
+.draft-preview { margin: 14px 18px 20px; padding: 18px; border: 2px solid #c48b43; border-radius: 12px; background: #fff8eb; color: #4d351b; }
+.draft-preview > strong { display: block; font-size: 16px; }
+.draft-preview > p { max-width: 75ch; font-size: 13px; line-height: 1.5; }
+.draft-preview > small { display: block; margin-bottom: 12px; color: #705532; }
+.draft-preview pre { overflow: auto; max-height: 560px; margin: 0; padding: 16px; border: 1px solid #e6d7bd; border-radius: 8px; background: #fffefa; color: #26363a; font: 14px/1.65 Georgia, serif; white-space: pre-wrap; overflow-wrap: anywhere; }
+.draft-preview details { margin-top: 14px; font-size: 13px; }
+.draft-preview summary { cursor: pointer; font-weight: 700; }
+.draft-preview li { margin: 8px 0; line-height: 1.45; }
 @media (max-width: 700px) {
   .topbar { gap: 5px; padding: 8px; flex-wrap: wrap; }
   .task-switcher { flex: 1; justify-content: space-around; }

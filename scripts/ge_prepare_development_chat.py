@@ -30,6 +30,29 @@ from app.evaluation.ge_development_chat_authority import (  # noqa: E402
 from app.evaluation.live_suite import sealed_sha256  # noqa: E402
 
 
+def codex_routes(model_id: str, auth_mode: str, *, session_ui: bool) -> list[dict[str, object]]:
+    credential_env = None if auth_mode == "chatgpt_signin" else "LEGALBOT_CODEX_BRIDGE_KEY"
+    routes: list[dict[str, object]] = [{
+        "route_id": "codex_bridge", "kind": "codex_bridge",
+        "model_id": model_id, "endpoint": None,
+        "credential_env": credential_env, "auth_mode": auth_mode,
+    }]
+    if session_ui and auth_mode == "chatgpt_signin":
+        for choice, suffix in (
+            ("gpt-6-sol", "sol"),
+            ("gpt-6-astra", "astra"),
+            ("gpt-6-luna", "luna"),
+        ):
+            if choice != model_id:
+                routes.append({
+                    "route_id": f"codex_bridge_{suffix}",
+                    "kind": "codex_bridge", "model_id": choice,
+                    "endpoint": None, "credential_env": None,
+                    "auth_mode": "chatgpt_signin",
+                })
+    return routes
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session-ui", action="store_true", help="Issue v2 session/conversation/online-research capability")
@@ -114,15 +137,7 @@ def main() -> int:
             "credential_env": "GEMINI_API_KEY",
         })
     if args.codex_model is not None:
-        routes.append({
-            "route_id": "codex_bridge", "kind": "codex_bridge",
-            "model_id": args.codex_model, "endpoint": None,
-            "credential_env": (
-                None if args.codex_auth_mode == "chatgpt_signin"
-                else "LEGALBOT_CODEX_BRIDGE_KEY"
-            ),
-            "auth_mode": args.codex_auth_mode,
-        })
+        routes.extend(codex_routes(args.codex_model, args.codex_auth_mode, session_ui=args.session_ui))
     if not all(_valid_route(settings, route) for route in routes):
         parser.error("a configured route has an invalid model identity or endpoint")
     access_key = secrets.token_urlsafe(40)

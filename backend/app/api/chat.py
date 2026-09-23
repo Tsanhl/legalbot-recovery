@@ -284,6 +284,75 @@ async def conversation(conversation_id: str, request: Request) -> dict[str, Any]
     }
 
 
+@router.get("/jobs/{job_id}/draft-preview")
+async def draft_preview(job_id: str, request: Request, response: Response) -> dict[str, Any]:
+    """Show the session owner a saved draft without granting publication authority."""
+    services = request.app.state.services
+    settings = services.settings
+    if (
+        settings.environment != "development"
+        or settings.host != "127.0.0.1"
+        or not settings.development_state_id
+    ):
+        raise HTTPException(404, "Draft preview is unavailable")
+    config(services)
+    _, session_id = require_session(request, services)
+    owned = services.database.fetchone(
+        "SELECT j.status,j.answer_id FROM chat_owned_jobs c "
+        "JOIN jobs j ON j.id=c.job_id WHERE c.job_id=? AND c.session_id=?",
+        (job_id, session_id),
+    )
+    if owned is None:
+        raise HTTPException(404, "Draft preview not found")
+    response.headers["Cache-Control"] = "no-store"
+    if owned["status"] == "complete" and owned["answer_id"]:
+        return {"available": False, "reason": "released_answer"}
+    version = services.database.fetchone(
+        "SELECT id,version_number,version_kind,encrypted_content,word_count,model_version "
+        "FROM answer_versions WHERE job_id=? "
+        "AND version_kind IN ('structured','targeted_repair') "
+        "ORDER BY version_number DESC LIMIT 1",
+        (job_id,),
+    )
+    if version is None:
+        return {"available": False, "reason": "no_saved_draft_yet"}
+    try:
+        content = services.cipher.decrypt_text(bytes(version["encrypted_content"]))
+    except (TypeError, ValueError):
+        raise HTTPException(409, "Saved draft could not be opened") from None
+    report = services.database.fetchone(
+        "SELECT findings_json FROM quality_reports WHERE answer_version_id=? "
+        "ORDER BY rowid DESC LIMIT 1",
+        (version["id"],),
+    )
+    findings: list[dict[str, str]] = []
+    if report is not None:
+        try:
+            raw_findings = json.loads(str(report["findings_json"] or "[]"))
+            findings = [
+                {"code": str(item.get("code") or "review_finding"),
+                 "message": str(item.get("message") or "")}
+                for item in raw_findings
+                if isinstance(item, dict)
+                and item.get("severity") in {"hard_blocker", "repairable"}
+            ][:12]
+        except (TypeError, ValueError):
+            findings = []
+    return {
+        "available": True,
+        "status": "unverified_draft",
+        "job_status": str(owned["status"]),
+        "version": int(version["version_number"]),
+        "model_version": str(version["model_version"]),
+        "word_count": int(version["word_count"]),
+        "content": content,
+        "review_findings": findings,
+        "review_complete": report is not None,
+        "not_conversation_history": True,
+        "not_released_answer": True,
+    }
+
+
 class DisplayMessage(BaseModel):
     id: str = Field(max_length=128)
     role: Literal["user", "assistant"]

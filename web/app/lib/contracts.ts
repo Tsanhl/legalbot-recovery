@@ -20,7 +20,10 @@ export type DevelopmentRouteId =
   | "hosted_api"
   | "anthropic_api"
   | "gemini_api"
-  | "codex_bridge";
+  | "codex_bridge"
+  | "codex_bridge_sol"
+  | "codex_bridge_astra"
+  | "codex_bridge_luna";
 
 export type JobStage =
   | "queued"

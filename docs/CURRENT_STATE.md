@@ -1,6 +1,23 @@
 # LegalBot current state
 
-## Latest owner direction: execute the continuation guide
+## Latest owner direction: show drafts and choose the Codex model in chat
+
+The local chat now shows a saved, session-owned **unverified model draft** beside
+its held or running job. It remains outside released answers and conversation
+facts. A live r27 attempt exposed a date-control error, which was fixed, then
+timed out before saving a draft. A separate r28 Codex `gpt-6-astra` attempt used
+the reviewed 5 September England index and displayed its saved 424-word
+structured draft while claim review continued. This demonstrates the preview
+path, not a verified legal answer.
+
+The composer now places a Codex model selector beside **Words**. The next signed-in
+chat launcher issues separately pinned routes for `gpt-6-sol`, `gpt-6-astra`
+and `gpt-6-luna`. Selecting one creates or reuses a session-owned connection
+for the next question. A running job keeps its original model. The current r28
+authority was issued before this change and remains immutable, so its other
+model options are marked as available in the next session.
+
+## Continuation guide
 
 On 23 September the owner directed Codex-first repair. Reviewed whole-provision
 context now retains its original vector-hit lineage. r17–r25 exposed answer
@@ -17,8 +34,8 @@ study plus invited friends, including local indexing and RAG. The signed file
 is not yet bound to the private permission gate; external-model transfer,
 internet hosting and model training have not been enabled for its text. The
 owner now wants a friends-only audience and may defer Qwen. The current
-launcher is loopback-only and has no invite authentication. No commit/push,
-licence activation or ACTIVE change has been made.
+launcher is loopback-only and has no invite authentication. No licence
+activation or ACTIVE change has been made.
 
 Updated: 23 September 2026. **Shared local chat implemented; legal-answering acceptance incomplete.**
 

@@ -26,7 +26,7 @@ def main():
         help="Existing reviewed development retrieval manifest; never an ACTIVE build",
     )
     parser.add_argument("--api-model", default="gpt-5.5")
-    parser.add_argument("--codex-model", default="gpt-5.5",
+    parser.add_argument("--codex-model", default="gpt-6-astra",
                         help="Explicit signed-in Codex model; no automatic fallback")
     parser.add_argument("--claude-model", default="claude-sonnet-4-6")
     parser.add_argument("--gemini-model", default="gemini-2.5-pro")
