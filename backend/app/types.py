@@ -372,7 +372,7 @@ class IssuePlan(Record):
     jurisdiction: str
     subject: str | None = None
     proposition_keys: list[str] = Field(default_factory=list, max_length=6)
-    queries: list[str] = Field(default_factory=list, max_length=4)
+    queries: list[str] = Field(default_factory=list, max_length=5)
     notes_considered: int = Field(ge=0)
     notes_used: int = Field(ge=0)
     unsafe_notes_excluded: int = Field(ge=0)
@@ -628,6 +628,7 @@ class QuestionRequest(Record):
     word_target: int = Field(default=1_500, ge=100, le=10_000)
     online_mode: OnlineMode = OnlineMode.LOCAL_ONLY
     upload_ids: list[str] = Field(default_factory=list, max_length=20)
+    connection_id: str | None = Field(default=None, pattern=r"^connection-[a-f0-9]{32}$")
     conversation_id: str | None = Field(
         default=None,
         pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$",

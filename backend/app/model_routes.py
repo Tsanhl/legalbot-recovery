@@ -61,6 +61,10 @@ class HostedEvidenceGateway(LoopbackModelGateway):
     input_token_budget = 24_000
     output_token_budget = 8_192
 
+    def credential(self, name: str) -> str:
+        provider = getattr(self, "_connection_secret", None)
+        return provider() if provider is not None else os.environ.get(name, "")
+
 
 class OpenAIResponsesGateway(HostedEvidenceGateway):
     def __init__(self, settings: Settings, route: dict[str, Any]) -> None:
@@ -72,7 +76,7 @@ class OpenAIResponsesGateway(HostedEvidenceGateway):
     async def health(self) -> bool:
         # A configured key is not evidence of provider capability; a real
         # request still has to pass identity, JSON and all answer gates.
-        return bool(os.environ.get("OPENAI_API_KEY"))
+        return bool(self.credential("OPENAI_API_KEY"))
 
     def _validated_model_version(self, body: dict[str, Any]) -> str:
         observed = str(body.get("model_version") or "")
@@ -81,7 +85,7 @@ class OpenAIResponsesGateway(HostedEvidenceGateway):
         return f"openai:{observed}"
 
     async def _generate(self, envelope: dict[str, Any]) -> dict[str, Any]:
-        key = os.environ.get("OPENAI_API_KEY", "")
+        key = self.credential("OPENAI_API_KEY")
         if not key:
             raise RuntimeError("hosted API credential is unavailable")
         messages = envelope.get("messages")
@@ -151,7 +155,7 @@ class AnthropicMessagesGateway(HostedEvidenceGateway):
         self.allow_test_stub = False
 
     async def health(self) -> bool:
-        return bool(os.environ.get("ANTHROPIC_API_KEY"))
+        return bool(self.credential("ANTHROPIC_API_KEY"))
 
     def _validated_model_version(self, body: dict[str, Any]) -> str:
         observed = str(body.get("model_version") or "")
@@ -160,7 +164,7 @@ class AnthropicMessagesGateway(HostedEvidenceGateway):
         return f"anthropic:{observed}"
 
     async def _generate(self, envelope: dict[str, Any]) -> dict[str, Any]:
-        key = os.environ.get("ANTHROPIC_API_KEY", "")
+        key = self.credential("ANTHROPIC_API_KEY")
         if not key:
             raise RuntimeError("Anthropic API credential is unavailable")
         messages = envelope.get("messages")
@@ -216,7 +220,7 @@ class GeminiGenerateContentGateway(HostedEvidenceGateway):
         self.allow_test_stub = False
 
     async def health(self) -> bool:
-        return bool(os.environ.get("GEMINI_API_KEY"))
+        return bool(self.credential("GEMINI_API_KEY"))
 
     def _validated_model_version(self, body: dict[str, Any]) -> str:
         observed = str(body.get("model_version") or "")
@@ -225,7 +229,7 @@ class GeminiGenerateContentGateway(HostedEvidenceGateway):
         return f"gemini:{observed}"
 
     async def _generate(self, envelope: dict[str, Any]) -> dict[str, Any]:
-        key = os.environ.get("GEMINI_API_KEY", "")
+        key = self.credential("GEMINI_API_KEY")
         if not key:
             raise RuntimeError("Gemini API credential is unavailable")
         messages = envelope.get("messages")
@@ -304,6 +308,17 @@ class CodexBridgeGateway(HostedEvidenceGateway):
         # snapshot. Preserve that limit in the answer identity.
         return f"codex-requested:{observed}"
 
+    @staticmethod
+    def _reasoning_effort(mode: str) -> str:
+        return "xhigh" if mode in {"draft", "repair"} else "medium"
+
+    def _generation_config_sha256(self) -> str:
+        return hashlib.sha256(json.dumps({
+            "base_profile_sha256": super()._generation_config_sha256(),
+            "draft_and_repair_reasoning": "xhigh", "review_reasoning": "medium",
+            "web_search": "disabled",
+        }, sort_keys=True).encode()).hexdigest()
+
     async def _generate(self, envelope: dict[str, Any]) -> dict[str, Any]:
         if not await self.health():
             raise RuntimeError("Codex bridge requires configured sign-in or dedicated key and OS isolation wrapper")
@@ -351,6 +366,8 @@ class CodexBridgeGateway(HostedEvidenceGateway):
                 "-c", "features.apps=false",
                 "-c", "features.hooks=false",
                 "-c", "agents.enabled=false",
+                "-c", 'web_search="disabled"',
+                "-c", f'model_reasoning_effort="{self._reasoning_effort(str(envelope.get("mode", "")))}"',
                 "-C", str(root), "-m", self.expected_model,
                 "--output-schema", str(schema), "--output-last-message", str(answer), "-",
             ]
@@ -365,6 +382,11 @@ class CodexBridgeGateway(HostedEvidenceGateway):
                 process.kill()
                 await process.wait()
                 raise RuntimeError("Codex bridge timed out") from None
+            except asyncio.CancelledError:
+                if process.returncode is None:
+                    process.kill()
+                await process.wait()
+                raise
             if process.returncode != 0 or not answer.is_file():
                 raise RuntimeError("Codex bridge failed without a verified JSON result")
             raw = answer.read_text(encoding="utf-8")
@@ -378,6 +400,7 @@ class CodexBridgeGateway(HostedEvidenceGateway):
                 "structured": structured, "raw_text": wrapper["payload"],
                 "model_version": self.expected_model, "finish_reason": "stop",
                 "warnings": [], "usage": {},
+                "requested_reasoning_effort": self._reasoning_effort(str(envelope.get("mode", ""))),
                 "transport_projection": _transport_projection(messages, prompt),
             }
 
@@ -393,9 +416,15 @@ class RoutedModelGateway:
         )
         self._routes: dict[str, LoopbackModelGateway] = {}
 
-    def select(self, route_id: str) -> Token[LoopbackModelGateway | None]:
+    def select(self, route_id: str, *, connection_id: str | None = None, connection_store: Any = None) -> Token[LoopbackModelGateway | None]:
         route = load_development_chat_route(self.settings, route_id)
-        gateway = self._routes.get(route_id)
+        if connection_id is not None:
+            from .evaluation.ge_development_chat_authority import route_sha256
+            connection = connection_store.get(connection_id)
+            if connection["route_id"] != route_id or connection["route_sha256"] != route_sha256(route):
+                raise RuntimeError("connection_route_changed")
+        # Never cache a gateway carrying another session's credential callback.
+        gateway = self._routes.get(route_id) if connection_id is None else None
         if gateway is None:
             kind = route["kind"]
             if kind == "qwen_local":
@@ -410,7 +439,10 @@ class RoutedModelGateway:
                 gateway = GeminiGenerateContentGateway(self.settings, route)
             else:
                 gateway = CodexBridgeGateway(self.settings, route)
-            self._routes[route_id] = gateway
+            if connection_id is None:
+                self._routes[route_id] = gateway
+            elif isinstance(gateway, HostedEvidenceGateway):
+                gateway._connection_secret = lambda: connection_store.secret(connection_id)
         return self._selected.set(gateway)
 
     def reset(self, token: Token[LoopbackModelGateway | None]) -> None:
@@ -422,6 +454,14 @@ class RoutedModelGateway:
     @property
     def assessment_character_budget(self) -> int:
         return self._current().assessment_character_budget
+
+    @property
+    def evidence_character_budget(self) -> int:
+        return self._current().evidence_character_budget
+
+    @property
+    def evidence_token_budget(self) -> int:
+        return self._current().evidence_token_budget
 
     @property
     def selected_model_id(self) -> str:

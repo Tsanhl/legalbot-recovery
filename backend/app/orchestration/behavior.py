@@ -113,16 +113,14 @@ def route_behavior(signals: BehaviorSignals) -> BehaviorDecision:
             ("outside_product_jurisdiction: no model call and no cross-jurisdiction inference.",),
         )
 
-    if _uk_tenancy_location_missing(signals.question):
+    from ..conversations.clarification import necessary_questions
+    questions = necessary_questions(signals.question)
+    if questions and not signals.unsafe_question:
         return BehaviorDecision(
-            FailureReasonCode.MISSING_USER_FACTS,
-            BehaviorAction.CLARIFY,
-            False,
-            None,
-            "Which UK nation is the flat in? Do you rent the whole flat as your main home, "
-            "and does the landlord live or share accommodation with you? Have you received "
-            "any notice besides the email?",
-            ("UK housing rules differ by nation and occupation arrangement.",),
+            FailureReasonCode.MISSING_USER_FACTS, BehaviorAction.CLARIFY, False, None,
+            "I need a few facts to identify the applicable rules. Please keep the relevant messages and documents. "
+            "You do not need to repeat dates or amounts already supplied.\n\n" + "\n".join(f"- {item}" for item in questions),
+            ("Clarification uses observable facts; no legal classification is assumed.",),
         )
 
     if signals.unsafe_question and not signals.mixed_unsafe_remainder:
@@ -281,6 +279,9 @@ def _uk_tenancy_location_missing(question: str) -> bool:
 
 
 def looks_like_missing_document(question: str, retrieval_hit_count: int) -> bool:
+    from ..conversations.clarification import user_fact_text
+
+    question = user_fact_text(question)
     text = question.casefold()
     if retrieval_hit_count != 0:
         return False

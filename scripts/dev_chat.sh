@@ -21,14 +21,15 @@ export LEGALBOT_HOST=127.0.0.1
 export LEGALBOT_PORT=8776
 export LEGALBOT_LIVE_PROFILE=standard
 export LEGALBOT_TEST_MODE=false
-export LEGALBOT_OFFICIAL_RESEARCH_ENABLED=false
+export LEGALBOT_OFFICIAL_RESEARCH_ENABLED="${LEGALBOT_OFFICIAL_RESEARCH_ENABLED:-true}"
 export LEGALBOT_XERJ_ENABLED=false
 export LEGALBOT_PHOENIX_ENABLED=false
-export LEGALBOT_ONLINE_MODE=local_only
+export LEGALBOT_ONLINE_MODE="${LEGALBOT_ONLINE_MODE:-auto}"
+export LEGALBOT_OWNER_CONSOLE_ENABLED=false
 export LEGALBOT_MODEL_URL=http://127.0.0.1:8778
 export LEGALBOT_MODEL_ID=mlx-community/Qwen3.5-9B-4bit
 
-PYTHONPATH=backend .venv/bin/python - <<'PY'
+PYTHONPATH="$project_dir:$project_dir/backend" .venv/bin/python - <<'PY'
 import hashlib
 import sqlite3
 from app.config import Settings
@@ -76,15 +77,15 @@ if [[ "${LEGALBOT_START_QWEN:-0}" == "1" ]]; then
   export LEGALBOT_MODEL_EAGER_LOAD=true
   export LEGALBOT_MODEL_REVISION=8b2b98c00a6b4d291155e4890773ca8f769aee53
   export LEGALBOT_MODEL_PATH="$project_dir/models/runtime/Qwen3.5-9B-4bit"
-  LEGALBOT_MODEL_HOST=127.0.0.1 LEGALBOT_MODEL_PORT=8778 PYTHONPATH=backend \
+  LEGALBOT_MODEL_HOST=127.0.0.1 LEGALBOT_MODEL_PORT=8778 PYTHONPATH="$project_dir:$project_dir/backend" \
     uv run --project model-runtime python -m app.model_runtime &
   model_pid=$!
 fi
 
-PYTHONPATH=backend .venv/bin/python -m uvicorn app.api:app \
+PYTHONPATH="$project_dir:$project_dir/backend" .venv/bin/python -m uvicorn app.api:app \
   --host 127.0.0.1 --port 8776 &
 api_pid=$!
-PYTHONPATH=backend .venv/bin/python -m app.cli worker &
+PYTHONPATH="$project_dir:$project_dir/backend" .venv/bin/python -m app.cli worker &
 worker_pid=$!
 (cd web && npm run dev) &
 web_pid=$!

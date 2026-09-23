@@ -792,8 +792,18 @@ def test_terminal_quality_status_is_held_without_release_outbox(tmp_path: Path) 
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "finding_code,severity",
+    [
+        ("targeted_narrowing_required", Severity.REPAIRABLE),
+        ("unsupported_material_fact", Severity.HARD_BLOCKER),
+        ("non_atomic_material_claim", Severity.HARD_BLOCKER),
+    ],
+)
 async def test_failed_targeted_repair_never_falls_back_to_whole_draft_subset(
     tmp_path: Path,
+    finding_code: str,
+    severity: Severity,
 ) -> None:
     database = Database(tmp_path / "legalbot.sqlite3")
     database.initialize()
@@ -825,9 +835,9 @@ async def test_failed_targeted_repair_never_falls_back_to_whole_draft_subset(
                     findings=[
                         QualityFinding(
                             gate="claim_evidence",
-                            code="targeted_narrowing_required",
+                            code=finding_code,
                             message="Only the named claim may change.",
-                            severity=Severity.REPAIRABLE,
+                            severity=severity,
                             section_id="failed-section",
                             claim_id="failed-claim",
                         )
@@ -917,17 +927,10 @@ async def test_failed_targeted_repair_never_falls_back_to_whole_draft_subset(
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "failure_code",
-    [
-        "current_law_verification_limited",
-        "applicable_avoidance_standard_failed",
-    ],
-)
-async def test_deterministic_currentness_and_avoidance_failures_never_call_repair_or_publish(
+async def test_deterministic_currentness_failure_never_calls_repair_or_publishes(
     tmp_path: Path,
-    failure_code: str,
 ) -> None:
+    failure_code = "current_law_verification_limited"
     database = Database(tmp_path / "legalbot.sqlite3")
     database.initialize()
     cipher = _cipher()

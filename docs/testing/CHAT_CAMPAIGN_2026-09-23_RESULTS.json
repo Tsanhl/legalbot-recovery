@@ -1,0 +1,1762 @@
+{
+  "schema": "legalbot.exposed-ui-campaign-holds.v1",
+  "state": "shared-chat-20260923-r5",
+  "campaign_sha256": "1e69bbbc5c706ae8157687a34f2338129447ef8aeaf74403aaf9a0b9a0d03174",
+  "authority_sha256": "41e10bed920338a83a40190bfa2c1ab1520ad0013759880f723edcbc6cc9ff37",
+  "completed_legal_answers": 0,
+  "conversations": 40,
+  "submitted_turns": 46,
+  "source_and_intake_failure_is_model_quality_score": false,
+  "professional_legal_validation": false,
+  "raw_transcripts_location": "isolated state encrypted conversation_messages and vault/display-receipts; excluded from Git",
+  "rows": [
+    {
+      "case_id": "ES01",
+      "task_type": "essay",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "a1b85d10f3bc77ff80a9b7e269b23a79f8c059f2ce66c680084b34b4ec4c69a3"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        9.154
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 4,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES02",
+      "task_type": "essay",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "686569e2e494371b2d31d293351ce87c188a055ee793c0dc7ba675b643d420e2"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        8.866
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES03",
+      "task_type": "essay",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "58155f92dd0900cdcb934b4937e64125ff9d524376379944b39ac1979273b118"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        8.0
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 3,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES04",
+      "task_type": "essay",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "a54549f98dab734d7a9db07aad90491a873ab96644c87f5a4feabe211fcd7020"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        6.614
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES05",
+      "task_type": "essay",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "3abc7d641fe30ea43109e286c43429a30cfaf22a2a740603531ab1292d29c507"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        5.401
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE01",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "373d48d22019a2010cf9b823fd0e5e78a7fb0ad623a089d0c0c6206a6e78c4a6"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        1.155
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 4,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        },
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE02",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 2,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": true,
+      "display_receipt_sha256": [
+        "3342add26e64ebac5b0ec6b5e56b24df9a17c4452340b9df33c73f930e43c392"
+      ],
+      "displayed_message_count": 4,
+      "latency_seconds_per_turn": [
+        0.474,
+        2.159
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        },
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE03",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "02660bae649faf0f45436e43184427d24dd31a6dfdad3b3e2f1868ada060367e"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        0.413
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE04",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 2,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": true,
+      "display_receipt_sha256": [
+        "9c0f11b378d961f96ebf658a86fcddea9e041dc5cd841811e30b1f0267fede75"
+      ],
+      "displayed_message_count": 4,
+      "latency_seconds_per_turn": [
+        0.176,
+        0.804
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE05",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "3bb4e6fa4940204803d68670bf69eb04b1ffbec336d4beecafa1e5898752f185"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        1.129
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_point_in_time_mismatch"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE06",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "9f154e4f4dea6f2009bdebfee25d0ea4814cb2d25dddb268cdd4d7c5a12b9b9e"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        2.116
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "content_sha256": "83cba09523ecba45e90d59bd3db168cfcf8d9e9f1fb0cd936015722ea26483f2",
+          "result": "captured_review_pending",
+          "source": "california_legislature"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "captured_source_requires_currentness_and_proposition_review"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE07",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "c21932c3aabc1a4ac4e4ec889f44613d48948fe7f55ec1ebd6a8147932edd0b1"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        1.084
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "new_york_senate"
+        },
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "new_york_senate"
+        },
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "new_york_senate"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_http_status_403"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE08",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "1beb31cffa38211a20b605bd293e215833d1e4806cc27974621a2a58d3263c74"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        1.097
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "content_sha256": "dbfba8a96dc3cd584157ca66aaafdf67e0ed15dd5a0c8a58f3d4bd0f109fc646",
+          "result": "captured_review_pending",
+          "source": "texas_statutes"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "captured_source_requires_currentness_and_proposition_review"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE09",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 2,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": true,
+      "display_receipt_sha256": [
+        "30f051ffabb94ace6bbd9dee8dcec2c435b3d9a7b4ad1ffb572f5bc2218a040e"
+      ],
+      "displayed_message_count": 4,
+      "latency_seconds_per_turn": [
+        0.316,
+        1.368
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "content_sha256": "8444615d28f5d3c8af7577f829b2ec57e0baa4e82016fd9edafb4055b4fa5443",
+          "result": "captured_review_pending",
+          "source": "florida_legislature"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "captured_source_requires_currentness_and_proposition_review"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE10",
+      "task_type": "general",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "4c640a37ffecb5e0b379b4839c15b42a3b35765f1afe81719d32c4d2d576551b"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        12.415
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "us_code"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_network_unavailable"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB01",
+      "task_type": "problem",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "51c881938df4ddc63b4bfb8b84c0c55c6d7b71ae32c414877899bddc89004f29"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        5.678
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 4,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB02",
+      "task_type": "problem",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "193c5b05306afb63c415c2049b9bce1ce6965854bf44a28d86975a70dd33ddc0"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        4.771
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB03",
+      "task_type": "problem",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "2ce9e374f5636ec8011d12b7b49e663d49530d44e9ba0e460d927add12d4baac"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        3.767
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB04",
+      "task_type": "problem",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "11c9030cc34171b55c6762b71c3e0c5de8837774ec3dd675839607c434f5b895"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        2.993
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 3,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB05",
+      "task_type": "problem",
+      "selected_route": "codex_bridge",
+      "selected_model": "gpt-5.5",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "339cd6b40ced6418afc8a7f21a083a28eae15c0d43d2ffcc73fa81c90090e895"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        2.105
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES01",
+      "task_type": "essay",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "302d76b5c95e75d8d2fb87e57851c2507ee87da0d1a6c3d98d3963da323601f2"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        4.073
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 4,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES02",
+      "task_type": "essay",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "7e8fa58b4c204baa46d6b47f15616e0639a7136b12a84e33235451499ca53c01"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        8.15
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES03",
+      "task_type": "essay",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "2643765db6107a4170ae653ef394dc9bc4789ff3287850beb56044a9c0ccaedd"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        7.292
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 3,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES04",
+      "task_type": "essay",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "d6f26b95a50ee8eff453d092e0ca99ed7a00a9f1ae11d4e0f5ecaf66cb657faf"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        6.223
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "ES05",
+      "task_type": "essay",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "2bf756683eca48b10c16e1610815d407f973b926828ff79ed4636f68eb0a4bec"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        5.031
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE01",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "ddc4baf97eee826b1f33a92d27aba575dbb0c37f1facdda52842e5cec55040ea"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        1.248
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 4,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        },
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE02",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 2,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": true,
+      "display_receipt_sha256": [
+        "9691dd0ecfb39c9fadd824e9626515aa7d3cb8464b89dfa90d21ac7b7e453ef3"
+      ],
+      "displayed_message_count": 4,
+      "latency_seconds_per_turn": [
+        0.363,
+        1.838
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        },
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE03",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "0a52b48132b2ea2c941d3c629478ea400de35d2c71590ea7853aa6e9070f500e"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        0.254
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE04",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 2,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": true,
+      "display_receipt_sha256": [
+        "83ac18ea16ce990eb7d06a2aab716d1305d7c5e00a131e754074448e59e99c05"
+      ],
+      "displayed_message_count": 4,
+      "latency_seconds_per_turn": [
+        0.493,
+        0.547
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE05",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "679855b0cb0ff4be70943f79f9411ce0ac5dd755edd506d2403e0d80dc69f9cc"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        4.587
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_point_in_time_mismatch"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE06",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "362afe1bd28db9512af6ee43b251d70a86ddf760d54ba0e2b39dd2bb14953fdd"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        4.767
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "content_sha256": "54140b94c5b533bc99e52d1990995a85468ed460099c537a8d82f4f58f0eb150",
+          "result": "captured_review_pending",
+          "source": "california_legislature"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "captured_source_requires_currentness_and_proposition_review"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE07",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "fa4f4800403e460a72a4deb7efd966c8197642a2e25caa072702fba3d64f4764"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        3.766
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "new_york_senate"
+        },
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "new_york_senate"
+        },
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "new_york_senate"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_http_status_403"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE08",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "d437fa98d9ad65066b13c3b4674755283ce3639dc95a721a72edeca3dcbcaeb3"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        3.37
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "content_sha256": "dbfba8a96dc3cd584157ca66aaafdf67e0ed15dd5a0c8a58f3d4bd0f109fc646",
+          "result": "captured_review_pending",
+          "source": "texas_statutes"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "captured_source_requires_currentness_and_proposition_review"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE09",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 2,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": true,
+      "display_receipt_sha256": [
+        "7d9361c886b264593af441cac3135b8621828c0b219182b10a3e34def4922c76"
+      ],
+      "displayed_message_count": 4,
+      "latency_seconds_per_turn": [
+        2.228,
+        1.451
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "content_sha256": "8444615d28f5d3c8af7577f829b2ec57e0baa4e82016fd9edafb4055b4fa5443",
+          "result": "captured_review_pending",
+          "source": "florida_legislature"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "captured_source_requires_currentness_and_proposition_review"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "GE10",
+      "task_type": "general",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "eea730a1ca226e198c3fc8295eb757c03993a0b900625ea69d63a86eadd08b29"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        13.176
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 1,
+      "online_searches": [
+        {
+          "action": "full_text_capture",
+          "result": "unavailable_or_not_permitted",
+          "source": "us_code"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_network_unavailable"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB01",
+      "task_type": "problem",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "3285c95f7162809c493707b6e6c7432461611a76d02f90e6795da5d62961274f"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        4.929
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 4,
+      "online_searches": [
+        {
+          "action": "structured_api",
+          "result": "rejected",
+          "source": "legislation_gov_uk"
+        }
+      ],
+      "evidence_rejection_reasons": [
+        "official_unapplied_effects_present"
+      ],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB02",
+      "task_type": "problem",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "275516318a87b5b9f73dd3ad020841d339ca577203f597b0975bd94356392e3c"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        3.917
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB03",
+      "task_type": "problem",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "a8e7aff02a2216a9bf1761bee73e94928765a46b9e114b3d4b5e4895c0f70138"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        2.902
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB04",
+      "task_type": "problem",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "cb5d7de6417b4c026f57303ff52431e967af8e88ba545079030863de8e447f28"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        2.08
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 3,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    },
+    {
+      "case_id": "PB05",
+      "task_type": "problem",
+      "selected_route": "qwen_local",
+      "selected_model": "mlx-community/Qwen3.5-9B-4bit",
+      "messages_submitted": 1,
+      "exact_frozen_user_messages": true,
+      "publication_status": "held_for_review",
+      "terminal_reason": "healthy_retrieval_zero_hits",
+      "clarification_then_resolved_followup": null,
+      "display_receipt_sha256": [
+        "a61311f0281af56296cd269fe654922036b5d6b45d94bf7eda60b9f02ccec150"
+      ],
+      "displayed_message_count": 2,
+      "latency_seconds_per_turn": [
+        1.067
+      ],
+      "model_stage_names": [],
+      "substantive_generation_attempted": false,
+      "source_review_attempted": false,
+      "retrieval_candidate_counts": [
+        0
+      ],
+      "query_count": 2,
+      "online_searches": [],
+      "evidence_rejection_reasons": [],
+      "retrieval_generation_sha256": [
+        "1a73104ac068f1e3947e9fe6e10f36855b592ea9ae2f5058900c4f7c859b0ae0"
+      ],
+      "query_embedding_performed": false,
+      "supplied_evidence_count": 0,
+      "substantive_word_count": null,
+      "length_result": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "factual_accuracy": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER",
+      "material_coverage": "INCOMPLETE",
+      "invented_facts": "NO_SUBSTANTIVE_ANSWER_TO_ASSESS",
+      "citation_validation": "NOT_ASSESSABLE_NO_SUBSTANTIVE_ANSWER"
+    }
+  ]
+}

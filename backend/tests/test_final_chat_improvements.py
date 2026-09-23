@@ -1,12 +1,13 @@
 from datetime import date
+
 import pytest
 
 from app.config import Settings
 from app.model_routes import CodexBridgeGateway
 from app.orchestration.answer_structure import canonical_heading, section_contract
 from app.orchestration.contracts import ModelDraft
-from app.orchestration.runner import _bind_model_draft_context
 from app.orchestration.retry_policy import is_deterministic_safety_failure
+from app.orchestration.runner import _bind_model_draft_context
 from app.runtime_adapters import LoopbackModelGateway
 from app.types import StructuredDraft, TaskType
 
@@ -56,7 +57,8 @@ def application_draft():
 
 def test_application_binds_exact_user_facts_without_turning_them_into_law():
     from app.quality.fact_provenance import verified_application_quotes
-    draft=application_draft(); claim=draft.sections[0].claims[1]
+    draft=application_draft()
+    claim=draft.sections[0].claims[1]
     assert verified_application_quotes(claim,draft,"I paid £799.") == ("I paid £799.",)
     for question in (None,"I paid £500."):
         with pytest.raises(ValueError,match="application_fact_not_in_question"):
@@ -77,6 +79,38 @@ def test_application_fact_values_reach_validator_but_invented_values_still_hold(
             word_count=450,word_target=450,question=question)
     assert not any(f.code=="unsupported_material_fact" for f in evaluate("I paid £799.").findings)
     assert any(f.code=="unsupported_material_fact" for f in evaluate("I paid £500.").findings)
+
+
+def test_application_binding_feedback_identifies_exact_missing_dependency_without_mutation():
+    from app.quality.fact_provenance import (
+        application_binding_repair_hint,
+        verified_application_quotes,
+    )
+    draft = application_draft()
+    claim = draft.sections[0].claims[1].model_copy(update={"rule_claim_ids": ["missing-rule"]})
+    before = draft.model_dump_json()
+    hint = application_binding_repair_hint(claim, draft, "I paid £799.")
+    assert '"invalid_rule_claim_ids": ["missing-rule"]' in hint
+    assert '"existing_rule_candidates_by_evidence": {"e1": ["rule"]}' in hint
+    assert "does not establish" in hint
+    assert draft.model_dump_json() == before
+    with pytest.raises(ValueError, match="application_legal_rule_dependency_invalid"):
+        verified_application_quotes(claim, draft, "I paid £799.")
+
+
+def test_application_review_preserves_full_fact_context_and_binds_changes(evidence):
+    from app.quality.ai_evidence_reviewer import freeze_material_claims
+    draft = application_draft()
+    span = evidence.model_copy(update={"id": "e1", "jurisdiction": "England"})
+    first = freeze_material_claims(draft=draft, evidence_by_id={"e1": span},
+                                  question="I paid £799. The laptop was new.")
+    second = freeze_material_claims(draft=draft, evidence_by_id={"e1": span},
+                                   question="I paid £799. The laptop was used.")
+    assert first[0].question_context == ""  # User text never supplies a pure legal rule.
+    assert first[0].identity == second[0].identity
+    assert first[1].model_payload()["question_context"].endswith("The laptop was new.")
+    assert first[1].assumed_question_facts == ("I paid £799.",)
+    assert first[1].identity.evidence_bundle_sha256 != second[1].identity.evidence_bundle_sha256
 
 
 def test_gap_uuid_digits_are_not_misclassified_as_a_phone(tmp_path, cipher):
@@ -116,7 +150,8 @@ def test_selected_provider_identity_is_used_for_review_provenance(tmp_path):
     try:
         assert router.selected_model_id=="gpt-5.5"
         assert router.selected_generation_config_sha256==selected._generation_config_sha256()
-    finally:router.reset(token)
+    finally:
+        router.reset(token)
     assert router.selected_model_id==settings.model_id
 
 
@@ -126,3 +161,23 @@ def test_checkpoint_cannot_reuse_an_answer_across_provider_budget_changes():
         word_target=450,pack_digest="a"*64,assessment_rules=[],upload_context=[],
         assessment_bundle_sha256="b"*64,model_id="same-model")
     assert draft_checkpoint_input_sha256(**args,generation_config_sha256="c"*64) != draft_checkpoint_input_sha256(**args,generation_config_sha256="d"*64)
+
+
+def test_ge_prompt_leads_with_conclusion_without_forcing_repeated_analysis():
+    from app.orchestration.answer_structure import drafting_section_contract
+    assert [r['id'] for r in drafting_section_contract('general')] == [
+        'direct-answer', 'next-steps', 'applicable-law', 'qualifications',
+    ]
+    assert drafting_section_contract('essay') == section_contract('essay')
+    assert canonical_heading('general', 'conclusion', 5) == 'Conclusion'
+
+
+def test_codex_reasoning_profile_is_explicit_and_digest_bound(tmp_path):
+    gateway = CodexBridgeGateway(Settings(project_root=tmp_path), {
+        'model_id': 'gpt-5.5', 'auth_mode': 'chatgpt_signin',
+    })
+    assert gateway._reasoning_effort('draft') == 'xhigh'
+    assert gateway._reasoning_effort('repair') == 'xhigh'
+    assert gateway._reasoning_effort('semantic_verify') == 'medium'
+    from app.model_routes import HostedEvidenceGateway
+    assert gateway._generation_config_sha256() != HostedEvidenceGateway._generation_config_sha256(gateway)

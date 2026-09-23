@@ -124,6 +124,30 @@ def test_question_itself_drives_fixed_issue_queries_without_teaching_notes() -> 
     assert all(len(query) <= 1_200 for query in plan.queries)
     assert any("Legal issue: duty of care." in query for query in plan.queries)
     assert "final issue is remoteness" in plan.queries[0].casefold()
+    assert all("background background" not in query for query in plan.queries[1:])
+
+
+def test_distinct_consumer_issues_get_focused_queries() -> None:
+    plan = build_issue_plan(
+        question=(
+            "Explain satisfactory quality, the short-term right to reject, "
+            "refund timing and repair or replacement for a faulty laptop."
+        ),
+        jurisdiction="England",
+        subject="consumer",
+        notes=[],
+    )
+
+    assert plan.queries[0].startswith("Explain satisfactory quality")
+    assert any("Legal issue: consumer satisfactory quality" in q for q in plan.queries[1:])
+    assert any(
+        "consumer repair, replacement, rejection, refund timing and return costs" in q
+        and "section 20" in q and "section 23" in q
+        for q in plan.queries[1:]
+    )
+    assert any("consumer refund deadline, collection and return costs" in q for q in plan.queries[1:])
+    assert any("consumer short-term rejection period" in q and "section 22" in q for q in plan.queries[1:])
+    assert all("faulty laptop" not in q for q in plan.queries[1:])
 
 
 class _IssueAwareRetriever:
@@ -341,3 +365,23 @@ def test_runner_uses_teaching_only_for_queries_never_evidence_or_release(
     assert flow["status_counts"] == {"not_found": 1}
     assert "UNIQUE_PRIVATE_TEACHING_PROSE" not in json.dumps(flow, sort_keys=True)
     assert answer["policy_version"] == POLICY_VERSION
+
+
+def test_everyday_broken_product_facts_research_quality_without_legal_vocabulary():
+    from app.orchestration.classifier import classify_subject
+    question = ('I bought a laptop at a shop for personal use. It repeatedly shut down. '
+                'The retailer offers only store credit. Can I get my money back?')
+    subject = classify_subject(question)
+    assert subject == 'consumer'
+    plan = build_issue_plan(question=question,jurisdiction='England',subject=subject,notes=[])
+    assert len(plan.queries) == 5
+    for section in (9, 19, 20, 22, 23):
+        assert any(f'section {section}' in query for query in plan.queries[1:])
+    assert plan.proposition_keys[:4] == [
+        'consumer_quality', 'consumer_remedies', 'consumer_refund', 'consumer_rejection_period',
+    ]
+    other = build_issue_plan(question='Our factory server shut down during an employment dispute.',
+                             jurisdiction='England',subject='employment',notes=[])
+    assert 'consumer_quality' not in other.proposition_keys
+    overseas = build_issue_plan(question=question,jurisdiction='California',subject=subject,notes=[])
+    assert not any('Consumer Rights Act' in query for query in overseas.queries[1:])

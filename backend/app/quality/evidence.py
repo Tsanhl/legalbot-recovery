@@ -299,9 +299,13 @@ def non_atomic_material_claim_reasons(text: str) -> tuple[str, ...]:
     for match in re.finditer(r"\b(?:and|or|but|whereas|while|however)\b", text, re.IGNORECASE):
         left = text[: match.start()]
         right = text[match.end() :]
+        # In "seven days or the original time limit", limit is a noun,
+        # not a second finite predicate. Other actual verbs remain checked.
+        left_predicates = re.sub(r"\b(?:time|monetary|financial|statutory|liability)\s+limits?\b", "", left, flags=re.IGNORECASE)
+        right_predicates = re.sub(r"\b(?:time|monetary|financial|statutory|liability)\s+limits?\b", "", right, flags=re.IGNORECASE)
         if (
-            _CLAUSE_PREDICATE_RE.search(left)
-            and _CLAUSE_PREDICATE_RE.search(right)
+            _CLAUSE_PREDICATE_RE.search(left_predicates)
+            and _CLAUSE_PREDICATE_RE.search(right_predicates)
             and (_EXPLICIT_SUBJECT_RE.search(right) or _CLAUSE_PREDICATE_RE.match(right.lstrip()))
         ):
             reasons.append("coordinated_independent_clauses")

@@ -1,23 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api, formatApiError } from "../lib/api";
-import type {
-  AnswerRecord,
-  AnswerFeedbackCategory,
-  AnswerFeedbackRating,
-  AttachmentRecord,
-  ConversationSummary,
-  DevelopmentRouteId,
-  HealthRecord,
-  JobDoneEvent,
-  JobEventEnvelope,
-  JobProgressEvent,
-  JobRecord,
-  JobStage,
-  Jurisdiction,
-  OnlineMode,
-  TaskMode,
-} from "../lib/contracts";
-import { AnswerMarkdown, type CitationToken } from "./AnswerMarkdown";
+import type { DevelopmentRouteId, JobRecord, JobStage, OnlineMode, TaskMode } from "../lib/contracts";
+import { chatApi, type ChatSession, type ChatMessage, type Connection } from "../lib/chat-api";
+import { AnswerMarkdown } from "./AnswerMarkdown";
 import { EvidenceDrawer, type EvidenceSelection } from "./EvidenceDrawer";
 import { Icons } from "./Icons";
 
@@ -26,31 +11,6 @@ const TASKS: Array<{ value: TaskMode; label: string; description: string }> = [
   { value: "essay", label: "Essay", description: "Critical argument and scholarship" },
   { value: "problem", label: "Problem", description: "Issues, rules, application and outcome" },
   { value: "general", label: "General", description: "Clear, authoritative explanation" },
-];
-
-const DEVELOPMENT_ROUTE_DETAILS: Record<DevelopmentRouteId, string> = {
-  qwen_local: "Uses the model running on this server, if started and pinned. It does not use a visitor's computer.",
-  local_endpoint: "Uses a pinned loopback model endpoint on this server, if configured.",
-  hosted_api: "Uses this server's OpenAI API key; a visitor's ChatGPT subscription is not connected.",
-  anthropic_api: "Uses this server's Claude API key; a visitor's Claude account is not connected.",
-  gemini_api: "Uses this server's Gemini API key; a visitor's Gemini account is not connected.",
-  codex_bridge: "Uses the signed-in Codex CLI on this server, if configured; a visitor's local Codex is not connected.",
-};
-
-const JURISDICTIONS: Array<{ value: Jurisdiction; label: string }> = [
-  { value: "England and Wales", label: "England & Wales" },
-  { value: "England", label: "England" },
-  { value: "Wales", label: "Wales" },
-  { value: "Scotland", label: "Scotland" },
-  { value: "Northern Ireland", label: "Northern Ireland" },
-  { value: "Hong Kong", label: "Hong Kong" },
-  { value: "European Union", label: "European Union" },
-  { value: "United States", label: "United States" },
-  { value: "US federal", label: "United States — federal" },
-  { value: "California", label: "United States — California" },
-  { value: "New York", label: "United States — New York" },
-  { value: "Texas", label: "United States — Texas" },
-  { value: "Other", label: "Other / specify in question" },
 ];
 
 const STAGE_LABELS: Record<JobStage, string> = {
@@ -98,138 +58,8 @@ const STARTERS = [
   },
 ];
 
-function readableDate(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(date);
-}
-
 function stageIndex(stage: JobStage): number {
   return ["queued", ...PROGRESS_STAGES, "complete"].indexOf(stage);
-}
-
-function releaseLabel(answer: AnswerRecord): string {
-  if (answer.release_state === "verified_full") return "Evidence verified";
-  if (answer.release_state === "verified_concise") return "Verified concise answer";
-  if (answer.release_state === "verified_limited") return "Verified limited answer";
-  if (answer.release_state === "held_for_review") return "Held for review";
-  return "System error";
-}
-
-function clearJobQuery() {
-  const url = new URL(window.location.href);
-  url.searchParams.delete("job");
-  window.history.replaceState({}, "", url);
-}
-
-interface AnswerCardProps {
-  answer: AnswerRecord;
-  onEvidence: (citation: CitationToken) => void;
-  onIssue: () => void;
-}
-
-function AnswerCard({ answer, onEvidence, onIssue }: AnswerCardProps) {
-  const [copied, setCopied] = useState(false);
-  const [feedbackRating, setFeedbackRating] = useState<AnswerFeedbackRating>("helpful");
-  const [feedbackCategory, setFeedbackCategory] = useState<AnswerFeedbackCategory>("clarity");
-  const [feedbackNote, setFeedbackNote] = useState("");
-  const [feedbackStatus, setFeedbackStatus] = useState("");
-  const [feedbackSending, setFeedbackSending] = useState(false);
-  const feedbackIdempotency = useRef(crypto.randomUUID());
-  const copyText = async () => {
-    await navigator.clipboard.writeText(answer.content);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1500);
-  };
-  const submitFeedback = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFeedbackSending(true);
-    setFeedbackStatus("");
-    try {
-      const result = await api.feedback(answer.id, {
-        rating: feedbackRating,
-        category: feedbackCategory,
-        scope: "answer",
-        note: feedbackNote.trim() || undefined,
-        idempotency_key: feedbackIdempotency.current,
-      });
-      setFeedbackStatus(`Saved for owner review · ${result.refinement_id}`);
-      setFeedbackNote("");
-      feedbackIdempotency.current = crypto.randomUUID();
-    } catch (error) {
-      setFeedbackStatus(formatApiError(error));
-    } finally {
-      setFeedbackSending(false);
-    }
-  };
-  return (
-    <article className="answer-card">
-      <header className="answer-meta">
-        <span className={`verified-badge ${answer.release_state}`}>
-          <Icons.shield size={15} />{releaseLabel(answer)}
-        </span>
-        <span>{answer.word_count.toLocaleString()} words</span>
-        {typeof answer.quality?.academic_score === "number" && (
-          <span title="Automated, advisory and not blind-marker calibrated">
-            {Math.round(answer.quality.academic_score)} advisory structure score
-          </span>
-        )}
-      </header>
-
-      <AnswerMarkdown content={answer.content} onEvidence={onEvidence} />
-
-      <footer className="answer-footer">
-        <div>
-          <span>Immutable released answer</span>
-          {answer.index_build_id && <span> · Index {answer.index_build_id}</span>}
-          <span> · Policy {answer.policy_version}</span>
-        </div>
-        <button className="text-button" type="button" onClick={() => void copyText()}>
-          {copied ? <Icons.check size={16} /> : <Icons.copy size={16} />}
-          {copied ? "Copied" : "Copy Markdown"}
-        </button>
-        <button className="text-button" type="button" onClick={onIssue}>
-          <Icons.alert size={16} /> Log quality issue
-        </button>
-      </footer>
-      <form className="answer-feedback" onSubmit={(event) => void submitFeedback(event)}>
-        <div>
-          <strong>Help improve this answer</strong>
-          <span>Encrypted feedback is queued for owner review; it never changes sources or model weights automatically.</span>
-        </div>
-        <label>
-          <span>Rating</span>
-          <select value={feedbackRating} onChange={(event) => setFeedbackRating(event.target.value as AnswerFeedbackRating)}>
-            <option value="helpful">Helpful</option>
-            <option value="partly_helpful">Partly helpful</option>
-            <option value="not_helpful">Not helpful</option>
-          </select>
-        </label>
-        <label>
-          <span>Category</span>
-          <select value={feedbackCategory} onChange={(event) => setFeedbackCategory(event.target.value as AnswerFeedbackCategory)}>
-            <option value="clarity">Clarity</option>
-            <option value="accuracy">Legal accuracy</option>
-            <option value="currentness">Current law</option>
-            <option value="authority">Authority selection</option>
-            <option value="citation">Citation</option>
-            <option value="completeness">Completeness</option>
-            <option value="application">Application</option>
-            <option value="structure">Structure</option>
-            <option value="length">Length</option>
-            <option value="privacy">Privacy</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
-        <label className="feedback-note">
-          <span>Optional note</span>
-          <textarea maxLength={4000} rows={2} value={feedbackNote} onChange={(event) => setFeedbackNote(event.target.value)} />
-        </label>
-        <button disabled={feedbackSending} type="submit">{feedbackSending ? "Saving…" : "Send feedback"}</button>
-        {feedbackStatus && <p role="status">{feedbackStatus}</p>}
-      </form>
-    </article>
-  );
 }
 
 function JobProgress({ stage, detail, progress }: { stage: JobStage; detail: string; progress: number }) {
@@ -261,641 +91,171 @@ function JobProgress({ stage, detail, progress }: { stage: JobStage; detail: str
 }
 
 export function LegalBotApp() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
-  const [selectedAnswerId, setSelectedAnswerId] = useState("");
-  const [currentQuestion, setCurrentQuestion] = useState("");
-  const [answer, setAnswer] = useState<AnswerRecord | null>(null);
-  const [health, setHealth] = useState<HealthRecord | null>(null);
-  const [developmentChat, setDevelopmentChat] = useState(false);
-  const [developmentAuthoritySha, setDevelopmentAuthoritySha] = useState("");
-  const [developmentAccessKey, setDevelopmentAccessKey] = useState("");
-  const [developmentRoute, setDevelopmentRoute] = useState<DevelopmentRouteId>("qwen_local");
-  const [developmentRemoteConsent, setDevelopmentRemoteConsent] = useState(false);
-  const [taskMode, setTaskMode] = useState<TaskMode>("auto");
-  const [jurisdiction, setJurisdiction] = useState<Jurisdiction>("England and Wales");
-  const [customJurisdiction, setCustomJurisdiction] = useState("");
-  const developmentHistory = useRef<string[]>([]);
-  const [asOfDate, setAsOfDate] = useState(() => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  });
-  const [onlineMode, setOnlineMode] = useState<OnlineMode>("local_only");
-  const [targetWords, setTargetWords] = useState(1500);
+  const [session, setSession] = useState<ChatSession | null>(null);
+  const [connections, setConnections] = useState<Connection[]>([]);
+  const [connectionId, setConnectionId] = useState("");
+  const [route, setRoute] = useState<DevelopmentRouteId>("codex_bridge");
+  const [apiKey, setApiKey] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [panel, setPanel] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [taskMode, setTaskMode] = useState<TaskMode>("general");
+  const [jurisdiction, setJurisdiction] = useState("England");
+  const [asOfDate, setAsOfDate] = useState(new Date().toLocaleDateString('en-CA'));
+  const [onlineMode, setOnlineMode] = useState<OnlineMode>("auto");
+  const [targetWords, setTargetWords] = useState(450);
   const [prompt, setPrompt] = useState("");
-  const [attachments, setAttachments] = useState<AttachmentRecord[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [activeJobId, setActiveJobId] = useState("");
-  const [activeEventsUrl, setActiveEventsUrl] = useState("");
-  const [stage, setStage] = useState<JobStage>("queued");
-  const [progress, setProgress] = useState(0);
-  const [stageDetail, setStageDetail] = useState("");
-  const [terminalNotice, setTerminalNotice] = useState<{ stage: "held_for_review" | "system_error" | "cancelled"; message: string } | null>(null);
-  const [serviceError, setServiceError] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [conversation, setConversation] = useState(() => new URLSearchParams(location.search).get('conversation') || `conversation-${crypto.randomUUID()}`);
+  const [history, setHistory] = useState<{id:string}[]>([]);
+  const [jobId, setJobId] = useState("");
+  const [job, setJob] = useState<JobRecord | null>(null);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [sidebar, setSidebar] = useState(false);
   const [evidence, setEvidence] = useState<EvidenceSelection | null>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
-  const messageEnd = useRef<HTMLDivElement>(null);
-  const submitIdempotency = useRef("");
-  const conversationId = useRef(`conversation-${crypto.randomUUID()}`);
+  const idempotency = useRef("");
+  const end = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef(conversation);
+  const selected = connections.find(c => c.id === connectionId);
+  const selectedRoute = session?.routes.find(r => r.route_id === selected?.route_id);
 
-  useEffect(() => {
-    api.setDevelopmentChatConnection(
-      developmentChat && /^[0-9a-f]{64}$/.test(developmentAuthoritySha) && developmentAccessKey
-        ? { authoritySha256: developmentAuthoritySha, accessKey: developmentAccessKey, routeId: developmentRoute, remoteConsent: developmentRemoteConsent }
-        : null,
-    );
-  }, [developmentChat, developmentAuthoritySha, developmentAccessKey, developmentRoute, developmentRemoteConsent]);
-
-  const refreshConversations = useCallback(async () => {
-    try {
-      const list = await api.conversations();
-      setConversations(list);
-      return list;
-    } catch (error) {
-      setServiceError(formatApiError(error));
-      return [];
-    }
-  }, []);
-
-  const openReleasedAnswer = useCallback(async (item: ConversationSummary) => {
-    try {
-      const released = await api.answer(item.answer_id);
-      setSelectedAnswerId(item.answer_id);
-      setCurrentQuestion(item.question_summary);
-      setAnswer(released);
-      setTerminalNotice(null);
-      submitIdempotency.current = "";
-      setActiveJobId("");
-      setSidebarOpen(false);
-      clearJobQuery();
-      setServiceError("");
-    } catch (error) {
-      setServiceError(formatApiError(error));
-    }
+  const refresh = useCallback(async (id: string, restoreSettings = false) => {
+    const value = await chatApi.conversation(id);
+    if (conversationRef.current !== id) return value;
+    setMessages(value.messages);
+    const last = value.jobs.at(-1);
+    if (last && restoreSettings) { setJurisdiction(last.jurisdiction); setAsOfDate(last.as_of_date); setTargetWords(last.word_target); setTaskMode(last.task_type as TaskMode); setConnectionId(last.connection_id); }
+    if (last && ['queued','running'].includes(last.status)) setJobId(last.id);
+    return value;
   }, []);
 
   useEffect(() => {
-    let current = true;
-    Promise.allSettled([api.health(), api.conversations()]).then(([healthResult, conversationResult]) => {
-      if (!current) return;
-      if (healthResult.status === "fulfilled") setHealth(healthResult.value);
-      if (conversationResult.status === "fulfilled") setConversations(conversationResult.value);
-      if (healthResult.status === "rejected" && conversationResult.status === "rejected") {
-        setServiceError(formatApiError(healthResult.reason));
-      }
-      const reconnectId = new URLSearchParams(window.location.search).get("job");
-      if (reconnectId) setActiveJobId(reconnectId);
-    });
-    return () => {
-      current = false;
-    };
-  }, []);
-
-  const installAnswer = useCallback((released: AnswerRecord) => {
-    setAnswer(released);
-    setSelectedAnswerId(released.id);
-    setActiveJobId("");
-    setActiveEventsUrl("");
-    setTerminalNotice(null);
-    setStage(released.release_state === "verified_limited" ? "limited" : "complete");
-    setProgress(1);
-    submitIdempotency.current = "";
-    clearJobQuery();
-    void refreshConversations();
-  }, [refreshConversations]);
+    let active = true;
+    void chatApi.session().then(async value => {
+      if (!active) return;
+      setSession(value); setConnections(value.connections);
+      setConnectionId(value.connections.find(c => c.route_id === 'codex_bridge')?.id || value.connections[0]?.id || '');
+      const list = await chatApi.conversations();
+      if (!active) return;
+      setHistory(list.items);
+      const current = new URLSearchParams(location.search).get('conversation');
+      if (current && list.items.some(i => i.id === current)) await refresh(current, true);
+      if (!value.connections.length) setPanel(true);
+    }).catch(e => { if (active) setError(formatApiError(e)); });
+    return () => { active = false; };
+  }, [refresh]);
 
   useEffect(() => {
-    if (!activeJobId) return;
-    let current = true;
-    let terminal = false;
-    let socket: WebSocket | null = null;
-    let reconnectTimer: number | null = null;
-    let lastSequence = 0;
-
-    const endWithoutAnswer = (nextStage: "held_for_review" | "system_error" | "cancelled", message?: string | null) => {
-      if (!current) return;
-      terminal = true;
-      setStage(nextStage);
-      setTerminalNotice({
-        stage: nextStage,
-        message: message || (
-          nextStage === "held_for_review"
-            ? "The evidence or quality gate requires human review. No unverified answer was released."
-            : nextStage === "cancelled"
-              ? "The research job stopped after its last encrypted checkpoint."
-              : "The research job ended safely without releasing an answer."
-        ),
-      });
-      setActiveJobId("");
-      setActiveEventsUrl("");
-      submitIdempotency.current = "";
-      clearJobQuery();
-    };
-
-    const loadReleased = async (answerId: string | null) => {
-      if (!answerId) {
-        endWithoutAnswer("system_error", "The job completed without a released answer identifier.");
-        return;
-      }
+    if (!jobId) return;
+    let active = true;
+    let timer: number;
+    const poll = async () => {
       try {
-        const released = await api.answer(answerId);
-        if (current) installAnswer(released);
-      } catch (error) {
-        if (current) setServiceError(formatApiError(error));
-      }
-    };
-
-    const handleJob = async (job: JobRecord) => {
-      if (!current) return;
-      if (job.conversation_id) conversationId.current = job.conversation_id;
-      if (job.jurisdiction && JURISDICTIONS.some((item) => item.value === job.jurisdiction)) {
-        setJurisdiction(job.jurisdiction as Jurisdiction);
-      }
-      if (job.as_of_date) setAsOfDate(job.as_of_date);
-      if (job.question_summary !== "Private encrypted question") setCurrentQuestion(job.question_summary);
-      setStage(job.stage);
-      setProgress(job.progress);
-      setStageDetail(job.message || "");
-      if (job.status === "complete") {
-        terminal = true;
-        await loadReleased(job.answer_id);
-      }
-      else if (job.status === "held_for_review") endWithoutAnswer("held_for_review", job.message);
-      else if (job.status === "system_error") endWithoutAnswer("system_error", job.message);
-      else if (job.status === "cancelled") endWithoutAnswer("cancelled", job.message);
-    };
-
-    const hydrate = async () => {
-      try {
-        await handleJob(await api.job(activeJobId));
-      } catch (error) {
-        if (current) setServiceError(formatApiError(error));
-      }
-    };
-
-    const connect = () => {
-      if (!current) return;
-      socket = new WebSocket(
-        api.jobEventsWebSocketUrl(activeJobId, activeEventsUrl, lastSequence),
-        "legalbot.job-events.v1",
-      );
-      socket.onmessage = (raw) => {
-        try {
-          const envelope = JSON.parse(String(raw.data)) as JobEventEnvelope;
-          if (
-            envelope.schema !== "legalbot.job-event.v1"
-            || envelope.job_id !== activeJobId
-            || !envelope.event_id
-            || !envelope.attempt_id
-            || !Number.isSafeInteger(envelope.lease_generation)
-            || !Number.isSafeInteger(envelope.sequence)
-            || envelope.sequence < lastSequence
-          ) throw new Error("invalid websocket event envelope");
-          lastSequence = envelope.sequence;
-          if (!current) return;
-          if (envelope.event === "progress") {
-            const event = envelope.data as JobProgressEvent;
-            if (event.stage) setStage(event.stage);
-            if (event.progress !== null) setProgress(event.progress);
-            setStageDetail(event.message_code);
-            return;
-          }
-          if (envelope.event === "reset_required") {
-            void hydrate();
-            return;
-          }
-          const event = envelope.data as JobDoneEvent;
-          if (event.status === "complete" && event.terminal_kind === "committed") {
-            terminal = true;
-            void loadReleased(event.answer_id);
-          }
-          else if (event.status === "held") endWithoutAnswer("held_for_review", event.message_code);
-          else if (event.status === "cancelled") endWithoutAnswer("cancelled", event.message_code);
-          else endWithoutAnswer("system_error", event.message_code);
-        } catch {
-          setServiceError("A WebSocket progress update could not be read. The durable job remains available.");
-          void hydrate();
+        const value = await api.job(jobId);
+        if (!active) return;
+        setJob(value);
+        if (['complete','held_for_review','system_error','cancelled','failed','dlq'].includes(value.status)) {
+          setJobId(''); idempotency.current = '';
+          await refresh(conversation);
+          const list = await chatApi.conversations(); setHistory(list.items);
+          return;
         }
-      };
-      socket.onerror = () => {
-        if (!terminal) void hydrate();
-      };
-      socket.onclose = () => {
-        socket = null;
-        if (!current || terminal) return;
-        void hydrate().finally(() => {
-          if (current && !terminal) reconnectTimer = window.setTimeout(connect, 750);
-        });
-      };
+      } catch(e) { if (active) setError(formatApiError(e)); }
+      if (active) timer = window.setTimeout(() => void poll(), 1200);
     };
-
-    if (developmentChat) {
-      void hydrate();
-      const poll = window.setInterval(() => {
-        if (current && !terminal) void hydrate();
-      }, 1200);
-      return () => {
-        current = false;
-        window.clearInterval(poll);
-      };
-    }
-
-    void hydrate().then(() => {
-      if (current && !terminal) connect();
-    });
-    return () => {
-      current = false;
-      if (reconnectTimer !== null) window.clearTimeout(reconnectTimer);
-      socket?.close();
-    };
-  }, [activeEventsUrl, activeJobId, installAnswer, developmentChat, developmentAuthoritySha, developmentAccessKey, developmentRoute, developmentRemoteConsent]);
+    void poll();
+    return () => { active = false; window.clearTimeout(timer); };
+  }, [jobId, conversation, refresh]);
 
   useEffect(() => {
-    messageEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [answer, activeJobId, stage, terminalNotice]);
+    if (!messages.length) return;
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-message-id]'));
+    const displayed = nodes.map(node => ({id:node.dataset.messageId!, role:node.dataset.messageRole!, text:node.innerText}));
+    if (displayed.length === messages.length) void chatApi.displayReceipt(conversation, displayed).catch(() => { /* Evidence capture failure never changes an answer. */ });
+  }, [messages, conversation]);
 
-  const newResearch = () => {
-    setSelectedAnswerId("");
-    setCurrentQuestion("");
-    setAnswer(null);
-    setActiveJobId("");
-    setActiveEventsUrl("");
-    setPrompt("");
-    setAttachments([]);
-    setTerminalNotice(null);
-    setSidebarOpen(false);
-    submitIdempotency.current = "";
-    conversationId.current = `conversation-${crypto.randomUUID()}`;
-    clearJobQuery();
+  useEffect(() => { end.current?.scrollIntoView({behavior:'smooth'}); }, [messages, jobId]);
+
+  const connect = async () => {
+    setConnecting(true); setError(''); setNotice('');
+    try {
+      const value = await chatApi.connect(route, apiKey, remember);
+      setApiKey(''); setConnections(old => [...old, value]); setConnectionId(value.id);
+      setNotice('Connection saved. Run Test connection to check a real model response.');
+    } catch(e) { setError(formatApiError(e)); }
+    finally { setConnecting(false); }
   };
-
-  const addFiles = async (files: FileList | null) => {
-    if (!files?.length) return;
-    setUploading(true);
-    const uploaded = await Promise.allSettled([...files].map((file) => api.upload(file)));
-    setAttachments((current) => [
-      ...current,
-      ...uploaded
-        .filter((item): item is PromiseFulfilledResult<AttachmentRecord> => item.status === "fulfilled")
-        .map((item) => item.value),
-    ]);
-    const failed = uploaded.filter((item) => item.status === "rejected");
-    if (failed.length) setServiceError(`${failed.length} file${failed.length === 1 ? "" : "s"} could not be staged.`);
-    setUploading(false);
-    if (fileInput.current) fileInput.current.value = "";
+  const test = async () => {
+    if (!selected) return;
+    setConnecting(true); setNotice('Testing a short model response…');
+    try {
+      const result = await chatApi.test(selected.id);
+      setConnections(old => old.map(c => c.id === selected.id ? {...c,test_status:result.status} : c));
+      setNotice(result.status === 'passed' ? 'Model responded. Legal answer quality is checked separately.' : 'Model test failed. Check credentials, model access or the local model service.');
+    } catch(e) { setError(formatApiError(e)); }
+    finally { setConnecting(false); }
   };
-
   const submit = async () => {
-    const question = prompt.trim();
-    if (!question || activeJobId) return;
-    const connectionIntent = question.toLowerCase().replace(/[.!?]+$/, "");
-    const requestedRoute = (
-      /^(link|connect|use) codex$/.test(connectionIntent) ? "codex_bridge"
-        : /^(link|connect|use) (api|openai api)$/.test(connectionIntent) ? "hosted_api"
-          : /^(link|connect|use) (claude|anthropic api)$/.test(connectionIntent) ? "anthropic_api"
-            : /^(link|connect|use) (gemini|gemini api)$/.test(connectionIntent) ? "gemini_api"
-          : /^(link|connect|use) (local model|my local model)$/.test(connectionIntent) ? "local_endpoint"
-            : null
-    );
-    if (requestedRoute) {
-      setDevelopmentChat(true);
-      setDevelopmentRoute(requestedRoute);
-      setPrompt("");
-      setServiceError("Enter the pinned owner development authority and access key, then ask a legal question.");
-      return;
+    if (!prompt.trim() || jobId) return;
+    if (/^(link|connect|use) (codex|claude|gemini|api|local model)[.!?]?$/i.test(prompt.trim())) {
+      const text = prompt.toLowerCase();
+      setRoute(text.includes('claude')?'anthropic_api':text.includes('gemini')?'gemini_api':text.includes('api')?'hosted_api':text.includes('local')?'qwen_local':'codex_bridge');
+      setPanel(true); setPrompt(''); return;
     }
-    setServiceError("");
-    setTerminalNotice(null);
+    setError(''); setNotice('');
+    if (!selected) { setPanel(true); setError('Connect a model before sending your question.'); return; }
+    if (!consent && (selected.route_id !== 'qwen_local' || onlineMode !== 'local_only')) {
+      setError('Confirm remote processing, or choose local Qwen with indexed sources only.'); return;
+    }
+    if (!idempotency.current) idempotency.current = crypto.randomUUID();
     try {
-      if (developmentChat) {
-        if (!/^[0-9a-f]{64}$/.test(developmentAuthoritySha) || !developmentAccessKey) {
-          throw new Error("Enter the pinned development authority SHA-256 and owner access key.");
-        }
-        if (attachments.length) {
-          throw new Error("Development chat currently accepts text only; remove staged uploads.");
-        }
-        api.setDevelopmentChatConnection({
-          authoritySha256: developmentAuthoritySha,
-          accessKey: developmentAccessKey,
-          routeId: developmentRoute,
-          remoteConsent: developmentRemoteConsent,
-        });
-      } else {
-        api.setDevelopmentChatConnection(null);
-      }
-      const selectedJurisdiction = jurisdiction === "Other" ? customJurisdiction.trim() : jurisdiction;
-      if (!selectedJurisdiction || selectedJurisdiction.length > 120) {
-        throw new Error("Enter a specific jurisdiction (country and, where relevant, state or region).");
-      }
-      const contextualQuestion = developmentChat && developmentHistory.current.length
-        ? `Earlier messages in this case:\n${developmentHistory.current.map((item, index) => `${index + 1}. ${item}`).join("\n\n")}\n\nCurrent message:\n${question}`
-        : question;
-      if (contextualQuestion.length > 30_000) {
-        throw new Error("This case history is too long. Start a new development chat.");
-      }
-      if (!submitIdempotency.current) submitIdempotency.current = crypto.randomUUID();
-      const created = await api.createAnswer({
-        question: contextualQuestion,
-        task_type: taskMode,
-        jurisdiction: selectedJurisdiction,
-        as_of_date: asOfDate || undefined,
-        word_target: targetWords,
-        online_mode: developmentChat ? "local_only" : onlineMode,
-        upload_ids: developmentChat ? [] : attachments.map((item) => item.upload_id),
-        conversation_id: developmentChat ? undefined : conversationId.current,
-      }, submitIdempotency.current);
-      if (created.conversation_id) conversationId.current = created.conversation_id;
-      if (developmentChat) developmentHistory.current = [...developmentHistory.current, question].slice(-4);
-      setCurrentQuestion(question);
-      setAnswer(null);
-      setSelectedAnswerId("");
-      setPrompt("");
-      setAttachments([]);
-      setStage(created.stage);
-      setProgress(0);
-      setStageDetail("");
-      setActiveEventsUrl(created.events_url);
-      setActiveJobId(created.job_id);
-      const url = new URL(window.location.href);
-      url.searchParams.set("job", created.job_id);
-      window.history.replaceState({}, "", url);
-    } catch (error) {
-      setServiceError(formatApiError(error));
-    }
+      const accepted = await chatApi.ask({question:prompt.trim(), task_type:taskMode, jurisdiction, as_of_date:asOfDate, word_target:targetWords, online_mode:onlineMode, upload_ids:[], conversation_id:conversation, connection_id:connectionId}, idempotency.current, consent);
+      const url = new URL(location.href); url.searchParams.set('conversation', conversation); window.history.replaceState({},'',url);
+      setPrompt(''); setJob(null); setJobId(accepted.job_id); await refresh(conversation);
+    } catch(e) { setError(formatApiError(e)); }
   };
-
-  const openEvidence = (citation: CitationToken) => {
-    if (!answer) return;
-    setEvidence({ answerId: answer.id, evidenceId: citation.evidenceId, citationLabel: citation.label });
+  const newChat = () => {
+    const id = `conversation-${crypto.randomUUID()}`; conversationRef.current = id; setConversation(id); setMessages([]); setJobId(''); setJob(null); setError(''); idempotency.current='';
+    window.history.replaceState({},'', '/'); setSidebar(false);
   };
-
-  const reportIssue = async () => {
-    if (!answer) return;
-    const note = window.prompt(
-      "Describe the legal, source, citation, privacy or completeness issue. The note is encrypted locally.",
-      "",
-    );
-    if (note === null || !note.trim()) return;
-    try {
-      const result = await api.reportIssue(answer.id, {
-        category: "owner_quality_review",
-        severity: "medium",
-        affected_layer: "end_to_end",
-        expected_ids: [],
-        observed_ids: [answer.id],
-        note: note.trim(),
-      });
-      setServiceError(`Quality issue ${result.issue_id} logged for review.`);
-    } catch (error) {
-      setServiceError(formatApiError(error));
-    }
-  };
-
-  const cancelActiveJob = async () => {
-    if (!activeJobId) return;
-    try {
-      await api.cancelJob(activeJobId);
-      setStageDetail("Cancellation requested; stopping after the current safe checkpoint.");
-    } catch (error) {
-      setServiceError(formatApiError(error));
-    }
-  };
-
-  const selectedTask = useMemo(() => TASKS.find((item) => item.value === taskMode) || TASKS[0], [taskMode]);
-  const hasResearch = Boolean(currentQuestion || answer);
-  const systemReady = Boolean(
-    developmentChat
-      ? health?.database_ready && health?.worker_ready
-      : health?.status === "ready" && health?.database_ready && health?.model_ready && health?.worker_ready && health?.active_index,
-  );
-
-  return (
-    <div className="legal-app">
-      <button className={`mobile-scrim ${sidebarOpen ? "show" : ""}`} aria-label="Close navigation" onClick={() => setSidebarOpen(false)} />
-      <aside className={`app-sidebar ${sidebarOpen ? "open" : ""}`}>
-        <div className="brand-row">
-          <span className="brand-mark"><Icons.mark size={23} /></span>
-          <div><strong>Counsel</strong><span>Verified legal research</span></div>
-        </div>
-        <button className="new-chat-button" type="button" onClick={newResearch}>
-          <Icons.plus size={18} /> New research
-        </button>
-        <nav className="primary-nav" aria-label="Primary navigation">
-          <a className="active" href="/"><Icons.chat size={18} /> Research</a>
-          <a href="/admin"><Icons.dashboard size={18} /> Operations</a>
-        </nav>
-        <div className="sidebar-section-title"><span>Released work</span><button type="button" onClick={() => void refreshConversations()}>Refresh</button></div>
-        <div className="conversation-list">
-          {conversations.length === 0 && <p className="sidebar-empty">Verified research will appear here after release.</p>}
-          {conversations.map((item) => (
-            <button
-              className={`conversation-link ${selectedAnswerId === item.answer_id ? "active" : ""}`}
-              key={item.answer_id}
-              onClick={() => void openReleasedAnswer(item)}
-              type="button"
-            >
-              <span>{item.question_summary || "Released legal research"}</span>
-              <small>{item.word_count.toLocaleString()} words · {readableDate(item.created_at)}</small>
-              <i>{item.release_state.replaceAll("_", " ")}</i>
-            </button>
-          ))}
-        </div>
-        <footer className="sidebar-footer">
-          <div className={`system-dot ${systemReady ? "ready" : ""}`} />
-          <div>
-            <strong>{systemReady ? "API and worker ready" : serviceError ? "API unavailable" : "Checking API and worker"}</strong>
-            <span>{developmentChat ? "Model and legal sources checked on submission" : health?.model_id ? `${health.model_id} selected; answer readiness checked on submission` : "Model and legal sources checked on submission"}</span>
-          </div>
-        </footer>
-      </aside>
-
-      <main className="chat-workspace">
-        <header className="workspace-header">
-          <button className="menu-button" type="button" onClick={() => setSidebarOpen(true)} aria-label="Open navigation"><Icons.menu /></button>
-          <div className="task-switcher" role="group" aria-label="Answer type">
-            {TASKS.map((item) => (
-              <button aria-pressed={taskMode === item.value} className={taskMode === item.value ? "active" : ""} key={item.value} onClick={() => setTaskMode(item.value)} type="button">
-                {item.label}
-              </button>
-            ))}
-          </div>
-          <div className="header-controls">
-            <label>
-              <Icons.globe size={17} /><span className="sr-only">Jurisdiction</span>
-              <select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value as Jurisdiction)}>
-                {JURISDICTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
-              </select>
-            </label>
-            {jurisdiction === "Other" && (
-              <label>Jurisdiction
-                <input aria-label="Specify jurisdiction" value={customJurisdiction}
-                  onChange={(event) => setCustomJurisdiction(event.target.value)}
-                  placeholder="Country and state or region" maxLength={120} />
-              </label>
-            )}
-            <a className="admin-shortcut" href="/admin" aria-label="Open operations dashboard"><Icons.dashboard size={18} /></a>
-          </div>
-        </header>
-
-        <div className="chat-scroll">
-          {!hasResearch && !activeJobId && (
-            <section className="welcome">
-              <div className="welcome-mark"><Icons.mark size={30} /></div>
-              <span className="eyebrow">Evidence before assertion</span>
-              <h1>Legal research you can inspect.</h1>
-              <p>Ask for a critical essay, problem analysis or clear explanation. Every material legal proposition is bound to the exact source span used to support it.</p>
-              <div className="starter-grid">
-                {STARTERS.map((item) => {
-                  const StarterIcon = item.icon;
-                  return (
-                    <button key={item.mode} type="button" onClick={() => { setTaskMode(item.mode); setPrompt(`${item.title}: `); }}>
-                      <span><StarterIcon size={20} /></span><strong>{item.title}</strong><p>{item.copy}</p>
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="trust-strip">
-                <span><Icons.shield size={16} /> Claim-level evidence</span>
-                <span><Icons.book size={16} /> Full OSCOLA by default</span>
-                <span><Icons.target size={16} /> Advisory academic guidance</span>
-              </div>
-            </section>
-          )}
-
-          {hasResearch && (
-            <section className="message-thread" aria-live="polite">
-              <div className="thread-heading">
-                <span className="eyebrow">{selectedTask.label} · {jurisdiction}</span>
-                <h1>{currentQuestion || "Legal research"}</h1>
-              </div>
-              {currentQuestion && <div className="user-message"><p>{currentQuestion}</p></div>}
-              {answer && <AnswerCard answer={answer} onEvidence={openEvidence} onIssue={() => void reportIssue()} />}
-            </section>
-          )}
-
-          {activeJobId && (
-            <>
-              <JobProgress stage={stage} detail={stageDetail} progress={progress} />
-              <button className="text-button cancel-job" type="button" onClick={() => void cancelActiveJob()}>
-                Cancel after checkpoint
-              </button>
-            </>
-          )}
-
-          {terminalNotice && (
-            <section className="generation-error" role="alert">
-              <Icons.alert size={22} />
-              <div>
-                <strong>{STAGE_LABELS[terminalNotice.stage]}</strong>
-                <p>{terminalNotice.message}</p>
-                <small>No unsupported draft was released or shown as a legal answer.</small>
-              </div>
-              <button type="button" onClick={() => setTerminalNotice(null)}>Dismiss</button>
-            </section>
-          )}
-
-          <div ref={messageEnd} />
-        </div>
-
-        <div className="composer-dock">
-          <div className="development-chat-controls">
-            <label>
-              <input type="checkbox" checked={developmentChat} onChange={(event) => {
-                setDevelopmentChat(event.target.checked);
-                developmentHistory.current = [];
-                if (!event.target.checked) api.setDevelopmentChatConnection(null);
-              }} /> Owner development chat
-            </label>
-            {developmentChat && (
-              <>
-                <label>Model
-                  <select aria-label="Development model route" value={developmentRoute} onChange={(event) => {
-                    developmentHistory.current = [];
-                    setDevelopmentRoute(event.target.value as DevelopmentRouteId);
-                  }}>
-                    <option value="qwen_local">Own local Qwen</option>
-                    <option value="local_endpoint">Linked local model</option>
-                    <option value="hosted_api">OpenAI API</option>
-                    <option value="anthropic_api">Claude API</option>
-                    <option value="gemini_api">Gemini API</option>
-                    <option value="codex_bridge">Codex bridge</option>
-                  </select>
-                </label>
-                <label>Authority SHA-256
-                  <input aria-label="Development authority SHA-256" type="text" value={developmentAuthoritySha} onChange={(event) => setDevelopmentAuthoritySha(event.target.value.trim())} autoComplete="off" />
-                </label>
-                <label>Owner access key
-                  <input aria-label="Development owner access key" type="password" value={developmentAccessKey} onChange={(event) => setDevelopmentAccessKey(event.target.value)} autoComplete="off" />
-                </label>
-                {(["hosted_api", "anthropic_api", "gemini_api", "codex_bridge"] as const).includes(developmentRoute as "hosted_api" | "anthropic_api" | "gemini_api" | "codex_bridge") && (
-                  <label><input type="checkbox" checked={developmentRemoteConsent} onChange={(event) => setDevelopmentRemoteConsent(event.target.checked)} />
-                    Send this question and selected evidence to the remote model</label>
-                )}
-                <span>{DEVELOPMENT_ROUTE_DETAILS[developmentRoute]} Owner-only development route: a pinned authority, access key and reviewed candidate index are required. Text questions only; no uploads.</span>
-              </>
-            )}
-          </div>
-          {serviceError && (
-            <div className="service-alert" role="alert">
-              <Icons.alert size={16} /><span>{serviceError}</span><button type="button" onClick={() => setServiceError("")}>Dismiss</button>
-            </div>
-          )}
-          {attachments.length > 0 && (
-            <div className="attachment-row">
-              {attachments.map((item) => (
-                <span key={item.upload_id}><Icons.file size={15} />{item.display_name}<button aria-label={`Remove ${item.display_name}`} type="button" onClick={() => setAttachments((current) => current.filter((file) => file.upload_id !== item.upload_id))}>×</button></span>
-              ))}
-            </div>
-          )}
-          <div className="composer">
-            <textarea
-              aria-label="Legal research question"
-              disabled={Boolean(activeJobId)}
-              onChange={(event) => setPrompt(event.target.value)}
-              onKeyDown={(event) => {
-                if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-                  event.preventDefault();
-                  void submit();
-                }
-              }}
-              placeholder={`${selectedTask.description}. Ask your question…`}
-              rows={3}
-              value={prompt}
-            />
-            <div className="composer-toolbar">
-              <button className="attach-control" disabled={developmentChat || uploading || Boolean(activeJobId)} type="button" onClick={() => fileInput.current?.click()}>
-                {uploading ? <span className="mini-spinner" /> : <Icons.paperclip size={18} />}
-                {uploading ? "Processing…" : "Attach sources"}
-              </button>
-              <input ref={fileInput} type="file" hidden multiple accept=".pdf,.docx,.pptx,.odt,.txt,.md,.html" onChange={(event) => void addFiles(event.target.files)} />
-              <label className="compact-control">
-                <span>Online</span>
-                <select value={developmentChat ? "local_only" : onlineMode} disabled={developmentChat} onChange={(event) => setOnlineMode(event.target.value as OnlineMode)}>
-                  <option value="auto">Auto</option><option value="always">Always</option><option value="local_only">Local only</option>
-                </select>
-              </label>
-              <label className="compact-control">
-                <span>Words</span>
-                <input min={100} max={10000} step={100} type="number" value={targetWords} onChange={(event) => setTargetWords(Math.max(100, Math.min(10000, Number(event.target.value) || 1500)))} />
-              </label>
-              <label className="compact-control date-control">
-                <span>Law as of</span>
-                <input aria-label="Law as of date" type="date" value={asOfDate} onChange={(event) => setAsOfDate(event.target.value)} />
-              </label>
-              <span className="composer-spacer" />
-              <button className="send-button" disabled={!prompt.trim() || Boolean(activeJobId) || !systemReady} type="button" onClick={() => void submit()}>
-                <span>Research</span><Icons.send size={18} />
-              </button>
-            </div>
-          </div>
-          <p className="legal-note"><Icons.shield size={14} /> Legal information and academic research, not legal advice. Verify deadlines with a qualified lawyer.</p>
-        </div>
-      </main>
-
-      <EvidenceDrawer selection={evidence} onClose={() => setEvidence(null)} />
-    </div>
-  );
+  const chooseMode = (mode: TaskMode) => { setTaskMode(mode); setTargetWords(mode === 'essay' || mode === 'problem' ? 700 : 450); };
+  return <div className="app-shell">
+    {sidebar && <aside className="sidebar"><button type="button" onClick={newChat}>New conversation</button><h2>Saved conversations</h2>{history.map((item, i) => <button type="button" key={item.id} onClick={() => { conversationRef.current = item.id; setConversation(item.id); setJobId(''); setJob(null); setSidebar(false); const url=new URL(location.href); url.searchParams.set('conversation',item.id); window.history.replaceState({},'',url); void refresh(item.id, true).catch(e=>setError(formatApiError(e))); }}>Conversation {history.length-i}</button>)}</aside>}
+    <main className="main-panel">
+      <header className="topbar"><button className="icon-button" type="button" aria-label="Open conversations" onClick={()=>setSidebar(!sidebar)}><Icons.menu size={22}/></button>
+        <nav className="task-switcher" aria-label="Answer mode">{TASKS.map(item=><button type="button" className={taskMode===item.value?'active':''} key={item.value} onClick={()=>chooseMode(item.value)}>{item.label}</button>)}</nav>
+        <button type="button" className="text-button" onClick={()=>setPanel(!panel)}>Model connection</button>
+      </header>
+      {panel && <section className="connection-panel" aria-label="Model connection">
+        <h2>Choose your model</h2>
+        <p>Codex uses this Mac’s signed-in CLI and a remote model. Qwen runs on this Mac. API keys belong to this browser session.</p>
+        <label>Provider<select aria-label="Provider" value={route} onChange={e=>{setRoute(e.target.value as DevelopmentRouteId);setApiKey('');}}>
+          <option value="codex_bridge">Codex</option><option value="qwen_local">Local Qwen</option><option value="hosted_api">OpenAI API</option><option value="anthropic_api">Claude API</option><option value="gemini_api">Gemini API</option>
+        </select></label>
+        <p>{session?.routes.find(r=>r.route_id===route)?.model_id || 'This provider has not been configured by the local launcher.'}</p>
+        {['hosted_api','anthropic_api','gemini_api'].includes(route) && <><label>API key<input aria-label="API key" type="password" autoComplete="off" value={apiKey} onChange={e=>setApiKey(e.target.value)}/></label><label><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/>Remember connection in the operating system credential store</label></>}
+        <button type="button" disabled={connecting||!session?.routes.some(r=>r.route_id===route)} onClick={()=>void connect()}>Connect</button>
+        <label>Active connection<select aria-label="Active connection" value={connectionId} onChange={e=>setConnectionId(e.target.value)}><option value="">Choose connection</option>{connections.map(c=><option key={c.id} value={c.id}>{c.route_id} · {c.test_status}</option>)}</select></label>
+        <button type="button" disabled={!selected||connecting} onClick={()=>void test()}>Test connection</button>
+        <button type="button" disabled={!selected||connecting} onClick={()=>{if(selected) void chatApi.disconnect(selected.id).then(()=>{setConnections(old=>old.filter(c=>c.id!==selected.id));setConnectionId('');}).catch(e=>setError(formatApiError(e)));}}>Disconnect</button>
+      </section>}
+      <div className="connection-status" role="status">{selectedRoute ? `${selectedRoute.kind} · ${selectedRoute.model_id} · ${selected?.test_status}` : 'No model connected'} · UK and USA coverage is checked per question.</div>
+      <section className="chat-content" aria-label="Conversation">
+        {!messages.length && <section className="welcome"><div className="welcome-mark">A</div><p className="eyebrow">Evidence before assertion</p><h1>Legal research you can inspect.</h1><p>Ask for a critical essay, problem analysis or clear explanation. Inspect the sources used and any remaining limitations.</p><div className="starter-grid">{STARTERS.map(item=><button key={item.mode} type="button" className="starter-card" onClick={()=>chooseMode(item.mode)}><span><item.icon size={24}/></span><strong>{item.title}</strong><p>{item.copy}</p></button>)}</div><p>Claim-level evidence · Full OSCOLA by default · Advisory academic guidance</p></section>}
+        {messages.map(message=><article key={message.id} className={message.role==='user'?'question-card':'answer-card'} data-message-role={message.role} data-message-id={message.id}><header>{message.role==='user'?'You':'LegalBot'}</header>{message.role==='assistant'&&<small className="message-provenance">Selected: {message.selected_model || message.selected_provider || 'unknown'} · {message.display_origin==='released_answer'?'Reviewed answer':'System clarification or incomplete result'}</small>}<div className="answer-prose"><AnswerMarkdown content={message.content} onEvidence={citation=>{if(message.answer_id)setEvidence({answerId:message.answer_id,evidenceId:citation.evidenceId,citationLabel:citation.label});}}/></div></article>)}
+        {jobId && <><JobProgress stage={job?.stage||'queued'} detail={job?.message||'Your question is saved. Checking sources and selected model.'} progress={job?.progress||0}/><button type="button" onClick={()=>void api.cancelJob(jobId).catch(e=>setError(formatApiError(e)))}>Cancel</button></>}
+        <div ref={end}/>
+      </section>
+      <form className="composer" onSubmit={e=>{e.preventDefault();void submit();}}>
+        {error && <p className="service-alert" role="alert">{error}</p>}{notice && <p role="status">{notice}</p>}
+        <textarea aria-label="Your legal question" placeholder="Ask your legal question…" value={prompt} onChange={e=>{setPrompt(e.target.value);idempotency.current='';}} maxLength={30000} rows={4}/>
+        <div className="composer-controls"><label>Words<input aria-label="Words" type="number" min={100} max={10000} value={targetWords} onChange={e=>setTargetWords(Number(e.target.value))}/></label><label>Law as of<input aria-label="Law as of" type="date" value={asOfDate} onChange={e=>setAsOfDate(e.target.value)}/></label><label>Jurisdiction<input aria-label="Jurisdiction" value={jurisdiction} onChange={e=>setJurisdiction(e.target.value)} placeholder="Country and state or UK nation"/></label><label>Sources<select aria-label="Sources" value={onlineMode} onChange={e=>setOnlineMode(e.target.value as OnlineMode)}><option value="local_only">Indexed sources only</option><option value="auto">Index + online research</option></select></label></div>
+        <label className="remote-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Allow this question and selected context to be processed by the chosen remote provider and official-source research services</label>
+        <button className="send-button" type="submit" disabled={!prompt.trim()||Boolean(jobId)} aria-label="Send question"><Icons.send size={22}/></button>
+      </form>
+    </main>
+    {evidence && <EvidenceDrawer selection={evidence} onClose={()=>setEvidence(null)}/>}
+  </div>;
 }

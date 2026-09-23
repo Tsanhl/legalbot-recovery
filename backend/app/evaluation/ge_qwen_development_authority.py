@@ -52,7 +52,7 @@ def development_request_sha256(payload: QuestionRequest) -> str:
         canonical_json_bytes(
             {
                 "schema": "legalbot.ge-qwen-development-request.v1",
-                "request": payload.model_dump(mode="json"),
+                "request": payload.model_dump(mode="json", exclude={"connection_id"} if payload.connection_id is None else set()),
             }
         )
     ).hexdigest()
@@ -64,7 +64,7 @@ def development_idempotency_key_sha256(raw_idempotency_key: str) -> str:
 
 def persisted_job_idempotency_key(raw_idempotency_key: str) -> str:
     return hashlib.sha256(
-        f"legalbot-intake-v1\0{raw_idempotency_key}".encode("utf-8")
+        f"legalbot-intake-v1\0{raw_idempotency_key}".encode()
     ).hexdigest()
 
 
@@ -280,9 +280,9 @@ def replay_ge_qwen_development_admission(
 
 
 __all__ = [
-    "GEQwenDevelopmentAdmissionBinding",
     "GE_QWEN_DEVELOPMENT_AUTHORITY_SCHEMA",
     "GE_QWEN_DEVELOPMENT_LANE",
+    "GEQwenDevelopmentAdmissionBinding",
     "development_idempotency_key_sha256",
     "development_request_sha256",
     "expected_runtime_binding",

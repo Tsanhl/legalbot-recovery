@@ -1,6 +1,7 @@
 """Fail-closed, allowlisted official-source research for one answer job.
 
 Only structured legislation.gov.uk material can become an ``EvidenceSpan``.
+Session development also captures permitted UK/US candidates for source review.
 All other registered sources are link/metadata candidates for review.  Nothing
 in this module writes to LanceDB or changes the ACTIVE index pointer.
 """
@@ -73,6 +74,12 @@ _SUBJECT_QUERIES = {
     "trusts": "trustees",
 }
 _JURISDICTION_SLUGS = {
+    "us federal": "us_federal",
+    "united states": "us_federal",
+    "california": "california",
+    "new york": "new_york",
+    "texas": "texas",
+    "florida": "florida",
     "england": "england_wales",
     "wales": "england_wales",
     "england and wales": "england_wales",
@@ -402,7 +409,11 @@ class OfficialOnlineResearcher:
         spans: list[EvidenceSpan] = []
         query = _safe_legislation_query(proposition, subject, self.settings.owner_identifiers)
         legislation_policy = self.registry.get("legislation_gov_uk")
-        if jurisdiction_slug in legislation_policy.jurisdictions and query is not None:
+        from .discovery import legislation_queries
+        queries = legislation_queries(proposition, query) if self.settings.development_chat_authority_sha256 else ([query] if query else [])
+        for query in queries:
+            if jurisdiction_slug not in legislation_policy.jurisdictions:
+                break
             searches.append(
                 {"source": "legislation_gov_uk", "action": "structured_api", "result": "attempted"}
             )
@@ -426,6 +437,33 @@ class OfficialOnlineResearcher:
                 searches[-1]["result"] = "rejected"
                 rejections.append(_safe_error_code(exc))
 
+        if self.settings.development_chat_authority_sha256:
+            from ..evaluation.ge_development_chat_authority import (
+                GE_SESSION_CHAT_SCHEMA,
+                _load_authority,
+            )
+            authority, _ = _load_authority(self.settings)
+            if authority["schema"] == GE_SESSION_CHAT_SCHEMA:
+                from .discovery import discovery_urls
+                from .official_capture import capture_official_candidate
+                for url in discovery_urls(proposition, jurisdiction)[:3]:
+                    policy = _policy_for_url(self.registry, url)
+                    if policy is None or jurisdiction_slug not in policy.jurisdictions:
+                        continue
+                    entry = {"source": policy.source_id, "action": "full_text_capture", "result": "attempted"}
+                    searches.append(entry)
+                    try:
+                        receipt = await capture_official_candidate(
+                            settings=self.settings, fetcher=self.fetcher, policy=policy,
+                            url=url, jurisdiction=jurisdiction, as_of_date=as_of_date,
+                        )
+                        entry["result"] = "captured_review_pending"
+                        entry["content_sha256"] = receipt["content_sha256"]
+                        rejections.append("captured_source_requires_currentness_and_proposition_review")
+                    except (OnlineFetchError, PermissionError, ValueError, OSError) as exc:
+                        entry["result"] = "unavailable_or_not_permitted"
+                        rejections.append(_safe_error_code(exc))
+
         direct_rejections = await self._stage_explicit_official_links(
             proposition=proposition,
             jurisdiction=jurisdiction,
@@ -434,7 +472,12 @@ class OfficialOnlineResearcher:
             searches=searches,
         )
         rejections.extend(direct_rejections)
-        return spans[:MAX_EVIDENCE_SPANS], searches, list(dict.fromkeys(rejections))
+        groups: dict[str, list[EvidenceSpan]] = {}
+        for span in spans:
+            groups.setdefault(span.source_version_id, []).append(span)
+        balanced = [group[i] for i in range(MAX_EVIDENCE_SPANS)
+                    for group in groups.values() if len(group) > i]
+        return balanced[:MAX_EVIDENCE_SPANS], searches, list(dict.fromkeys(rejections))
 
     async def _research_legislation(
         self,
@@ -449,12 +492,18 @@ class OfficialOnlineResearcher:
     ) -> list[EvidenceSpan]:
         policy = self.registry.get("legislation_gov_uk")
         adapter = cast(LegislationGovUkAdapter, self.adapters["legislation_gov_uk"])
-        feed_plan = adapter.search_plan(
-            query, as_of_date=as_of_date, title_search=title_search, results_count=5
-        )
-        feed = await self.fetcher.fetch(feed_plan, policy)
-        _require_xml_content_type(feed, atom=True)
-        candidates = _parse_atom_candidates(feed.content, query, title_search)
+        from .discovery import LEGISLATION_IDENTITIES
+        exact = LEGISLATION_IDENTITIES.get(query) if self.settings.development_chat_authority_sha256 else None
+        if exact:
+            identity, title = exact
+            candidates = [AtomLegislationCandidate(identity, title, f"https://www.legislation.gov.uk/{identity}")]
+        else:
+            feed_plan = adapter.search_plan(
+                query, as_of_date=as_of_date, title_search=title_search, results_count=10
+            )
+            feed = await self.fetcher.fetch(feed_plan, policy)
+            _require_xml_content_type(feed, atom=True)
+            candidates = _parse_atom_candidates(feed.content, query, title_search)
         output: list[EvidenceSpan] = []
         rejection_codes: list[str] = []
         for candidate in candidates[:MAX_LEGISLATION_RESULTS]:
@@ -467,6 +516,17 @@ class OfficialOnlineResearcher:
                 # a successful fetch nor dct:valid alone proves currentness.
                 effects_response = await self.fetcher.fetch(adapter.plan(candidate.identity), policy)
                 _require_xml_content_type(effects_response, atom=False)
+                if self.settings.development_chat_authority_sha256:
+                    from ..crypto import LocalCipher
+                    directory = self.settings.vault_dir / "official-captures"
+                    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+                    cipher = LocalCipher.from_local_key(create=False)
+                    for captured in (response, effects_response):
+                        path = directory / (hashlib.sha256(captured.content).hexdigest() + ".body.enc")
+                        if not path.exists():
+                            with path.open("xb") as handle:
+                                handle.write(cipher.encrypt_bytes(captured.content))
+                            path.chmod(0o600)
                 verified = _verify_legislation(
                     response=response,
                     candidate=candidate,
@@ -737,6 +797,7 @@ def _parse_atom_candidates(
             continue
         canonical = f"https://www.legislation.gov.uk/{identity}"
         candidates.append(AtomLegislationCandidate(identity, title, canonical))
+    candidates.sort(key=lambda c: (_normalised_title(c.title) != _normalised_title(query), len(c.title)))
     return candidates
 
 
@@ -831,7 +892,16 @@ def _verify_legislation(
     requested = _PROVISION.search(proposition)
     requested_number = requested.group("number") if requested else None
     requested_kind = requested.group("label").casefold() if requested else None
-    query_tokens = set(re.findall(r"[a-z]{3,}", query.casefold()))
+    # Rank provisions against the legal issue, not words in the instrument title.
+    # Title-only ranking favoured commencement/citation clauses over the remedy.
+    from ..conversations.clarification import user_fact_text
+    issue_text = user_fact_text(proposition).casefold()
+    query_tokens = set(re.findall(r"[a-z]{3,}", issue_text)) - {
+        "the", "and", "that", "this", "for", "with", "have", "has", "not", "from", "was",
+        "are", "what", "which", "law", "legal", "act", "regulations", "september", "today",
+    }
+    if not query_tokens:
+        query_tokens = set(re.findall(r"[a-z]{3,}", query.casefold()))
     excerpts: list[tuple[str, str, int]] = []
     for element in root.iter():
         fragment_id = str(element.get("id", ""))
@@ -844,7 +914,9 @@ def _verify_legislation(
         if len(text) < 20:
             continue
         if len(text) > 4_000:
-            text = text[:4_000].rsplit(" ", 1)[0]
+            # A cut provision may lose an exception or condition. Require a
+            # smaller complete structural span instead of truncating its tail.
+            continue
         if prompt_injection_hits(text):
             continue
         score = len(query_tokens & set(re.findall(r"[a-z]{3,}", text.casefold())))

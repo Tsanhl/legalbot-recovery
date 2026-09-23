@@ -18,7 +18,7 @@ from typing import Any
 from .rules import assessment_standard_privacy_issues
 
 BUNDLE_SCHEMA = "legalbot.assessment-guidance-bundle.v1"
-BUNDLE_VERSION = "owner-standards-2026-09-23.3"
+BUNDLE_VERSION = "owner-standards-2026-09-23.4"
 OWNER_DECISION_MANIFEST_SHA256 = "be5916d6e3e40febb3819d1529df6f6ab4055de98baf275f8361b0fc31dda9a2"
 OWNER_VERIFICATION_SIGNAL = "owner_authored_policy_v1"
 OWNER_APPROVED_MARKER_SIGNAL = "owner_approved_marker_mapping_v1"
@@ -274,7 +274,7 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         grade_band="50-59",
         criterion="issue_spotting",
         task_type="any",
-        positive_target="Address or expressly rule out every material issue raised by the question.",
+        positive_target="Address or expressly rule out every material issue, including independent alternative legal routes; keep each route's conditions, deadlines and remedies distinct.",
         anti_pattern="Do not omit a material issue, exception, defence, remedy or limiting authority.",
         repair_action="Create an issue checklist and repair only the omitted issue or affected section.",
     ),
@@ -297,8 +297,8 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         task_type="problem",
         positive_target=(
             "Test the strongest competing applications, identify missing material facts, "
-            "and rank likely outcomes proportionately. Identify the route to each remedy, "
-            "its limits and any incompatible election or double recovery."
+            "and rank likely outcomes proportionately. Do not invent evidence, bargaining power or alternatives: stated expenditure is not proof that an invoice exists. Identify the route to each remedy, "
+            "its limits and any incompatible election or double recovery. Track paid deposits, unpaid balances, additional demands, mitigation costs and claimed losses separately; a breach does not automatically extinguish the unpaid price."
         ),
         anti_pattern=None,
         repair_action="Add the strongest alternative and explain which fact would change the ranking.",
@@ -341,7 +341,7 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         positive_target=(
             "Compare the material authorities and relevant scholarship, explaining agreement, "
             "tension, hierarchy and significance for the thesis. Distinguish holdings from "
-            "obiter comments and one legal doctrine from a related but different doctrine. "
+            "obiter comments, undecided issues and distinct doctrines. Distinguish original scholarly views from positions merely reported. Test each claimed doctrinal purpose against the actual rules and counterexamples. "
             "Where relevant and supported, "
             "evaluate the social, economic or institutional context and defend a reform position "
             "separately from the statement of established law."
@@ -713,6 +713,13 @@ def budget_assessment_guidance(
         if index < len(repairs):
             interleaved.append(repairs[index])
 
+    # Reserve one complete target and one complete repair when a balanced pair
+    # fits. A long first target must not crowd all corrective guidance out.
+    pairs = [(a, b) for a in positives for b in repairs
+             if len(instruction_for_rule(a)) + len(instruction_for_rule(b)) <= max_characters]
+    if pairs:
+        a, b = pairs[0]
+        interleaved = [a, b, *(r for r in interleaved if r not in (a, b))]
     selected: list[AssessmentGuidanceRule] = []
     instructions: list[str] = []
     omitted: list[str] = []

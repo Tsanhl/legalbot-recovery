@@ -299,3 +299,34 @@ async def test_missing_reviewer_transport_fails_closed() -> None:
             model_version="2026-08-20",
             policy_sha256="a" * 64,
         )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('reference', ['e1', 'invented-reference', None])
+async def test_long_evidence_ids_use_exact_host_bound_aliases(reference):
+    evidence = _evidence(id='ge-research-' + 'a' * 64)
+    class Model:
+        async def invoke_json(self, **kwargs):
+            claim = kwargs['user_payload']['claims'][0]
+            assert claim['evidence'][0]['evidence_id'] == 'e1'
+            assert claim['evidence'][0]['text'] == evidence.text
+            assert kwargs['user_payload']['evidence_reference_map_sha256']
+            return 'review-1', {'claims': [{
+                'claim_id': 'claim-1', 'verdict': 'supported' if reference else 'unsupported',
+                'reason_codes': [] if reference else ['no_support'],
+                'cited_evidence_ids': [reference] if reference else [],
+            }]}
+    async def invoke():
+        return await invoke_ai_evidence_reviewer(
+            model=Model(), draft=_draft(evidence_ids=[evidence.id]),
+            evidence_by_id={evidence.id: evidence}, model_id='test', model_version='test-v1',
+            policy_sha256='a' * 64,
+        )
+    if reference == 'invented-reference':
+        with pytest.raises(ValueError, match='unknown evidence reference'):
+            await invoke()
+    else:
+        result = await invoke()
+        assert result.claims[0].evidence_span_ids == (evidence.id,)
+        assert result.claims[0].cited_evidence_ids == ((evidence.id,) if reference else ())
+        assert result.passed is (reference is not None)

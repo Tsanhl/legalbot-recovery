@@ -258,6 +258,20 @@ class DurableAnswerWorker:
                 ):
                     self.observability.record_terminal(terminal_row)
             except Exception as exc:
+                settings = getattr(self.services, "settings", None)
+                if getattr(settings, "development_chat_authority_sha256", None):
+                    # Private diagnostics must never mask the original failure
+                    # or prevent the durable terminal/error transition.
+                    try:
+                        import traceback
+                        directory = settings.vault_dir / "worker-errors"
+                        directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+                        path = directory / f"{job_id}-{time.time_ns()}.enc"
+                        with path.open("xb") as handle:
+                            handle.write(self.services.cipher.encrypt_text(traceback.format_exc()))
+                        path.chmod(0o600)
+                    except Exception:
+                        pass
                 message = str(exc)
                 reason_code = str(getattr(exc, "reason_code", "") or "")
                 if (

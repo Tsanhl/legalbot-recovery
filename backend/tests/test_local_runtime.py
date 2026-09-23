@@ -5,8 +5,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from fastapi import HTTPException
-from fastapi.responses import FileResponse
+from fastapi import HTTPException, Request
+from fastapi.responses import FileResponse, ORJSONResponse
 
 from app.api import main as api_main
 from app.config import Settings
@@ -25,12 +25,13 @@ async def test_spa_routes_and_assets_are_served_from_the_build(
     monkeypatch.setattr(api_main, "WEB_DIST", tmp_path)
 
     root = await api_main.local_web_application("")
-    admin = await api_main.local_web_application("admin")
+    with pytest.raises(HTTPException) as admin_error:
+        await api_main.local_web_application("admin")
+    assert admin_error.value.status_code == 404
     javascript = await api_main.local_web_application("assets/app.js")
 
     assert isinstance(root, FileResponse)
     assert Path(root.path) == index
-    assert Path(admin.path) == index
     assert Path(javascript.path) == asset
 
 
@@ -78,6 +79,42 @@ def test_default_port_contract_and_production_launcher() -> None:
     assert "LEGALBOT_PORT=8776" in developer
     assert "LEGALBOT_MODEL_PORT=8778" in developer
     assert 'default="http://127.0.0.1:8778"' in smoke
+    assert "LEGALBOT_OWNER_CONSOLE_ENABLED=false" in launcher
+
+
+@pytest.mark.asyncio
+async def test_public_mode_denies_owner_routes_but_keeps_public_api(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    public_settings = Settings(environment="production", owner_console_enabled=False)
+    assert public_settings.owner_console_active is False
+    monkeypatch.setattr(api_main, "settings", public_settings)
+
+    async def next_response(_request: Request) -> ORJSONResponse:
+        return ORJSONResponse({"ok": True})
+
+    for path in ("/admin", "/admin/overview", "/api/v1/admin/overview"):
+        request = Request({
+            "type": "http", "method": "GET", "path": path,
+            "headers": [(b"host", b"testserver")],
+            "client": ("testclient", 1234),
+            "query_string": b"",
+        })
+        response = await api_main.owner_only_and_headers(request, next_response)
+        assert response.status_code == 404
+
+    request = Request({
+        "type": "http", "method": "GET", "path": "/api/v1/health",
+        "headers": [(b"host", b"testserver")],
+        "client": ("testclient", 1234),
+        "query_string": b"",
+    })
+    response = await api_main.owner_only_and_headers(request, next_response)
+    assert response.status_code == 200
+
+    with pytest.raises(HTTPException) as caught:
+        await api_main.local_web_application("admin")
+    assert caught.value.status_code == 404
 
 
 @pytest.mark.parametrize("override,message", [

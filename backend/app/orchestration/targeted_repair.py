@@ -15,6 +15,12 @@ def failed_section_scope(
     claim_sections = {
         claim.id: section.id for section in prior.sections for claim in section.claims
     }
+    if any(finding.code in {"longer_than_requested", "shorter_than_requested"}
+           for finding in findings):
+        # Length is an answer-wide constraint. Limiting condensation to one
+        # section can make the target mathematically impossible. All revised
+        # claims still receive the complete evidence and omission review.
+        return tuple(sorted(section.id for section in prior.sections))
     return tuple(
         sorted(
             {

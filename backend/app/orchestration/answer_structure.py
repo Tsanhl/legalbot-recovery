@@ -2,14 +2,13 @@
 
 from ..types import TaskType
 
-
 SECTION_CONTRACTS = {
     TaskType.GENERAL: (
         ("direct-answer", "Direct answer"),
+        ("next-steps", "Practical next steps"),
         ("applicable-law", "Applicable law"),
         ("application", "Application to your facts"),
         ("qualifications", "Qualifications and uncertainty"),
-        ("next-steps", "Practical next steps"),
         ("conclusion", "Conclusion"),
     ),
     TaskType.ESSAY: (
@@ -43,3 +42,15 @@ def canonical_heading(task_type: TaskType | str, section_id: str, position: int)
     # into the answer. Known section roles retain their meaning for the scorer.
     headings = {item["id"]: item["heading"] for item in section_contract(task_type)}
     return headings.get(section_id, f"Analysis {position}")
+
+
+def drafting_section_contract(task_type: TaskType | str) -> list[dict[str, str]]:
+    """GE leads with its conclusion; reasoning contains any fact application.
+
+    Keep historical roles renderable, but do not invite a duplicate conclusion
+    or a separate repetition of the same analysis in new short GE answers.
+    """
+    roles = section_contract(task_type)
+    if TaskType(task_type) == TaskType.GENERAL:
+        return [role for role in roles if role["id"] not in {"application", "conclusion"}]
+    return roles

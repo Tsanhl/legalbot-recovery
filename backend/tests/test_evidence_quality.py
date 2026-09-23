@@ -72,6 +72,62 @@ def test_unrelated_span_cannot_verify_a_material_claim(evidence) -> None:
     assert any(finding.code == "unrelated_evidence" for finding in report.findings)
 
 
+def test_application_uses_related_legal_rule_link_without_lexical_false_positive(evidence) -> None:
+    source = evidence.model_copy(update={
+        "text": "Where goods do not conform, the consumer may reject them and the trader must give a refund.",
+    })
+    question = "Maya paid OvenWorks £799 for goods that do not conform."
+    draft = StructuredDraft(
+        title="Refund application",
+        task_type=TaskType.GENERAL,
+        jurisdiction="England and Wales",
+        as_of_date=date(2026, 8, 11),
+        sections=[StructuredSectionDraft(id="law", heading="Law", claims=[
+            StructuredClaimDraft(
+                id="refund-rule",
+                text="If goods do not conform, the consumer may reject them and the trader must give a refund.",
+                evidence_ids=[source.id],
+            ),
+            StructuredClaimDraft(
+                id="maya-application",
+                text="Maya can seek £799 back from OvenWorks.",
+                evidence_ids=[source.id],
+                kind="application",
+                fact_quotes=[question],
+                rule_claim_ids=["refund-rule"],
+            ),
+        ])],
+    )
+    report = QualityEvaluator().evaluate(
+        answer_version_id="application-rule-link",
+        draft=draft,
+        rendered_text="Refund analysis.",
+        evidence_by_id={source.id: source},
+        word_count=150,
+        word_target=150,
+        question=question,
+    )
+    assert not any(
+        finding.code == "unrelated_evidence" and finding.claim_id == "maya-application"
+        for finding in report.findings
+    )
+
+    unrelated = source.model_copy(update={"text": "The moon is made of cheese."})
+    report = QualityEvaluator().evaluate(
+        answer_version_id="application-unrelated-rule",
+        draft=draft,
+        rendered_text="Refund analysis.",
+        evidence_by_id={unrelated.id: unrelated},
+        word_count=150,
+        word_target=150,
+        question=question,
+    )
+    assert any(
+        finding.code == "unrelated_evidence" and finding.claim_id == "maya-application"
+        for finding in report.findings
+    )
+
+
 def test_false_quotation_is_a_hard_blocker_even_when_topic_matches(evidence) -> None:
     report = _evaluate(
         'The verified statutory proposition states that "cats may fly on Tuesdays".', evidence
@@ -516,4 +572,16 @@ def test_case_currentness_passes_only_matching_reviewed_proposition(evidence) ->
     )
     assert any(
         finding.code == "case_subsequent_treatment_unverified" for finding in wrong_hash.findings
+    )
+
+
+def test_atomicity_distinguishes_noun_limit_from_finite_predicate():
+    assert not non_atomic_material_claim_reasons(
+        'The deadline is seven days or the original time limit if later.'
+    )
+    assert non_atomic_material_claim_reasons(
+        'The deadline is seven days and the statute limits recovery to actual loss.'
+    )
+    assert non_atomic_material_claim_reasons(
+        'The claimant must give notice and the time limit is seven days.'
     )

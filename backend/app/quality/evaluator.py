@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping
-from typing import TYPE_CHECKING
 from types import SimpleNamespace
-from .fact_provenance import verified_application_quotes
+from typing import TYPE_CHECKING
 from uuid import uuid4
 
-from ..assessment.standards_scoring import score_applicable_standards
 from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE, applicable_guidance_rules
+from ..assessment.standards_scoring import score_applicable_standards
 from ..currentness import is_legislation_source
 from ..jurisdictions import compatible
 from ..legal_roles import MATERIAL_CASE_ROLES
@@ -32,6 +31,7 @@ from .evidence import (
     non_atomic_material_claim_reasons,
     unsupported_material_facts,
 )
+from .fact_provenance import application_binding_repair_hint, verified_application_quotes
 from .policy import COMMON, OVERLAYS, decide_release
 
 if TYPE_CHECKING:
@@ -100,6 +100,7 @@ class QualityEvaluator:
         material_claims = [
             claim for section in draft.sections for claim in section.claims if claim.material
         ]
+        claims_by_id = {claim.id: claim for claim in material_claims}
         for _first, second in self._contradictory_claims(material_claims):
             findings.append(
                 QualityFinding(
@@ -127,7 +128,7 @@ class QualityEvaluator:
                         gate="fact_provenance", code="unsupported_material_fact",
                         message=str(exc), severity=Severity.HARD_BLOCKER,
                         section_id=section.id, claim_id=claim.id,
-                        corrective_action="Bind exact question facts and a supported legal-rule claim; do not invent premises.",
+                        corrective_action=application_binding_repair_hint(claim, draft, question),
                     ))
                 atomicity_reasons = non_atomic_material_claim_reasons(claim.text)
                 if atomicity_reasons:
@@ -401,6 +402,16 @@ class QualityEvaluator:
                     span.id
                     for span in bound_spans
                     if not is_substantively_related(claim.text, span)
+                    and not (
+                        claim.kind == "application"
+                        and any(
+                            (rule := claims_by_id.get(rule_id)) is not None
+                            and rule.kind == "legal_proposition"
+                            and span.id in rule.evidence_ids
+                            and is_substantively_related(rule.text, span)
+                            for rule_id in claim.rule_claim_ids
+                        )
+                    )
                 ]
                 if unrelated:
                     findings.append(
@@ -591,7 +602,7 @@ class QualityEvaluator:
             has_gaps=bool(draft.limitations) or current_law_limits,
         )
 
-        if word_count > int(word_target * 1.15):
+        if material_claims and word_count > int(word_target * 1.10):
             # A fluent answer must not silently overrun the requested length.
             # This is repairable quality, not an evidence-safety defect. Scope
             # edits to the longest section; never mechanically cut sentences.
@@ -604,7 +615,7 @@ class QualityEvaluator:
             ))
             release = ReleaseState.HELD_FOR_REVIEW
 
-        if word_count < max(100, int(word_target * 0.8)):
+        if material_claims and word_count < int(word_target * 0.90):
             findings.append(
                 QualityFinding(
                     gate="requested_length",
@@ -614,6 +625,7 @@ class QualityEvaluator:
                     corrective_action="Expand analysis without removing any verified substantive prose.",
                 )
             )
+            release = ReleaseState.HELD_FOR_REVIEW
         if academic_score < 70 and release != ReleaseState.HELD_FOR_REVIEW:
             findings.append(
                 QualityFinding(

@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 from app.config import Settings  # noqa: E402
 from app.evaluation.ge_development_chat_authority import (  # noqa: E402
     GE_DEVELOPMENT_CHAT_SCHEMA,
+    GE_SESSION_CHAT_SCHEMA,
     _valid_route,
 )
 from app.evaluation.live_suite import sealed_sha256  # noqa: E402
@@ -31,6 +32,7 @@ from app.evaluation.live_suite import sealed_sha256  # noqa: E402
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--session-ui", action="store_true", help="Issue v2 session/conversation/online-research capability")
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--owner-scope-sha256", required=True)
     parser.add_argument("--hours", type=int, default=24)
@@ -126,7 +128,7 @@ def main() -> int:
     access_key = secrets.token_urlsafe(40)
     now = datetime.now(UTC)
     authority = {
-        "schema": GE_DEVELOPMENT_CHAT_SCHEMA,
+        "schema": GE_SESSION_CHAT_SCHEMA if args.session_ui else GE_DEVELOPMENT_CHAT_SCHEMA,
         "run_id": args.run_id,
         "owner_scope_sha256": args.owner_scope_sha256,
         "development_state_id": settings.development_state_id,
@@ -140,6 +142,12 @@ def main() -> int:
         "release_allowed": True,
         "release_audience": "owner_evaluation",
     }
+    if args.session_ui:
+        authority["capabilities"] = {
+            "session_connections": True, "saved_conversations": True,
+            "online_modes": ["local_only", "auto", "always"],
+            "review_before_use": True, "shared_source_admission": False,
+        }
     authority["seal_sha256"] = sealed_sha256(authority)
     path = settings.development_chat_authority_path
     path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -149,10 +157,16 @@ def main() -> int:
     with path.open("x", encoding="utf-8") as handle:
         handle.write(payload)
     path.chmod(0o600)
+    if args.session_ui:
+        from app.crypto import LocalCipher
+        key_path = path.with_name("CHAT-ACCESS-KEY.enc")
+        with key_path.open("xb") as handle:
+            handle.write(LocalCipher.from_local_key().encrypt_text(access_key))
+        key_path.chmod(0o600)
     print(json.dumps({
         "authority_path": str(path),
         "authority_sha256": hashlib.sha256(payload.encode()).hexdigest(),
-        "access_key_once": access_key,
+        "access_key_once": None if args.session_ui else access_key,
         "route_ids": [route["route_id"] for route in routes],
     }, sort_keys=True))
     return 0

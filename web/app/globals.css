@@ -486,3 +486,59 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Shared chat connection controls, equally available to owner and local users. */
+.connection-panel { margin: 1rem auto; padding: 1.25rem; max-width: 900px; border: 1px solid var(--line, #d8ddd5); border-radius: 18px; background: #fff; display: flex; gap: .8rem; flex-wrap: wrap; align-items: center; }
+.connection-panel h2, .connection-panel p { flex-basis: 100%; margin: .2rem 0; }
+.connection-panel label { display: flex; gap: .5rem; align-items: center; }
+.connection-panel input[type=password] { max-width: 270px; }
+.connection-panel select, .connection-panel input, .connection-panel button, .composer-controls input, .composer-controls select { font: inherit; padding: .55rem; border: 1px solid #d8ddd5; border-radius: 9px; }
+.connection-status { padding: .6rem 1.2rem; color: #536965; font-size: .85rem; }
+.composer-controls { display: flex; flex-wrap: wrap; gap: .6rem; }
+.composer-controls label { display: flex; gap: .4rem; align-items: center; }
+.composer-controls input[type=number] { width: 6rem; }
+.remote-consent { display: block; font-size: .85rem; margin: .75rem 0; }
+[data-message-role] { margin: 1rem auto; max-width: 900px; padding: 1rem 1.4rem; }
+[data-message-role] > header { font-weight: 700; margin-bottom: .7rem; }
+
+/* One responsive conversation surface. Diagnostic dashboards are CLI-only. */
+.app-shell { min-height: 100dvh; }
+.main-panel { width: 100%; margin: auto; }
+.topbar { position: sticky; top: 0; z-index: 10; display: flex; gap: 16px; align-items: center; padding: 12px 24px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.topbar .text-button { margin-left: auto; font-size: 13px; }
+.icon-button { border: 0; background: transparent; cursor: pointer; padding: 8px; }
+.sidebar { position: fixed; z-index: 30; top: 68px; left: 0; bottom: 0; width: min(320px, 85vw); padding: 24px; overflow: auto; background: var(--navy); color: white; box-shadow: var(--shadow); }
+.sidebar h2 { font-size: 16px; }
+.sidebar button { display: block; width: 100%; padding: 12px; margin: 8px 0; text-align: left; border: 1px solid #56706e; border-radius: 8px; background: transparent; color: white; cursor: pointer; }
+.connection-status { max-width: 960px; margin: auto; line-height: 1.5; }
+.chat-content { width: min(960px, calc(100% - 32px)); margin: auto; }
+.welcome { width: 100%; padding: 40px 0; min-height: 0; }
+.welcome .eyebrow { font: 700 12px Arial, sans-serif; letter-spacing: .12em; color: var(--green); }
+.welcome-mark { font: 36px Georgia, serif; }
+.welcome > p:last-child { margin-top: 24px; font: 12px Arial, sans-serif; }
+[data-message-role] { overflow-wrap: anywhere; padding: 16px 20px; }
+[data-message-role] .answer-prose { padding: 8px 0 0; }
+.question-card { margin-left: 12%; border-radius: 16px; background: #e9ece6; }
+.question-card .answer-prose p { font: 14px/1.7 Arial, sans-serif; white-space: pre-wrap; }
+.composer { position: relative; width: min(960px, calc(100% - 32px)); margin: 24px auto; padding: 18px; border: 1px solid #adc3b9; border-radius: 18px; background: var(--surface); }
+.composer textarea { width: 100%; min-height: 110px; max-height: 300px; padding: 8px; resize: vertical; border: 0; background: transparent; color: var(--ink); font: 18px/1.5 var(--serif); }
+.composer-controls { padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; }
+.composer-controls input { max-width: 170px; }
+.remote-consent { padding-right: 52px; line-height: 1.5; color: var(--muted); }
+.composer .send-button { position: absolute; right: 16px; bottom: 16px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 12px; background: var(--green); color: white; cursor: pointer; }
+.composer .send-button:disabled { opacity: .45; cursor: default; }
+.connection-panel { width: min(960px, calc(100% - 32px)); font-size: 14px; line-height: 1.5; }
+.connection-panel button { cursor: pointer; background: var(--green-pale); }
+.connection-panel label { flex-wrap: wrap; }
+.connection-panel select { max-width: 100%; }
+@media (max-width: 700px) {
+  .topbar { gap: 5px; padding: 8px; flex-wrap: wrap; }
+  .task-switcher { flex: 1; justify-content: space-around; }
+  .task-switcher button { min-width: 0; padding: 8px; }
+  .topbar .text-button { margin-left: 44px; }
+  .starter-grid { grid-template-columns: 1fr; }
+  .welcome h1 { font-size: 38px; }
+  .composer-controls label { flex-wrap: wrap; }
+  .composer-controls { gap: 12px; }
+  .question-card { margin-left: 4%; }
+}

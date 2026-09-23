@@ -125,6 +125,8 @@ def ai_evidence_reviewer_toolchain_sha256() -> str:
                 "may_raise_fail_closed_owner_review_hold": True,
                 "only_supported_passes": True,
                 "resume": "sealed_create_only_claim_checkpoint",
+                "evidence_transport": "exact_short_aliases_for_long_ids_v1",
+                "application_context": "full_question_bound_with_exact_selected_quotes_v1",
             }
         )
     ).hexdigest()
@@ -158,6 +160,7 @@ class FrozenClaimReviewInput:
     claim_text: str
     evidence: tuple[EvidenceSpan, ...]
     assumed_question_facts: tuple[str, ...] = ()
+    question_context: str = ""
 
     def model_payload(self) -> dict[str, Any]:
         """Return the bounded model payload containing only this frozen material."""
@@ -167,6 +170,7 @@ class FrozenClaimReviewInput:
             "claim_sha256": self.identity.claim_sha256,
             "claim_text": self.claim_text,
             "assumed_question_facts": list(self.assumed_question_facts),
+            "question_context": self.question_context,
             "evidence": [
                 {
                     "evidence_id": span.id,
@@ -233,6 +237,7 @@ def freeze_material_claims(
                 raise ValueError("material claim IDs must be unique")
             observed_claim_ids.add(claim.id)
             fact_quotes = verified_application_quotes(claim, draft, question)
+            question_context = (question or "") if claim.kind == "application" else ""
             spans: list[EvidenceSpan] = []
             for evidence_id in claim.evidence_ids:
                 span = evidence_by_id.get(evidence_id)
@@ -278,6 +283,7 @@ def freeze_material_claims(
                 "evidence": [_evidence_identity(span) for span in spans],
                 "assumed_question_facts": list(fact_quotes),
                 "rule_claim_ids": list(claim.rule_claim_ids),
+                "question_context_sha256": _text_sha256(question_context),
             }
             identity = FrozenClaimReviewIdentity(
                 claim_id=claim.id,
@@ -293,6 +299,7 @@ def freeze_material_claims(
                     claim_text=claim.text,
                     evidence=tuple(spans),
                     assumed_question_facts=fact_quotes,
+                    question_context=question_context,
                 )
             )
     return tuple(output)
@@ -1130,6 +1137,18 @@ async def invoke_ai_evidence_reviewer(
             "proposer_confidence": None,
             "chain_of_thought": None,
         }
+        # Copying long hashes is not legal reasoning. Keep canonical identities
+        # in custody and give the reviewer short exact transport references.
+        # Unknown references still fail closed; no fuzzy ID repair is allowed.
+        evidence_rows = user_payload["claims"][0]["evidence"]
+        alias_map: dict[str, str] = {}
+        if any(len(row["evidence_id"]) > 32 for row in evidence_rows):
+            for index, row in enumerate(evidence_rows, start=1):
+                alias = f"e{index}"
+                alias_map[alias] = row["evidence_id"]
+                row["evidence_id"] = alias
+            user_payload["evidence_reference_format"] = "Echo only the supplied e1/e2 references; the host binds them to immutable evidence identities."
+            user_payload["evidence_reference_map_sha256"] = hashlib.sha256(_canonical_json(alias_map)).hexdigest()
         started = time.perf_counter()
         response = await model.invoke_json(
             system_prompt=ai_evidence_reviewer_prompt_text(),
@@ -1147,7 +1166,13 @@ async def invoke_ai_evidence_reviewer(
         rows = _model_claim_rows(parsed)
         if len(rows) != 1 or str(rows[0].get("claim_id") or "") != claim.identity.claim_id:
             raise ValueError("AI reviewer claim identity differs from its frozen input")
-        decision = _claim_verdict_from_model_row(frozen=claim, row=rows[0])
+        decision_row = dict(rows[0])
+        if alias_map:
+            references = decision_row.get("cited_evidence_ids", [])
+            if not isinstance(references, list) or any(ref not in alias_map for ref in references):
+                raise ValueError("AI reviewer returned an unknown evidence reference")
+            decision_row["cited_evidence_ids"] = [alias_map[ref] for ref in references]
+        decision = _claim_verdict_from_model_row(frozen=claim, row=decision_row)
         checkpoint_seal: str | None = None
         if checkpoint_store is not None:
             sealed_checkpoint = seal_ai_reviewer_claim_checkpoint(

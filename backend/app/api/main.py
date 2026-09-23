@@ -34,21 +34,21 @@ from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE
 from ..config import settings
 from ..contracts import canonical_json_bytes
 from ..db import JobQueueCapacityError, SourceScanConflictError, SourceScanStateError
+from ..evaluation.ge_development_chat_authority import (
+    GE_DEVELOPMENT_CHAT_LANE,
+    GEDevelopmentChatAdmissionBinding,
+    validate_development_chat_admission,
+    validate_development_chat_read_access,
+)
+from ..evaluation.ge_qwen_development_authority import (
+    GE_QWEN_DEVELOPMENT_LANE,
+    GEQwenDevelopmentAdmissionBinding,
+    validate_ge_qwen_development_api_admission,
+)
 from ..evaluation.live_suite_admission import (
     Live60AdmissionBinding,
     Live60EvaluationAdmissionBinding,
     validate_live60_api_admission,
-)
-from ..evaluation.ge_qwen_development_authority import (
-    GEQwenDevelopmentAdmissionBinding,
-    GE_QWEN_DEVELOPMENT_LANE,
-    validate_ge_qwen_development_api_admission,
-)
-from ..evaluation.ge_development_chat_authority import (
-    GEDevelopmentChatAdmissionBinding,
-    GE_DEVELOPMENT_CHAT_LANE,
-    validate_development_chat_admission,
-    validate_development_chat_read_access,
 )
 from ..evaluation.owner_quality_canary_runtime import (
     OwnerCanaryAdmissionBinding,
@@ -92,6 +92,7 @@ from ..types import (
     SourceUpdateResolutionRequest,
     SourceUpdateReviewRequest,
 )
+from .chat import router as chat_router
 from .deps import row as request_row
 from .routers import evaluation_router, feedback_router, incidents_router
 from .routers.evaluation import (
@@ -684,6 +685,7 @@ app.add_middleware(
 app.include_router(evaluation_router)
 app.include_router(feedback_router)
 app.include_router(incidents_router)
+app.include_router(chat_router)
 
 
 @app.middleware("http")
@@ -706,6 +708,14 @@ async def owner_only_and_headers(request: Request, call_next: Any) -> Any:
             {"detail": "LegalBot-New rejected an untrusted Host header"},
             status_code=400,
         )
+    path = request.url.path
+    if not settings.owner_console_active and (
+        path == "/admin"
+        or path.startswith("/admin/")
+        or path == "/api/v1/admin"
+        or path.startswith("/api/v1/admin/")
+    ):
+        return ORJSONResponse({"detail": "Not found"}, status_code=404)
     origin = request.headers.get("origin")
     fetch_site = (request.headers.get("sec-fetch-site") or "").casefold()
     if origin is not None and origin not in _ALLOWED_BROWSER_ORIGINS:
@@ -783,6 +793,8 @@ def _require_released_job_read_authority(
     poll them without turning a job-status read into a release decision.
     """
 
+    from .chat import authorise_job_read
+    authorise_job_read(request, services, job)
     answer_row = answer
     if answer_row is None and job["answer_id"] is not None:
         answer_row = (
@@ -1027,6 +1039,8 @@ async def health(request: Request) -> HealthView:
     status_code=status.HTTP_202_ACCEPTED,
 )
 async def create_question(payload: QuestionRequest, request: Request) -> QuestionAccepted:
+    if payload.connection_id is not None and not getattr(request.state, "chat_session_id", None):
+        raise HTTPException(403, "Session connections must use the authenticated chat endpoint")
     services = _services(request)
     observability = getattr(services, "observability", None)
     evaluation_run_id = request.headers.get("x-evaluation-run-id")
@@ -1269,7 +1283,8 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
         live60_binding = chat_binding
         evaluation_run_id = chat_binding.run_id
         evaluation_case_id = chat_binding.case_id
-    if live60_binding is not None and payload.conversation_id is not None:
+    session_chat = isinstance(live60_binding, GEDevelopmentChatAdmissionBinding) and payload.connection_id is not None
+    if live60_binding is not None and payload.conversation_id is not None and not session_chat:
         raise HTTPException(422, "Evaluation jobs cannot join ordinary conversation history")
     if payload.upload_ids:
         try:
@@ -1287,7 +1302,7 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
             ) from None
     conversation_id: str | None = None
     conversation_store = getattr(services, "conversations", None)
-    if ordinary_request:
+    if ordinary_request or session_chat:
         if conversation_store is None:
             if payload.conversation_id is not None:
                 raise HTTPException(503, "Encrypted conversation storage is unavailable")
@@ -1476,9 +1491,12 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
             user_message = conversation_store.append_message(
                 conversation_id,
                 role="user",
-                content=payload.question,
+                content=getattr(request.state, "chat_raw_message", payload.question),
                 job_id=job_id,
             )
+            if session_chat:
+                from ..conversations.chat_facts import record_message_facts
+                record_message_facts(services, user_message, request.state.chat_session_id)
             conversation_store.bind_user_message_to_job(
                 conversation_id=conversation_id,
                 message_id=user_message.id,
@@ -1801,6 +1819,12 @@ async def job_events_websocket(websocket: WebSocket, job_id: str) -> None:
 
 @app.post("/api/v1/jobs/{job_id}/cancel")
 async def cancel_job(job_id: str, request: Request) -> dict[str, Any]:
+    from .chat import authorise_job_read
+    services = _services(request)
+    row = services.database.job(job_id)
+    if row is None:
+        raise HTTPException(404, "Answer job not found")
+    authorise_job_read(request, services, row)
     if not _services(request).database.request_cancel_job(job_id):
         raise HTTPException(404, "Answer job not found")
     return {"job_id": job_id, "cancel_requested": True}
@@ -1808,6 +1832,12 @@ async def cancel_job(job_id: str, request: Request) -> dict[str, Any]:
 
 @app.post("/api/v1/jobs/{job_id}/resume")
 async def resume_job(job_id: str, request: Request) -> dict[str, Any]:
+    from .chat import authorise_job_read
+    services = _services(request)
+    row = services.database.job(job_id)
+    if row is None:
+        raise HTTPException(404, "Answer job not found")
+    authorise_job_read(request, services, row)
     try:
         resumed = _services(request).database.resume_answer_job(job_id)
     except JobQueueCapacityError:
@@ -2124,6 +2154,10 @@ async def create_answer_issue(
     answer = services.database.answer(answer_id)
     if answer is None:
         raise HTTPException(404, "Answer version not found")
+    job = services.database.job(str(answer["job_id"]))
+    if job is None:
+        raise HTTPException(404, "Answer version not found")
+    _require_released_job_read_authority(services=services, job=job, request=request, answer=answer)
     issue_id = str(uuid4())
     services.database.create_evaluation_issue(
         issue_id=issue_id,
@@ -2210,6 +2244,14 @@ async def conversation_window(
     from ..conversations import ConversationExpiredError, ConversationNotFoundError
 
     services = _services(request)
+    if services.settings.development_chat_authority_sha256:
+        from ..connections import ConnectionUnavailable
+        from .chat import require_session
+        vault, session_id = require_session(request, services)
+        try:
+            vault.require_conversation(conversation_id, session_id)
+        except ConnectionUnavailable:
+            raise HTTPException(404, "Conversation not found") from None
     try:
         window = services.conversations.window(
             conversation_id,
@@ -3140,10 +3182,14 @@ async def promote_index(build_id: str, request: Request) -> dict[str, Any]:
 
 @app.get("/{client_path:path}", include_in_schema=False)
 async def local_web_application(client_path: str) -> FileResponse:
-    """Serve the built owner-only SPA without a second production web server."""
+    """Serve the selected SPA without a second production web server."""
 
     if client_path == "api" or client_path.startswith("api/"):
         raise HTTPException(404, "API route not found")
+    if not settings.owner_console_active and (
+        client_path == "admin" or client_path.startswith("admin/")
+    ):
+        raise HTTPException(404, "Not found")
     root = WEB_DIST.resolve()
     index = root / "index.html"
     if not index.is_file():

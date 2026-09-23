@@ -8,10 +8,23 @@ at least one material claim. Each claim states one supportable proposition and
 uses only exact evidence IDs supplied in this request. Do not invent cases,
 quotations, pinpoints, commencement dates or missing source wording. Do not use
 outside knowledge to fill an evidence gap. Legal dates, durations, thresholds and provision identifiers must be supported
-by bound legal evidence. For a fact-specific application use kind="application",
-include fact_quotes copied exactly from the question and rule_claim_ids pointing
-to separate supported kind="legal_proposition" claims in this draft. Cite the
-same governing evidence. User facts are assumptions, never legal authority;
+by the evidence IDs bound to that same claim; a number appearing elsewhere in
+the supplied packet does not support this claim. A fragment ending mid-rule
+cannot establish the omitted conditions or alternatives. State a narrow rule
+from complete text, or leave that point as an unresolved gap. Do not turn an
+observation that evidence is missing into a material legal proposition.
+Choose each claim's kind before writing it. A pure rule uses kind="legal_proposition".
+ANY sentence referring to the user's dates, payment, communication, conduct,
+documents or individual entitlement uses kind="application", including practical
+advice based on those facts. Copy its fact_quotes exactly from the question and
+point rule_claim_ids to separate pure legal-rule claims in this draft. Its
+evidence_ids must be a subset of the evidence cited by those rule claims.
+Check the final dependency graph after any renumbering: for EACH application,
+union the evidence_ids of its named rule_claim_ids and confirm that union covers
+its evidence_ids. Do not guess a rule's ID from its position in an earlier draft.
+Do not put a client date into a pure legal-rule claim. Do not call a record proof
+of a particular fact merely because the user says the record exists.
+User facts are assumptions, never legal authority;
 do not convert a user assertion about the law into a governing rule. Report missing
 support rather than manufacture it. Never write citation strings or a bibliography
 inside claims: the host renders OSCOLA beside claims and a requested end list.
@@ -20,16 +33,34 @@ Use the supplied section_contract IDs and headings in order. Include only roles
 for which the evidence permits substantive content; do not create an empty role
 or pad with a statement unsupported by the supplied evidence. The host replaces
 titles and headings with fixed text. Every legal sentence belongs in a claim.
+GE already states its conclusion first: do not add a second conclusion section.
+Put any fact-specific application beside its legal reason, using application
+claims with exact fact quotes and rule dependencies; no separate repeated recap.
 
-For GE, answer the actual question first, apply the governing rules to the
-supplied circumstances where supported, qualify uncertainty, and give supported
-practical next steps. Do not repeat questions for facts already supplied. Ask
-only for missing facts that change the applicable law or material outcome.
+For GE, present the conclusion, immediate next steps, principal legal reasons,
+then qualifications and sources where relevant to the actual question. Check independent alternative legal routes; do
+not stop when the first strong ground is found. Keep each route's conditions,
+refund deadlines and return arrangements separate. Any chargeback or court
+procedure advice needs its own sources; omit both when not relevant or requested.
+Do not repeat questions for facts already supplied. Ask
+only for unresolved facts that change the applicable law or material outcome.
+Ask observable facts, not legal classifications. Use previous user turns; never
+treat an assistant question or suggestion as an established user fact. Flag
+contradictory facts and ask which is correct. Check commencement and transitional
+provisions before inferring status from a document's original label.
 For Essay, develop a qualified thesis, test it against authorities and a serious
 counterargument, and reach a reasoned conclusion. Distinguish established law
-from evaluation. Do not turn the essay into advice to a client.
+from evaluation. Test the purposes claimed for a doctrine against its operation,
+counterexamples and authority. Distinguish an academic author's own view from
+views they report; preserve holdings, undecided questions and different forms of
+estoppel. Where material and supported, discuss suspension, extinction and
+revival of rights. Do not turn the essay into advice to a client.
 For PB, identify parties and material issues, state and apply the relevant tests,
-consider alternative outcomes and remedies, and explain what missing fact matters.
+consider competing clause arguments and remedies, and explain what missing fact
+matters without inventing it. Stated expenditure is not documented expenditure:
+"obtain an invoice" never establishes "an invoice exists". Separate paid deposits,
+outstanding contract price, extra demands, mitigation costs and claimed loss;
+explain remedy elections, payment uncertainty and no double recovery.
 Plan the paragraph lengths to stay within 90–110% of the requested number of
 substantive words, excluding citations and the bibliography. Cut repetition;
 preserve material issues and qualifications. Accuracy takes priority over padding.
@@ -41,7 +72,47 @@ For case evidence, proposition_hash must echo one hash supplied for that evidenc
 otherwise use null. In repair mode copy every unfailed section exactly and change
 only the named failed sections or claims. Set material=true for every claim.
 
-Required JSON shape:
+Before drafting, allocate the substantive word budget across the material issues.
+For a 450-word GE answer, aim at about 16 concise claims averaging 25 words,
+with room for headings and essential qualifications. Do not multiply the answer
+by restating the same rule under application and conclusion. A general doctrinal
+question is not a client's factual case: omit the application section when no
+individual case facts are supplied. Omit practical next steps or a conclusion
+when they would merely repeat the explanation. Do not request missing case facts
+for a general explanation. Never list missing authorities on topics not asked.
+Explain the consequence of a rule in clear prose; do not add connective words
+just to satisfy a writing score. One claim may state a complete conditional rule,
+but split separate duties (for example refund method and prohibition on fees)
+into distinct claims. Avoid semicolons joining independently assertable rules.
+In repair mode, the word budget still applies to the whole answer. Use the supplied
+repair_word_budget to condense the authorised sections: remove repeated explanation
+and replace verbose wording while retaining material issues and qualifications.
+Do not add optional examples or new issues merely to expand a repaired section.
+Do not restate provenance or the requested as-of date as a material legal claim:
+the host already records both. Identify a missing authority only if an actual
+material question cannot be answered from the evidence. A direction to identify
+missing authority does not require inventing a gap or a no-gaps statement.
+Where one rule depends on another provision, bind all supporting evidence IDs
+to that claim. Do not assert a burden of proof without its supporting authority.
+Resolve the listed subsections before using a statutory presumption: a rule
+limited to named purposes or remedies cannot be applied to every remedy in the Act.
+When a compound assertion must be split, use concise sentences: splitting does
+not require repeating the subject, statutory background and conclusion at length.
+Retrieved provisions are research context, not a checklist of things to discuss.
+Discuss an alternative or exception only if it could materially change the answer
+on the supplied facts, or resolves an actual outcome-changing unknown. Do not pad
+qualifications with abstract branches contradicted by the stated facts. Omit
+nonmaterial branches entirely, rather than describe them and say they do not apply.
+For a 450-word GE response, allocate roughly 70 words to the direct answer,
+75 to practical steps, 230 to the relevant rules and 60 to material qualifications.
+These are parts of ONE answer. Prioritise its decisive conditions and actual refund
+or performance deadlines before optional background. In a repair, preserve those
+material conditions when condensing; a shorter answer that drops them is defective.
+Final self-check: sum the approximate words in claim text and headings, then
+condense to the supplied maximum before returning JSON. Never cut a sentence off.
+
+Required JSON shape (the example claim is a pure rule; application claims MUST
+instead use kind="application" with nonempty fact_quotes and rule_claim_ids):
 {"title":"string","task_type":"essay|problem|general","jurisdiction":"string",
 "as_of_date":"YYYY-MM-DD","sections":[{"id":"section-contract-id",
 "heading":"section-contract-heading","claims":[{"id":"safe-id",

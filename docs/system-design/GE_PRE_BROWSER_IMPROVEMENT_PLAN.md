@@ -1,6 +1,92 @@
 # LegalBot GE: shared backend, model routes and evaluation plan
 
-## 23 September final-check result — latest owner development direction
+## Latest owner direction: detailed handoff; implementation paused
+
+On 23 September the owner interrupted execution and requested a detailed guide
+because further work was becoming repetitive. New implementation/model dispatch
+is paused. The already-dispatched r6 Codex probe finished `held_for_review`;
+its structured draft was 469 words with a preliminary automated 87.0 score, but
+material evidence/writing findings blocked publication. No AI evidence review or
+repair stage ran. Read `docs/system-design/SHARED_CHAT_CONTINUATION_GUIDE.md`
+(relative to the repository root) and the private r6 `CONTINUATION-HANDOFF.json`
+before any resumed execution. No new commit/push or training has been performed.
+The current handoff supersedes earlier continuous-execution wording below.
+
+
+## Current implementation and acceptance — 23 September 2026
+
+The owner's explicit implementation instruction supersedes the historical pause
+and dashboard split. One local chat UI now uses the session facade over the
+existing API, durable worker, AnswerRunner, LanceDB, embeddings and reranker.
+Codex is the initial default; base Qwen and the three API routes remain distinct.
+No silent provider fallback or cross-model answer rewriting is allowed.
+
+```mermaid
+flowchart LR
+  UI[One chat UI] --> Session[Session and connection ownership]
+  Session --> Facts[Encrypted conversation and fact ledger]
+  Facts --> API[Candidate-pinned API and durable queue]
+  API --> Retrieval[Reviewed vector generation]
+  API --> Research[Official capture and case-specific source review]
+  Retrieval --> Runner[AnswerRunner]
+  Research --> Runner
+  Runner --> Model[Selected Codex / Qwen / API]
+  Model --> Review[Fact, evidence and writing checks]
+  Review --> Repair[At most two targeted repairs]
+  Repair --> Review
+  Review --> Publish[Atomic release or explicit incomplete result]
+  Publish --> UI
+```
+
+### What the real campaign established
+
+[40 per-case records](../testing/CHAT_CAMPAIGN_2026-09-23_RESULTS.json) preserve
+20 frozen cases per selected route, 46 submitted turns and exact encrypted
+browser receipts. Six genuine first-turn clarifications were displayed before
+follow-up facts arrived; each follow-up stopped repeating resolved questions.
+Both connection probes invoked the real selected model successfully.
+
+**Zero campaign legal answers were published.** Current-date evidence holds
+prevented substantive generation. Do not count those holds as legal accuracy,
+70+ writing, word-count, citation or model-quality passes. The detailed
+[acceptance report](../testing/SHARED_CHAT_2026-09-23.md) distinguishes separate
+in-scope vector/model probes and engineered fault tests from the campaign.
+
+### Implemented controls and remaining work
+
+| Area | Implemented | Remaining acceptance gap |
+|---|---|---|
+| Conversation | Session ownership; encrypted user/assistant messages; append-only literal fact ledger; exact follow-up context; explicit window-overflow refusal | General semantic contradiction resolution still relies on the instructed model; narrow intake rules are not universal legal classification |
+| Connection | Create/list/test/disconnect; native OS remembered credentials; encrypted expiring temporary credentials shared with worker; no environment mutation | Valid-key live tests for OpenAI/Claude/Gemini; public account/visitor desktop architecture is later |
+| UI | One chat; selected model and system/released provenance; refresh and cancel; no Operations dashboard or authority keys | No claim that UI smoothness proves legal quality |
+| Vector retrieval | Pinned reviewed generation; actual query vectors, LanceDB queries, reranking and encrypted evidence trace for in-scope probes | Installed generation covers England consumer law on 5 September only; other scopes require reviewed generations |
+| Online evidence | Official full-text capture and rights gates; UK dated CLML/extent/effects checks; actual case-specific source review; no shared auto-admission | Bounded discovery is not deep search; unresolved effects and versions, US source/currentness review and permitted judgment qualification remain |
+| FCL | Separate executed-licence permissions for capture, indexing, external processing and training | Executed terms/effective date have not been supplied to the private gate |
+| Answer quality | Shared `.4` guide, fact provenance, OSCOLA/default grouped bibliography, GE450/Essay-PB700 ±10%, at most two repairs | Current campaign has no substantive output on which to establish source support, full coverage or writing quality |
+
+New private state lives beneath `data/development-runtime/shared-chat-*`. Raw
+invocations and rendered transcripts are encrypted and ignored by Git. The
+public results contain only exposed case IDs, safe derived metrics and hashes.
+The four pre-existing review-file deletions are excluded from implementation.
+
+### Conditional Qwen experiment
+
+Do not train to compensate for absent evidence. Once source/prompt failures are
+resolved and separate model-specific defects are measured, prepare 60 rights-cleared,
+source-reviewed examples (30 GE/15 Essay/15 PB), family-disjoint 48/12 split. Exclude
+the 20 campaign cases, private conversations, all protected banks and unverified
+drafts. One MLX LoRA run only: pinned base, rank2, one layer, batch1, learning rate
+1e-5, fixed seed, prompt masking/checkpointing, 4096-token complete examples, 12GB
+ceiling; stop at 100 steps or two hours. Select using validation only and rerun
+the 20 exposed UI cases. No training or adapter adoption has occurred here.
+
+## Historical implementation observations
+
+The following dated observations remain for lineage. They do not override the
+current single-chat decision or represent the latest running state. In particular,
+old browser-memory history and owner-dashboard descriptions are superseded above.
+
+## Earlier 23 September final-check result (historical)
 
 The owner's latest “FINAL CHECK” authorizes the scoped Codex/API development checks and non-weight repairs recorded in the [final report](../testing/FINAL_CHECK_2026-09-23.md); it supersedes the old planning-only pause for this work. Five GE cases, two essays and one PB have been tested. Actual API r6 accepted nine messages: seven holds and two UUID/privacy-scanner crashes; the two repaired messages in r8 now hold correctly for missing qualifying evidence. The effective result is one necessary clarification and eight evidence holds, with no substantive publication. Separate actual signed-in Codex research diagnostics generated all eight outputs; their same-model marks do not establish a full 70+ pass. Length and material source-support gaps remain. Source scope stays the reviewed England consumer-law generation at 5 September; current-date and worldwide qualification and online chat research are still incomplete.
 

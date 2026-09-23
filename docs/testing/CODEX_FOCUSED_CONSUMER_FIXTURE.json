@@ -1,0 +1,26 @@
+{
+  "schema": "legalbot.exposed-focused-fixture.v1",
+  "id": "codex-instore-refund-20260905",
+  "exposed": true,
+  "not_frozen_campaign_GE01": true,
+  "as_of_date": "2026-09-05",
+  "jurisdiction": "England",
+  "mode": "general",
+  "word_target": 450,
+  "source_mode": "local_only",
+  "question": "Today is 5 September 2026. I live in England. On 25 August I bought a new laptop for £799 in a UK retailer’s physical shop, for my personal use, and paid that retailer directly by debit card. The retailer delivered it on 27 August. From its first ordinary use it repeatedly shut down. I followed the instructions and have not damaged or modified it. On 1 September I emailed the retailer describing the fault and clearly saying I rejected the laptop and wanted a full refund. I have not agreed to repair or replacement. The retailer says it only gives store credit and I should contact the manufacturer. The laptop is available for collection, and I have kept my order confirmation and emails. Can I insist on a money refund, who is responsible, and what should I do next? Apply English law on these dates, explain important qualifications, and use OSCOLA citations. About 450 words.",
+  "expected_issues": [
+    "Do not ask for dates, location, purpose or remedy election already supplied",
+    "Apply satisfactory quality and short-term rejection to the stated facts without treating fault as proven adjudication",
+    "Relate delivery and express rejection dates without inventing a statutory deadline",
+    "Trader responsibility and same-payment-method refund unless expressly agreed otherwise; no refund fee",
+    "Refund without undue delay and within 14 days from trader agreement of entitlement, not automatically from the email",
+    "Collection/return agreement and reasonable return costs with the statutory exception",
+    "Consumer cannot be forced into store credit by retailer policy; distinguish repair election without treating it as already agreed",
+    "Practical written follow-up and preserve the stated records; do not invent evidence",
+    "No distance cancellation inference for the expressly in-store purchase",
+    "405–495 substantive words, exact per-claim support, no fabricated facts or authorities"
+  ],
+  "review": "Same-provider AI review plus host factual/citation/length/provenance checks; no professional legal sign-off",
+  "frozen_before_generation": true
+}

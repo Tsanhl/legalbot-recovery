@@ -9,13 +9,14 @@ from typing import Any, Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE, applicable_guidance_rules
 from ..contracts import canonical_json_bytes
 from ..prompt_templates import (
     FULL_ANSWER_REVIEWER_TEMPLATE_NAME,
     FULL_ANSWER_REVIEWER_TEMPLATE_SHA256,
     prompt_template_text,
 )
-from ..types import EvidenceSpan, StructuredDraft
+from ..types import EvidenceSpan, QualityFinding, Severity, StructuredDraft
 from .draft_identity import source_draft_sha256
 
 FULL_ANSWER_REVIEW_SCHEMA = "legalbot.ai-full-answer-review.v1"
@@ -41,6 +42,15 @@ class OmissionReview(BaseModel):
     issue_id: str
     status: Literal["none", "material", "uncertain"]
     reason_code: str
+    explanation: str = Field(default="", max_length=1200)
+    section_ids: tuple[str, ...] = ()
+    evidence_ids: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def omission_is_actionable(self) -> OmissionReview:
+        if self.status != "none" and (not self.explanation.strip() or not self.section_ids):
+            raise ValueError("omission requires an explanation and affected section")
+        return self
 
     @field_validator("issue_id")
     @classmethod
@@ -57,6 +67,24 @@ class OmissionReview(BaseModel):
         return value
 
 
+class WritingCheck(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    rule_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._:-]{0,127}$")
+    verdict: Literal["pass", "fail", "uncertain"]
+    section_ids: tuple[str, ...]
+    reason_code: str = Field(pattern=r"^(?:[a-z0-9][a-z0-9._:-]{0,127})?$")
+
+    @model_validator(mode="after")
+    def failure_has_scope(self) -> WritingCheck:
+        if self.verdict != "pass" and not self.section_ids:
+            raise ValueError("writing failure requires an actionable section")
+        if self.verdict != "pass" and not self.reason_code:
+            raise ValueError("writing failure requires a reason")
+        if len(self.section_ids) != len(set(self.section_ids)):
+            raise ValueError("writing review repeats a section")
+        return self
+
+
 class FullAnswerReviewerOutput(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -64,6 +92,7 @@ class FullAnswerReviewerOutput(BaseModel):
     complete_rendered_answer_reviewed: Literal[True]
     all_material_omissions_checked: Literal[True]
     omissions: tuple[OmissionReview, ...]
+    writing_checks: tuple[WritingCheck, ...] = ()
     verdict: Literal["pass", "hold"]
 
     @field_validator("reviewed_claim_ids")
@@ -77,7 +106,8 @@ class FullAnswerReviewerOutput(BaseModel):
 
     @model_validator(mode="after")
     def verdict_matches_omissions(self) -> FullAnswerReviewerOutput:
-        expected = "pass" if all(item.status == "none" for item in self.omissions) else "hold"
+        expected = "pass" if (all(item.status == "none" for item in self.omissions)
+                              and all(item.verdict == "pass" for item in self.writing_checks)) else "hold"
         if self.verdict != expected:
             raise ValueError("full-answer review verdict differs from omission findings")
         return self
@@ -111,6 +141,7 @@ class FullAnswerReviewResult(BaseModel):
     complete_rendered_answer_reviewed: Literal[True]
     all_material_omissions_checked: Literal[True]
     omissions: tuple[OmissionReview, ...]
+    writing_checks: tuple[WritingCheck, ...] = ()
     verdict: Literal["pass", "hold"]
     passed: bool
     seal_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -123,9 +154,9 @@ class FullAnswerReviewResult(BaseModel):
             raise ValueError("full-answer result issue IDs are duplicated")
         if tuple(item.issue_id for item in self.omissions) != self.issue_ids:
             raise ValueError("full-answer result does not cover issues in frozen order")
-        expected_pass = self.verdict == "pass" and all(
-            item.status == "none" for item in self.omissions
-        )
+        expected_pass = (self.verdict == "pass"
+                         and all(item.status == "none" for item in self.omissions)
+                         and all(item.verdict == "pass" for item in self.writing_checks))
         if self.passed != expected_pass:
             raise ValueError("full-answer pass differs from its findings")
         value = self.model_dump(mode="json", by_alias=True)
@@ -190,6 +221,9 @@ async def invoke_full_answer_reviewer(
         raise ValueError("full-answer claim references evidence outside the frozen pack")
     facts = [dict(item) for item in fact_inputs]
     evidence = _evidence_rows(evidence_by_id)
+    writing_rules = applicable_guidance_rules(
+        OWNER_ASSESSMENT_BUNDLE, task_type=str(draft.task_type), subject=None,
+    )
     payload = {
         "schema": "legalbot.ai-full-answer-review-input.v1",
         "question": question,
@@ -203,6 +237,9 @@ async def invoke_full_answer_reviewer(
         "material_claims": claims,
         "candidate_visible_facts": facts,
         "frozen_evidence": evidence,
+        "writing_rules": [{"rule_id": rule.rule_id, "target": rule.positive_target,
+                           "anti_pattern": rule.anti_pattern} for rule in writing_rules],
+        "section_ids": [section.id for section in draft.sections],
     }
     invocation_id, raw = await model.invoke_json(
         system_prompt=prompt_template_text(FULL_ANSWER_REVIEWER_TEMPLATE_NAME),
@@ -214,6 +251,15 @@ async def invoke_full_answer_reviewer(
         raise ValueError("full-answer reviewer did not cover claims in frozen order")
     if tuple(item.issue_id for item in output.omissions) != frozen_issue_ids:
         raise ValueError("full-answer reviewer did not cover issues in frozen order")
+    if tuple(item.rule_id for item in output.writing_checks) != tuple(rule.rule_id for rule in writing_rules):
+        raise ValueError("full-answer reviewer did not check every applicable writing rule")
+    if any(not set(item.section_ids) <= set(payload["section_ids"]) for item in output.writing_checks):
+        raise ValueError("writing review names an unknown section")
+    for omission in output.omissions:
+        if not set(omission.section_ids) <= set(payload["section_ids"]):
+            raise ValueError("omission review names an unknown section")
+        if not set(omission.evidence_ids) <= allowed_evidence:
+            raise ValueError("omission review names evidence outside the frozen pack")
     material: dict[str, Any] = {
         "schema": FULL_ANSWER_REVIEW_SCHEMA,
         "review_id": "full-answer-review-"
@@ -244,6 +290,40 @@ async def invoke_full_answer_reviewer(
     }
     material["seal_sha256"] = hashlib.sha256(canonical_json_bytes(material)).hexdigest()
     return FullAnswerReviewResult.model_validate(material)
+
+
+def semantic_writing_findings(
+    findings: Sequence[QualityFinding], review: FullAnswerReviewResult,
+) -> list[QualityFinding]:
+    """Reconcile lexical writing signals with an exact-draft semantic review.
+
+    Only the advisory writing heuristic can be resolved here. Legal support,
+    omissions, word count, privacy and provenance findings remain untouched.
+    The original scored report remains available as diagnostic evidence.
+    """
+    passed = {item.rule_id for item in review.writing_checks if item.verdict == "pass"}
+    result = []
+    for finding in findings:
+        if (finding.gate == "assessment_standards"
+                and finding.code == "applicable_avoidance_standard_failed"
+                and any(f" {rule} " in finding.message for rule in passed)):
+            result.append(finding.model_copy(update={
+                "severity": Severity.INFORMATIONAL,
+                "message": finding.message + " Exact-draft semantic writing review passed this rule; lexical score retained as advisory.",
+            }))
+        else:
+            result.append(finding)
+    for item in review.writing_checks:
+        if item.verdict == "pass":
+            continue
+        for section_id in item.section_ids:
+            result.append(QualityFinding(
+                gate="semantic_writing_review", code="semantic_writing_rule_failed",
+                message=f"Writing rule {item.rule_id}: {item.reason_code}",
+                severity=Severity.HARD_BLOCKER, section_id=section_id,
+                corrective_action="Repair this specific writing defect while preserving supported legal meaning and the requested word budget.",
+            ))
+    return result
 
 
 __all__ = [

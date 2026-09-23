@@ -32,6 +32,7 @@ from .live_suite import sealed_sha256
 
 GE_DEVELOPMENT_CHAT_LANE = "ge_owner_development_chat"
 GE_DEVELOPMENT_CHAT_SCHEMA = "legalbot.ge-owner-development-chat-authority.v1"
+GE_SESSION_CHAT_SCHEMA = "legalbot.ge-owner-development-chat-authority.v2"
 _SHA = re.compile(r"^[0-9a-f]{64}$")
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$")
 _ROUTE_KINDS = frozenset({"qwen_local", "local_endpoint", "hosted_api", "anthropic_api", "gemini_api", "codex_bridge"})
@@ -65,7 +66,7 @@ def chat_runtime_binding_sha256(settings: Settings, route: Mapping[str, Any]) ->
     answer_path_sha256 = {
         name: hashlib.sha256((app_root / name).read_bytes()).hexdigest()
         for name in (
-            "orchestration/behavior.py", "orchestration/runner.py",
+            "orchestration/behavior.py", "orchestration/runner.py", "orchestration/worker.py",
             "orchestration/answer_structure.py", "orchestration/retry_policy.py",
             "orchestration/targeted_repair.py", "citations/oscola.py",
             "orchestration/gaps.py",
@@ -74,6 +75,10 @@ def chat_runtime_binding_sha256(settings: Settings, route: Mapping[str, Any]) ->
             "quality/evaluator.py", "assessment/guidance_bundle.py",
             "assessment/rules.py", "assessment/standards_scoring.py",
             "retrieval/reviewed_research_generation.py",
+            "retrieval/development_query.py", "connections.py", "api/chat.py",
+            "conversations/chat_facts.py", "conversations/clarification.py",
+            "research/licence_permissions.py", "research/official_capture.py", "research/case_source_review.py",
+            "research/discovery.py", "research/source_registry.py", "research/adapters.py",
             "prompt_templates.py",
             "evaluation/prompts/draft_generator.v5.txt",
             "evaluation/prompts/ai_evidence_reviewer.v3.txt",
@@ -99,8 +104,9 @@ def chat_runtime_binding_sha256(settings: Settings, route: Mapping[str, Any]) ->
         "prompt_version": PROMPT_VERSION,
         "policy_sha256": POLICY_SHA256,
         "assessment_bundle_sha256": OWNER_ASSESSMENT_BUNDLE.sha256,
-        "online_mode": OnlineMode.LOCAL_ONLY.value,
-        "official_research_enabled": False,
+        "online_mode": settings.online_default,
+        "official_research_enabled": settings.official_research_enabled,
+        "official_registry_sha256": hashlib.sha256((settings.project_root / "config/official_sources.json").read_bytes()).hexdigest(),
         "adapter_id": None,
     })).hexdigest()
 
@@ -168,15 +174,18 @@ def _load_authority(settings: Settings) -> tuple[dict[str, Any], str]:
     if not hmac.compare_digest(hashlib.sha256(raw).hexdigest(), configured):
         raise RuntimeError("development_chat_authority_hash_changed")
     value = load_json_strict(raw)
-    if not isinstance(value, dict) or set(value) != {
+    required = {
         "schema", "run_id", "owner_scope_sha256", "development_state_id",
         "candidate_build_id", "retrieval_manifest_sha256", "access_key_sha256",
         "issued_at", "expires_at", "routes", "writes_active", "release_allowed",
         "release_audience", "seal_sha256",
-    }:
+    }
+    if isinstance(value, dict) and value.get("schema") == GE_SESSION_CHAT_SCHEMA:
+        required.add("capabilities")
+    if not isinstance(value, dict) or set(value) != required:
         raise RuntimeError("development_chat_authority_shape_invalid")
     if (
-        value["schema"] != GE_DEVELOPMENT_CHAT_SCHEMA
+        value["schema"] not in {GE_DEVELOPMENT_CHAT_SCHEMA, GE_SESSION_CHAT_SCHEMA}
         or not _ID.fullmatch(str(value["run_id"] or ""))
         or not _SHA.fullmatch(str(value["owner_scope_sha256"] or ""))
         or not _SHA.fullmatch(str(value["access_key_sha256"] or ""))
@@ -201,6 +210,14 @@ def _load_authority(settings: Settings) -> tuple[dict[str, Any], str]:
         expires = datetime.fromisoformat(str(value["expires_at"]))
     except ValueError as exc:
         raise RuntimeError("development_chat_authority_time_invalid") from exc
+    if value["schema"] == GE_SESSION_CHAT_SCHEMA and (
+        value["capabilities"] != {
+            "session_connections": True, "saved_conversations": True,
+            "online_modes": ["local_only", "auto", "always"],
+            "review_before_use": True, "shared_source_admission": False,
+        } or settings.xerj_enabled or settings.phoenix_enabled
+    ):
+        raise RuntimeError("development_chat_capabilities_invalid")
     if (
         issued.tzinfo is None or expires.tzinfo is None
         or issued.astimezone(UTC) > datetime.now(UTC)
@@ -208,7 +225,7 @@ def _load_authority(settings: Settings) -> tuple[dict[str, Any], str]:
         or expires <= issued
     ):
         raise RuntimeError("development_chat_authority_expired")
-    if (
+    if value["schema"] == GE_DEVELOPMENT_CHAT_SCHEMA and (
         settings.official_research_enabled or settings.xerj_enabled
         or settings.phoenix_enabled or settings.online_default != "local_only"
     ):
@@ -249,12 +266,8 @@ def validate_development_chat_admission(
     access_key: str, route_id: str, raw_idempotency_key: str,
     payload: QuestionRequest, remote_processing_consent: bool = False,
 ) -> GEDevelopmentChatAdmissionBinding:
-    if (
-        payload.as_of_date is None or payload.online_mode != OnlineMode.LOCAL_ONLY
-        or payload.conversation_id is not None or payload.upload_ids
-    ):
-        raise RuntimeError("development_chat_request_scope_invalid")
     value, file_sha = _load_authority(settings)
+    _validate_scope(value, payload, remote_processing_consent)
     if not hmac.compare_digest(supplied_authority_file_sha256, file_sha):
         raise RuntimeError("development_chat_authority_header_mismatch")
     if not hmac.compare_digest(
@@ -265,7 +278,7 @@ def validate_development_chat_admission(
     route = load_development_chat_route(settings, route_id)
     if route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"} and not remote_processing_consent:
         raise RuntimeError("development_chat_remote_processing_consent_required")
-    remote_processing_consent = route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"}
+    remote_processing_consent = route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"} or payload.online_mode != OnlineMode.LOCAL_ONLY
     return GEDevelopmentChatAdmissionBinding(
         run_id=str(value["run_id"]),
         case_id=_case_id(raw_idempotency_key),
@@ -294,7 +307,7 @@ def replay_development_chat_admission(
         value["owner_scope_sha256"], chat_runtime_binding_sha256(settings, route),
         route_sha256(route), development_request_sha256(payload),
         str(row["idempotency_key"] or ""),
-        route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"},
+        route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"} or payload.online_mode != OnlineMode.LOCAL_ONLY,
     )
     observed = (
         authority.get("run_id"), authority.get("authority_file_sha256"),
@@ -306,11 +319,10 @@ def replay_development_chat_admission(
     if (
         observed != expected
         or authority.get("case_id") != _case_id_from_persisted_key(str(row["idempotency_key"] or ""))
-        or payload.as_of_date is None or payload.online_mode != OnlineMode.LOCAL_ONLY
-        or payload.conversation_id is not None or payload.upload_ids
         or str(row["evaluation_request_sha256"] or "") != expected[6]
     ):
         raise RuntimeError("development_chat_replay_mismatch")
+    _validate_scope(value, payload, bool(authority.get("remote_processing_consent")))
     return GEDevelopmentChatAdmissionBinding(
         run_id=str(value["run_id"]), case_id=str(authority["case_id"]),
         request_sha256=expected[6], candidate_build_id=str(value["candidate_build_id"]),
@@ -327,3 +339,15 @@ def _case_id_from_persisted_key(persisted: str) -> str:
     # The raw key is deliberately unavailable to the worker. The API uses its
     # persisted digest as the stable case identity instead.
     return "chat-" + persisted[:40]
+
+
+def _validate_scope(value: dict[str, Any], payload: QuestionRequest, consent: bool) -> None:
+    if payload.as_of_date is None or payload.upload_ids:
+        raise RuntimeError("development_chat_request_scope_invalid")
+    if value["schema"] == GE_DEVELOPMENT_CHAT_SCHEMA:
+        if payload.online_mode != OnlineMode.LOCAL_ONLY or payload.conversation_id or payload.connection_id:
+            raise RuntimeError("development_chat_request_scope_invalid")
+    elif payload.connection_id is None or payload.conversation_id is None:
+        raise RuntimeError("development_chat_session_required")
+    if payload.online_mode != OnlineMode.LOCAL_ONLY and not consent:
+        raise RuntimeError("development_chat_remote_processing_consent_required")

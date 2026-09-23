@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from copy import deepcopy
 from datetime import date
 
 import pytest
@@ -9,8 +10,60 @@ from app.citations.oscola import render_oscola
 from app.config import Settings
 from app.retrieval.reviewed_research_generation import (
     ReviewedResearchGenerationRetriever,
+    _retain_receipt_context,
+    provision_context_rows,
     register_scoped_development_retrieval_candidate,
 )
+
+
+def test_provision_context_preserves_rule_conditions_and_original_hashes():
+    _, rows = _frozen_fixture()
+    first = deepcopy(rows[0])
+    second = deepcopy(first)
+    first["text"] = "section 22 The period starts after all these events—"
+    first["text_sha256"] = hashlib.sha256(first["text"].encode()).hexdigest()
+    second["id"] = "2" * 64
+    second["text"] = "section 22 the goods have been delivered."
+    second["text_sha256"] = hashlib.sha256(second["text"].encode()).hexdigest()
+    second["structural_chunk"]["ordinal"] += 1
+    original = deepcopy((first, second))
+    parents = provision_context_rows((second, first))
+    assert len(parents) == 1
+    parent = parents[0]
+    assert parent["text"] == first["text"] + "\n" + second["text"]
+    assert parent["text_sha256"] == hashlib.sha256(parent["text"].encode()).hexdigest()
+    assert parent["structural_chunk"]["chunk_id"].startswith("context:")
+    assert (first, second) == original
+    second["text"] = "tampered"
+    with pytest.raises(RuntimeError, match="child_text_changed"):
+        provision_context_rows((first, second))
+
+
+def test_provision_context_cannot_cross_review_or_source_boundaries():
+    _, rows = _frozen_fixture()
+    second = deepcopy(rows[0])
+    second["id"] = "2" * 64
+    second["review_sha256"] = "different-review"
+    with pytest.raises(RuntimeError, match="mixed_review_scope"):
+        provision_context_rows((*rows, second))
+    second["capture_sha256"] = "different-source"
+    assert provision_context_rows((*rows, second)) == ()
+
+
+def test_hosted_selection_keeps_whole_provision_above_local_budget():
+    from app.runtime_adapters import select_fully_visible_evidence
+    from app.types import EvidenceSpan
+    text = "Complete statutory rule with all qualifications. " * 190
+    span = EvidenceSpan(
+        id="whole-provision", source_version_id="source", chunk_id="chunk",
+        text=text.strip(), locator="section 9", lane="primary_authority",
+        jurisdiction="England", subject="consumer", content_sha256="a" * 64,
+        index_build_id="candidate",
+    )
+    assert not select_fully_visible_evidence([span]).spans
+    hosted = select_fully_visible_evidence([span], char_budget=45000, token_budget=15000)
+    assert hosted.spans == (span,)
+    assert not hosted.omitted_ids
 
 
 def _frozen_fixture():
@@ -54,6 +107,21 @@ def _frozen_fixture():
         },
     )
     return manifest, rows
+
+
+def test_frozen_receipt_retains_reviewed_context_beyond_selected_hits() -> None:
+    rows = {"hit": {"id": "hit"}, "context": {"id": "context"}}
+    retained: dict[str, dict] = {}
+    ranks: dict[str, int] = {}
+
+    _retain_receipt_context(rows, ["hit"], retained, ranks)
+
+    assert set(retained) == {"hit", "context"}
+    assert ranks == {"hit": 1}
+    with pytest.raises(RuntimeError, match="selection_invalid"):
+        _retain_receipt_context(rows, ["missing"], {}, {})
+    with pytest.raises(RuntimeError, match="context_conflict"):
+        _retain_receipt_context(rows, ["hit"], {"context": {"id": "altered"}}, {})
 
 
 @pytest.mark.asyncio
@@ -126,3 +194,23 @@ def test_candidate_registration_fails_on_changed_catalogue_identity(
     database.execute("UPDATE chunks SET markdown_text='changed'")
     with pytest.raises(RuntimeError, match="chunk identity differs"):
         register_scoped_development_retrieval_candidate(settings, database)
+
+
+def test_parent_context_registration_keeps_vector_counts_and_unique_ordinals(
+    tmp_path, database, monkeypatch
+):
+    settings = Settings(project_root=tmp_path, development_state_id="ge-qwen-test",
+                        development_candidate_build_id="candidate-visible-r1")
+    manifest, rows = _frozen_fixture()
+    second = deepcopy(rows[0])
+    second["id"] = "2" * 64
+    second["structural_chunk"]["chunk_id"] = "sha256:" + "3" * 64
+    second["structural_chunk"]["ordinal"] += 1
+    monkeypatch.setattr(ReviewedResearchGenerationRetriever, "_load",
+                        lambda self: (manifest, (*rows, second)))
+    assert register_scoped_development_retrieval_candidate(settings, database) == 3
+    assert register_scoped_development_retrieval_candidate(settings, database) == 3
+    build = database.fetchone("SELECT chunk_count, vector_count FROM index_builds")
+    assert build["chunk_count"] == 3
+    assert build["vector_count"] == 2
+    assert database.active_index_id() is None

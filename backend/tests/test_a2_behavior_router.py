@@ -175,9 +175,9 @@ def test_uk_tenancy_asks_for_nation_then_accepts_same_case_followup() -> None:
     )
     decision = route_behavior(BehaviorSignals(question=first, jurisdiction="England and Wales"))
     assert decision.reason_code == FailureReasonCode.MISSING_USER_FACTS
-    assert "Which UK nation" in decision.user_message
+    assert "England, Wales, Scotland or Northern Ireland" in decision.user_message
     assert "how much" not in decision.user_message.casefold()
-    followup = first + " The flat is in Birmingham, England. I rent the entire flat as my main home. The landlord does not live here. The email is the only notice."
+    followup = first + " The flat is in Birmingham, England. I rent the entire flat as my main home. The landlord does not live here. The email is the only notice. The agreement began on 1 September 2025."
     assert route_behavior(BehaviorSignals(question=followup, jurisdiction="England")).reason_code == FailureReasonCode.PROCEED
 
 

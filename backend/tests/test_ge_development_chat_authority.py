@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from types import SimpleNamespace
 
 import httpx
@@ -28,6 +29,8 @@ from app.types import QuestionRequest
 
 
 def _fixture(tmp_path):
+    (tmp_path / "config").mkdir()
+    (tmp_path / "config/official_sources.json").write_bytes((Path(__file__).resolve().parents[2] / "config/official_sources.json").read_bytes())
     base = Settings(
         project_root=tmp_path,
         development_state_id="owner-chat-test",

@@ -12,8 +12,8 @@ import httpx
 
 from .config import Settings
 from .model_runtime.config import PINNED_RUNTIME_MODEL_VERSION, PINNED_RUNTIME_REPO
+from .orchestration.answer_structure import drafting_section_contract
 from .orchestration.contracts import ModelDraft
-from .orchestration.answer_structure import section_contract
 from .privacy import prompt_injection_hits, scrub_pii, scrub_prompt_data
 from .prompt_templates import (
     DRAFT_GENERATOR_TEMPLATE_NAME,
@@ -245,7 +245,9 @@ def _budgeted_evidence_payloads(
         if not safe_text:
             omitted.append(span.id)
             continue
-        maximum = min(len(safe_text), MAX_EVIDENCE_SPAN_CHARS)
+        # Complete provision contexts may exceed a short local excerpt. Hosted
+        # routes have a larger declared budget; never inherit the 9B span cap.
+        maximum = min(len(safe_text), max(MAX_EVIDENCE_SPAN_CHARS, char_budget // 2))
         minimum = min(len(safe_text), 80)
         low = minimum
         high = maximum
@@ -291,6 +293,8 @@ def select_fully_visible_evidence(
     *,
     as_of_date: date | None = None,
     maximum_spans: int = 12,
+    char_budget: int = EVIDENCE_PROMPT_CHAR_BUDGET,
+    token_budget: int = EVIDENCE_PROMPT_TOKEN_BUDGET,
 ) -> FullyVisibleEvidenceSelection:
     """Select only exact whole EvidenceSpan text for the selected-contract route.
 
@@ -328,7 +332,8 @@ def select_fully_visible_evidence(
         # A selected evidence contract binds the source chunk digest.  If the
         # privacy projection changes those bytes, omit the span rather than
         # reviewing the model against different text later.
-        if not safe_text or safe_text != span.text:
+        if (not safe_text or safe_text != span.text
+                or len(safe_text) > max(MAX_EVIDENCE_SPAN_CHARS, char_budget // 2)):
             omitted.append(span.id)
             continue
         payload = _evidence_payload(
@@ -340,8 +345,8 @@ def select_fully_visible_evidence(
         )
         fits, _, _ = _prompt_bundle_fits(
             [*payloads, payload],
-            char_budget=EVIDENCE_PROMPT_CHAR_BUDGET,
-            token_budget=EVIDENCE_PROMPT_TOKEN_BUDGET,
+            char_budget=char_budget,
+            token_budget=token_budget,
         )
         if not fits:
             omitted.append(span.id)
@@ -350,13 +355,15 @@ def select_fully_visible_evidence(
         selected.append(span)
     _, characters, tokens = _prompt_bundle_fits(
         payloads,
-        char_budget=EVIDENCE_PROMPT_CHAR_BUDGET,
-        token_budget=EVIDENCE_PROMPT_TOKEN_BUDGET,
+        char_budget=char_budget,
+        token_budget=token_budget,
     )
     replay = _budgeted_evidence_payloads(
         selected,
         owner_identifiers,
         as_of_date=as_of_date,
+        char_budget=char_budget,
+        token_budget=token_budget,
     )
     if (
         [item["id"] for item in replay.payloads] != [item.id for item in selected]
@@ -592,6 +599,21 @@ class LoopbackModelGateway:
         self.allow_test_stub = settings.test_mode
         self.owner_identifiers = settings.owner_identifiers
         self._timeout = httpx.Timeout(connect=5, read=300, write=30, pool=5)
+        self._capture_vault = settings.vault_dir if settings.development_chat_authority_sha256 else None
+
+    def _preserve_invocation(self, envelope: Mapping[str, Any], body: Mapping[str, Any]) -> None:
+        if self._capture_vault is None:
+            return
+        from .crypto import LocalCipher
+        directory = self._capture_vault / "model-invocations"
+        directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+        record = {"schema": "legalbot.private-model-invocation.v1",
+                  "model_id": self.expected_model, "envelope": envelope, "response": body}
+        raw = json.dumps(record, ensure_ascii=False, sort_keys=True).encode()
+        path = directory / (str(envelope["request_id"]) + ".enc")
+        with path.open("xb") as handle:
+            handle.write(LocalCipher.from_local_key(create=False).encrypt_bytes(raw))
+        path.chmod(0o600)
 
     def _validated_model_version(self, body: Mapping[str, Any]) -> str:
         warnings = body.get("warnings", ())
@@ -668,7 +690,13 @@ class LoopbackModelGateway:
             "jurisdiction": jurisdiction,
             "as_of_date": as_of_date.isoformat(),
             "word_target": word_target,
-            "section_contract": section_contract(task_type),
+            "substantive_word_budget": {
+                "target": word_target,
+                "minimum": int(word_target * 0.9),
+                "maximum": int(word_target * 1.1),
+                "counted": "All claim text and headings together; citation strings are added by the host and excluded.",
+            },
+            "section_contract": drafting_section_contract(task_type),
             "evidence": list(bundle.payloads),
             "evidence_prompt_manifest": {
                 "provided_ids": [span.id for span in evidence],
@@ -769,6 +797,7 @@ class LoopbackModelGateway:
             raise ClientDisconnectedAfterGenerationError(
                 "model HTTP response was lost; retry requires a new semantic-verifier invocation"
             ) from exc
+        self._preserve_invocation(envelope, body)
         self._validated_model_version(body)
         structured_value = body.get("structured")
         if isinstance(structured_value, str):
@@ -807,6 +836,16 @@ class LoopbackModelGateway:
                 scrub_pii(question, self.owner_identifiers), self.max_question_chars
             ),
             "word_target": word_target,
+            "repair_word_budget": {
+                "whole_answer_minimum": int(word_target * 0.90),
+                "whole_answer_maximum": int(word_target * 1.10),
+                "unchanged_section_words": sum(
+                    len(claim.text.split()) for section in prior.sections
+                    if section.id not in failed_sections for claim in section.claims
+                ),
+                "prior_claim_words": sum(len(claim.text.split()) for section in prior.sections for claim in section.claims),
+                "instruction": "Return a complete revised draft within the whole-answer maximum, including headings. Replace verbose claims rather than appending new explanations. Retain material meaning, not redundant sentences. Do not multiply claims just because a qualification must be made explicit.",
+            },
             "prior": prior.model_dump(mode="json"),
             "failed_sections": list(failed_sections),
             "findings": [item.model_dump(mode="json") for item in findings],
@@ -825,7 +864,8 @@ class LoopbackModelGateway:
             "uploaded_context": _budgeted_upload_context(upload_context, self.owner_identifiers),
             "constraints": {
                 "preserve_unfailed_sections_exactly": True,
-                "never_silently_delete_substantive_prose": True,
+                "preserve_material_issues_and_qualifications": True,
+                "condense_repeated_or_irrelevant_prose_in_failed_sections": True,
                 "output": "structured_json_only",
                 "prompt_contract": {
                     "prompt_version": PROMPT_VERSION,
@@ -880,6 +920,7 @@ class LoopbackModelGateway:
             "stop": GENERATION_CONFIG["stop"],
         }
         body = await self._generate(envelope)
+        self._preserve_invocation(envelope, body)
         warnings = body.get("warnings", [])
         is_stub = isinstance(warnings, Sequence) and "stub_mode" in warnings
         if is_stub and not self.allow_test_stub:
@@ -895,8 +936,9 @@ class LoopbackModelGateway:
             raise ValueError("model output was truncated and cannot enter validation")
         model_version = self._validated_model_version(body)
         transport_projection = body.get("transport_projection")
-        if transport_projection is not None:
-            if (
+        if (
+            transport_projection is not None
+            and (
                 not isinstance(transport_projection, dict)
                 or not isinstance(transport_projection.get("sent_content"), str)
                 or transport_projection.get("sent_content_sha256")
@@ -906,8 +948,9 @@ class LoopbackModelGateway:
                     json.dumps(messages, ensure_ascii=False, sort_keys=True,
                                separators=(",", ":")).encode("utf-8")
                 ).hexdigest()
-            ):
-                raise ValueError("provider actual sent-input projection differs")
+            )
+        ):
+            raise ValueError("provider actual sent-input projection differs")
         structured_value = body.get("structured")
         if isinstance(structured_value, str):
             structured_value = json.loads(structured_value)

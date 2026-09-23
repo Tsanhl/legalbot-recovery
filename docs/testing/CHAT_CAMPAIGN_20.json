@@ -1,0 +1,410 @@
+{
+  "schema": "legalbot.exposed-chat-campaign.v1",
+  "created_before_generation": true,
+  "models": [
+    "codex_bridge",
+    "qwen_local"
+  ],
+  "as_of_date": "2026-09-23",
+  "review_kind": "same-provider AI plus deterministic checks; not professional legal validation",
+  "rubric": {
+    "critical_floor": [
+      "no fabricated facts or authorities",
+      "supported material claims",
+      "correct jurisdiction/date",
+      "material coverage"
+    ],
+    "length_tolerance": 0.1,
+    "clarification_exempt": true,
+    "repairs_max": 2,
+    "advisory_writing_target": 70,
+    "hold_is_substantive_success": false
+  },
+  "cases": [
+    {
+      "id": "GE01",
+      "task_type": "general",
+      "jurisdiction": "England",
+      "as_of_date": "2026-09-23",
+      "title": "Laptop refund",
+      "question": "Today is 23 September 2026. Jurisdiction: England.\n\nOn 2 September 2026 I bought a new laptop for £799 online from Elm Retail Ltd, a UK business, for personal use. It arrived on 4 September and repeatedly shut down from first use despite correct setup. I have not damaged or modified it. On 16 September I emailed rejecting it and requesting a full refund. I have not agreed to repair or replacement. The retailer offers only store credit and says I must contact the manufacturer. It is available for collection and I have the order and emails. Can I insist on a refund, who is responsible, and what should I do next? Cite the applicable law and important qualifications.",
+      "word_target": 450,
+      "expected_issues": [
+        "faulty goods rejection and dates",
+        "separate distance-selling route and exceptions",
+        "retailer responsibility",
+        "refund timing qualification",
+        "collection/return distinction",
+        "chargeback and court have separate sources"
+      ],
+      "follow_up": null,
+      "provenance": "existing_exposed_regression",
+      "training_excluded": true
+    },
+    {
+      "id": "GE02",
+      "task_type": "general",
+      "jurisdiction": "UK",
+      "as_of_date": "2026-09-23",
+      "title": "Tenancy notice",
+      "question": "Today is 23 September 2026. Jurisdiction: UK.\n\nI rent a flat in the UK for £1,000 per month. On 21 September my landlord emailed: 'I am selling the flat, so you need to move out by 5 October.' I have no court papers. Do I have to leave by then and what should I do now?",
+      "word_target": 450,
+      "expected_issues": [
+        "first turn asks only unresolved observable facts",
+        "follow-up retains dates/rent",
+        "England commencement and transitional law",
+        "notice validity",
+        "court procedure and immediate steps"
+      ],
+      "follow_up": "The flat is in Birmingham, England. I rent the entire flat as my main home. The landlord does not live there and has never shared the accommodation. The written agreement was for 1 September 2025 to 31 August 2026, and I continued living there and paying monthly since then. Rent is due on the first, and I have no arrears. The quoted email is the only notice; no prescribed form or attachment was sent. I have not agreed to move out. Continue using my earlier message.",
+      "provenance": "existing_exposed_regression",
+      "training_excluded": true
+    },
+    {
+      "id": "GE03",
+      "task_type": "general",
+      "jurisdiction": "Wales",
+      "as_of_date": "2026-09-23",
+      "title": "School support",
+      "question": "Today is 23 September 2026. My 10-year-old attends a maintained primary school in Cardiff, Wales. The school agreed she has additional learning needs and issued an individual development plan in June 2026 providing daily small-group literacy support. Since term began on 3 September, that support has not happened. The head says there is no available teaching assistant. I have the plan and the head's email. What can I ask the school or local authority to do, and how can I challenge this? Do not assume the English SEND system applies.",
+      "word_target": 450,
+      "expected_issues": [
+        "Welsh ALN framework",
+        "responsibility for specified provision",
+        "review/reconsideration and appeal route",
+        "no English EHC substitution"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE04",
+      "task_type": "general",
+      "jurisdiction": "Scotland",
+      "as_of_date": "2026-09-23",
+      "title": "Succession clarification",
+      "question": "Today is 23 September 2026. My father lived in Edinburgh, Scotland, and has died. My sister says I inherit nothing because everything goes to her. I do not know what information matters. What should I do?",
+      "word_target": 450,
+      "expected_issues": [
+        "ask will/family/death date facts",
+        "Scottish movable versus heritable estate",
+        "legal rights versus will/intestacy",
+        "no invented estate value",
+        "practical records/executor steps"
+      ],
+      "follow_up": "He died on 12 August 2026, domiciled in Scotland. He was widowed, never remarried, and had only two children, my sister and me. A signed will leaves everything to my sister. His only assets were a solely owned Edinburgh house worth about £250,000 and £60,000 in savings; there are £10,000 of debts and funeral expenses. I have not signed any waiver. Please continue from my earlier message and explain which sums need confirmation.",
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE05",
+      "task_type": "general",
+      "jurisdiction": "Northern Ireland",
+      "as_of_date": "2026-09-23",
+      "title": "Wage deduction",
+      "question": "Today is 23 September 2026. I work as an employee at a shop in Belfast, Northern Ireland. My September payslip shows a £180 deduction for a till shortage. My written contract says nothing about deductions, and I never agreed to one. I received my wages on 20 September. My employer says everyone must share losses regardless of fault. What should I do, what time limits matter, and which body handles the dispute?",
+      "word_target": 450,
+      "expected_issues": [
+        "NI statute and tribunal route",
+        "authorisation/retail worker limits",
+        "time limit/conciliation qualifications",
+        "no automatic Great Britain ACAS substitution"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE06",
+      "task_type": "general",
+      "jurisdiction": "California",
+      "as_of_date": "2026-09-23",
+      "title": "Rental deposit",
+      "question": "Today is 23 September 2026. I rented an unfurnished apartment in Sacramento, California, under a one-year lease signed in August 2025. I paid a $2,000 security deposit. I moved out and returned keys on 31 August 2026, leaving a forwarding address. I received no refund or itemised deductions by today. The landlord now texts that repainting always uses the entire deposit. I paid all rent and photographed ordinary wear. What can I request and what remedies might exist?",
+      "word_target": 450,
+      "expected_issues": [
+        "applicable California deposit rules and effective dates",
+        "deadline/documentation",
+        "ordinary wear versus damage",
+        "bad faith fact dependent",
+        "no invented evidence content"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE07",
+      "task_type": "general",
+      "jurisdiction": "New York",
+      "as_of_date": "2026-09-23",
+      "title": "Freelance payment",
+      "question": "Today is 23 September 2026. I am a freelance graphic designer based in Albany, New York. A New York company engaged me under a signed $1,800 contract for a logo, due 15 August, with payment due 30 August. I delivered the files on 14 August and the client used the logo. They have not paid and now demand an unrelated extra project for free. I have the contract and emails. Which payment protections and enforcement options may apply?",
+      "word_target": 450,
+      "expected_issues": [
+        "state versus NYC coverage",
+        "written contract and payment deadlines",
+        "scope/threshold exclusions",
+        "enforcement and remedies without guaranteed penalties"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE08",
+      "task_type": "general",
+      "jurisdiction": "Texas",
+      "as_of_date": "2026-09-23",
+      "title": "Home repair service",
+      "question": "Today is 23 September 2026. I live in Austin, Texas. On 1 August I paid a licensed local company $2,400 to repair my home air conditioner under a written contract. They promised a working compressor and completed the job on 5 August. It stopped cooling on 7 August. A second technician says the old faulty compressor was never replaced; I have a written diagnostic report. The first company refuses to respond. What should I do before suing, and what claims or limitations should I check?",
+      "word_target": 450,
+      "expected_issues": [
+        "contract versus consumer protection",
+        "notice/opportunity to resolve",
+        "evidence versus inference of intent",
+        "damages and mitigation",
+        "licensing status not guarantee of liability"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE09",
+      "task_type": "general",
+      "jurisdiction": "Florida",
+      "as_of_date": "2026-09-23",
+      "title": "Child relocation clarification",
+      "question": "Today is 23 September 2026. I live in Florida with my child and have been offered a job elsewhere. Can I move with my child next month, or must I ask the other parent first?",
+      "word_target": 450,
+      "expected_issues": [
+        "ask order/distance/duration/agreement",
+        "statutory relocation scope",
+        "written consent or petition process",
+        "best-interest factors",
+        "do not treat request as approved"
+      ],
+      "follow_up": "We live in Orlando. A Florida court entered a parenting plan in 2024 providing shared parental responsibility and alternating weeks with our 8-year-old. I propose moving 200 miles to Miami permanently for a job starting 20 October 2026. The other parent objects in writing. There is no emergency or abuse allegation. The plan has no special relocation permission. Please use my earlier message.",
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "GE10",
+      "task_type": "general",
+      "jurisdiction": "US federal",
+      "as_of_date": "2026-09-23",
+      "title": "Federal records request",
+      "question": "Today is 23 September 2026. On 1 July 2026 I submitted a written FOIA request through a US federal agency's published portal for a final inspection report about a public facility. The agency acknowledged receipt on 2 July, gave a tracking number and assigned it to its simple queue. It has sent no determination, exemption explanation or extension notice. I am willing to pay reasonable duplication fees and do not seek personal records. What steps and deadlines should I check?",
+      "word_target": 450,
+      "expected_issues": [
+        "federal FOIA determination versus production",
+        "working day calculation caveats",
+        "administrative appeal/exhaustion",
+        "exemptions and segregability",
+        "no guaranteed immediate release"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "ES01",
+      "task_type": "essay",
+      "jurisdiction": "England",
+      "as_of_date": "2026-09-23",
+      "title": "Consideration and estoppel",
+      "question": "Today is 23 September 2026. Jurisdiction: England.\n\nWrite a critical essay of approximately 700 words: 'Consideration remains a necessary safeguard in English contract law, and promissory estoppel does not provide an adequate replacement.' Assess the purposes of consideration, contractual variations, promises to accept less than an existing debt, and the limits of estoppel. Develop a thesis, address counterarguments and distinguish established law from reform. Use verified authorities, OSCOLA citations and a bibliography grouped into Case law, Legislation and Secondary sources. Do not invent authorities or quotations.",
+      "word_target": 700,
+      "expected_issues": [
+        "purpose tested against operation",
+        "variations and debt distinction",
+        "Rock undecided consideration issue",
+        "promissory versus convention estoppel",
+        "suspension/extinction/revival",
+        "accurate scholar attribution"
+      ],
+      "follow_up": null,
+      "provenance": "existing_exposed_regression",
+      "training_excluded": true
+    },
+    {
+      "id": "ES02",
+      "task_type": "essay",
+      "jurisdiction": "England",
+      "as_of_date": "2026-09-23",
+      "title": "Negligence duties",
+      "question": "Write a critical essay of approximately 700 words: 'The distinction between causing harm and failing to protect is a coherent foundation for English negligence liability.' Apply English law as at 23 September 2026. Analyse omissions, assumptions of responsibility and public authority cases; test significant counterarguments rather than listing cases. Distinguish holdings from evaluation. Use verified authorities and OSCOLA; identify material verification limits.",
+      "word_target": 700,
+      "expected_issues": [
+        "acts versus omissions",
+        "assumption of responsibility",
+        "public authorities and statutory context",
+        "counterargument",
+        "holding precision"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "ES03",
+      "task_type": "essay",
+      "jurisdiction": "England",
+      "as_of_date": "2026-09-23",
+      "title": "Judicial review",
+      "question": "Write a critical essay of approximately 700 words: 'Proportionality should replace irrationality as the general standard of substantive judicial review in English law.' Use law as at 23 September 2026. Compare rationality and proportionality, rights and non-rights settings, judicial competence and separation of powers. Develop a reasoned position and address opposing arguments. Use verified authorities with OSCOLA and a bibliography grouped into Case law, Legislation and Secondary sources.",
+      "word_target": 700,
+      "expected_issues": [
+        "current doctrine versus proposed reform",
+        "rights context",
+        "intensity of review",
+        "institutional arguments",
+        "no claim universal replacement already settled",
+        "grouped bibliography"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "ES04",
+      "task_type": "essay",
+      "jurisdiction": "US federal",
+      "as_of_date": "2026-09-23",
+      "title": "First Amendment",
+      "question": "Write a critical essay of approximately 700 words: 'Content neutrality adequately protects freedom of speech under the First Amendment.' Apply US federal constitutional law as at 23 September 2026. Discuss content and viewpoint discrimination, scrutiny, time/place/manner regulation and significant limitations of the neutrality approach. Address counterarguments and distinguish current doctrine from your evaluation. Cite verified case pinpoints; use OSCOLA by default.",
+      "word_target": 700,
+      "expected_issues": [
+        "state action scope",
+        "content/viewpoint distinction",
+        "scrutiny qualifications",
+        "time place manner",
+        "counterargument"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "ES05",
+      "task_type": "essay",
+      "jurisdiction": "US federal",
+      "as_of_date": "2026-09-23",
+      "title": "Copyright fair use",
+      "question": "Write a critical essay of approximately 700 words: 'Transformative use has made US copyright fair use both more principled and less predictable.' Apply US federal law as at 23 September 2026. Analyse the four statutory factors, purpose and character, commercial use and market effect. Compare relevant Supreme Court reasoning without treating transformation as dispositive. Use verified authorities and identify unverified developments. Append an OSCOLA bibliography grouped into Case law, Legislation and Secondary sources.",
+      "word_target": 700,
+      "expected_issues": [
+        "all four factors",
+        "specific use not abstract transformation",
+        "commercial/market interaction",
+        "case distinctions",
+        "no categorical AI-training conclusion",
+        "grouped bibliography"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "PB01",
+      "task_type": "problem",
+      "jurisdiction": "England",
+      "as_of_date": "2026-09-23",
+      "title": "OvenWorks",
+      "question": "Today is 23 September 2026. Jurisdiction: England.\n\nMaya runs a café in Bristol. Before contracting, she tells Daniel, OvenWorks Ltd's sales manager, that she needs an oven producing 120 pastries per hour and installation by 10 September for a booked launch. He emails: 'This model comfortably produces 120 pastries per hour, and we guarantee installation by 10 September.' Maya signs for £8,000 and pays £4,000. The contract identifies the model and installation date, and states in ordinary-sized print: 'The buyer confirms that it has not relied on any statement outside this agreement. OvenWorks accepts no liability for loss of profit arising from delay or equipment performance.' On 5 September OvenWorks demands another £1,500 because another customer will pay more for the slot. Maya cannot obtain another installer before launch and emails: 'I agree because I have no practical alternative, but I object to this extra charge.' Installation occurs on 15 September. Output is 70 pastries per hour; a pre-sale technical specification also records 70, but there is no evidence Daniel read it. Maya hires a temporary oven for £600 and claims £2,000 launch profit, partly estimated. Advise in approximately 700 words on claims, variation/duress, clauses and remedies. Use verified OSCOLA authorities and a grouped bibliography; do not assume fraud or apply consumer law to this business purchase.",
+      "word_target": 700,
+      "expected_issues": [
+        "term and misrepresentation alternatives",
+        "knowledge versus inference",
+        "variation and economic duress",
+        "nonreliance and exclusion clause prerequisites",
+        "£600 stated not documented",
+        "deposit balance extra demand losses separate",
+        "elections and no double recovery"
+      ],
+      "follow_up": null,
+      "provenance": "existing_exposed_regression",
+      "training_excluded": true
+    },
+    {
+      "id": "PB02",
+      "task_type": "problem",
+      "jurisdiction": "England",
+      "as_of_date": "2026-09-23",
+      "title": "Criminal liability and defences",
+      "question": "Answer in approximately 700 words under English law as at 23 September 2026. At a party in Leeds, Alex sees Ben quickly reach into his jacket after saying 'I will hurt you'. Alex, who voluntarily drank several beers, honestly believes Ben has a knife and punches him once. Ben was actually reaching for his phone, falls onto a table and sustains a broken jaw. Alex says the punch was necessary; a witness says Ben had already stepped away. Later Alex takes Ben's phone, intending to keep it until Ben pays for a damaged jacket, and leaves. Analyse possible non-fatal offences, self-defence, intoxication and theft, addressing evidential alternatives. Do not decide disputed facts or invent intent. Cite verified authorities and distinguish prosecution elements from defences.",
+      "word_target": 700,
+      "expected_issues": [
+        "offence harm and mens rea",
+        "honest mistake versus intoxicated mistake",
+        "reasonable force/disputed facts",
+        "theft elements and belief in legal right",
+        "no invented intent"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "PB03",
+      "task_type": "problem",
+      "jurisdiction": "California",
+      "as_of_date": "2026-09-23",
+      "title": "Worker classification and wages",
+      "question": "Answer in approximately 700 words applying California and relevant federal law as at 23 September 2026. Lina delivers parcels full time for a courier company in Los Angeles under a contract labelling her an independent contractor. The company sets routes and delivery windows, supplies the van, prohibits substitution and pays $18 per scheduled hour. She has no other clients or independent business. For six weeks she worked 50 hours weekly, including mandatory loading and unloading, but was paid for only 40 hours each week. The company says the label removes overtime rights. No facts establish a statutory exemption. Analyse classification, unpaid time/overtime, possible remedies and information needed; avoid assuming federal and state tests are identical.",
+      "word_target": 700,
+      "expected_issues": [
+        "California test and exceptions",
+        "contract label not decisive",
+        "hours worked proof",
+        "state/federal overtime interaction",
+        "avoid duplicate recovery"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "PB04",
+      "task_type": "problem",
+      "jurisdiction": "New York",
+      "as_of_date": "2026-09-23",
+      "title": "Housing repairs",
+      "question": "Answer in approximately 700 words applying New York law as at 23 September 2026. Amir rents a private market-rate apartment in Buffalo as his main home under a written lease. The landlord does not live in the building. A roof leak reported by email on 2 August has made one bedroom unusable; photographs show water damage. The landlord has not repaired it. Amir withheld all September rent without obtaining legal advice. On 18 September the landlord changed the entrance lock while Amir was at work; his belongings remain inside. No court case or order exists. The landlord claims the lease waives all repair duties. Analyse repair duties, possible rent remedies, the risks of withholding and the lockout; identify urgent practical steps and avoid assuming NYC-specific rules apply.",
+      "word_target": 700,
+      "expected_issues": [
+        "habitability and waiver",
+        "abatement proportionality proof",
+        "withholding risks",
+        "self-help lockout",
+        "Buffalo versus NYC rules"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    },
+    {
+      "id": "PB05",
+      "task_type": "problem",
+      "jurisdiction": "Florida",
+      "as_of_date": "2026-09-23",
+      "title": "Debt collection",
+      "question": "Answer in approximately 700 words applying Florida and relevant federal law as at 23 September 2026. Eva lives in Tampa. A third-party collection agency buys a personal credit-card debt and first calls her on 1 September 2026. On 4 September she receives a letter stating the debt amount and dispute rights. She mails a written dispute on 10 September, delivered on 12 September, asking for verification. On 16 September the collector calls her employer and tells a manager Eva owes the debt; the employer had already told it workplace calls are prohibited. It calls Eva at 10:30 pm on 18 September and threatens arrest unless she pays immediately. No verification has arrived. Analyse the federal and Florida frameworks, facts affecting their scope, remedies and limitations. Do not assume the amount or validity of the underlying debt is established.",
+      "word_target": 700,
+      "expected_issues": [
+        "federal debt collector/consumer coverage",
+        "validation dispute timing",
+        "third party and workplace communications",
+        "time of call/arrest threats",
+        "Florida separate statute",
+        "remedies limitation no automatic debt cancellation"
+      ],
+      "follow_up": null,
+      "provenance": "new_scenario_first",
+      "training_excluded": true
+    }
+  ],
+  "manifest_sha256": "c7524551b7cd2bcc864218e479b5ecb7bf2a144c9a01e052018a26256dceeb95"
+}

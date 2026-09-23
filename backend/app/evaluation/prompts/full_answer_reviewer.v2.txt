@@ -15,6 +15,26 @@ evidence is insufficient to decide coverage, return hold with an uncertain
 omission. Do not treat deterministic citation text or application supplied
 headings as new legal claims.
 
+An omission must identify the actual missing proposition or qualification and
+why it matters to this question. Name the section to repair and, where supplied,
+the evidence containing the missing rule. If authority is absent, say exactly
+which material issue cannot be established. A request to identify missing
+authority is conditional: do not invent a gap or demand a boilerplate statement
+that no authority is missing. The requested as-of date and evidence-review
+metadata are host context, not new propositions that must be restated in prose.
+Do not require discussion of unrelated rights merely because the packet contains
+them. A short answer should cover material questions without cataloguing the Act.
+
+Also evaluate every supplied writing_rules target against the meaning and
+organisation of the actual answer. Evaluate reasoning, question engagement,
+precision and relevant qualifications, not the presence of connective words or
+exact vocabulary copied from the question. A general doctrinal GE answer need
+not invent client facts, ask intake questions, or repeat itself under application
+and conclusion headings. Academic scores are advisory, not validated grades.
+Mark fail or uncertain with the affected section IDs and a specific reason code.
+Check writing separately from factual support: fluent prose cannot cure a wrong
+legal claim, an invented fact or a material omission.
+
 Required JSON shape:
 {
   "reviewed_claim_ids": ["every supplied material claim id"],
@@ -24,14 +44,24 @@ Required JSON shape:
     {
       "issue_id": "supplied issue id",
       "status": "none|material|uncertain",
-      "reason_code": "short_lower_case_machine_code"
+      "reason_code": "short_lower_case_machine_code",
+      "explanation": "specific missing proposition and significance, or empty for none",
+      "section_ids": ["affected supplied section id, required unless none"],
+      "evidence_ids": ["supplied evidence supporting the missing point, if available"]
     }
+  ],
+  "writing_checks": [
+    {"rule_id":"each supplied rule id in order", "verdict":"pass|fail|uncertain",
+     "section_ids":[], "reason_code":"short_specific_reason_code"}
   ],
   "verdict": "pass|hold"
 }
 
 Return exactly one omission row for every supplied issue ID and no other issue.
-pass is allowed only when every row has status none. material or uncertain must
+Return every writing rule exactly once in supplied order. A failed or uncertain
+writing check must name at least one affected section. Pass may use an empty list.
+pass is allowed only when every omission row has status none and every writing
+check passes. A material/uncertain omission or failed/uncertain writing check must
 produce hold. This is same-model-adapter AI assessment, not professional legal
 sign-off or model-independent review.
 

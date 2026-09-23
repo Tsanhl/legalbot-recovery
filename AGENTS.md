@@ -1,5 +1,37 @@
 # LegalBot v1.11 recovery-workspace agent rules
 
+## Latest owner direction: execute the targeted continuation guide
+
+The owner explicitly resumed work under
+`docs/system-design/SHARED_CHAT_CONTINUATION_GUIDE.md` and then directed Codex
+fixture repair first. Complete reviewed provision context now reaches Codex via
+actual query embeddings, LanceDB and reranking. Preserve r16 setup failure,
+r17/r18 cancelled attempts and r19 terminal hold. r20 ended in a review-schema error after an overlong repair; r21 ended when a
+reviewer copied a long evidence ID incorrectly. Preserve both. r22 exposed missing ordinary-language issue queries and an invalid application-rule dependency. Preserve its failed draft. r23 reached both bounded repairs but held with application-rule mismatches and 623 words. r24 held after two repairs (557/553/578 words). Its per-claim review omitted user facts from context. r25 confirmed complete fact context and xhigh drafting but produced 581 claim words; it was cancelled during the first repair. r26 explicitly selected account-listed gpt-6-astra and passed its connection test, but owned processes disappeared during its second repair after an interrupted turn. Preserve the private interrupted-attempt receipt; its stale running database row is not a completed answer. No further model dispatch occurred in that continuation.
+The broad doctrine fixture remains unresolved, not superseded by an easier pass. Do not repeat the full
+forty-case campaign or train Qwen on these source/prompt failures. The owner
+has supplied the executed Find Case Law licence terms and confirmed all parties
+signed on 23 September 2026. The stated purpose is a local England-and-Wales
+research assistant for private study plus invited friends, with local parsing,
+BM25/vector indexing and RAG. See the sanitized assessment in the ignored r26
+state. The executed PDF bytes are not bound to the private permission gate;
+external-model use, public hosting and weight training are not expressly covered
+by the quoted purpose. The owner's latest audience direction is invited friends
+only, which requires access control before any internet deployment. No ACTIVE/public promotion,
+Git commit/push or training has occurred in this continuation. This direction
+supersedes older dated status lines below.
+
+## 23 September: shared chat implementation authorised (current)
+
+The owner explicitly requested implementation of **Make Codex and Qwen produce verifiable answers through one chat UI**. This supersedes the earlier planning pause and the unfinished public/owner dashboard split for this scoped work. Use one chat application, Codex by default, base Qwen separately, session-owned API connections and encrypted conversation history. Enable official online research only under the new scoped development capability and review evidence before use. Preserve candidate pins, factual/publication controls, immutable evaluation records and protected banks; no ACTIVE or public live promotion is authorised.
+
+The current campaign is 20 exposed cases per model (10 GE, 5 Essay, 5 PB), including real withheld follow-ups and system failure tests. A conditional, separate rights-cleared 60-example Qwen experiment is authorised only after source/prompt repairs and model-specific failure evidence, bounded to 100 steps/two hours/12 GB; all historical training and bank exclusions remain. No licence rights follow merely from approval correspondence: executed terms, effective date, indexing, external processing and training permissions must each be checked. Audited commit and push remain authorised; the four pre-existing review-file deletions stay separate. Historical construction receipts have been read and are terminal; no duplicate construction process is started.
+
+**Implementation in progress; no new model campaign pass, training result or end-to-end publication is claimed.**
+
+
+The local web build is the single answering UI for both owner and users. Operations UI code is removed; private diagnostics remain available through files and CLI. Owner management access stays disabled by default. This does not authorize public deployment or ACTIVE promotion.
+
 ## 23 September final-check result — latest owner development direction
 
 The owner's latest “FINAL CHECK” authorizes the scoped Codex/API development checks and non-weight repairs recorded in the [final report](docs/testing/FINAL_CHECK_2026-09-23.md); it supersedes the old planning-only pause for this work. Five GE cases, two essays and one PB have been tested. Actual API r6 accepted nine messages: seven holds and two UUID/privacy-scanner crashes; the two repaired messages in r8 now hold correctly for missing qualifying evidence. The effective result is one necessary clarification and eight evidence holds, with no substantive publication. Separate actual signed-in Codex research diagnostics generated all eight outputs; their same-model marks do not establish a full 70+ pass. Length and material source-support gaps remain. Source scope stays the reviewed England consumer-law generation at 5 September; current-date and worldwide qualification and online chat research are still incomplete.
@@ -8,6 +40,9 @@ Repairs cover provider budgets and identity, safe section roles, fact/rule prove
 
 
 ## Workspace authority
+
+- Current 23 September execution result: the shared chat campaign submitted 40 actual browser conversations / 46 turns (20 cases per selected Codex/base-Qwen route). All final campaign requests held for qualifying evidence; zero substantive publication and no model-quality score. Six real clarification/follow-up sequences resolved. Both real connection probes passed. See `docs/testing/CHAT_CAMPAIGN_2026-09-23_RESULTS.json` and the maintained report for separate in-scope probes. No new LoRA, protected-bank dispatch, ACTIVE write or production promotion. Single chat replaces Operations for all local users. Preserve encrypted private transcripts and all execution states; do not reuse them for training or call an evidence hold a successful answer.
+
 
 - Latest owner answer, 23 September 2026: **“both”** — implement the scoped
   owner-development chat route and update the system design. This supersedes

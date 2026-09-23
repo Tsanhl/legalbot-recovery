@@ -317,6 +317,10 @@ SUBJECT_MARKERS: dict[str, tuple[str, ...]] = {
         "satisfactory quality",
         "fitness for purpose",
         "right to reject",
+        "personal use",
+        "store credit",
+        "faulty goods",
+        "defective goods",
     ),
     "professional negligence": (
         "professional negligence",

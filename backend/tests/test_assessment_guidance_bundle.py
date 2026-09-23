@@ -33,7 +33,7 @@ def test_owner_bundle_expresses_70_and_lower_band_repair_semantics() -> None:
     assert {"owner-request-pinpoint-treatment-v1", "owner-request-concise-material-analysis-v1"} <= {
         rule.rule_id for rule in OWNER_ASSESSMENT_BUNDLE.rules
     }
-    assert OWNER_ASSESSMENT_BUNDLE.version == "owner-standards-2026-09-23.3"
+    assert OWNER_ASSESSMENT_BUNDLE.version == "owner-standards-2026-09-23.4"
     rules = {rule.rule_id: rule.positive_target for rule in OWNER_ASSESSMENT_BUNDLE.rules}
     assert "legal date" in rules["owner-universal-authority-at-claim-v1"]
     assert "double recovery" in rules["owner-problem-ranked-outcomes-v1"]

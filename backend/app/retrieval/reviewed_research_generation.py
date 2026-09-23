@@ -7,6 +7,7 @@ research-only review before exposing EvidenceSpan objects to AnswerRunner.
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import math
@@ -85,6 +86,79 @@ def _safe_file(root: Path, relative: object, expected_sha256: object) -> tuple[P
     return path, raw
 
 
+def _retain_receipt_context(
+    receipt_evidence: Mapping[str, dict[str, Any]],
+    selected_ids: Sequence[str],
+    retrieval_rows: dict[str, dict[str, Any]],
+    receipt_rank: dict[str, int],
+) -> None:
+    """Keep the exact reviewed context expansion, not just its search hits.
+
+    A retrieval receipt includes every source chunk in the reviewed groups
+    touched by its selected hits.  The selected IDs rank the original hits;
+    context rows remain searchable only after their prepared-row equality and
+    source-review checks in ``_load`` have passed.
+    """
+
+    if not selected_ids or not set(selected_ids) <= set(receipt_evidence):
+        raise RuntimeError("development_retrieval_selection_invalid")
+    for row_id, row in receipt_evidence.items():
+        existing = retrieval_rows.get(row_id)
+        if existing is not None and existing != row:
+            raise RuntimeError("development_retrieval_context_conflict")
+        retrieval_rows[row_id] = row
+    for ordinal, row_id in enumerate(selected_ids, start=1):
+        receipt_rank[row_id] = min(receipt_rank.get(row_id, 10_000), ordinal)
+
+
+def provision_context_rows(
+    reviewed_rows: Sequence[dict[str, Any]],
+) -> tuple[dict[str, Any], ...]:
+    """Assemble reviewed provision fragments without changing the vector index.
+
+    Vector hits remain the original child rows. Their parent context contains
+    every retained, reviewed row of the same source/provision, in document
+    order. New content IDs bind the exact join and its component hashes; no
+    source bytes, date, review decision or original chunk identity is changed.
+    This is context expansion, not a new embedding or source admission.
+    """
+    groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    ordinal_offset = max((row["structural_chunk"]["ordinal"] for row in reviewed_rows), default=0) + 1
+    for row in reviewed_rows:
+        locator = str(row["structural_chunk"].get("metadata", {}).get("legal_locator") or "")
+        if not re.fullmatch(r"(?:section|article|regulation) \d+[A-Za-z]*", locator):
+            continue
+        groups.setdefault((str(row["capture_sha256"]), locator), []).append(row)
+    parents = []
+    for (capture, locator), children in groups.items():
+        if len(children) < 2:
+            continue
+        children.sort(key=lambda row: (row["structural_chunk"]["ordinal"], row["id"]))
+        for child in children:
+            if _digest(str(child["text"]).encode()) != child["text_sha256"]:
+                raise RuntimeError("development_context_child_text_changed")
+        # A parent cannot cross review, validity, source or private-scope bounds.
+        for field in ("review_sha256", "scope_sha256", "valid_from", "valid_to", "group"):
+            if len({str(child.get(field)) for child in children}) != 1:
+                raise RuntimeError("development_context_mixed_review_scope")
+        text = "\n".join(str(child["text"]) for child in children)
+        bindings = [{"id": row["id"], "text_sha256": row["text_sha256"]} for row in children]
+        identity = _digest({"schema": "legalbot.reviewed-provision-context.v1",
+                            "capture": capture, "locator": locator, "children": bindings})
+        structural = children[0]["structural_chunk"]
+        parents.append({
+            **children[0], "id": identity, "text": text, "text_sha256": _digest(text.encode()),
+            "structural_chunk": {
+                **structural, "chunk_id": f"context:{identity}", "text": text,
+                "ordinal": ordinal_offset + structural["ordinal"],
+                "metadata": {**structural.get("metadata", {}),
+                             "context_assembly": "all_reviewed_provision_rows_in_document_order",
+                             "context_components": bindings},
+            },
+        })
+    return tuple(parents)
+
+
 class ReviewedResearchGenerationRetriever(EvidenceRetriever):
     """Fail-closed projection of one reviewed one-day generation."""
 
@@ -94,6 +168,7 @@ class ReviewedResearchGenerationRetriever(EvidenceRetriever):
         self._rows: tuple[dict[str, Any], ...] | None = None
         self._manifest: dict[str, Any] | None = None
         self._receipt_rank: dict[str, int] = {}
+        self.last_query_trace: dict[str, Any] | None = None
 
     def active_build_id(self) -> str:
         return self._build_id
@@ -269,9 +344,9 @@ class ReviewedResearchGenerationRetriever(EvidenceRetriever):
                 or not set(selected_ids) <= set(receipt_evidence)
             ):
                 raise RuntimeError("development_retrieval_selection_invalid")
-            for ordinal, row_id in enumerate(selected_ids, start=1):
-                retrieval_rows[row_id] = receipt_evidence[row_id]
-                receipt_rank[row_id] = min(receipt_rank.get(row_id, 10_000), ordinal)
+            _retain_receipt_context(
+                receipt_evidence, selected_ids, retrieval_rows, receipt_rank
+            )
 
         sources = manifest.get("sources")
         if not isinstance(sources, list) or not sources:
@@ -347,6 +422,45 @@ class ReviewedResearchGenerationRetriever(EvidenceRetriever):
             or as_of_date.isoformat() != manifest["as_of_date"]
             or (subject is not None and subject not in accepted_subjects)
         ):
+            self.last_retrieval_code = "reviewed_generation_scope_mismatch"
+            self.last_query_trace = {
+                "query_sha256": hashlib.sha256(query.encode()).hexdigest(),
+                "generation_sha256": manifest["generation"]["generation_sha256"],
+                "selected_ids": [], "embedding_performed": False,
+                "reason": self.last_retrieval_code,
+                "reviewed_jurisdiction": manifest["jurisdiction"],
+                "reviewed_as_of_date": manifest["as_of_date"],
+            }
+            return ()
+        self.last_retrieval_code = None
+        vector_trace = None
+        if self.settings.development_chat_authority_sha256:
+            from ..evaluation.ge_development_chat_authority import (
+                GE_SESSION_CHAT_SCHEMA,
+                _load_authority,
+            )
+            authority, _ = _load_authority(self.settings)
+            if authority["schema"] == GE_SESSION_CHAT_SCHEMA:
+                from ..crypto import LocalCipher
+                from .development_query import query_reviewed_generation
+                vector_trace = await asyncio.to_thread(
+                    query_reviewed_generation, query,
+                    self.settings.project_root / manifest["generation"]["path"], rows,
+                )
+                trace_dir = self.settings.vault_dir / "query-traces"
+                trace_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+                trace_path = trace_dir / (vector_trace["sha256"] + ".enc")
+                with trace_path.open("xb") as handle:
+                    handle.write(LocalCipher.from_local_key(create=False).encrypt_bytes(canonical_json_bytes(vector_trace)))
+                trace_path.chmod(0o600)
+                self.last_query_trace = {"sha256": vector_trace["sha256"], "query_sha256": vector_trace["query_sha256"], "selected_ids": vector_trace["selected_ids"], "generation_sha256": manifest["generation"]["generation_sha256"]}
+        manifest_subject = str(manifest["subject"])
+        accepted_subjects = {manifest_subject, manifest_subject.removesuffix("-law")}
+        if (
+            jurisdiction != manifest["jurisdiction"]
+            or as_of_date.isoformat() != manifest["as_of_date"]
+            or (subject is not None and subject not in accepted_subjects)
+        ):
             return ()
         terms = {
             item
@@ -402,6 +516,23 @@ class ReviewedResearchGenerationRetriever(EvidenceRetriever):
         used = {str(row["id"]) for row in diversified}
         diversified.extend(row for row in ranked if str(row["id"]) not in used)
         selected_rows = diversified[: max(1, min(limit, 30))]
+        if vector_trace is not None:
+            by_id = {row["id"]: row for row in rows}
+            selected_rows = [by_id[key] for key in vector_trace["selected_ids"][:limit]]
+
+        # Return whole reviewed provision context for each actual search hit.
+        # The original vector receipt still records child IDs and rerank scores.
+        contexts = provision_context_rows(rows)
+        context_by_child = {
+            child["id"]: parent for parent in contexts
+            for child in parent["structural_chunk"]["metadata"]["context_components"]
+        }
+        expanded = {}
+        for row in selected_rows:
+            parent = context_by_child.get(row["id"], row)
+            expanded.setdefault(parent["id"], parent)
+        selected_rows = list(expanded.values())
+
         source_specs = {
             source["capture_sha256"]: source for source in manifest["sources"]
         }
@@ -444,7 +575,8 @@ class ReviewedResearchGenerationRetriever(EvidenceRetriever):
                     currentness_status="point_in_time",
                     content_sha256=str(row["text_sha256"]),
                     index_build_id=self._build_id,
-                    canonical_url=str(source["canonical_url"]),
+                    canonical_url=(str(source["canonical_url"]).removesuffix("/data.xml")
+                                   + "/" + locator.replace(" ", "/")),
                     retrieval_relevance_score=1.0,
                     retrieval_route="frozen_reviewed_research_receipt",
                     retrieval_threshold=1.0,
@@ -482,6 +614,8 @@ def register_scoped_development_retrieval_candidate(
 
     build_id = str(settings.development_candidate_build_id or "")
     manifest, rows = ReviewedResearchGenerationRetriever(settings, build_id)._load()
+    vector_count = len(rows)
+    rows = (*rows, *provision_context_rows(rows))
     row_count = len(rows)
     if database.active_index_id() is not None:
         raise RuntimeError("scoped development store unexpectedly contains ACTIVE")
@@ -509,7 +643,7 @@ def register_scoped_development_retrieval_candidate(
             relative_path,
             len(manifest["sources"]),
             row_count,
-            row_count,
+            vector_count,
             settings.embedding_model,
             "NOT_RUN",
         )
@@ -526,7 +660,7 @@ def register_scoped_development_retrieval_candidate(
                     relative_path,
                     len(manifest["sources"]),
                     row_count,
-                    row_count,
+                    vector_count,
                     settings.embedding_model,
                     now,
                 ),

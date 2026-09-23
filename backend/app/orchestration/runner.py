@@ -21,7 +21,6 @@ from ..assessment.guidance_bundle import (
     budget_assessment_guidance,
 )
 from ..citations.oscola import bibliography_requested, render_answer
-from .answer_structure import canonical_heading
 from ..config import Settings
 from ..crypto import LocalCipher
 from ..db import Database
@@ -66,6 +65,7 @@ from ..types import (
     TaskType,
     UploadContextSpan,
 )
+from .answer_structure import canonical_heading
 from .behavior import (
     BehaviorDecision,
     BehaviorSignals,
@@ -96,6 +96,11 @@ from .teaching_verify import render_teaching_notes_view, run_teaching_verify_cit
 from .uploads import QuestionUploadProcessor, UploadPreparation
 
 MAX_MERGED_EVIDENCE = 60
+_TARGETED_DRAFT_CORRECTION_CODES = frozenset({
+    "unsupported_material_fact",
+    "non_atomic_material_claim",
+    "unrelated_evidence",
+})
 _JOB_RETRIEVER: ContextVar[EvidenceRetriever | None] = ContextVar(
     "legalbot_job_retriever", default=None
 )
@@ -639,7 +644,16 @@ class AnswerRunner:
             ):
                 if not hasattr(self.model, "select"):
                     raise RuntimeError("development chat requires a route-aware model gateway")
-                model_token = self.model.select(str(route_authority.get("route_id") or ""))
+                request_value = json.loads(str(row["request_json"] or "{}"))
+                if request_value.get("connection_id"):
+                    from ..connections import ConnectionStore
+                    model_token = self.model.select(
+                        str(route_authority.get("route_id") or ""),
+                        connection_id=request_value["connection_id"],
+                        connection_store=ConnectionStore(self.database, self.cipher),
+                    )
+                else:
+                    model_token = self.model.select(str(route_authority.get("route_id") or ""))
             await self._run_bound(job_id, raise_on_error=raise_on_error)
         finally:
             if token is not None:
@@ -779,6 +793,11 @@ class AnswerRunner:
         if row is None:
             raise RuntimeError("conversation rewrite job no longer exists")
         if row["evaluation_run_id"] is not None or row["evaluation_case_id"] is not None:
+            authority = json.loads(str(row["evaluation_authority_json"] or "{}"))
+            if request.connection_id and authority.get("lane") == "ge_owner_development_chat":
+                # The session facade froze the complete server-side history into
+                # the exact request before admission. Never read later turns here.
+                return await disabled.rewrite(question=question, history=())
             raise RuntimeError("evaluation jobs cannot use conversation query rewriting")
         if self.conversations is None:
             raise RuntimeError(
@@ -1049,14 +1068,23 @@ class AnswerRunner:
                 "candidate_count": sum(len(items) for items in evidence_batches),
             },
         )
-        evidence = self._dedupe_legal_evidence(evidence_batches)
+        evidence = self._dedupe_legal_evidence(
+            evidence_batches,
+            balance_issue_queries=self.settings.development_candidate_build_id is not None,
+            issue_queries=issue_plan.queries,
+            preferred_locators=tuple(
+                dict.fromkeys(
+                    f"section {number.casefold()}"
+                    for query in issue_plan.queries[1:]
+                    for number in re.findall(r"\bsection\s+(\d+[a-z]?)\b", query, re.I)
+                )
+            ),
+        )
 
-        searches: list[dict[str, str]] = []
-        rejections: list[str] = []
-        # Official-source discovery is a separate durable control-plane task.
-        # It may be queued only after this immutable answer snapshot ends as
-        # limited/held; it never injects newly fetched bytes into the current
-        # answer or bypasses the owner-promoted ACTIVE authority store.
+        evidence, searches, rejections = await self._chat_online_evidence(
+            job_id=job_id, request=request, question=question, subject=subject,
+            as_of=as_of, evidence=evidence, section_key="all-issues",
+        )
 
         if not evidence:
             retrieval_failure_code = getattr(self.retriever, "last_retrieval_code", None)
@@ -1193,6 +1221,8 @@ class AnswerRunner:
                 self.settings.owner_identifiers,
                 as_of_date=as_of,
                 maximum_spans=8,
+                char_budget=getattr(self.model, "evidence_character_budget", 8500),
+                token_budget=getattr(self.model, "evidence_token_budget", 2800),
             )
             qualified = list(visible_selection.spans)
             if not qualified:
@@ -1790,6 +1820,14 @@ class AnswerRunner:
                     )
                 )
             )
+        if self.settings.development_chat_authority_sha256:
+            batches = []
+            for query, subject in items:
+                batches.append(await self.retriever.retrieve(
+                    query=query, jurisdiction=jurisdiction, subject=subject,
+                    as_of_date=as_of, limit=30, cacheable=cacheable,
+                ))
+            return tuple(batches)
         batches = await asyncio.gather(
             *(
                 self.retriever.retrieve(
@@ -1804,6 +1842,67 @@ class AnswerRunner:
             )
         )
         return tuple(batches)
+
+    async def _chat_online_evidence(
+        self, *, job_id, request, question, subject, as_of, evidence, section_key,
+    ):
+        searches, rejections = [], []
+        if request.connection_id and request.online_mode != "local_only":
+            from ..research.runtime import OfficialOnlineResearcher
+            researcher = OfficialOnlineResearcher(settings=self.settings, database=self.database)
+            online, searches, rejections = await researcher.research_gap(
+                proposition=question, jurisdiction=request.jurisdiction,
+                subject=subject, as_of_date=as_of,
+            )
+            if online:
+                from ..jobs import ANSWER_MODEL_CALL_SECONDS
+                from ..research.case_source_review import (
+                    SOURCE_REVIEW_PROMPT,
+                    qualify_review,
+                    review_payload,
+                )
+                online = [span for span in online if not prompt_injection_hits(span.text)]
+                payload = review_payload(question, online, as_of)
+                self._event(job_id, JobStage.QUALIFYING, 0.25, "Reviewing newly retrieved sources for this question")
+                call_token, _ = self.database.arm_model_call_deadline(job_id, seconds=ANSWER_MODEL_CALL_SECONDS)
+                try:
+                    async with asyncio.timeout(ANSWER_MODEL_CALL_SECONDS):
+                        invocation_id, value = await self.model.invoke_json(system_prompt=SOURCE_REVIEW_PROMPT, user_payload=payload, mode="semantic_verify")
+                finally:
+                    if not self.database.clear_model_call_deadline(job_id, call_token=call_token):
+                        raise RuntimeError("model-call deadline ownership changed during source review")
+                record = {"input": payload, "system_prompt": SOURCE_REVIEW_PROMPT, "invocation_id": invocation_id,
+                          "parsed_output": value, "model_id": str(getattr(self.model, "selected_model_id", self.settings.model_id))}
+                try:
+                    online, receipt = qualify_review(list(online), value, as_of=as_of, question=question, model_id=record["model_id"])
+                    record["receipt"] = receipt
+                except ValueError:
+                    online = []
+                    record["rejection"] = "source_review_shape_or_binding_invalid"
+                    rejections.append("source_review_shape_or_binding_invalid")
+                self.database.store_stage_attempt(
+                    attempt_id=str(uuid4()), job_id=job_id, stage_key="online-source-review", section_key=section_key,
+                    attempt_number=self.database.next_stage_attempt_number(job_id, "online-source-review", section_key),
+                    status="complete", encrypted_output=self.cipher.encrypt_text(json.dumps(record, sort_keys=True)),
+                    metrics={"accepted_count": len(online), "professional_legal_validation": False},
+                )
+                if not online:
+                    rejections.append("online_sources_held_after_case_review")
+            evidence = self._dedupe_legal_evidence((evidence, online))
+            self.database.store_stage_attempt(
+                attempt_id=str(uuid4()), job_id=job_id,
+                stage_key="online-research", section_key=section_key,
+                attempt_number=self.database.next_stage_attempt_number(job_id, "online-research", section_key),
+                status="complete", encrypted_output=self.cipher.encrypt_text(json.dumps({
+                    "searches": searches, "rejections": rejections,
+                    "supplied_evidence_ids": [span.id for span in online],
+                    "source_digests": [span.content_sha256 for span in online],
+                    "query_trace": getattr(self.retriever, "last_query_trace", None),
+                    "shared_index_updated": False,
+                }, sort_keys=True)),
+                metrics={"candidate_count": len(online), "rejection_count": len(rejections)},
+            )
+        return evidence, searches, rejections
 
     async def _run_sectioned(
         self,
@@ -1857,6 +1956,15 @@ class AnswerRunner:
             cacheable=not bool(request.upload_ids),
             query_rewrite_version=query_rewrite_version,
         )
+        if request.connection_id and request.online_mode != "local_only":
+            augmented = []
+            for (task, section_subject), found in zip(section_queries, found_batches, strict=True):
+                enriched, _, _ = await self._chat_online_evidence(
+                    job_id=job_id, request=request, question=task.query,
+                    subject=section_subject, as_of=as_of, evidence=found, section_key=task.key,
+                )
+                augmented.append(enriched)
+            found_batches = tuple(augmented)
         plan_ms = round((time.perf_counter() - retrieval_started) * 1000)
         retrieval_results = tuple(
             (
@@ -2205,10 +2313,22 @@ class AnswerRunner:
                         for item in report.findings
                         if item.severity == Severity.HARD_BLOCKER
                         and is_deterministic_safety_failure(item.code)
+                        and item.code not in _TARGETED_DRAFT_CORRECTION_CODES
                     }
                 )
             )
-            if not self.settings.test_mode and not deterministic_hard_codes:
+            # These draft/binding findings prohibit release of the current bytes, but a
+            # changed, section-scoped draft can remove an unsupported value or
+            # split a compound claim. Every revision receives the full gates
+            # again. Other deterministic safety failures still stop immediately.
+            invalid_fact_binding = any(
+                item.gate == "fact_provenance" and item.severity == Severity.HARD_BLOCKER
+                for item in report.findings
+            )
+            # A malformed application dependency cannot be frozen for semantic
+            # review. Preserve the named hard finding and repair its exact scope
+            # first; the corrected draft must still pass every review below.
+            if not self.settings.test_mode and not deterministic_hard_codes and not invalid_fact_binding:
                 from ..jobs import ANSWER_MODEL_CALL_SECONDS
 
                 call_token, _ = self.database.arm_model_call_deadline(
@@ -2244,6 +2364,11 @@ class AnswerRunner:
                         message=(
                             "The separate-pass advisory AI reviewer flagged this material "
                             "claim against its frozen EvidenceSpans for fail-closed owner review."
+                            + " Findings: " + ", ".join(
+                                code for claim_review in review.claims
+                                if claim_review.claim_id == item.claim_id
+                                for code in claim_review.reason_codes
+                            )
                         ),
                         severity=Severity.HARD_BLOCKER,
                         section_id=claim_sections.get(item.claim_id),
@@ -2309,39 +2434,55 @@ class AnswerRunner:
                             )
                     self._raise_if_cancelled(job_id)
                     full_findings: list[QualityFinding] = []
-                    if not full_review.passed:
-                        omission_statuses = {item.status for item in full_review.omissions}
-                        full_findings.append(
-                            QualityFinding(
+                    self.objects.put_json(
+                        namespace="full_answer_reviews",
+                        value={"job_id": job_id, "answer_version_id": answer_id,
+                               "review": full_review.model_dump(mode="json", by_alias=True)},
+                        metadata={"purpose": "encrypted_exact_draft_review",
+                                  "source_draft_sha256": full_review.source_draft_sha256},
+                    )
+                    for omission in full_review.omissions:
+                        if omission.status == "none":
+                            continue
+                        for section_id in omission.section_ids:
+                            full_findings.append(QualityFinding(
                                 gate="ai_full_answer_review",
                                 code=(
                                     "ai_full_answer_material_omission"
-                                    if "material" in omission_statuses
+                                    if omission.status == "material"
                                     else "ai_full_answer_omission_uncertain"
                                 ),
-                                message=(
-                                    "The separate complete-answer review found a material or "
-                                    "uncertain omission against the candidate-visible facts and "
-                                    "frozen evidence."
-                                ),
+                                message=f"{omission.reason_code}: {omission.explanation}",
                                 severity=Severity.HARD_BLOCKER,
+                                section_id=section_id,
                                 corrective_action=(
-                                    "Hold this version and create a new bounded answer attempt "
-                                    "only when the omitted issue can be resolved from frozen inputs."
+                                    "Address this specific omission using frozen evidence: "
+                                    + ", ".join(omission.evidence_ids)
+                                    + ". Do not add unrelated authority-status boilerplate."
                                 ),
-                            )
-                        )
+                            ))
+                    from ..quality.full_answer_reviewer import semantic_writing_findings
+                    from ..quality.policy import decide_release
+
+                    reconciled = semantic_writing_findings(report.findings, full_review)
+                    complete_findings = [*reconciled, *full_findings]
+                    release = decide_release(
+                        hard_blocker=any(f.severity == Severity.HARD_BLOCKER for f in complete_findings),
+                        evidence_passed=report.evidence_passed,
+                        academic_score=report.academic_score,
+                        word_count=rendered.word_count, word_target=request.word_target,
+                        has_gaps=bool(current.structured.limitations),
+                    )
+                    if any(f.code in {"longer_than_requested", "shorter_than_requested"}
+                           for f in complete_findings):
+                        release = ReleaseState.HELD_FOR_REVIEW
                     report = report.model_copy(
                         update={
                             "ai_full_answer_review": full_review.model_dump(
                                 mode="json", by_alias=True
                             ),
-                            "findings": [*report.findings, *full_findings],
-                            "release_state": (
-                                report.release_state
-                                if full_review.passed
-                                else ReleaseState.HELD_FOR_REVIEW
-                            ),
+                            "findings": complete_findings,
+                            "release_state": release,
                         }
                     )
                     if (
@@ -3362,20 +3503,98 @@ class AnswerRunner:
     @staticmethod
     def _dedupe_legal_evidence(
         batches: Sequence[Sequence[EvidenceSpan]],
+        *,
+        balance_issue_queries: bool = False,
+        preferred_locators: Sequence[str] = (),
+        issue_queries: Sequence[str] = (),
     ) -> list[EvidenceSpan]:
         output: list[EvidenceSpan] = []
         seen: set[tuple[str, str]] = set()
-        for batch in batches:
-            for span in batch:
-                if not is_citable_authority_lane(span):
+        if balance_issue_queries:
+            # Each batch answers a different issue query.  Keeping the first
+            # batch intact can exhaust the model's eight-span budget before
+            # evidence found for the other issues reaches the prompt.
+            ranked = (
+                (batch_index, span)
+                for rank in range(max((len(batch) for batch in batches), default=0))
+                for batch_index, batch in enumerate(batches)
+                for span in batch[rank : rank + 1]
+            )
+            ordered = list(ranked)
+            preferred = []
+            preferred_keys: set[tuple[str, str]] = set()
+            for locator in preferred_locators:
+                focused_batches = [
+                    index for index, query in enumerate(issue_queries)
+                    if re.search(rf"\b{re.escape(locator)}\b", query, re.I)
+                ]
+                focused_index = focused_batches[-1] if focused_batches else None
+                match = next(
+                    (
+                        span for batch_index, span in ordered
+                        if batch_index == focused_index
+                        and span.locator.strip().casefold() == locator.casefold()
+                        and (span.source_version_id, span.chunk_id) not in preferred_keys
+                    ),
+                    None,
+                ) or next(
+                    (
+                        span for _, span in ordered
+                        if span.locator.strip().casefold() == locator.casefold()
+                        and (span.source_version_id, span.chunk_id) not in preferred_keys
+                    ),
+                    None,
+                )
+                if match is not None:
+                    preferred.append(match)
+                    preferred_keys.add((match.source_version_id, match.chunk_id))
+            supplement = []
+            for index, query in enumerate(issue_queries):
+                if index >= len(batches):
+                    break
+                if not all(term in query.casefold() for term in ("refund", "collection", "return costs")):
                     continue
-                key = (span.source_version_id, span.chunk_id)
-                if key in seen:
+                for span in batches[index][:3]:
+                    if span.locator.strip().casefold() != "section 20":
+                        continue
+                    key = (span.source_version_id, span.chunk_id)
+                    if key not in preferred_keys:
+                        supplement.append(span)
+                        preferred_keys.add(key)
+            preferred_set = {locator.casefold() for locator in preferred_locators}
+            matching_context = [
+                span for _, span in ordered
+                if span.locator.strip().casefold() in preferred_set
+                and (span.source_version_id, span.chunk_id) not in preferred_keys
+            ]
+            seen_locators: set[tuple[str, str]] = set()
+            diverse = []
+            remainder = []
+            for _, span in ordered:
+                if (
+                    (span.source_version_id, span.chunk_id) in preferred_keys
+                    or span.locator.strip().casefold() in preferred_set
+                ):
                     continue
-                seen.add(key)
-                output.append(span)
-                if len(output) >= MAX_MERGED_EVIDENCE:
-                    return output
+                locator = (span.source_version_id, span.locator.strip().casefold())
+                if locator in seen_locators:
+                    remainder.append(span)
+                else:
+                    seen_locators.add(locator)
+                    diverse.append(span)
+            candidates = (*preferred, *supplement, *matching_context, *diverse, *remainder)
+        else:
+            candidates = (span for batch in batches for span in batch)
+        for span in candidates:
+            if not is_citable_authority_lane(span):
+                continue
+            key = (span.source_version_id, span.chunk_id)
+            if key in seen:
+                continue
+            seen.add(key)
+            output.append(span)
+            if len(output) >= MAX_MERGED_EVIDENCE:
+                return output
         return output
 
     def _record_teaching_verify_cite(

@@ -1,55 +1,49 @@
-# Counsel web interface
+# LegalBot chat UI
 
-A clean-room Vite/React/TypeScript single-page interface for the local Counsel
-legal research service. The browser consumes the FastAPI `/api/v1` surface; the
-backend remains the only source of truth for conversations, jobs, answers,
-evidence and operator status.
+One Vite/React/TypeScript application serves both the owner and local testers.
+There is no Operations dashboard or separate owner build. `/admin` redirects to
+`/`; management APIs are disabled by default independently of the frontend.
 
-## Prerequisites
+## Run the complete local application
 
-- Node.js 24 LTS
+Use the repository's `scripts/launch_session_chat.py` with a fresh isolated state
+and an existing reviewed retrieval manifest. See the repository README. The
+launcher supplies the development capability privately to the API and durable
+worker. The browser never receives an owner access key or authority hash.
 
-## Quick Start
+The chat opens at `http://127.0.0.1:8777/`, with the API on loopback port 8776 and
+optional pinned Qwen runtime on 8778. Codex uses the host's signed-in CLI and is a
+remote model. Selecting it does not access a website visitor's own desktop CLI.
+
+## Development commands
 
 ```bash
 npm ci
 npm run dev
-npm run build
-npm start
+npm run typecheck
+npm run lint
+npm test
 ```
 
-Development and Vite preview bind the owner interface to
-`http://127.0.0.1:8777`. Both proxy `/api` directly to the development FastAPI
-service at `http://127.0.0.1:8776`, including uploads and SSE job events.
+`npm test` builds the single application and checks its public surface, safe
+Markdown citations and credential handling. The API/worker must also run for
+real answering. A built web page alone does not qualify the model or sources.
 
-For the production-style local application, `npm run build` creates `dist/`
-and the repository-level `scripts/start.sh` makes FastAPI serve the SPA and API
-from the single origin `http://127.0.0.1:8777`. No Vite server or CORS proxy is
-used in production.
+## Conversation and connection behavior
 
-## Application shape
+- Session-owned conversations, messages and matter facts live in encrypted backend storage.
+- Refresh uses an opaque conversation ID. Browser history is not the model's case memory.
+- Qwen, Codex, OpenAI, Claude and Gemini use the same evidence/review pipeline.
+- API keys are held temporarily in encrypted server storage, or in the native OS
+  credential store if **Remember connection** is selected. No keys enter browser
+  storage, URLs or process-wide environment changes.
+- **Test connection** invokes the selected model. Passing does not establish legal quality.
+- **Indexed sources only** and **Index + online research** are explicit choices.
+  Remote models/research require consent. Fetching a page is not source approval.
+- A host clarification or evidence hold is labelled separately from a released
+  model answer. Selected model identity is displayed on each assistant message.
+- Rendered transcript receipts are encrypted diagnostic records; they are
+  client observations, not legal verification or publication authority.
 
-- `/` provides task selection, jurisdiction, uploads, durable job progress,
-  immutable Markdown answers and claim-level evidence inspection.
-- `/admin` provides source inventory, hybrid-index, subject coverage, gap,
-  quality and human-review views.
-- `src/main.tsx` selects the owner view from the browser pathname.
-- `app/lib/api.ts` is the single versioned FastAPI client boundary.
-- `vite.config.ts` owns the loopback-only ports and `/api` proxy.
-- Set `VITE_LEGAL_API_BASE` only to bypass same-origin `/api/v1` during
-  specialized local development.
-
-This build is local owner-only. It intentionally contains no application auth,
-cloud identity, local database or browser-side persistence.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: type-check and create the static Vite build
-- `npm start`: preview `dist/` locally with the API proxy
-- `npm run lint`: run the TypeScript/React accessibility rules
-- `npm run typecheck`: run strict TypeScript checking
-- `npm test`: rebuild and verify the SPA, routes and API boundaries
-
-There is no browser database, local storage, Cloudflare runtime, Next.js server
-or cloud identity dependency in this interface.
+Raw private transcripts, API keys and licence documents must not enter Git.
+Public hosting, user accounts and visitor-owned desktop connections are later work.

@@ -108,6 +108,7 @@ fail "guarded model launcher returned without replacing its process"
 
 echo "Starting LegalBot-New at http://$app_host:$app_port"
 LEGALBOT_ENV=production \
+LEGALBOT_OWNER_CONSOLE_ENABLED=false \
 LEGALBOT_HOST="$app_host" \
 LEGALBOT_PORT="$app_port" \
 LEGALBOT_MODEL_URL="http://$model_host:$model_port" \

@@ -34,6 +34,13 @@ class Settings:
     host: str = os.getenv("LEGALBOT_HOST", "127.0.0.1")
     port: int = int(os.getenv("LEGALBOT_PORT", "8777"))
     environment: str = os.getenv("LEGALBOT_ENV", "development")
+    owner_console_enabled: bool | None = field(
+        default_factory=lambda: (
+            None
+            if os.getenv("LEGALBOT_OWNER_CONSOLE_ENABLED") is None
+            else _env_bool("LEGALBOT_OWNER_CONSOLE_ENABLED")
+        )
+    )
     development_state_id: str | None = field(
         default_factory=lambda: os.getenv("LEGALBOT_DEVELOPMENT_STATE_ID") or None
     )
@@ -105,6 +112,12 @@ class Settings:
     canary_review_root: Path | None = field(
         default_factory=lambda: _env_optional_path("LEGALBOT_CANARY_REVIEW_ROOT")
     )
+
+    @property
+    def owner_console_active(self) -> bool:
+        if self.owner_console_enabled is not None:
+            return self.owner_console_enabled
+        return False
 
     def __post_init__(self) -> None:
         if self.development_candidate_build_id is not None and (
