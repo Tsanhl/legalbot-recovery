@@ -104,7 +104,7 @@ _PROVISION_ATOM = (
 )
 _PROVISION_RANGE = rf"{_PROVISION_ATOM}(?:\s*(?:-|–|—|to)\s*{_PROVISION_ATOM})?"
 _PROVISION_SERIES_RE = re.compile(
-    r"(?<![A-Za-z0-9])"
+    r"(?<![A-Za-z0-9'’])"
     rf"(?P<label>{_PROVISION_LABEL})"
     r"\.?\s*"
     rf"(?P<series>{_PROVISION_RANGE}(?:\s*(?:,\s*(?:(?:and|or)\s+)?|(?:and|or|&)\s+){_PROVISION_RANGE})*)",

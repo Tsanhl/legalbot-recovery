@@ -330,3 +330,68 @@ async def test_long_evidence_ids_use_exact_host_bound_aliases(reference):
         assert result.claims[0].evidence_span_ids == (evidence.id,)
         assert result.claims[0].cited_evidence_ids == ((evidence.id,) if reference else ())
         assert result.passed is (reference is not None)
+
+@pytest.mark.asyncio
+async def test_remote_reviews_are_bounded_and_keep_frozen_order():
+    import asyncio
+
+    class Model:
+        claim_review_concurrency = 4
+        active = 0
+        peak = 0
+
+        async def invoke_json(self, **kwargs):
+            claim = kwargs['user_payload']['claims'][0]
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+            try:
+                await asyncio.sleep(0.01 if claim['claim_id'] != 'claim-1' else 0.04)
+                return ('invoke-' + claim['claim_id'], {'claims': [{
+                    'claim_id': claim['claim_id'], 'verdict': 'supported',
+                    'reason_codes': [], 'cited_evidence_ids': ['evidence-1'],
+                }]})
+            finally:
+                self.active -= 1
+
+    model = Model()
+    draft = _draft()
+    draft.sections[0].claims[:] = [draft.sections[0].claims[0].model_copy(update={'id': f'claim-{i}'}) for i in range(1, 7)]
+    progress = []
+    result = await invoke_ai_evidence_reviewer(
+        model=model, draft=draft, evidence_by_id={'evidence-1': _evidence()},
+        model_id='test-model', model_version='test-version', policy_sha256='a'*64,
+        on_progress=lambda done, total: progress.append((done, total)),
+    )
+    assert model.peak == 4 and model.active == 0
+    assert [c.claim_id for c in result.claims] == [f'claim-{i}' for i in range(1, 7)]
+    assert progress == [(i, 6) for i in range(1, 7)]
+    assert len(set(result.invocation_ids)) == 6
+
+
+@pytest.mark.asyncio
+async def test_failed_parallel_review_cancels_siblings():
+    import asyncio
+
+    class Model:
+        claim_review_concurrency = 4
+        active = 0
+
+        async def invoke_json(self, **kwargs):
+            self.active += 1
+            try:
+                if kwargs['user_payload']['claims'][0]['claim_id'] == 'claim-1':
+                    await asyncio.sleep(0.01)
+                    raise RuntimeError('provider failed')
+                await asyncio.Event().wait()
+            finally:
+                self.active -= 1
+
+    draft = _draft()
+    draft.sections[0].claims[:] = [draft.sections[0].claims[0].model_copy(update={'id': f'claim-{i}'}) for i in range(1, 5)]
+    model = Model()
+    with pytest.raises(RuntimeError, match='provider failed'):
+        await invoke_ai_evidence_reviewer(
+            model=model, draft=draft, evidence_by_id={'evidence-1': _evidence()},
+            model_id='test-model', model_version='test-version', policy_sha256='a'*64,
+        )
+    assert model.active == 0

@@ -11,13 +11,14 @@ recommendations can never override deterministic or owner-controlled gates.
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import os
 import re
 import stat
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, Self
@@ -237,7 +238,7 @@ def freeze_material_claims(
                 raise ValueError("material claim IDs must be unique")
             observed_claim_ids.add(claim.id)
             fact_quotes = verified_application_quotes(claim, draft, question)
-            question_context = (question or "") if claim.kind == "application" else ""
+            question_context = question or ""
             spans: list[EvidenceSpan] = []
             for evidence_id in claim.evidence_ids:
                 span = evidence_by_id.get(evidence_id)
@@ -1082,6 +1083,7 @@ async def invoke_ai_evidence_reviewer(
     policy_sha256: str,
     checkpoint_store: AIEvidenceReviewerCheckpointStore | None = None,
     question: str | None = None,
+    on_progress: Callable[[int, int], None] | None = None,
 ) -> AIEvidenceReviewResult:
     """Invoke the distinct reviewer prompt and seal only locally derived identities.
 
@@ -1096,10 +1098,7 @@ async def invoke_ai_evidence_reviewer(
     toolchain_sha = ai_evidence_reviewer_toolchain_sha256()
     if checkpoint_store is not None:
         checkpoint_store.prepare(frozen)
-    invocation_ids: list[str] = []
-    claim_rows: list[Mapping[str, Any]] = []
-    invocation_traces: list[AIReviewerInvocationTrace] = []
-    for ordinal, claim in enumerate(frozen, start=1):
+    async def review_claim(ordinal: int, claim: FrozenClaimReviewInput):
         checkpoint = (
             checkpoint_store.read(ordinal=ordinal, claim=claim)
             if checkpoint_store is not None
@@ -1116,16 +1115,14 @@ async def invoke_ai_evidence_reviewer(
                 policy_sha256=policy_sha256,
                 toolchain_sha256=toolchain_sha,
             )
-            invocation_ids.append(checkpoint.invocation_trace.invocation_id)
-            claim_rows.append(_model_row_from_verdict(checkpoint.decision))
-            invocation_traces.append(
+            return (checkpoint.invocation_trace.invocation_id,
+                    _model_row_from_verdict(checkpoint.decision),
                 _reseal_ai_reviewer_invocation_trace(
                     checkpoint.invocation_trace,
                     resumed_from_checkpoint=True,
                     checkpoint_seal_sha256=checkpoint.seal_sha256,
                 )
             )
-            continue
         if not hasattr(model, "invoke_json"):
             raise RuntimeError("AI evidence reviewer transport is unavailable")
         user_payload = {
@@ -1192,15 +1189,41 @@ async def invoke_ai_evidence_reviewer(
                 checkpoint=sealed_checkpoint,
             )
             checkpoint_seal = sealed_checkpoint.seal_sha256
-        invocation_ids.append(invocation_id)
-        claim_rows.append(_model_row_from_verdict(decision))
-        invocation_traces.append(
-            _reseal_ai_reviewer_invocation_trace(
-                trace,
-                resumed_from_checkpoint=False,
-                checkpoint_seal_sha256=checkpoint_seal,
-            )
-        )
+        return (invocation_id, _model_row_from_verdict(decision),
+                _reseal_ai_reviewer_invocation_trace(
+                    trace, resumed_from_checkpoint=False,
+                    checkpoint_seal_sha256=checkpoint_seal,
+                ))
+
+    # Remote requests are independent; preserve a distinct invocation and exact
+    # evidence binding per claim. Checkpoint files require a contiguous prefix.
+    concurrency = 1 if checkpoint_store is not None else min(4, max(1, int(
+        getattr(model, "claim_review_concurrency", 1)
+    )))
+    semaphore = asyncio.Semaphore(concurrency)
+    completed = 0
+
+    async def bounded_review(ordinal: int, claim: FrozenClaimReviewInput):
+        nonlocal completed
+        async with semaphore:
+            result = await review_claim(ordinal, claim)
+            completed += 1
+            if on_progress is not None:
+                on_progress(completed, len(frozen))
+            return result
+
+    tasks = [asyncio.create_task(bounded_review(i, claim))
+             for i, claim in enumerate(frozen, start=1)]
+    try:
+        results = await asyncio.gather(*tasks)
+    except BaseException:
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+        raise
+    invocation_ids = [row[0] for row in results]
+    claim_rows = [row[1] for row in results]
+    invocation_traces = [row[2] for row in results]
 
     if invocation_ids:
         aggregate_invocation_id = invocation_ids[0]

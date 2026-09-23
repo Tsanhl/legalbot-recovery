@@ -1,21 +1,28 @@
 # LegalBot current state
 
-## Latest owner direction: show drafts and choose the Codex model in chat
+## Latest owner direction: faster private review and one GE check with 6 Sol
 
-The local chat now shows a saved, session-owned **unverified model draft** beside
-its held or running job. It remains outside released answers and conversation
-facts. A live r27 attempt exposed a date-control error, which was fixed, then
-timed out before saving a draft. A separate r28 Codex `gpt-6-astra` attempt used
-the reviewed 5 September England index and displayed its saved 424-word
-structured draft while claim review continued. This demonstrates the preview
-path, not a verified legal answer.
+The r28 Astra job ended during review after saving a 424-word structured draft
+and a 440-word repair; its queued companion expired. Neither produced a released
+answer. Its terminal receipt is private. The local UI keeps the saved draft in a
+collapsed, session-owned **private diagnostic** panel, separate from released
+answers and conversation facts.
 
-The composer now places a Codex model selector beside **Words**. The next signed-in
-chat launcher issues separately pinned routes for `gpt-6-sol`, `gpt-6-astra`
-and `gpt-6-luna`. Selecting one creates or reuses a session-owned connection
-for the next question. A running job keeps its original model. The current r28
-authority was issued before this change and remains immutable, so its other
-model options are marked as available in the next session.
+The r29 launcher pins separate 6 Sol, 6 Astra and 6 Luna routes. The owner asked
+to use 6 Sol for the final GE check. Its real signed-in CLI connection test
+failed with a provider error stating that this ChatGPT account does not support
+`gpt-6-sol`. No r29 legal question was submitted. The UI now shows the failure
+and prevents a question from being sent through that failed connection. A
+choice about using Astra for the single fixture is pending; it must retain its
+own model identity.
+
+Answer review now checks up to four independent material claims concurrently,
+preserves input order, and reports the count completed. This removes a serial
+wait in the prior trace without weakening the claim or full-answer gates.
+Encrypted conversations have a 30-day activity expiry for access, with a
+seven-day hot-window bound. Expiry does not silently delete immutable evaluation
+records. The existing API, query processing, indexed retrieval, drafting and
+release boundary are retained; one substantive GE answer remains unproven.
 
 ## Continuation guide
 

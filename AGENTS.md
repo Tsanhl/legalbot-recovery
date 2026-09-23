@@ -1,16 +1,18 @@
 # LegalBot v1.11 recovery-workspace agent rules
 
-## 23 September UI continuation: preserve the running fixture
+## 23 September r29 UI continuation: Sol access and one GE fixture
 
-The owner asked for a Codex model selector beside **Words**, offering 6 Sol,
-6 Astra and 6 Luna, without interrupting the current answer attempt. The UI
-selector and next-launch signed-in route definitions are implemented. The
-current r28 authority was issued before those extra routes and must not be
-mutated while jobs run; it displays Sol/Luna as next-session choices. r28 has
-shown an actual saved Astra draft in a session-owned **unverified model draft**
-panel. This preview is not released legal advice or a completed quality pass.
-Do not stop, restart, or reinterpret the running/queued r28 jobs merely to
-activate the new selector. Keep their attempts and drafts preserved.
+r28 is terminal: its first Astra job was cancelled during review after saving a
+424-word draft and 440-word repair; its second job expired in the queue. The
+private terminal receipt preserves both. r29 is the current loopback session,
+with separately pinned 6 Sol, 6 Astra and 6 Luna routes. The owner requested
+6 Sol for the remaining check. Its real isolated signed-in CLI probe failed:
+the provider returned that `gpt-6-sol` is unsupported with this ChatGPT account.
+The failed connection is shown as failed in the UI and cannot submit a question.
+No r29 legal job has been submitted. Do not silently use Astra or call its
+result a Sol test. The owner has been asked whether to use Astra for the one
+GE fixture. The speed and privacy changes are implemented and under narrow
+verification; no supported legal answer or active/public promotion is claimed.
 
 ## Latest owner direction: execute the targeted continuation guide
 

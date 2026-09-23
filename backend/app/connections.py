@@ -10,6 +10,7 @@ import hashlib
 import json
 import secrets
 import time
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -175,10 +176,16 @@ class ConnectionStore:
 
     def require_conversation(self, identifier: str, session: str) -> None:
         row = self.db.fetchone(
-            "SELECT session_id FROM chat_owned_conversations WHERE id=?", (identifier,)
+            "SELECT o.session_id,c.status,c.expires_at FROM chat_owned_conversations o "
+            "LEFT JOIN conversation_sessions c ON c.id=o.id WHERE o.id=?", (identifier,)
         )
         if row is None or row["session_id"] != session:
             raise ConnectionUnavailable("Conversation unavailable in this session")
+        if row["expires_at"] is not None and (
+            row["status"] != "active"
+            or datetime.fromisoformat(row["expires_at"]) <= datetime.now(UTC)
+        ):
+            raise ConnectionUnavailable("Conversation expired or closed")
 
     def require_job(self, identifier: str, session: str) -> Any:
         row = self.db.fetchone("SELECT * FROM chat_owned_jobs WHERE job_id=?", (identifier,))

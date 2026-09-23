@@ -119,3 +119,11 @@ instead use kind="application" with nonempty fact_quotes and rule_claim_ids):
 "text":"one supported proposition","evidence_ids":["supplied-id"],
 "material":true,"kind":"legal_proposition","proposition_hash":null,"fact_quotes":[],"rule_claim_ids":[]}]}],
 "limitations":[]}
+
+Keep each claim to one sentence. Give separate claims to independently
+assertable duties or conclusions, including separate sentences in the same
+paragraph. A fact-specific entitlement conclusion must bind the evidence for
+every decisive element, including the substantive standard and remedy
+conditions; a provision describing a refund alone may not establish entitlement.
+Frame relevant rules to the question's scope instead of reciting broad rules
+whose unused branches would need long qualifications.

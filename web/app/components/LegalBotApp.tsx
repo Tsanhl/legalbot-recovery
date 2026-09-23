@@ -80,7 +80,13 @@ function stageIndex(stage: JobStage): number {
   return ["queued", ...PROGRESS_STAGES, "complete"].indexOf(stage);
 }
 
-function JobProgress({ stage, detail, progress }: { stage: JobStage; detail: string; progress: number }) {
+function JobProgress({ stage, detail, createdAt }: { stage: JobStage; detail: string; createdAt?: string }) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+  const elapsed = createdAt ? Math.max(0, Math.floor((now - Date.parse(createdAt)) / 1000)) : 0;
   const current = stageIndex(stage);
   return (
     <div className="job-card" role="status" aria-live="polite">
@@ -90,7 +96,7 @@ function JobProgress({ stage, detail, progress }: { stage: JobStage; detail: str
           <strong>{STAGE_LABELS[stage]}</strong>
           <p>{detail || "Working locally. You can leave this page and reconnect to the same job."}</p>
         </div>
-        <strong>{Math.round(Math.max(0, Math.min(1, progress)) * 100)}%</strong>
+        <strong aria-label="Elapsed time">{Math.floor(elapsed / 60)}m {elapsed % 60}s</strong>
       </div>
       <ol className="stage-track" aria-label="Answer progress">
         {PROGRESS_STAGES.map((item) => {
@@ -111,13 +117,13 @@ function JobProgress({ stage, detail, progress }: { stage: JobStage; detail: str
 type VisibleDraft = Extract<DraftPreview, {available: true}>;
 
 function DraftPreviewCard({ preview }: { preview: VisibleDraft }) {
-  return <section className="draft-preview" aria-label="Unverified model draft">
-    <strong>Unverified model draft — for your review</strong>
+  return <details className="draft-preview" aria-label="Private diagnostic draft">
+    <summary>Private diagnostic draft — unverified</summary>
     <p>This is the model’s saved text, not a released legal answer. It may contain errors or unsupported claims. It is not added to the case facts for follow-up questions.</p>
     <small>{preview.model_version} · version {preview.version} · {preview.word_count} words · {preview.review_complete ? 'Review findings below' : 'Review in progress'}</small>
     <pre>{preview.content}</pre>
     {preview.review_findings.length > 0 && <details><summary>Why this draft was held ({preview.review_findings.length} findings shown)</summary><ul>{preview.review_findings.map((finding, i) => <li key={`${finding.code}-${i}`}><strong>{finding.code}:</strong> {finding.message}</li>)}</ul></details>}
-  </section>;
+  </details>;
 }
 
 export function LegalBotApp() {
@@ -258,7 +264,7 @@ export function LegalBotApp() {
     try {
       const result = await chatApi.test(selected.id);
       setConnections(old => old.map(c => c.id === selected.id ? {...c,test_status:result.status} : c));
-      setNotice(result.status === 'passed' ? 'Model responded. Legal answer quality is checked separately.' : 'Model test failed. Check credentials, model access or the local model service.');
+      setNotice(result.status === 'passed' ? 'Model responded. Legal answer quality is checked separately.' : 'Model test failed. This connection cannot answer questions; check model access or choose another connection.');
     } catch(e) { setError(formatApiError(e)); }
     finally { setConnecting(false); }
   };
@@ -271,6 +277,7 @@ export function LegalBotApp() {
     }
     setError(''); setNotice('');
     if (!selected) { setPanel(true); setError('Connect a model before sending your question.'); return; }
+    if (selected.test_status === 'failed') { setPanel(true); setError('This model failed its connection test. Choose a working connection before sending your question.'); return; }
     const parsedLawDate = new Date(`${asOfDate}T00:00:00Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(asOfDate) || Number.isNaN(parsedLawDate.getTime()) || parsedLawDate.toISOString().slice(0, 10) !== asOfDate) {
       setError('Enter the law date as YYYY-MM-DD.'); return;
@@ -291,7 +298,7 @@ export function LegalBotApp() {
   };
   const chooseMode = (mode: TaskMode) => { setTaskMode(mode); setTargetWords(mode === 'essay' || mode === 'problem' ? 700 : 450); };
   return <div className="app-shell">
-    {sidebar && <aside className="sidebar"><button type="button" onClick={newChat}>New conversation</button><h2>Saved conversations</h2>{history.map((item, i) => <button type="button" key={item.id} onClick={() => { conversationRef.current = item.id; setConversation(item.id); setJobId(''); setJob(null); setSidebar(false); const url=new URL(location.href); url.searchParams.set('conversation',item.id); window.history.replaceState({},'',url); void refresh(item.id, true).catch(e=>setError(formatApiError(e))); }}>Conversation {history.length-i}</button>)}</aside>}
+    {sidebar && <aside className="sidebar"><button type="button" onClick={newChat}>New conversation</button><h2>Saved conversations</h2><p>Private chats expire after {session?.conversation_retention_days || 30} days without a new message.</p>{history.map((item, i) => <button type="button" key={item.id} onClick={() => { conversationRef.current = item.id; setConversation(item.id); setJobId(''); setJob(null); setSidebar(false); const url=new URL(location.href); url.searchParams.set('conversation',item.id); window.history.replaceState({},'',url); void refresh(item.id, true).catch(e=>setError(formatApiError(e))); }}>Conversation {history.length-i}</button>)}</aside>}
     <main className="main-panel">
       <header className="topbar"><button className="icon-button" type="button" aria-label="Open conversations" onClick={()=>setSidebar(!sidebar)}><Icons.menu size={22}/></button>
         <nav className="task-switcher" aria-label="Answer mode">{TASKS.map(item=><button type="button" className={taskMode===item.value?'active':''} key={item.value} onClick={()=>chooseMode(item.value)}>{item.label}</button>)}</nav>
@@ -310,11 +317,11 @@ export function LegalBotApp() {
         <button type="button" disabled={!selected||connecting} onClick={()=>void test()}>Test connection</button>
         <button type="button" disabled={!selected||connecting} onClick={()=>{if(selected) void chatApi.disconnect(selected.id).then(()=>{setConnections(old=>old.filter(c=>c.id!==selected.id));setConnectionId('');}).catch(e=>setError(formatApiError(e)));}}>Disconnect</button>
       </section>}
-      <div className="connection-status" role="status">{selectedRoute && selected ? `${PROVIDER_LABELS[selected.route_id]} · ${selectedRoute.model_id} · ${selected.test_status === 'passed' ? 'connection tested' : 'connection test pending'}` : 'No model connected'} · UK and USA coverage is checked per question.</div>
+      <div className="connection-status" role="status">{selectedRoute && selected ? `${PROVIDER_LABELS[selected.route_id]} · ${selectedRoute.model_id} · ${selected.test_status === 'passed' ? 'connection tested' : selected.test_status === 'failed' ? 'connection failed' : 'connection test pending'}` : 'No model connected'} · UK and USA coverage is checked per question.</div>
       <section className="chat-content" aria-label="Conversation">
         {!messages.length && <section className="welcome"><div className="welcome-mark">A</div><p className="eyebrow">Evidence before assertion</p><h1>Legal research you can inspect.</h1><p>Ask for a critical essay, problem analysis or clear explanation. Inspect the sources used and any remaining limitations.</p><div className="starter-grid">{STARTERS.map(item=><button key={item.mode} type="button" className="starter-card" onClick={()=>chooseMode(item.mode)}><span><item.icon size={24}/></span><strong>{item.title}</strong><p>{item.copy}</p></button>)}</div><p>Claim-level evidence · Full OSCOLA by default · Advisory academic guidance</p></section>}
         {messages.map(message=><article key={message.id} className={message.role==='user'?'question-card':'answer-card'} data-message-role={message.role} data-message-id={message.id}><header>{message.role==='user'?'You':'LegalBot'}</header>{message.role==='assistant'&&<small className="message-provenance">Selected: {message.selected_model || message.selected_provider || 'unknown'} · {message.display_origin==='released_answer'?'Reviewed answer':'System clarification or incomplete result'}</small>}<div className="answer-prose"><AnswerMarkdown content={message.content} onEvidence={citation=>{if(message.answer_id)setEvidence({answerId:message.answer_id,evidenceId:citation.evidenceId,citationLabel:citation.label});}}/></div>{message.role==='assistant' && !message.answer_id && message.job_id && draftPreviews[message.job_id] && <DraftPreviewCard preview={draftPreviews[message.job_id]}/>}</article>)}
-        {jobId && <><JobProgress stage={job?.stage||'queued'} detail={job?.message||'Your question is saved. Checking sources and selected model.'} progress={job?.progress||0}/>{draftPreviews[jobId] && <DraftPreviewCard preview={draftPreviews[jobId]}/>}<button type="button" onClick={()=>void api.cancelJob(jobId).catch(e=>setError(formatApiError(e)))}>Cancel</button></>}
+        {jobId && <><JobProgress stage={job?.stage||'queued'} detail={job?.message||'Your question is saved. Checking sources and selected model.'} createdAt={job?.created_at}/>{draftPreviews[jobId] && <DraftPreviewCard preview={draftPreviews[jobId]}/>}<button type="button" onClick={()=>void api.cancelJob(jobId).catch(e=>setError(formatApiError(e)))}>Cancel</button></>}
         <div ref={end}/>
       </section>
       <form className="composer" onSubmit={e=>{e.preventDefault();void submit();}}>

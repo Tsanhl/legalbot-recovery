@@ -50,6 +50,7 @@ class LocalEndpointGateway(LoopbackModelGateway):
 
 
 class HostedEvidenceGateway(LoopbackModelGateway):
+    claim_review_concurrency = 4
     """Bounded hosted profile; does not inherit the local 9B memory budget."""
 
     max_question_chars = 30_000
@@ -466,6 +467,10 @@ class RoutedModelGateway:
     @property
     def selected_model_id(self) -> str:
         return str(getattr(self._current(), "expected_model", self.settings.model_id))
+
+    @property
+    def claim_review_concurrency(self) -> int:
+        return int(getattr(self._current(), "claim_review_concurrency", 1))
 
     @property
     def selected_generation_config_sha256(self) -> str:

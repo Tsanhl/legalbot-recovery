@@ -95,6 +95,10 @@ def authorise_job_read(request: Request, services: Any, job: Any) -> None:
     _, session = require_session(request, services)
     if owned["session_id"] != session:
         raise HTTPException(404, "Job not found")
+    try:
+        store(services).require_conversation(str(owned["conversation_id"]), session)
+    except ConnectionUnavailable:
+        raise HTTPException(404, "Conversation expired or unavailable") from None
     # Historical reads do not require a still-connected provider credential.
     connection = services.database.fetchone(
         "SELECT route_id FROM chat_connections WHERE id=?", (owned["connection_id"],)
@@ -131,6 +135,7 @@ async def session(request: Request, response: Response) -> dict[str, Any]:
         "default_route": "codex_bridge",
         "online_research_available": services.settings.official_research_enabled,
         "coverage": "UK and USA; support is checked for each jurisdiction and date",
+        "conversation_retention_days": services.settings.conversation_retention_days,
     }
 
 
@@ -247,8 +252,9 @@ async def conversations(request: Request) -> dict[str, Any]:
     services = request.app.state.services
     vault, session_id = require_session(request, services)
     rows = services.database.fetchall(
-        "SELECT id FROM chat_owned_conversations WHERE session_id=? ORDER BY created_at DESC",
-        (session_id,),
+        "SELECT o.id FROM chat_owned_conversations o JOIN conversation_sessions c ON c.id=o.id "
+        "WHERE o.session_id=? AND c.status='active' AND c.expires_at>? ORDER BY o.created_at DESC",
+        (session_id, datetime.now(UTC).isoformat()),
     )
     return {"items": [{"id": r["id"]} for r in rows]}
 
@@ -298,12 +304,16 @@ async def draft_preview(job_id: str, request: Request, response: Response) -> di
     config(services)
     _, session_id = require_session(request, services)
     owned = services.database.fetchone(
-        "SELECT j.status,j.answer_id FROM chat_owned_jobs c "
+        "SELECT j.status,j.answer_id,c.conversation_id FROM chat_owned_jobs c "
         "JOIN jobs j ON j.id=c.job_id WHERE c.job_id=? AND c.session_id=?",
         (job_id, session_id),
     )
     if owned is None:
         raise HTTPException(404, "Draft preview not found")
+    try:
+        store(services).require_conversation(str(owned["conversation_id"]), session_id)
+    except ConnectionUnavailable:
+        raise HTTPException(404, "Conversation expired or unavailable") from None
     response.headers["Cache-Control"] = "no-store"
     if owned["status"] == "complete" and owned["answer_id"]:
         return {"available": False, "reason": "released_answer"}
@@ -408,6 +418,8 @@ async def question(payload: QuestionRequest, request: Request) -> Any:
         vault.claim_conversation(payload.conversation_id, session_id)
     except ConnectionUnavailable:
         raise HTTPException(404, "Connection or conversation unavailable") from None
+    if connection["test_status"] == "failed":
+        raise HTTPException(409, "Selected model failed its connection test")
     key = request.headers.get("x-idempotency-key", "")
     if not 8 <= len(key) <= 128:
         raise HTTPException(422, "An idempotency key is required")

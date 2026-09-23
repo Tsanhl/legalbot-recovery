@@ -4,7 +4,17 @@ Updated 23 September 2026. The owner directed Codex-first execution. The origina
 fragmented-context defect is now repaired for the reviewed England/5 September
 candidate; r17–r19 reached drafting and review but remained incomplete/held.
 r20 ended in a review-schema error; r21 stopped on an incorrectly echoed reviewer evidence ID. r22 exposed missing ordinary-language issue queries and an invalid application-rule dependency. r23 reached both bounded repairs but held with application-rule mismatches and 623 words. r24 held after two repairs (557/553/578 words). Its per-claim review omitted user facts from context. r25 confirmed complete fact context and xhigh drafting but produced 581 claim words; it was cancelled during the first repair. r26 explicitly selected gpt-6-astra and passed its connection test, but the processes disappeared during its second repair after an interrupted turn. Its private interrupted-attempt receipt preserves the stale running row and proves no published answer. The owner now prefers Codex and API routes first; Qwen training can wait. External access is intended for invited friends only. The local launcher has no invite authentication and remains loopback-only.
-See `docs/testing/SHARED_CHAT_CONTINUATION_2026-09-23.md` for terminal outcomes.
+In r28, Astra saved a 424-word draft and a 440-word repair before review was
+cancelled; its second queued job expired. Both are terminal and preserved. The
+r29 loopback UI has separately pinned Sol, Astra and Luna routes. The owner's
+requested 6 Sol model failed a real isolated CLI probe because this signed-in
+ChatGPT account does not support `gpt-6-sol`. The failed route is visibly marked
+and cannot accept a question. No r29 legal job has run; do not rename an Astra
+result as a Sol result. The single GE fixture awaits the owner's route choice.
+The claim reviewer now checks independent claims with bounded parallelism and
+shows a completed-claim count; conversation access has a 30-day activity
+expiry. See `docs/testing/SHARED_CHAT_CONTINUATION_2026-09-23.md` for earlier
+terminal outcomes.
 Do not repeat the forty-case campaign before one supported Codex answer.
 
 ## Current route and audience decision

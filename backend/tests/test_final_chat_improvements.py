@@ -106,8 +106,9 @@ def test_application_review_preserves_full_fact_context_and_binds_changes(eviden
                                   question="I paid £799. The laptop was new.")
     second = freeze_material_claims(draft=draft, evidence_by_id={"e1": span},
                                    question="I paid £799. The laptop was used.")
-    assert first[0].question_context == ""  # User text never supplies a pure legal rule.
-    assert first[0].identity == second[0].identity
+    assert first[0].question_context.endswith("The laptop was new.")
+    assert first[0].assumed_question_facts == ()  # Context scopes a rule; it is not authority.
+    assert first[0].identity != second[0].identity
     assert first[1].model_payload()["question_context"].endswith("The laptop was new.")
     assert first[1].assumed_question_facts == ("I paid £799.",)
     assert first[1].identity.evidence_bundle_sha256 != second[1].identity.evidence_bundle_sha256
@@ -181,3 +182,11 @@ def test_codex_reasoning_profile_is_explicit_and_digest_bound(tmp_path):
     assert gateway._reasoning_effort('semantic_verify') == 'medium'
     from app.model_routes import HostedEvidenceGateway
     assert gateway._generation_config_sha256() != HostedEvidenceGateway._generation_config_sha256(gateway)
+
+
+def test_possessive_s_is_not_a_statutory_section_reference():
+    from app.quality.evidence import extract_material_facts
+    for text in ("the refund’s 14-day deadline", "the retailer's 30 days"):
+        assert not any(f.kind == 'provision' for f in extract_material_facts(text))
+    assert any(f.kind == 'provision' and f.normalized_value == 'section:14'
+               for f in extract_material_facts('CRA s 14'))

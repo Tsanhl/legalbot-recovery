@@ -2344,6 +2344,11 @@ class AnswerRunner:
                             model_version=current.model_version,
                             policy_sha256=POLICY_SHA256,
                             question=question,
+                            on_progress=lambda done, total, round_number=attempts: self._event(
+                                job_id, JobStage.VERIFYING,
+                                min(0.64 + round_number * 0.12, 0.86),
+                                f"Final checks: {done} of {total} material claims checked",
+                            ),
                         )
                 finally:
                     if not self.database.clear_model_call_deadline(job_id, call_token=call_token):
@@ -2412,6 +2417,9 @@ class AnswerRunner:
                     full_call_token, _ = self.database.arm_model_call_deadline(
                         job_id, seconds=ANSWER_MODEL_CALL_SECONDS
                     )
+                    self._event(job_id, JobStage.VERIFYING,
+                                min(0.70 + attempts * 0.10, 0.90),
+                                "Final checks: coverage, accuracy and writing quality")
                     try:
                         async with asyncio.timeout(ANSWER_MODEL_CALL_SECONDS):
                             full_review = await invoke_full_answer_reviewer(

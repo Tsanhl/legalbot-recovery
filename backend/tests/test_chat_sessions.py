@@ -179,6 +179,15 @@ async def test_actual_api_saves_clarification_followup_and_blocks_other_session(
                 "question": "I rent in the UK. My landlord emailed on 21 September requiring departure by 5 October. Rent is £1,000.",
             }
             headers = {"X-Idempotency-Key": "first-turn"}
+            database.execute(
+                "UPDATE chat_connections SET test_status='failed' WHERE id=?", (conn["id"],)
+            )
+            rejected = await owner.post("/api/v1/chat/questions", json=payload, headers=headers)
+            assert rejected.status_code == 409
+            assert "failed its connection test" in rejected.text
+            database.execute(
+                "UPDATE chat_connections SET test_status='untested' WHERE id=?", (conn["id"],)
+            )
             admitted = await owner.post("/api/v1/chat/questions", json=payload, headers=headers)
             assert admitted.status_code == 202, admitted.text
             job = admitted.json()["job_id"]
@@ -283,6 +292,16 @@ async def test_saved_held_draft_is_visible_only_to_its_local_session(
             )).json()
             assert all(draft_text not in message["content"] for message in conversation["messages"])
             assert conversation["messages"][-1]["display_origin"] == "host_status"
+            database.execute(
+                "UPDATE conversation_sessions SET expires_at='2000-01-01T00:00:00+00:00' WHERE id=?",
+                ("conversation-draft-preview",),
+            )
+            assert (await owner.get('/api/v1/chat/conversations')).json()['items'] == []
+            assert (await owner.get('/api/v1/chat/conversations/conversation-draft-preview')).status_code == 404
+            assert (await owner.get(f'/api/v1/chat/jobs/{job_id}/draft-preview')).status_code == 404
+            assert (await owner.get(f'/api/v1/jobs/{job_id}')).status_code == 404
+            # TTL removes browser access; immutable evaluation custody remains private.
+            assert database.fetchone('SELECT id FROM answer_versions WHERE job_id=?', (job_id,)) is not None
     finally:
         app.state.services = previous
 
