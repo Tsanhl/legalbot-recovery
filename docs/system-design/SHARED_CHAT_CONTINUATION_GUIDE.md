@@ -372,11 +372,13 @@ No such new training or adapter adoption has occurred in this implementation.
 
 ## 10. Step 7 — cleanup and Git delivery
 
-Implementation is still uncommitted; no new push was made during this work.
-Previous authorization permits an audited public commit/push, but the current
-instruction is a handoff. Do not stage/push as a substitute for finishing review.
+The audited shared-chat, review-speed and UI changes were pushed to public
+`main` through commit `2c4ab9c`. This is code delivery, not proof that a
+substantive legal answer passed review. The four older review receipts below
+were restored in the local checkout after separate inspection; their deletion
+was not part of that commit.
 
-When delivery resumes:
+For later changes:
 
 - Audit the actual diff and runtime references. Dashboard components have been
   removed; recoverable copies and superseded working README/current-state text
@@ -386,8 +388,7 @@ When delivery resumes:
   because it is old.
 - Exclude credentials, private paths, raw prompts/transcripts, source/licence
   correspondence and training artifacts. Test the staged diff, not just `.gitignore`.
-- Reconcile these four **pre-existing** deletions separately; do not stage them with
-  the implementation:
+- Preserve these four historical review receipts and their checksum history:
   - `8-17 review/LegalBot-Live60-Path-B-Completed-Review-2026-08-17/README.md`
   - `8-17 review/LegalBot-Live60-Path-B-Completed-Review-2026-08-17/SHA256SUMS.txt`
   - `8-17 review/LegalBot-Live60-Path-B-Substantive-Review-Complete-Pending-Attestation-2026-08-17/README.md`
