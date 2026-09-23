@@ -1,7 +1,7 @@
 :root {
   --ink: #182a2d;
   --ink-soft: #43575a;
-  --muted: #748487;
+  --muted: #4d5e60;
   --paper: #f6f5f0;
   --paper-2: #eeece5;
   --surface: #fffefa;
@@ -165,6 +165,12 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .generation-error > button { align-self: start; border: 0; background: transparent; color: #7d362f; cursor: pointer; font-size: 10px; }
 
 .composer-dock { position: relative; z-index: 5; padding: 9px 24px 11px; border-top: 1px solid var(--line); background: rgb(246 245 240 / 96%); backdrop-filter: blur(16px); }
+.development-chat-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 7px; font-size: 10px; color: var(--ink-soft); }
+.development-chat-controls label { display: flex; align-items: center; gap: 5px; font-weight: 700; }
+.development-chat-controls input[type="text"] { width: 210px; }
+.development-chat-controls input[type="password"] { width: 150px; }
+.development-chat-controls input:not([type="checkbox"]), .development-chat-controls select { min-height: 28px; padding: 3px 6px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink); font: inherit; }
+.development-chat-controls > span { width: 100%; color: var(--muted); }
 .composer { width: min(880px, 100%); margin: 0 auto; border: 1px solid var(--line-strong); border-radius: 13px; background: var(--surface); box-shadow: 0 8px 30px rgb(30 46 44 / 7%); overflow: hidden; transition: border-color .15s ease, box-shadow .15s ease; }
 .composer:focus-within { border-color: #9cb9ad; box-shadow: 0 8px 34px rgb(29 102 85 / 10%); }
 .composer textarea { display: block; width: 100%; min-height: 70px; max-height: 180px; resize: vertical; padding: 14px 16px 8px; border: 0; outline: 0; background: transparent; color: var(--ink); font-family: var(--serif); font-size: 14px; line-height: 1.5; }
@@ -175,6 +181,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .compact-control { display: flex; align-items: center; gap: 5px; padding: 5px 7px; border: 1px solid #e0e2dc; border-radius: 7px; color: var(--muted); font-size: 8px; font-weight: 700; }
 .compact-control select, .compact-control input { width: 60px; border: 0; outline: 0; background: transparent; color: var(--ink-soft); font-size: 9px; font-weight: 700; }
 .compact-control input { width: 42px; }
+.compact-control.date-control input { width: 112px; }
 .composer-spacer { flex: 1; }
 .send-button { display: flex; align-items: center; gap: 8px; padding: 9px 13px; border: 0; border-radius: 8px; background: var(--green); color: white; cursor: pointer; font-size: 10px; font-weight: 800; box-shadow: 0 5px 12px rgb(29 102 85 / 17%); }
 .send-button:hover:not(:disabled) { background: var(--green-deep); }
@@ -210,7 +217,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .build-model, .registry-note { display: block; margin: 12px 0 0; color: var(--muted); font-size: 10px; }
 .table-subline { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; font-weight: 400; }
 .evidence-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
-.evidence-tags span { padding: 3px 6px; border: 1px solid rgb(29 102 85 / 18%); border-radius: 10px; color: #55756b; font-size: 8px; text-transform: capitalize; }
+.evidence-tags span { padding: 3px 6px; border: 1px solid rgb(29 102 85 / 24%); border-radius: 10px; color: #3f6257; font-size: 8px; text-transform: capitalize; }
 .evidence-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .evidence-title-row h3 { margin: 0; font-family: var(--serif); font-size: 16px; line-height: 1.35; }
 .source-open { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 4px; color: var(--green); font-size: 9px; font-weight: 800; }

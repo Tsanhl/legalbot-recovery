@@ -27,6 +27,12 @@ from .ge_locator_gold_overlay import (
     row_extent_verified,
     row_point_in_time,
 )
+from .ge_progression_taxonomy import (
+    aggregate_material_parts,
+    blocking_rows,
+    classify_evidence_materiality,
+    progression_from_checks,
+)
 
 CheckOutcome = Literal["PASS", "FAIL", "NOT_APPLICABLE", "NOT_ASSESSABLE"]
 
@@ -61,6 +67,18 @@ DIAGNOSTIC_CHECKS: tuple[str, ...] = (
     "jurisdiction_applicability",
     "currentness",
     "historical_date_applicability",
+    "actual_rendered_answer_quality",
+)
+
+INDEPENDENT_EVALUATOR_GATES: tuple[str, ...] = (
+    "SOURCE_IDENTITY",
+    "QUOTATION_FIDELITY",
+    "PASSAGE_COMPLETENESS",
+    "ISSUE_RELEVANCE",
+    "CLAIM_EVIDENCE_SUPPORT",
+    "JURISDICTION_AND_TEMPORAL_APPLICABILITY",
+    "CONTRADICTION_AND_COUNTERAUTHORITY",
+    "ACTUAL_RENDERED_ANSWER_QUALITY",
 )
 
 MEDIATION_TAGS = frozenset(
@@ -148,6 +166,8 @@ class FactualEvaluation:
     reasons: dict[str, str]
     diagnostic_checks: dict[str, dict[str, str]]
     failed: list[str]
+    locator_materiality: tuple[str, ...]
+    progression: dict[str, Any]
 
 
 def normalize_space(text: str) -> str:
@@ -166,6 +186,12 @@ def is_punctuation_only(text: str) -> bool:
     """True when the passage has no legal words, including repealed-dotters."""
 
     return alphanumeric_token_count(text) == 0
+
+
+def has_operative_legal_predicate(text: str) -> bool:
+    """True when a passage has enough wording to carry an operative legal rule."""
+
+    return alphanumeric_token_count(text) >= 8 and _LEGAL_PREDICATE.search(text or "") is not None
 
 
 def strip_locator_prefix(text: str, locator: str) -> str:
@@ -551,6 +577,33 @@ def planner_output(case: Mapping[str, Any]) -> str:
     )
 
 
+def actual_rendered_answer_quality(
+    *,
+    user_facing_answer_text: str,
+    planner_text: str,
+) -> DiagnosticCheck:
+    """Planner instructions are not proof that user-facing advice was delivered."""
+
+    rendered = str(user_facing_answer_text or "").strip()
+    planner = str(planner_text or "").strip()
+    if not rendered:
+        return DiagnosticCheck("FAIL", "No user-facing answer was rendered.")
+    if _planner_looks_like_instruction(rendered):
+        return DiagnosticCheck(
+            "FAIL",
+            "The rendered user-facing text is a planner instruction, not advice to the user.",
+        )
+    if planner and rendered.casefold() == planner.casefold():
+        return DiagnosticCheck(
+            "FAIL",
+            "Planner instruction appearing in the answer does not prove user-facing advice was delivered.",
+        )
+    return DiagnosticCheck(
+        "PASS",
+        "A user-facing answer was rendered separately from any planner instruction.",
+    )
+
+
 def _planner_looks_like_instruction(text: str) -> bool:
     lowered = text.casefold().lstrip()
     return any(lowered.startswith(prefix) for prefix in PLANNER_PREFIXES)
@@ -701,16 +754,17 @@ def evaluate_factual_checks(
             )
             for row in evidence_rows
         ]
-        fidelity = fidelity_parts[0]
-        completeness = completeness_parts[0]
-        relevance = relevance_parts[0]
-        if any(part.outcome != "PASS" for part in fidelity_parts):
-            fidelity = next(part for part in fidelity_parts if part.outcome != "PASS")
-        if any(part.outcome != "PASS" for part in completeness_parts):
-            completeness = next(part for part in completeness_parts if part.outcome != "PASS")
-        if any(part.outcome != "PASS" for part in relevance_parts):
-            relevance = next(part for part in relevance_parts if part.outcome != "PASS")
+        materialities = classify_evidence_materiality(
+            evidence_rows,
+            case_id=str(case.get("case_id") or ""),
+            relevance_outcomes=tuple(part.outcome for part in relevance_parts),
+            completeness_outcomes=tuple(part.outcome for part in completeness_parts),
+        )
+        fidelity = aggregate_material_parts(fidelity_parts, materialities)
+        completeness = aggregate_material_parts(completeness_parts, materialities)
+        relevance = aggregate_material_parts(relevance_parts, materialities)
     else:
+        materialities = ()
         fidelity = DiagnosticCheck(
             "NOT_ASSESSABLE",
             "Quotation fidelity is not assessable because no provision was selected.",
@@ -723,30 +777,38 @@ def evaluate_factual_checks(
             "FAIL",
             "No relevant primary-authority passage was selected.",
         )
-    origin = jurisdiction_origin(evidence_rows)
+    blocking_evidence = blocking_rows(evidence_rows, materialities) if evidence_rows else []
+    origin = jurisdiction_origin(blocking_evidence or evidence_rows)
     applicability = jurisdiction_applicability(
-        case=case, evidence_rows=evidence_rows, overlay=overlay
+        case=case, evidence_rows=blocking_evidence or evidence_rows, overlay=overlay
     )
-    currentness = currentness_check(case=case, evidence_rows=evidence_rows, overlay=overlay)
+    currentness = currentness_check(
+        case=case, evidence_rows=blocking_evidence or evidence_rows, overlay=overlay
+    )
     historical = historical_date_applicability(
-        case=case, evidence_rows=evidence_rows, overlay=overlay
+        case=case, evidence_rows=blocking_evidence or evidence_rows, overlay=overlay
     )
     safety = safety_check(user_facing_answer_text=user_facing_answer_text, case=case)
+    rendered = actual_rendered_answer_quality(
+        user_facing_answer_text=user_facing_answer_text,
+        planner_text=planner_output(case),
+    )
 
     support_ok = (
         bool(evidence_rows)
         and completeness.outcome == "PASS"
         and relevance.outcome == "PASS"
     )
+    citation_rows = blocking_evidence or list(evidence_rows)
     citation_ok = (
-        bool(evidence_rows)
+        bool(citation_rows)
         and identity.outcome == "PASS"
         and fidelity.outcome == "PASS"
         and all(
             row.get("identity_verified") is True
             and str(row.get("oscola_parenthetical") or "").startswith("(")
             and str(row.get("evidence_span_sha256") or "")
-            for row in evidence_rows
+            for row in citation_rows
         )
     )
 
@@ -820,17 +882,27 @@ def evaluate_factual_checks(
         "jurisdiction_applicability": applicability.as_contract(),
         "currentness": currentness.as_contract(),
         "historical_date_applicability": historical.as_contract(),
+        "actual_rendered_answer_quality": rendered.as_contract(),
     }
     failed = [
         name
         for name in FACTUAL_CHECKS
         if checks[name] in {"FAIL", "NOT_ASSESSABLE"}
     ]
+    titles = " ".join(str(row.get("title") or "") for row in evidence_rows)
+    progression = progression_from_checks(
+        checks=checks,
+        evidence_present=bool(evidence_rows),
+        case_id=str(case.get("case_id") or ""),
+        titles=titles,
+    )
     return FactualEvaluation(
         checks=checks,
         reasons=reasons,
         diagnostic_checks=diagnostic,
         failed=failed,
+        locator_materiality=tuple(materialities),
+        progression=progression,
     )
 
 

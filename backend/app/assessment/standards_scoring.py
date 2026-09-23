@@ -1,4 +1,4 @@
-"""Deterministically score every applicable rule in the sealed 16-rule bundle.
+"""Deterministically score every applicable rule in the sealed guidance bundle.
 
 Assessment guidance is drafting policy, never legal authority. The scorer uses
 observable answer structure and already-dispositioned claim/evidence identities;
@@ -178,6 +178,17 @@ def _observable_features(
     answer_tokens = _tokens(full_text)
     question_alignment = _ratio(len(question_tokens & answer_tokens), len(question_tokens))
     support_ratio = _ratio(sum(claim.id in supported for claim in material), len(material))
+    pinpoint_ratio = _ratio(
+        sum(
+            claim.id in supported and bool(claim.evidence_ids)
+            and all(
+                evidence_id in evidence_by_id and bool(evidence_by_id[evidence_id].locator)
+                for evidence_id in claim.evidence_ids
+            )
+            for claim in material
+        ),
+        len(material),
+    )
     reasoned_ratio = _ratio(
         sum(bool(_REASONING.search(claim.text)) for claim in material), len(material)
     )
@@ -220,6 +231,9 @@ def _observable_features(
         bool(_REASONING.search(conclusion_text) or _COMPARISON.search(conclusion_text))
     )
     quotation_discipline = 0.0 if _LONG_QUOTE.search(full_text) else 1.0
+    readable_claim_ratio = _ratio(
+        sum(8 <= len(claim.text.split()) <= 55 for claim in material), len(material)
+    )
     return {
         "support": support_ratio,
         "analysis": 0.55 * reasoned_ratio + 0.45 * support_ratio,
@@ -234,6 +248,12 @@ def _observable_features(
         "elements": element_ratio,
         "synthesis": synthesis,
         "quotation_discipline": quotation_discipline,
+        "pinpoint": pinpoint_ratio,
+        "material_precision": (
+            0.40 * readable_claim_ratio
+            + 0.35 * question_alignment
+            + 0.25 * reasoned_ratio
+        ),
     }
 
 
@@ -251,6 +271,8 @@ def _rule_score(rule: AssessmentGuidanceRule, features: Mapping[str, float]) -> 
         "owner-essay-authority-synthesis-v1": features["authority_synthesis"],
         "owner-essay-description-only-v1": features["analysis"],
         "owner-essay-quotation-dump-v1": features["quotation_discipline"],
+        "owner-request-pinpoint-treatment-v1": features["pinpoint"],
+        "owner-request-concise-material-analysis-v1": features["material_precision"],
         "assessment-canonical-case-synthesis-v1": features["authority_synthesis"],
         "owner-amended-criminal-element-defence-v2": features["elements"],
         "owner-amended-question-engagement-v2": features["question_alignment"],

@@ -54,7 +54,14 @@ def _plan():
     )
 
 
-def _span(*, qualified: bool = True, lane=MaterialLane.PRIMARY_AUTHORITY) -> EvidenceSpan:
+def _span(
+    *,
+    qualified: bool = True,
+    lane=MaterialLane.PRIMARY_AUTHORITY,
+    jurisdiction: str = "England and Wales",
+    currentness_status: str = "current",
+    citation_data: dict[str, str] | None = None,
+) -> EvidenceSpan:
     return EvidenceSpan(
         id="evidence-refund-1",
         source_version_id="source-version-refund-1",
@@ -62,10 +69,11 @@ def _span(*, qualified: bool = True, lane=MaterialLane.PRIMARY_AUTHORITY) -> Evi
         text="Private retrieved legal text must not enter the contract.",
         locator="section 20",
         lane=lane,
-        jurisdiction="England and Wales",
+        jurisdiction=jurisdiction,
         subject="consumer",
-        citation_data={"reviewed_as_of": "2026-09-01"},
-        currentness_status="current",
+        citation_data=citation_data
+        or {"reviewed_as_of": "2026-09-01", "commencement_status": "not_applicable"},
+        currentness_status=currentness_status,
         content_sha256="6" * 64,
         index_build_id="candidate-evidence-contract",
         retrieval_relevance_score=0.92,
@@ -141,4 +149,105 @@ def test_unqualified_or_teaching_evidence_cannot_enter_pack() -> None:
                     selected_rank=1,
                 ),
             ),
+        )
+
+
+@pytest.mark.parametrize(
+    ("span", "message"),
+    [
+        (_span(currentness_status="unknown"), "explicit qualified state"),
+        (
+            _span(citation_data={"commencement_status": "not_applicable"}),
+            "actual currentness review date",
+        ),
+        (
+            _span(
+                citation_data={
+                    "reviewed_as_of": "2026-08-31",
+                    "commencement_status": "not_applicable",
+                }
+            ),
+            "predates the requested date",
+        ),
+        (_span(jurisdiction="Scotland"), "jurisdiction"),
+    ],
+)
+def test_unknown_date_currentness_or_jurisdiction_cannot_be_qualified(
+    span: EvidenceSpan,
+    message: str,
+) -> None:
+    plan = _plan()
+    with pytest.raises(ValueError, match=message):
+        build_retrieval_evidence_contracts(
+            query_plan=plan.value,
+            query_plan_sha256=plan.content_sha256,
+            candidate_sha256="8" * 64,
+            evidence=(
+                QualifiedEvidenceInput(
+                    span=span,
+                    issue_ids=("issue-refund",),
+                    selected_token_count=100,
+                    selected_rank=1,
+                ),
+            ),
+            fact_snapshot_sha256=None,
+            created_at=datetime(2026, 9, 1, tzinfo=UTC),
+            registry=_registry(),
+        )
+
+
+def test_evidence_and_gap_issue_ids_must_come_from_the_frozen_plan() -> None:
+    plan = _plan()
+    common = {
+        "query_plan": plan.value,
+        "query_plan_sha256": plan.content_sha256,
+        "candidate_sha256": "8" * 64,
+        "fact_snapshot_sha256": None,
+        "created_at": datetime(2026, 9, 1, tzinfo=UTC),
+        "registry": _registry(),
+    }
+    with pytest.raises(ValueError, match="outside the frozen query plan"):
+        build_retrieval_evidence_contracts(
+            **common,
+            evidence=(
+                QualifiedEvidenceInput(
+                    span=_span(),
+                    issue_ids=("issue-unplanned",),
+                    selected_token_count=100,
+                    selected_rank=1,
+                ),
+            ),
+        )
+    with pytest.raises(ValueError, match="gap issue"):
+        build_retrieval_evidence_contracts(
+            **common,
+            evidence=(),
+            issue_gap_codes={"issue-unplanned": ("missing.authority",)},
+        )
+
+
+def test_historical_evidence_requires_a_window_covering_the_requested_date() -> None:
+    plan = _plan()
+    with pytest.raises(ValueError, match="bounded effective date range"):
+        build_retrieval_evidence_contracts(
+            query_plan=plan.value,
+            query_plan_sha256=plan.content_sha256,
+            candidate_sha256="8" * 64,
+            evidence=(
+                QualifiedEvidenceInput(
+                    span=_span(
+                        currentness_status="historical",
+                        citation_data={
+                            "reviewed_as_of": "2026-09-01",
+                            "commencement_status": "not_applicable",
+                        },
+                    ),
+                    issue_ids=("issue-refund",),
+                    selected_token_count=100,
+                    selected_rank=1,
+                ),
+            ),
+            fact_snapshot_sha256=None,
+            created_at=datetime(2026, 9, 1, tzinfo=UTC),
+            registry=_registry(),
         )

@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = Path("/Users/owner/Downloads/LegalBot-GE-owner-advisory-decision-overlay-r2.json")
+SOURCE = (Path.home() / "Downloads" / "LegalBot-GE-owner-advisory-decision-overlay-r2.json")
 PACK = (
     ROOT
     / "data/evaluations/general-enquiries"

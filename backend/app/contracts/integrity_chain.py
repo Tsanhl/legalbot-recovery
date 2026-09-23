@@ -7,6 +7,9 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from .claim_set import validate_claim_support_graph
+from .release import validate_release_checks
+from .retrieval_evidence import validate_retrieval_evidence_scope
 from .schema_registry import ContractSchemaRegistry, canonical_json_bytes
 
 
@@ -73,6 +76,19 @@ class AnswerIntegrityChainVerifier:
             self.registry.validate_new(value)
         if answer_job is not None:
             self.registry.validate_new(answer_job)
+
+        validate_retrieval_evidence_scope(
+            query_plan=query_plan,
+            retrieval_result=retrieval_result,
+            evidence_pack=evidence_pack,
+        )
+        validate_claim_support_graph(
+            claim_set,
+            issue_ids=query_plan["issue_ids"],
+            evidence_ids=[item["evidence_id"] for item in evidence_pack["selected"]],
+            facts=fact_snapshot["facts"],
+        )
+        validate_release_checks(claim_set=claim_set, validation_report=validation_report)
 
         digests = {
             str(value["schema"]): str(value["content_sha256"])
@@ -162,6 +178,13 @@ class AnswerIntegrityChainVerifier:
         )
         _require_equal(
             validation_report["fact_snapshot_sha256"], fact_digest, "validation fact digest"
+        )
+        _require_equal(
+            validation_report["policy_sha256"], query_plan["policy_sha256"], "validation policy"
+        )
+        _require_equal(validation_report["draft_id"], claim_set["draft_id"], "validation draft")
+        _require_equal(
+            validation_report["draft_sha256"], claim_set["draft_sha256"], "validation draft digest"
         )
         _require_unique_ids(list(validation_report["checks"]), field="check_id")
 

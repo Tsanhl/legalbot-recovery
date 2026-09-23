@@ -13,6 +13,7 @@ import httpx
 from .config import Settings
 from .model_runtime.config import PINNED_RUNTIME_MODEL_VERSION, PINNED_RUNTIME_REPO
 from .orchestration.contracts import ModelDraft
+from .orchestration.answer_structure import section_contract
 from .privacy import prompt_injection_hits, scrub_pii, scrub_prompt_data
 from .prompt_templates import (
     DRAFT_GENERATOR_TEMPLATE_NAME,
@@ -28,10 +29,14 @@ from .types import (
     UploadContextSpan,
 )
 
-PROMPT_VERSION = "evidence-first-structured-json-v4"
+PROMPT_VERSION = "evidence-first-structured-json-v5"
 
 MODEL_CONTEXT_TOKENS = 8192
-MODEL_OUTPUT_TOKENS = 2048
+# The 9B MLX runtime must finish a complete JSON object inside the durable
+# worker's 300-second model-call boundary.  The previous 2,048-token request
+# could still be generating when that boundary closed; 1,600 retains the
+# observed 1,388-token visible draft while bounding worst-case generation.
+MODEL_OUTPUT_TOKENS = 1600
 PROMPT_SAFETY_TOKENS = 844
 MAX_INPUT_ESTIMATED_TOKENS = MODEL_CONTEXT_TOKENS - MODEL_OUTPUT_TOKENS - PROMPT_SAFETY_TOKENS
 EVIDENCE_PROMPT_CHAR_BUDGET = 8500
@@ -120,6 +125,17 @@ class EvidencePromptBundle:
     payloads: tuple[dict[str, Any], ...]
     excluded_document_safety_ids: tuple[str, ...]
     omitted_budget_ids: tuple[str, ...]
+    estimated_tokens: int
+    serialized_characters: int
+
+
+@dataclass(frozen=True, slots=True)
+class FullyVisibleEvidenceSelection:
+    """Exact whole spans that fit the drafting prompt without text truncation."""
+
+    spans: tuple[EvidenceSpan, ...]
+    omitted_ids: tuple[str, ...]
+    excluded_document_safety_ids: tuple[str, ...]
     estimated_tokens: int
     serialized_characters: int
 
@@ -269,8 +285,100 @@ def _budgeted_evidence_payloads(
     )
 
 
-def _bounded_rules(rules: Sequence[str], owner_identifiers: Sequence[str]) -> list[str]:
-    remaining = MAX_ASSESSMENT_RULE_CHARS
+def select_fully_visible_evidence(
+    spans: Sequence[EvidenceSpan],
+    owner_identifiers: Sequence[str] = (),
+    *,
+    as_of_date: date | None = None,
+    maximum_spans: int = 12,
+) -> FullyVisibleEvidenceSelection:
+    """Select only exact whole EvidenceSpan text for the selected-contract route.
+
+    The ordinary prompt adapter can mark a span as truncated.  A selected
+    RetrievalResult/EvidencePack cannot represent that altered text, so the
+    development release route uses this stricter projection before generation.
+    Re-running the normal prompt builder on the returned spans is guaranteed to
+    include the same full text and no additional span.
+    """
+
+    if maximum_spans < 1 or maximum_spans > 32:
+        raise ValueError("fully visible evidence limit is outside the contract budget")
+    payloads: list[dict[str, Any]] = []
+    selected: list[EvidenceSpan] = []
+    omitted: list[str] = []
+    unsafe: list[str] = []
+    for span in spans:
+        if len(selected) >= maximum_spans:
+            omitted.append(span.id)
+            continue
+        safety_text = json.dumps(
+            {
+                "text": span.text,
+                "locator": span.locator,
+                "canonical_citation": span.canonical_citation,
+                "citation_data": span.citation_data,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        if prompt_injection_hits(safety_text):
+            unsafe.append(span.id)
+            continue
+        safe_text = scrub_pii(span.text, owner_identifiers).strip()
+        # A selected evidence contract binds the source chunk digest.  If the
+        # privacy projection changes those bytes, omit the span rather than
+        # reviewing the model against different text later.
+        if not safe_text or safe_text != span.text:
+            omitted.append(span.id)
+            continue
+        payload = _evidence_payload(
+            span,
+            owner_identifiers,
+            as_of_date=as_of_date,
+            text=safe_text,
+            text_truncated=False,
+        )
+        fits, _, _ = _prompt_bundle_fits(
+            [*payloads, payload],
+            char_budget=EVIDENCE_PROMPT_CHAR_BUDGET,
+            token_budget=EVIDENCE_PROMPT_TOKEN_BUDGET,
+        )
+        if not fits:
+            omitted.append(span.id)
+            continue
+        payloads.append(payload)
+        selected.append(span)
+    _, characters, tokens = _prompt_bundle_fits(
+        payloads,
+        char_budget=EVIDENCE_PROMPT_CHAR_BUDGET,
+        token_budget=EVIDENCE_PROMPT_TOKEN_BUDGET,
+    )
+    replay = _budgeted_evidence_payloads(
+        selected,
+        owner_identifiers,
+        as_of_date=as_of_date,
+    )
+    if (
+        [item["id"] for item in replay.payloads] != [item.id for item in selected]
+        or replay.omitted_budget_ids
+        or replay.excluded_document_safety_ids
+        or any(item.get("text_truncated") is True for item in replay.payloads)
+    ):
+        raise RuntimeError("fully visible evidence selection is not replayable")
+    return FullyVisibleEvidenceSelection(
+        spans=tuple(selected),
+        omitted_ids=tuple(omitted),
+        excluded_document_safety_ids=tuple(unsafe),
+        estimated_tokens=tokens,
+        serialized_characters=characters,
+    )
+
+
+def _bounded_rules(
+    rules: Sequence[str], owner_identifiers: Sequence[str],
+    *, max_characters: int = MAX_ASSESSMENT_RULE_CHARS,
+) -> list[str]:
+    remaining = max_characters
     selected: list[str] = []
     for rule in rules:
         safe = scrub_pii(rule, owner_identifiers).strip()
@@ -324,11 +432,160 @@ def _budgeted_upload_context(
     return selected
 
 
+def expected_model_visible_fact_inputs(
+    *,
+    question: str,
+    upload_context: Sequence[UploadContextSpan],
+    owner_identifiers: Sequence[str] = (),
+) -> dict[str, Any]:
+    """Build the exact question/upload projection before a draft is generated."""
+
+    visible_question = _bounded_text(
+        scrub_pii(question, owner_identifiers), MAX_QUESTION_CHARS
+    )
+    uploads = _budgeted_upload_context(upload_context, owner_identifiers)
+    visible = {
+        "question": visible_question,
+        "uploads": [
+            {"context_id": item["context_id"], "text": item["text"]}
+            for item in uploads
+        ],
+    }
+    return {
+        **visible,
+        "provenance": _model_fact_provenance(
+            visible,
+            question=question,
+            upload_context=upload_context,
+            owner_identifiers=owner_identifiers,
+        ),
+    }
+
+
 class ClientDisconnectedAfterGenerationError(RuntimeError):
     """The model ran, but the HTTP response was lost. That result is not VERIFIED."""
 
 
+def model_visible_fact_inputs(projection: Mapping[str, Any]) -> dict[str, Any]:
+    """Read only question/upload material from the exact host prompt projection.
+
+    This is a byte-identity check, not independent custody or factual approval.
+    In particular prior generated answers and legal evidence are not user facts.
+    """
+    if projection.get("schema") != "legalbot.actual-model-input-projection.v1":
+        raise ValueError("actual model input projection is required")
+    text = projection.get("user_message")
+    if not isinstance(text, str) or hashlib.sha256(text.encode()).hexdigest() != projection.get("user_message_sha256"):
+        raise ValueError("model input projection content changed")
+    system_hash = hashlib.sha256(DRAFT_SYSTEM_PROMPT.encode()).hexdigest()
+    if system_hash != projection.get("system_prompt_sha256"):
+        raise ValueError("model input projection prompt changed")
+    messages = [{"role": "system", "content": DRAFT_SYSTEM_PROMPT},
+                {"role": "user", "content": text}]
+    actual = hashlib.sha256(json.dumps(messages, ensure_ascii=False, sort_keys=True,
+                                      separators=(",", ":")).encode()).hexdigest()
+    if actual != projection.get("messages_sha256"):
+        raise ValueError("model input projection messages changed")
+    payload = json.loads(text)
+    if not isinstance(payload, dict) or not isinstance(payload.get("question"), str):
+        raise ValueError("model input projection question missing")
+    uploads = payload.get("uploaded_context", [])
+    if not isinstance(uploads, list) or any(not isinstance(item, dict)
+        or not isinstance(item.get("context_id"), str)
+        or not isinstance(item.get("text"), str) for item in uploads):
+        raise ValueError("model input projection uploads invalid")
+    return {"invocation_id": projection["invocation_id"], "question": payload["question"],
+            "uploads": [{"context_id": item["context_id"], "text": item["text"]}
+                        for item in uploads]}
+
+
+def _model_fact_provenance(
+    visible: Mapping[str, Any], *, question: str,
+    upload_context: Sequence[UploadContextSpan], owner_identifiers: Sequence[str],
+) -> dict[str, Any]:
+    """Bind sent facts to original gateway inputs without retaining raw PII.
+
+    Upload IDs identify extraction contexts, not source authority. The final
+    review producer must bind these input hashes to the admitted request and
+    extraction receipts; this mechanical projection does not approve facts.
+    """
+    expected_question = scrub_prompt_data(
+        _bounded_text(scrub_pii(question, owner_identifiers), MAX_QUESTION_CHARS),
+        owner_identifiers,
+    )
+    expected_uploads = scrub_prompt_data(
+        _budgeted_upload_context(upload_context, owner_identifiers), owner_identifiers,
+    )
+    expected = [{"context_id": item["context_id"], "text": item["text"]}
+                for item in expected_uploads]
+    if visible["question"] != expected_question or visible["uploads"] != expected:
+        raise ValueError("model-visible facts differ from host input transformation")
+    sources = {item.id: item for item in upload_context}
+    if len(sources) != len(upload_context):
+        raise ValueError("duplicate upload context identity")
+
+    def binding(original: str, sent: str) -> dict[str, Any]:
+        return {
+            "input_sha256": hashlib.sha256(original.encode("utf-8")).hexdigest(),
+            "visible_sha256": hashlib.sha256(sent.encode("utf-8")).hexdigest(),
+            "input_changed_by_projection": original != sent,
+        }
+
+    included = {item["context_id"] for item in expected}
+    return {
+        "schema": "legalbot.model-fact-input-provenance.v1",
+        "transformation": "gateway-pii-scrub-and-context-budget-v1",
+        "question": binding(question, str(expected_question)),
+        "uploads": [{"context_id": item["context_id"],
+                     **binding(sources[item["context_id"]].text, item["text"])}
+                    for item in expected],
+        "upload_input_inventory_sha256": hashlib.sha256(json.dumps(
+            [{"context_id": item.id,
+              "input_sha256": hashlib.sha256(item.text.encode("utf-8")).hexdigest()}
+             for item in upload_context], sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")).hexdigest(),
+        "omitted_upload_context_ids": [item.id for item in upload_context
+                                       if item.id not in included],
+        "semantic_facts_inferred": False,
+    }
+
+
+def verify_model_fact_provenance(
+    projection: Mapping[str, Any], *, question: str,
+    upload_context: Sequence[UploadContextSpan], owner_identifiers: Sequence[str],
+) -> dict[str, Any]:
+    """Replay the exact projection from caller-supplied original host inputs."""
+    visible = model_visible_fact_inputs(projection)
+    expected = _model_fact_provenance(
+        visible, question=question, upload_context=upload_context,
+        owner_identifiers=owner_identifiers,
+    )
+    if projection.get("fact_provenance") != expected:
+        raise ValueError("model fact provenance differs from original inputs")
+    return visible
+
+
 class LoopbackModelGateway:
+    max_question_chars = MAX_QUESTION_CHARS
+    assessment_character_budget = MAX_ASSESSMENT_RULE_CHARS
+    evidence_character_budget = EVIDENCE_PROMPT_CHAR_BUDGET
+    evidence_token_budget = EVIDENCE_PROMPT_TOKEN_BUDGET
+    repair_evidence_character_budget = REPAIR_EVIDENCE_CHAR_BUDGET
+    repair_evidence_token_budget = REPAIR_EVIDENCE_TOKEN_BUDGET
+    input_token_budget = MAX_INPUT_ESTIMATED_TOKENS
+    output_token_budget = MODEL_OUTPUT_TOKENS
+
+    def _generation_config_sha256(self) -> str:
+        profile = dict(GENERATION_CONFIG)
+        profile.update({
+            "max_tokens": self.output_token_budget,
+            "input_estimated_token_limit": self.input_token_budget,
+            "context_tokens": self.input_token_budget + self.output_token_budget + PROMPT_SAFETY_TOKENS,
+        })
+        return hashlib.sha256(
+            (json.dumps(profile, sort_keys=True, separators=(",", ":")) + "\n").encode()
+        ).hexdigest()
+
     def __init__(self, settings: Settings) -> None:
         self.url = settings.model_url.rstrip("/")
         self.expected_model = settings.model_id
@@ -367,6 +624,24 @@ class LoopbackModelGateway:
         except (httpx.HTTPError, TypeError, ValueError):
             return False
 
+    async def _generate(self, envelope: Mapping[str, Any]) -> dict[str, Any]:
+        """Transport seam used by every model-dependent stage.
+
+        Provider adapters override this method while retaining the exact
+        prompt budgeting, fact projection, schema and evidence-ID checks.
+        """
+        async with httpx.AsyncClient(
+            timeout=self._timeout,
+            trust_env=False,
+            follow_redirects=False,
+        ) as client:
+            response = await client.post(f"{self.url}/api/v1/generate", json=envelope)
+            response.raise_for_status()
+        body = response.json()
+        if not isinstance(body, dict):
+            raise ValueError("model runtime returned a non-object response")
+        return body
+
     async def draft(
         self,
         *,
@@ -380,17 +655,20 @@ class LoopbackModelGateway:
         upload_context: Sequence[UploadContextSpan] = (),
     ) -> ModelDraft:
         bundle = _budgeted_evidence_payloads(
-            evidence, self.owner_identifiers, as_of_date=as_of_date
+            evidence, self.owner_identifiers, as_of_date=as_of_date,
+            char_budget=self.evidence_character_budget,
+            token_budget=self.evidence_token_budget,
         )
         payload = {
             "mode": "draft",
             "question": _bounded_text(
-                scrub_pii(question, self.owner_identifiers), MAX_QUESTION_CHARS
+                scrub_pii(question, self.owner_identifiers), self.max_question_chars
             ),
             "task_type": task_type,
             "jurisdiction": jurisdiction,
             "as_of_date": as_of_date.isoformat(),
             "word_target": word_target,
+            "section_contract": section_contract(task_type),
             "evidence": list(bundle.payloads),
             "evidence_prompt_manifest": {
                 "provided_ids": [span.id for span in evidence],
@@ -404,7 +682,10 @@ class LoopbackModelGateway:
                 ],
             },
             "uploaded_context": _budgeted_upload_context(upload_context, self.owner_identifiers),
-            "assessment_rules": _bounded_rules(assessment_rules, self.owner_identifiers),
+            "assessment_rules": _bounded_rules(
+                assessment_rules, self.owner_identifiers,
+                max_characters=self.assessment_character_budget,
+            ),
             "constraints": {
                 "output": "structured_json_only",
                 "citations": "use_evidence_ids_only_never_write_citation_strings",
@@ -424,8 +705,8 @@ class LoopbackModelGateway:
                     "facts_and_issue_spotting_only_never_legal_evidence_never_cite"
                 ),
                 "evidence_prompt_budget": {
-                    "characters": EVIDENCE_PROMPT_CHAR_BUDGET,
-                    "estimated_tokens": EVIDENCE_PROMPT_TOKEN_BUDGET,
+                    "characters": self.evidence_character_budget,
+                    "estimated_tokens": self.evidence_token_budget,
                     "included": len(bundle.payloads),
                     "omitted_for_budget": len(bundle.omitted_budget_ids),
                     "excluded_for_document_safety": len(bundle.excluded_document_safety_ids),
@@ -434,12 +715,13 @@ class LoopbackModelGateway:
                     "prompt_version": PROMPT_VERSION,
                     "prompt_sha256": DRAFT_SYSTEM_PROMPT_SHA256,
                     "structured_draft_schema_sha256": STRUCTURED_DRAFT_SCHEMA_SHA256,
-                    "generation_config_sha256": GENERATION_CONFIG_SHA256,
+                    "generation_config_sha256": self._generation_config_sha256(),
                     "silent_truncation_forbidden": True,
                 },
             },
         }
-        return await self._call(payload, mode="draft")
+        return await self._call(payload, mode="draft", question=question,
+                                upload_context=upload_context)
 
     async def invoke_json(
         self,
@@ -461,25 +743,21 @@ class LoopbackModelGateway:
                 "content": json.dumps(safe_payload, ensure_ascii=False, sort_keys=True),
             },
         ]
+        if _estimate_prompt_tokens(json.dumps(messages, ensure_ascii=False)) > self.input_token_budget:
+            raise ValueError("verifier_prompt_exceeds_provider_input_budget")
         envelope = {
             "request_id": invocation_id,
             "mode": mode,
             "payload": {**safe_payload, "messages": messages},
             "messages": messages,
-            "max_tokens": MODEL_OUTPUT_TOKENS,
+            "max_tokens": self.output_token_budget,
             "temperature": 0.0,
             "top_p": 1.0,
             "seed": 0,
             "stop": [],
         }
         try:
-            async with httpx.AsyncClient(
-                timeout=self._timeout,
-                trust_env=False,
-                follow_redirects=False,
-            ) as client:
-                response = await client.post(f"{self.url}/api/v1/generate", json=envelope)
-                response.raise_for_status()
+            body = await self._generate(envelope)
         except (
             BrokenPipeError,
             ConnectionResetError,
@@ -491,9 +769,6 @@ class LoopbackModelGateway:
             raise ClientDisconnectedAfterGenerationError(
                 "model HTTP response was lost; retry requires a new semantic-verifier invocation"
             ) from exc
-        body = response.json()
-        if not isinstance(body, dict):
-            raise ValueError("model runtime returned a non-object response")
         self._validated_model_version(body)
         structured_value = body.get("structured")
         if isinstance(structured_value, str):
@@ -523,13 +798,13 @@ class LoopbackModelGateway:
             list(evidence.values()),
             self.owner_identifiers,
             as_of_date=prior.as_of_date,
-            char_budget=REPAIR_EVIDENCE_CHAR_BUDGET,
-            token_budget=REPAIR_EVIDENCE_TOKEN_BUDGET,
+            char_budget=self.repair_evidence_character_budget,
+            token_budget=self.repair_evidence_token_budget,
         )
         payload = {
             "mode": "repair",
             "question": _bounded_text(
-                scrub_pii(question, self.owner_identifiers), MAX_QUESTION_CHARS
+                scrub_pii(question, self.owner_identifiers), self.max_question_chars
             ),
             "word_target": word_target,
             "prior": prior.model_dump(mode="json"),
@@ -556,18 +831,29 @@ class LoopbackModelGateway:
                     "prompt_version": PROMPT_VERSION,
                     "prompt_sha256": DRAFT_SYSTEM_PROMPT_SHA256,
                     "structured_draft_schema_sha256": STRUCTURED_DRAFT_SCHEMA_SHA256,
-                    "generation_config_sha256": GENERATION_CONFIG_SHA256,
+                    "generation_config_sha256": self._generation_config_sha256(),
                     "silent_truncation_forbidden": True,
                 },
             },
         }
-        return await self._call(payload, mode="repair")
+        return await self._call(payload, mode="repair", question=question,
+                                upload_context=upload_context)
 
-    async def _call(self, payload: dict[str, Any], *, mode: str) -> ModelDraft:
+    async def _call(
+        self, payload: dict[str, Any], *, mode: str, question: str,
+        upload_context: Sequence[UploadContextSpan],
+    ) -> ModelDraft:
         system_prompt = DRAFT_SYSTEM_PROMPT
         safe_payload = scrub_prompt_data(payload, self.owner_identifiers)
         if not isinstance(safe_payload, dict):  # pragma: no cover - fixed shape invariant
             raise TypeError("model payload must remain an object")
+        fact_provenance = _model_fact_provenance(
+            {"question": safe_payload["question"],
+             "uploads": [{"context_id": item["context_id"], "text": item["text"]}
+                         for item in safe_payload["uploaded_context"]]},
+            question=question, upload_context=upload_context,
+            owner_identifiers=self.owner_identifiers,
+        )
         messages = [
             {"role": "system", "content": system_prompt},
             {
@@ -578,31 +864,22 @@ class LoopbackModelGateway:
         estimated_input = _estimate_prompt_tokens(
             "\n".join(str(message["content"]) for message in messages)
         )
-        if estimated_input > MAX_INPUT_ESTIMATED_TOKENS:
+        if estimated_input > self.input_token_budget:
             raise ValueError(
-                "scrubbed model prompt exceeds the conservative 8k context input budget"
+                "scrubbed model prompt exceeds the selected provider input budget"
             )
         envelope = {
             "request_id": str(uuid4()),
             "mode": mode,
             "payload": {**safe_payload, "messages": messages},
             "messages": messages,
-            "max_tokens": GENERATION_CONFIG["max_tokens"],
+            "max_tokens": self.output_token_budget,
             "temperature": GENERATION_CONFIG["temperature"],
             "top_p": GENERATION_CONFIG["top_p"],
             "seed": GENERATION_CONFIG["seed"],
             "stop": GENERATION_CONFIG["stop"],
         }
-        async with httpx.AsyncClient(
-            timeout=self._timeout,
-            trust_env=False,
-            follow_redirects=False,
-        ) as client:
-            response = await client.post(f"{self.url}/api/v1/generate", json=envelope)
-            response.raise_for_status()
-        body = response.json()
-        if not isinstance(body, dict):
-            raise ValueError("model runtime returned a non-object response")
+        body = await self._generate(envelope)
         warnings = body.get("warnings", [])
         is_stub = isinstance(warnings, Sequence) and "stub_mode" in warnings
         if is_stub and not self.allow_test_stub:
@@ -617,6 +894,20 @@ class LoopbackModelGateway:
         ):
             raise ValueError("model output was truncated and cannot enter validation")
         model_version = self._validated_model_version(body)
+        transport_projection = body.get("transport_projection")
+        if transport_projection is not None:
+            if (
+                not isinstance(transport_projection, dict)
+                or not isinstance(transport_projection.get("sent_content"), str)
+                or transport_projection.get("sent_content_sha256")
+                != hashlib.sha256(transport_projection["sent_content"].encode("utf-8")).hexdigest()
+                or transport_projection.get("source_messages_sha256")
+                != hashlib.sha256(
+                    json.dumps(messages, ensure_ascii=False, sort_keys=True,
+                               separators=(",", ":")).encode("utf-8")
+                ).hexdigest()
+            ):
+                raise ValueError("provider actual sent-input projection differs")
         structured_value = body.get("structured")
         if isinstance(structured_value, str):
             structured_value = json.loads(structured_value)
@@ -680,6 +971,22 @@ class LoopbackModelGateway:
                 str(key): float(value) for key, value in body.get("rubric_scores", {}).items()
             },
             model_version=model_version,
+            input_projections=({
+                "schema": "legalbot.actual-model-input-projection.v1",
+                "fact_provenance": fact_provenance,
+                "invocation_id": envelope["request_id"],
+                "mode": mode,
+                "messages_sha256": hashlib.sha256(
+                    json.dumps(messages, ensure_ascii=False, sort_keys=True,
+                               separators=(",", ":")).encode("utf-8")
+                ).hexdigest(),
+                "system_prompt_sha256": hashlib.sha256(system_prompt.encode("utf-8")).hexdigest(),
+                "user_message": messages[1]["content"],
+                "user_message_sha256": hashlib.sha256(
+                    messages[1]["content"].encode("utf-8")
+                ).hexdigest(),
+                "transport_projection": transport_projection,
+            },),
             metrics={
                 "input_tokens": int((body.get("usage") or {}).get("input_tokens", 0)),
                 "output_tokens": int((body.get("usage") or {}).get("output_tokens", 0)),
@@ -699,7 +1006,7 @@ class LoopbackModelGateway:
                 "prompt_version": PROMPT_VERSION,
                 "prompt_sha256": DRAFT_SYSTEM_PROMPT_SHA256,
                 "structured_draft_schema_sha256": STRUCTURED_DRAFT_SCHEMA_SHA256,
-                "generation_config_sha256": GENERATION_CONFIG_SHA256,
+                "generation_config_sha256": self._generation_config_sha256(),
                 "prompt_evidence_count": len(allowed_evidence_ids),
             },
         )

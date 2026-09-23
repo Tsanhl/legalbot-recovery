@@ -710,7 +710,7 @@ def _verify_derived(
 def _privacy_check_string(value: str) -> None:
     casefolded = value.casefold()
     if (
-        "owner" in casefolded
+        Path.home().name.casefold() in casefolded
         or "agnes" in casefolded
         or "legalbot-new" in casefolded
         or str(PROJECT_ROOT).casefold() in casefolded

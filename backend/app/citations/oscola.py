@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 from ..types import EvidenceSpan, RenderedAnswer, StructuredDraft
 
-OSCOLA_POLICY_VERSION = "oscola-5.0-2026-03.v2"
+OSCOLA_POLICY_VERSION = "oscola-5.0-2026-03.v3"
 
 
 class CitationMetadataError(ValueError):
@@ -354,9 +354,87 @@ def _citation_token(evidence: Iterable[EvidenceSpan]) -> tuple[str, list[str]]:
     return "; ".join(parts), ids
 
 
+def bibliography_requested(question: str) -> bool:
+    """Recognise an explicit request, including a later instruction to omit it."""
+    matches = list(re.finditer(
+        r"(?i)\b(?:no |without |omit |exclude |do not (?:add|include) |don't (?:add|include) )?"
+        r"(?:a |the )?(?:bibliography|bibliographies|bib)\b|(?:不要)?參考書目",
+        question,
+    ))
+    if not matches:
+        return False
+    value = matches[-1].group().casefold()
+    return not re.match(r"(?:no |without |omit |exclude |do not |don't |不要)", value)
+
+
+def _bibliography_author(data: Mapping[str, Any]) -> str | None:
+    explicit = _clean(data.get("bibliography_author"))
+    if explicit:
+        return explicit
+    author = _clean(data.get("author"))
+    if not author:
+        return None
+    if data.get("author_kind") == "corporate" or data.get("source_type") in {"web", "website"}:
+        return author
+    # Structured metadata can supply complex or corporate author forms. Only
+    # mechanically invert ordinary personal names; do not guess name particles.
+    names = re.split(r"\s+and\s+", author)
+    converted = []
+    for name in names:
+        parts = name.split()
+        if len(parts) < 2 or any(not part[0].isupper() for part in parts):
+            return author
+        converted.append(f"{parts[-1]} {''.join(part[0] for part in parts[:-1])}")
+    return " and ".join(converted)
+
+
+def render_bibliography(spans: Iterable[EvidenceSpan]) -> str:
+    """Render only cited identities, grouped as the owner's requested end list.
+
+    OSCOLA normally separates primary-authority tables from the secondary
+    bibliography. This chat presentation keeps all three groups at the end.
+    Pinpoints remain at claims and are omitted from the authority-level list.
+    """
+    groups: dict[str, dict[str, str]] = {
+        "Case law": {}, "Legislation": {}, "Secondary sources": {},
+    }
+    for span in spans:
+        data = dict(span.citation_data)
+        kind = str(data.get("source_type", ""))
+        data.pop("pinpoint", None)
+        if kind != "rule":
+            data.pop("provision", None)
+        if kind == "case":
+            group = "Case law"
+        elif kind in {"legislation", "statutory_instrument", "rule"}:
+            group = "Legislation"
+        else:
+            group = "Secondary sources"
+            author = _bibliography_author(data)
+            if author:
+                data["author"] = author
+        citation = render_oscola(data)
+        if group == "Case law":
+            citation = citation.replace("*", "")
+        # Exact rendered bibliographic identity deduplicates multiple versions
+        # and provisions without merging distinct judgments or editions.
+        key = citation.casefold()
+        groups[group].setdefault(key, citation)
+    lines = ["## Bibliography", ""]
+    for group, entries in groups.items():
+        if not entries:
+            continue
+        lines.extend((f"### {group}", ""))
+        lines.extend(f"- {html.escape(entries[key], quote=False)}" for key in sorted(entries))
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
+
 def render_answer(
     draft: StructuredDraft,
     evidence_by_id: Mapping[str, EvidenceSpan],
+    *,
+    include_bibliography: bool = False,
 ) -> RenderedAnswer:
     lines = [f"# {draft.title}", ""]
     used: list[str] = []
@@ -378,6 +456,10 @@ def render_answer(
         lines.append("")
     markdown = "\n".join(lines).rstrip() + "\n"
     words = len(re.findall(r"\b[\w’'-]+\b", re.sub(r"\[[^]]+\]\([^)]*\)", "", markdown)))
+    if include_bibliography and used:
+        markdown += "\n" + render_bibliography(
+            evidence_by_id[item] for item in dict.fromkeys(used)
+        ) + "\n"
     return RenderedAnswer(
         markdown=markdown, word_count=words, evidence_ids=list(dict.fromkeys(used))
     )

@@ -32,6 +32,7 @@ from ..prompt_templates import (
 )
 from ..types import EvidenceSpan, StructuredDraft
 from .draft_identity import SOURCE_DRAFT_IDENTITY_SCHEMA, source_draft_sha256
+from .fact_provenance import verified_application_quotes
 
 AI_EVIDENCE_REVIEW_SCHEMA = "legalbot.ai-evidence-review.v5"
 AI_EVIDENCE_ADJUDICATION_SCHEMA = "legalbot.ai-evidence-adjudication.v2"
@@ -156,6 +157,7 @@ class FrozenClaimReviewInput:
     identity: FrozenClaimReviewIdentity
     claim_text: str
     evidence: tuple[EvidenceSpan, ...]
+    assumed_question_facts: tuple[str, ...] = ()
 
     def model_payload(self) -> dict[str, Any]:
         """Return the bounded model payload containing only this frozen material."""
@@ -164,6 +166,7 @@ class FrozenClaimReviewInput:
             "claim_id": self.identity.claim_id,
             "claim_sha256": self.identity.claim_sha256,
             "claim_text": self.claim_text,
+            "assumed_question_facts": list(self.assumed_question_facts),
             "evidence": [
                 {
                     "evidence_id": span.id,
@@ -214,6 +217,7 @@ def freeze_material_claims(
     *,
     draft: StructuredDraft,
     evidence_by_id: Mapping[str, EvidenceSpan],
+    question: str | None = None,
 ) -> tuple[FrozenClaimReviewInput, ...]:
     """Freeze all material claims and reject missing or mutable evidence identities."""
 
@@ -228,6 +232,7 @@ def freeze_material_claims(
             if claim.id in observed_claim_ids:
                 raise ValueError("material claim IDs must be unique")
             observed_claim_ids.add(claim.id)
+            fact_quotes = verified_application_quotes(claim, draft, question)
             spans: list[EvidenceSpan] = []
             for evidence_id in claim.evidence_ids:
                 span = evidence_by_id.get(evidence_id)
@@ -271,6 +276,8 @@ def freeze_material_claims(
                 "claim_id": claim.id,
                 "claim_sha256": claim_sha256,
                 "evidence": [_evidence_identity(span) for span in spans],
+                "assumed_question_facts": list(fact_quotes),
+                "rule_claim_ids": list(claim.rule_claim_ids),
             }
             identity = FrozenClaimReviewIdentity(
                 claim_id=claim.id,
@@ -285,6 +292,7 @@ def freeze_material_claims(
                     identity=identity,
                     claim_text=claim.text,
                     evidence=tuple(spans),
+                    assumed_question_facts=fact_quotes,
                 )
             )
     return tuple(output)
@@ -1066,6 +1074,7 @@ async def invoke_ai_evidence_reviewer(
     model_version: str,
     policy_sha256: str,
     checkpoint_store: AIEvidenceReviewerCheckpointStore | None = None,
+    question: str | None = None,
 ) -> AIEvidenceReviewResult:
     """Invoke the distinct reviewer prompt and seal only locally derived identities.
 
@@ -1074,7 +1083,7 @@ async def invoke_ai_evidence_reviewer(
     to the drafting prompt.
     """
 
-    frozen = freeze_material_claims(draft=draft, evidence_by_id=evidence_by_id)
+    frozen = freeze_material_claims(draft=draft, evidence_by_id=evidence_by_id, question=question)
     source_draft_sha = source_draft_sha256(draft)
     frozen_bundle_sha = frozen_claim_bundle_sha256(frozen)
     toolchain_sha = ai_evidence_reviewer_toolchain_sha256()

@@ -593,7 +593,7 @@ def _validate_questions(
 def _assert_safety(root: Path) -> None:
     forbidden = (
         re.compile(rb"/Users/", re.IGNORECASE),
-        re.compile(rb"owner", re.IGNORECASE),
+        re.compile(re.escape(Path.home().name.encode()), re.IGNORECASE),
         re.compile(rb"\bAgnes\b", re.IGNORECASE),
     )
     question_count = 0

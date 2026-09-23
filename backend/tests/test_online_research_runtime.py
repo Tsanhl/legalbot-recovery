@@ -15,6 +15,25 @@ from app.research.source_registry import OfficialSourceRegistry
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 AS_OF = date(2026, 8, 11)
 
+
+@pytest.mark.parametrize("variant", ["valid", "missing_effects", "wrong_route", "ended", "unapplied", "wrong_identity"])
+def test_older_version_requires_date_route_interval_and_separate_effects(variant):
+    from app.research.runtime import _verify_legislation, FetchedResponse, AtomLegislationCandidate
+    content=clml(valid="2026-08-01").replace(b'RestrictExtent="E+W"',b'RestrictExtent="E+W" RestrictStartDate="2026-08-01"')
+    if variant=="ended":content=content.replace(b'RestrictStartDate="2026-08-01"',b'RestrictStartDate="2026-08-01" RestrictEndDate="2026-08-10"')
+    url="https://www.legislation.gov.uk/ukpga/2010/15/2026-08-11/data.xml"
+    if variant=="wrong_route":url=url.replace("2026-08-11","2026-08-01")
+    effects=FetchedResponse("https://www.legislation.gov.uk/ukpga/2010/15/data.xml",200,{},clml(
+        unapplied=variant=="unapplied", identity="ukpga/2011/15" if variant=="wrong_identity" else "ukpga/2010/15"))
+    kwargs=dict(response=FetchedResponse(url,200,{},content),
+        candidate=AtomLegislationCandidate("ukpga/2010/15","Equality Act 2010","https://www.legislation.gov.uk/ukpga/2010/15"),
+        proposition="Equality Act 2010 section 1",query="Equality Act 2010",as_of_date=AS_OF,
+        jurisdiction="England",effects_response=None if variant=="missing_effects" else effects)
+    if variant=="valid":
+        assert "effects_capture:" in _verify_legislation(**kwargs).currentness_status
+    else:
+        with pytest.raises(ValueError):_verify_legislation(**kwargs)
+
 ATOM = b"""<?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <entry>

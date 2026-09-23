@@ -4,7 +4,10 @@ from datetime import date
 
 import pytest
 
-from app.citations.oscola import CitationMetadataError, render_answer, render_oscola
+from app.citations.oscola import (
+    CitationMetadataError, bibliography_requested, render_answer, render_bibliography,
+    render_oscola,
+)
 from app.types import StructuredClaimDraft, StructuredDraft, StructuredSectionDraft, TaskType
 
 
@@ -264,6 +267,37 @@ def test_official_web_report_and_parliamentary_examples(
 def test_model_cannot_get_a_citation_without_verified_metadata() -> None:
     with pytest.raises(CitationMetadataError):
         render_oscola({"source_type": "case", "case_name": "Imaginary"})
+
+
+def test_requested_bibliography_groups_only_cited_authorities_and_deduplicates(evidence):
+    statute = evidence.model_copy(update={"citation_data": {
+        "source_type": "legislation", "title": "Example Act 2026", "provision": "s 1",
+    }})
+    case = evidence.model_copy(update={"citation_data": {
+        "source_type": "case", "case_name": "Corr v IBC Vehicles Ltd",
+        "neutral_citation": "[2008] UKHL 13", "report_citation": "[2008] 1 AC 884",
+    }, "locator": "para 42"})
+    book = evidence.model_copy(update={"citation_data": {
+        "source_type": "book", "author": "Adrian Briggs",
+        "title": "Agreements on Jurisdiction and Choice of Law",
+        "publisher": "OUP", "year": "2008",
+    }})
+    rendered = render_bibliography([statute, case, book, statute])
+    assert rendered.count("Example Act 2026") == 1
+    assert "s 1" not in rendered and "[42]" not in rendered
+    assert rendered.index("### Case law") < rendered.index("### Legislation") < rendered.index("### Secondary sources")
+    assert "Briggs A, *Agreements" in rendered
+    assert "*Corr" not in rendered
+
+
+@pytest.mark.parametrize(("question", "expected"), [
+    ("Please add a bibliography at the end", True),
+    ("Include bib", True), ("不要參考書目", False),
+    ("No bibliography, please", False), ("Please advise me", False),
+    ("Include a bibliography. Actually omit the bibliography", False),
+])
+def test_bibliography_request_respects_explicit_omission(question, expected):
+    assert bibliography_requested(question) is expected
 
 
 @pytest.mark.parametrize(

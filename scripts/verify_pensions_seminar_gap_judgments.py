@@ -23,7 +23,7 @@ DEFAULT_MANIFEST = (
 DEFAULT_PARENT_PLAN = (
     PROJECT_ROOT / "config/pensions_seminar_gap_official_sources.2026-08-26.v1.json"
 )
-DEFAULT_SOURCE_ROOT = Path("/Users/owner/Desktop/Law")
+DEFAULT_SOURCE_ROOT = (Path.home() / "Desktop" / "Law")
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
 DEFAULT_OUTPUT = (
     PROJECT_ROOT / "data/review_queue/pensions-seminar-gap-judgments-2026-08-26-verification.json"

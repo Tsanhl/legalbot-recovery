@@ -18,7 +18,7 @@ from typing import Any
 from .rules import assessment_standard_privacy_issues
 
 BUNDLE_SCHEMA = "legalbot.assessment-guidance-bundle.v1"
-BUNDLE_VERSION = "owner-standards-2026-08-14.1"
+BUNDLE_VERSION = "owner-standards-2026-09-23.3"
 OWNER_DECISION_MANIFEST_SHA256 = "be5916d6e3e40febb3819d1529df6f6ab4055de98baf275f8361b0fc31dda9a2"
 OWNER_VERIFICATION_SIGNAL = "owner_authored_policy_v1"
 OWNER_APPROVED_MARKER_SIGNAL = "owner_approved_marker_mapping_v1"
@@ -253,7 +253,9 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         task_type="any",
         positive_target=(
             "Support each material legal proposition at the point it is made with the "
-            "highest qualifying authority available in the frozen evidence pack."
+            "highest qualifying authority available in the frozen evidence pack. Check "
+            "that the cited passage applies to the issue, jurisdiction and legal date; "
+            "a relevant title or citation alone is insufficient."
         ),
         anti_pattern=None,
         repair_action="Bind qualifying evidence beside the claim or narrow the claim to its support.",
@@ -295,7 +297,8 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         task_type="problem",
         positive_target=(
             "Test the strongest competing applications, identify missing material facts, "
-            "and rank likely outcomes proportionately."
+            "and rank likely outcomes proportionately. Identify the route to each remedy, "
+            "its limits and any incompatible election or double recovery."
         ),
         anti_pattern=None,
         repair_action="Add the strongest alternative and explain which fact would change the ranking.",
@@ -337,7 +340,11 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         task_type="essay",
         positive_target=(
             "Compare the material authorities and relevant scholarship, explaining agreement, "
-            "tension, hierarchy and significance for the thesis."
+            "tension, hierarchy and significance for the thesis. Distinguish holdings from "
+            "obiter comments and one legal doctrine from a related but different doctrine. "
+            "Where relevant and supported, "
+            "evaluate the social, economic or institutional context and defend a reform position "
+            "separately from the statement of established law."
         ),
         anti_pattern=None,
         repair_action="Replace isolated summaries with a supported comparison tied to the thesis.",
@@ -359,6 +366,36 @@ OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
         positive_target="Paraphrase accurately and use only short quotations that perform an analytical function.",
         anti_pattern="Do not substitute long quotations or case narratives for reasoned engagement.",
         repair_action="Condense the source material and explain its significance in the analysis.",
+    ),
+    _owner_rule(
+        "owner-request-pinpoint-treatment-v1",
+        grade_band="70+",
+        criterion="citation_accuracy",
+        task_type="any",
+        positive_target=(
+            "Check that each cited provision or judgment paragraph supports the precise "
+            "proposition stated; distinguish the court's reasoning from a party's rejected submission."
+        ),
+        anti_pattern=None,
+        repair_action=(
+            "Recheck the cited passage and narrow, correct or remove the proposition when "
+            "the passage does not support it."
+        ),
+    ),
+    _owner_rule(
+        "owner-request-concise-material-analysis-v1",
+        grade_band="70+",
+        criterion="precision",
+        task_type="any",
+        positive_target=(
+            "Use clear, concise sentences and spend the requested word budget on the "
+            "material issues, reasoning and supported qualifications."
+        ),
+        anti_pattern=None,
+        repair_action=(
+            "Remove repetitive description and use the space to analyse the material "
+            "facts or competing legal arguments."
+        ),
     ),
 )
 

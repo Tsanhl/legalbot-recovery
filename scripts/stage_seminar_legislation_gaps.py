@@ -21,7 +21,7 @@ DEFAULT_RESOLUTION = (
     PROJECT_ROOT / "data/review_queue/seminar-gap-legislation-title-resolution-2026-08-26.json"
 )
 DEFAULT_CATALOGUE = PROJECT_ROOT / "data/catalog.sqlite3"
-DEFAULT_SOURCE_ROOT = Path("/Users/owner/Desktop/Law")
+DEFAULT_SOURCE_ROOT = (Path.home() / "Desktop" / "Law")
 DEFAULT_RELATIVE_DIRECTORY = Path(
     "Official Legislation/seminar-gap-official-2026-08-26/legislation-round2"
 )

@@ -29,8 +29,15 @@ def test_owner_bundle_expresses_70_and_lower_band_repair_semantics() -> None:
     assert all(rule.positive_target and rule.anti_pattern is None for rule in positives)
     assert all(rule.anti_pattern and rule.repair_action for rule in [*sixty, *fifty])
     assert all(rule.source_span_hash for rule in OWNER_ASSESSMENT_BUNDLE.rules)
-    assert len(OWNER_ASSESSMENT_BUNDLE.rules) == 16
-    assert OWNER_ASSESSMENT_BUNDLE.version == "owner-standards-2026-08-14.1"
+    assert len(OWNER_ASSESSMENT_BUNDLE.rules) == 18
+    assert {"owner-request-pinpoint-treatment-v1", "owner-request-concise-material-analysis-v1"} <= {
+        rule.rule_id for rule in OWNER_ASSESSMENT_BUNDLE.rules
+    }
+    assert OWNER_ASSESSMENT_BUNDLE.version == "owner-standards-2026-09-23.3"
+    rules = {rule.rule_id: rule.positive_target for rule in OWNER_ASSESSMENT_BUNDLE.rules}
+    assert "legal date" in rules["owner-universal-authority-at-claim-v1"]
+    assert "double recovery" in rules["owner-problem-ranked-outcomes-v1"]
+    assert "obiter" in rules["owner-essay-authority-synthesis-v1"]
 
 
 def test_audit_candidate_assessment_rules_are_not_live() -> None:

@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
 
+from ..jurisdictions import compatible
 from ..types import EvidenceSpan
 from .schema_registry import ContractSchemaRegistry, canonical_json_bytes, seal_contract
 
@@ -23,7 +24,33 @@ _LANES = {
     "book_or_treatise": "scholarship",
     "scholarship": "scholarship",
 }
-_ROUTES = {"exact_authority_identity", "exact_legislation_reference", "hybrid_rrf"}
+_ROUTES = {
+    "exact_authority_identity",
+    "exact_legislation_reference",
+    "hybrid_rrf",
+    "frozen_reviewed_research_receipt",
+}
+_CURRENTNESS_CURRENT = {
+    "current",
+    "confirmed_current",
+    "qualified_current",
+    "latest_available",
+    "latest_available_revised_snapshot",
+    "latest-available-revised-snapshot",
+    "point_in_time",
+    "point_in_time_current_at_target_ceiling",
+    "current_binding_supreme_court_authority",
+    "binding_successor_in_same_proceedings",
+    "persuasive_first_instance_with_current_statutory_confirmation",
+}
+_CURRENTNESS_HISTORICAL = {
+    "historical",
+    "historical_as_enacted",
+    "as_enacted",
+    "repealed",
+    "qualified_historical",
+}
+_UNRESOLVED_SCOPE = {"", "unknown", "unverified", "unresolved", "not_reviewed"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,13 +74,66 @@ def _stamp(value: datetime) -> str:
 
 
 def _currentness(span: EvidenceSpan) -> str:
-    value = str(span.currentness_status).casefold()
-    if any(token in value for token in ("historical", "as_enacted", "repealed")):
+    value = str(span.currentness_status).strip().casefold()
+    if value in _CURRENTNESS_HISTORICAL:
         return "qualified_historical"
-    return "qualified_current"
+    if value in _CURRENTNESS_CURRENT:
+        return "qualified_current"
+    raise ValueError("evidence currentness status is not an explicit qualified state")
 
 
-def _qualification_receipt(span: EvidenceSpan, *, issue_ids: Sequence[str]) -> str:
+def _optional_day(value: Any, *, field: str) -> date | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"evidence {field} must be an ISO date")
+    try:
+        return date.fromisoformat(value)
+    except ValueError:
+        raise ValueError(f"evidence {field} must be an ISO date") from None
+
+
+def _currentness_scope(span: EvidenceSpan, *, requested_as_of_date: date | None) -> dict[str, Any]:
+    citation = span.citation_data
+    reviewed = _optional_day(citation.get("reviewed_as_of"), field="reviewed_as_of")
+    if reviewed is None:
+        raise ValueError("evidence requires an actual currentness review date")
+    effective_from = _optional_day(citation.get("effective_from"), field="effective_from")
+    effective_to = _optional_day(citation.get("effective_to"), field="effective_to")
+    if effective_from is not None and effective_to is not None and effective_from > effective_to:
+        raise ValueError("evidence effective date range is reversed")
+    if requested_as_of_date is not None:
+        if reviewed < requested_as_of_date:
+            raise ValueError("evidence currentness review predates the requested date")
+        if effective_from is not None and requested_as_of_date < effective_from:
+            raise ValueError("evidence was not effective on the requested date")
+        if effective_to is not None and requested_as_of_date > effective_to:
+            raise ValueError("evidence was not effective on the requested date")
+        if _currentness(span) == "qualified_historical" and (
+            effective_from is None or effective_to is None
+        ):
+            raise ValueError("historical evidence requires a bounded effective date range")
+    extent = str(span.provision_extent_status or "").strip().casefold()
+    if extent in _UNRESOLVED_SCOPE:
+        raise ValueError("evidence extent is unresolved")
+    commencement = str(citation.get("commencement_status") or "").strip().casefold()
+    if commencement in _UNRESOLVED_SCOPE:
+        raise ValueError("evidence commencement is unresolved")
+    return {
+        "reviewed_as_of": reviewed.isoformat(),
+        "effective_from": effective_from.isoformat() if effective_from is not None else None,
+        "effective_to": effective_to.isoformat() if effective_to is not None else None,
+        "extent_status": span.provision_extent_status,
+        "commencement_status": citation["commencement_status"],
+    }
+
+
+def _qualification_receipt(
+    span: EvidenceSpan,
+    *,
+    issue_ids: Sequence[str],
+    requested_as_of_date: date | None,
+) -> str:
     if (
         not span.identity_verified
         or not span.currentness_verified
@@ -67,6 +147,10 @@ def _qualification_receipt(span: EvidenceSpan, *, issue_ids: Sequence[str]) -> s
     route = str(span.retrieval_route or "")
     if route not in _ROUTES:
         raise ValueError("evidence retrieval route is not selected")
+    currentness_scope = _currentness_scope(
+        span,
+        requested_as_of_date=requested_as_of_date,
+    )
     material = {
         "schema": "legalbot.evidence-qualification-receipt.v1",
         "evidence_id": span.id,
@@ -76,6 +160,7 @@ def _qualification_receipt(span: EvidenceSpan, *, issue_ids: Sequence[str]) -> s
         "jurisdiction": span.jurisdiction,
         "lane": lane,
         "currentness_status": _currentness(span),
+        **currentness_scope,
         "identity_verified": span.identity_verified,
         "currentness_verified": span.currentness_verified,
         "retrieval_threshold_policy_sha256": span.retrieval_threshold_policy_sha256,
@@ -91,7 +176,10 @@ def _evidence_ref(
 ) -> dict[str, Any]:
     span = item.span
     lane = _LANES[str(span.lane)]
-    citation = span.citation_data
+    currentness_scope = _currentness_scope(
+        span,
+        requested_as_of_date=requested_as_of_date,
+    )
     return {
         "evidence_id": span.id,
         "source_version_id": span.source_version_id,
@@ -102,20 +190,112 @@ def _evidence_ref(
         "lane": lane,
         "legal_role": span.legal_role,
         "currentness_status": _currentness(span),
-        "effective_from": citation.get("effective_from"),
-        "effective_to": citation.get("effective_to"),
-        "reviewed_as_of": (
-            citation.get("reviewed_as_of")
-            or (requested_as_of_date.isoformat() if requested_as_of_date is not None else None)
+        **currentness_scope,
+        "qualification_receipt_sha256": _qualification_receipt(
+            span,
+            issue_ids=item.issue_ids,
+            requested_as_of_date=requested_as_of_date,
         ),
-        "extent_status": span.provision_extent_status,
-        "commencement_status": str(citation.get("commencement_status") or "not_applicable"),
-        "qualification_receipt_sha256": _qualification_receipt(span, issue_ids=item.issue_ids),
         "retrieval_route": span.retrieval_route,
         "retrieval_score": span.retrieval_relevance_score,
         "selection_reason": span.retrieval_qualification_reason or "threshold_qualified",
         "score_system": "hybrid_rrf_reranker_v1",
     }
+
+
+def validate_retrieval_evidence_scope(
+    *,
+    query_plan: Mapping[str, Any],
+    evidence_pack: Mapping[str, Any],
+    retrieval_result: Mapping[str, Any] | None = None,
+) -> None:
+    """Reject cross-issue, cross-jurisdiction or invented currentness bindings.
+
+    JSON Schema closes shape.  This closes the semantic relations that a
+    schema cannot express and is safe to call again at release time.
+    """
+
+    plan_issues = tuple(query_plan["issue_ids"])
+    if len(plan_issues) != len(set(plan_issues)):
+        raise ValueError("frozen query plan contains duplicate issues")
+    plan_issue_set = set(plan_issues)
+    plan_jurisdiction = query_plan.get("jurisdiction")
+    requested = (
+        date.fromisoformat(query_plan["requested_as_of_date"])
+        if query_plan.get("requested_as_of_date") is not None
+        else None
+    )
+    selected = list(evidence_pack["selected"])
+    selected_ids = [str(item["evidence_id"]) for item in selected]
+    if len(selected_ids) != len(set(selected_ids)):
+        raise ValueError("evidence pack contains duplicate selected evidence")
+    if selected and not isinstance(plan_jurisdiction, str):
+        raise ValueError("evidence pack requires a resolved plan jurisdiction")
+    for item in selected:
+        if not compatible(plan_jurisdiction, item["jurisdiction"]):
+            raise ValueError("evidence pack jurisdiction is outside the frozen query plan")
+        reviewed = _optional_day(item.get("reviewed_as_of"), field="reviewed_as_of")
+        if reviewed is None:
+            raise ValueError("evidence pack lacks an actual currentness review date")
+        effective_from = _optional_day(item.get("effective_from"), field="effective_from")
+        effective_to = _optional_day(item.get("effective_to"), field="effective_to")
+        if effective_from is not None and effective_to is not None and effective_from > effective_to:
+            raise ValueError("evidence pack effective date range is reversed")
+        if requested is not None:
+            if reviewed < requested:
+                raise ValueError("evidence pack currentness review predates the requested date")
+            if effective_from is not None and requested < effective_from:
+                raise ValueError("evidence pack source was not effective on the requested date")
+            if effective_to is not None and requested > effective_to:
+                raise ValueError("evidence pack source was not effective on the requested date")
+            if item["currentness_status"] == "qualified_historical" and (
+                effective_from is None or effective_to is None
+            ):
+                raise ValueError("historical evidence pack source lacks a bounded effective range")
+        if str(item.get("extent_status") or "").strip().casefold() in _UNRESOLVED_SCOPE:
+            raise ValueError("evidence pack extent is unresolved")
+        if str(item.get("commencement_status") or "").strip().casefold() in _UNRESOLVED_SCOPE:
+            raise ValueError("evidence pack commencement is unresolved")
+
+    coverage = list(evidence_pack["issue_coverage"])
+    coverage_ids = [str(item["issue_id"]) for item in coverage]
+    if len(coverage_ids) != len(set(coverage_ids)) or set(coverage_ids) != plan_issue_set:
+        raise ValueError("evidence coverage does not exactly match the frozen plan issues")
+    selected_set = set(selected_ids)
+    covered_evidence: set[str] = set()
+    coverage_gaps: set[tuple[str, str]] = set()
+    for item in coverage:
+        ids = set(item["evidence_ids"])
+        gaps = set(item["gap_codes"])
+        if not ids <= selected_set:
+            raise ValueError("evidence coverage references evidence outside the pack")
+        expected = "satisfied" if ids and not gaps else "partial" if ids else "gap"
+        if item["status"] != expected:
+            raise ValueError("evidence coverage status is inconsistent with evidence and gaps")
+        covered_evidence.update(ids)
+        coverage_gaps.update((item["issue_id"], code) for code in gaps)
+    if covered_evidence != selected_set:
+        raise ValueError("selected evidence is not bound to exactly one or more frozen issues")
+    declared_gaps = {(item["issue_id"], item["code"]) for item in evidence_pack["gaps"]}
+    if coverage_gaps != declared_gaps or any(issue not in plan_issue_set for issue, _ in declared_gaps):
+        raise ValueError("evidence gaps do not match issue coverage")
+    if retrieval_result is not None:
+        if list(retrieval_result["selected_evidence_ids"]) != selected_ids:
+            raise ValueError("retrieval selection differs from the evidence pack")
+        result_allocations = {
+            item["issue_id"]: (
+                item["status"],
+                set(item["selected_evidence_ids"]),
+                set(item["reason_codes"]),
+            )
+            for item in retrieval_result["issue_allocations"]
+        }
+        pack_allocations = {
+            item["issue_id"]: (item["status"], set(item["evidence_ids"]), set(item["gap_codes"]))
+            for item in coverage
+        }
+        if result_allocations != pack_allocations:
+            raise ValueError("retrieval issue allocations differ from evidence coverage")
 
 
 def build_retrieval_evidence_contracts(
@@ -135,6 +315,17 @@ def build_retrieval_evidence_contracts(
     """Bind qualified spans to one result and one prompt-safe evidence pack."""
 
     registry.validate_new(query_plan)
+    requested_as_of_date = (
+        date.fromisoformat(query_plan["requested_as_of_date"])
+        if query_plan["requested_as_of_date"] is not None
+        else None
+    )
+    plan_issue_ids = set(query_plan["issue_ids"])
+    if not plan_issue_ids and evidence:
+        raise ValueError("selected evidence requires frozen plan issues")
+    plan_jurisdiction = query_plan.get("jurisdiction")
+    if evidence and not isinstance(plan_jurisdiction, str):
+        raise ValueError("selected evidence requires a resolved plan jurisdiction")
     selected = tuple(evidence)
     if len(selected) > int(query_plan["budgets"]["final_top_k"]):
         raise ValueError("selected evidence exceeds the frozen final top-k")
@@ -145,13 +336,23 @@ def build_retrieval_evidence_contracts(
     for item in selected:
         if not item.issue_ids:
             raise ValueError("selected evidence requires at least one issue binding")
+        if not set(item.issue_ids) <= plan_issue_ids:
+            raise ValueError("selected evidence issue is outside the frozen query plan")
+        if not compatible(plan_jurisdiction, item.span.jurisdiction, item.span.citation_data):
+            raise ValueError("selected evidence jurisdiction is outside the frozen query plan")
         if item.selected_token_count < 0:
             raise ValueError("selected evidence token count cannot be negative")
-        _qualification_receipt(item.span, issue_ids=item.issue_ids)
+        _qualification_receipt(
+            item.span,
+            issue_ids=item.issue_ids,
+            requested_as_of_date=requested_as_of_date,
+        )
 
     gaps_by_issue = {
         issue_id: tuple(dict.fromkeys(codes)) for issue_id, codes in (issue_gap_codes or {}).items()
     }
+    if not set(gaps_by_issue) <= plan_issue_ids:
+        raise ValueError("evidence gap issue is outside the frozen query plan")
     evidence_by_issue: dict[str, list[str]] = defaultdict(list)
     tokens_by_issue: dict[str, int] = defaultdict(int)
     for item in selected:
@@ -188,7 +389,11 @@ def build_retrieval_evidence_contracts(
     candidate_records = []
     for item in selected:
         span = item.span
-        receipt = _qualification_receipt(span, issue_ids=item.issue_ids)
+        receipt = _qualification_receipt(
+            span,
+            issue_ids=item.issue_ids,
+            requested_as_of_date=requested_as_of_date,
+        )
         candidate_identity = hashlib.sha256(
             canonical_json_bytes(
                 {
@@ -277,11 +482,7 @@ def build_retrieval_evidence_contracts(
     refs = [
         _evidence_ref(
             item,
-            requested_as_of_date=(
-                date.fromisoformat(query_plan["requested_as_of_date"])
-                if query_plan["requested_as_of_date"] is not None
-                else None
-            ),
+            requested_as_of_date=requested_as_of_date,
         )
         for item in selected
     ]
@@ -323,6 +524,11 @@ def build_retrieval_evidence_contracts(
         }
     )
     registry.validate_new(evidence_pack)
+    validate_retrieval_evidence_scope(
+        query_plan=query_plan,
+        retrieval_result=retrieval_result,
+        evidence_pack=evidence_pack,
+    )
     return RetrievalEvidenceContracts(
         retrieval_result=retrieval_result,
         evidence_pack=evidence_pack,
@@ -333,4 +539,5 @@ __all__ = [
     "QualifiedEvidenceInput",
     "RetrievalEvidenceContracts",
     "build_retrieval_evidence_contracts",
+    "validate_retrieval_evidence_scope",
 ]

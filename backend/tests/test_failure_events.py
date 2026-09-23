@@ -328,9 +328,9 @@ def test_no_secret_or_absolute_path_in_public_safe_logs(database, tmp_path) -> N
         source_id="job-privacy",
         job_id="job-privacy",
         user_or_owner_safe=(
-            "Leak from /Users/owner/Desktop/secret.pdf; requested_secret=super-secret-token"
+            "Leak from /Users/test-owner/Desktop/secret.pdf; requested_secret=super-secret-token"
         ),
-        internal_detail="C:\\Users\\owner\\private\\key.pem api_key=abcd",
+        internal_detail="C:\\Users\\test-owner\\private\\key.pem api_key=abcd",
         context={"requested_secret": "super-secret-token", "system_prompt": "never store"},
     )
     view = public_event_view(event)

@@ -718,7 +718,9 @@ async def test_direct_repair_checkpoint_is_reused_without_second_model_call(
                     ]
                 }
             )
-            return ModelDraft("direct private output", repaired, {}, "test-model", {})
+            return ModelDraft("direct private output", repaired, {}, "test-model", {},
+                input_projections=({"synthetic": True,
+                    "user_message": "private synthetic projected input"},))
 
     model = DirectModel()
     runner = _checkpoint_runner(tmp_path=tmp_path, database=database, cipher=cipher, model=model)
@@ -738,10 +740,20 @@ async def test_direct_repair_checkpoint_is_reused_without_second_model_call(
     first, first_reused = await runner._repair_with_checkpoint(**kwargs)
     second, second_reused = await runner._repair_with_checkpoint(**kwargs)
     assert first.structured == second.structured
+    assert first.input_projections == second.input_projections
+    assert second.input_projections[0]["user_message"] == "private synthetic projected input"
+    for checkpoint in runner.objects.root.rglob("*.enc"):
+        assert b"private synthetic projected input" not in checkpoint.read_bytes()
     assert first_reused is False
     assert second_reused is True
     assert model.calls == 1
     assert database.job("job-direct-repair")["model_call_deadline_at"] is None
+    # A legacy completed checkpoint cannot qualify the newly selected route.
+    runner.settings = Settings(project_root=tmp_path, development_state_id="synthetic-ge",
+        development_candidate_build_id="candidate-synthetic")
+    with pytest.raises(RuntimeError, match="projection mode differs"):
+        await runner._repair_with_checkpoint(**kwargs)
+    assert model.calls == 1
 
 
 @pytest.mark.asyncio

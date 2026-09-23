@@ -42,6 +42,11 @@ def test_wikipedia_and_commentary_hosts_are_rejected() -> None:
     assert (
         host_allowed("https://caselaw.nationalarchives.gov.uk/ewca/civ/2023/1416/data.xml") is True
     )
+    assert host_allowed("https://www.gov.uk/government/publications/other-page") is False
+    assert host_allowed(
+        "https://www.gov.uk/government/publications/changes-to-the-definition-of-deprivation-of-liberty/"
+        "uk-supreme-court-2026-judgment-on-what-constitutes-a-deprivation-of-liberty"
+    ) is True
 
 
 def test_pdf_is_only_a_fallback_after_official_xml() -> None:
@@ -49,6 +54,20 @@ def test_pdf_is_only_a_fallback_after_official_xml() -> None:
     assert urls[0].endswith("/data.xml")
     assert any(url.endswith("/data.pdf") for url in urls)
     assert urls.index(next(url for url in urls if url.endswith("/data.pdf"))) > 0
+    cpr = official_urls(lookup_official("The Civil Procedure Rules 1998") or {})
+    assert any("/part/1/" in url for url in cpr)
+    assert any("/part/3/" in url for url in cpr)
+    assert any("/part/44/" in url for url in cpr)
+    assert cpr[0].endswith(".xml")
+
+
+def test_specific_schedule_or_part_is_not_skipped_because_act_title_exists() -> None:
+    already = {"land registration act 2002", "the civil procedure rules 1998"}
+    assert title_already_present("Land Registration Act 2002", already) is True
+    assert title_already_present("Land Registration Act 2002 Schedule 8", already) is False
+    assert title_already_present("The Civil Procedure Rules 1998 Part 25", already) is False
+    part25 = official_urls(lookup_official("The Civil Procedure Rules 1998 Part 25") or {})
+    assert any("/part/25/" in url for url in part25)
 
 
 def test_scan_records_gaps_and_wrong_routes_separately(tmp_path: Path) -> None:
@@ -303,3 +322,38 @@ def test_remaining_includes_searchable_unregistered_titles(tmp_path: Path) -> No
     assert remaining == ["Example Missing Act 2001"]
     assert looks_officially_searchable("Example Missing Act 2001") is True
     assert looks_officially_searchable("ICC Mediation Rules (contractually incorporated edition)") is False
+
+
+def test_fill_known_titles_dedupes_sidecar_only(tmp_path: Path) -> None:
+    from app.evaluation.ge_factual_gap_fill import fill_known_titles
+
+    fetched: list[str] = []
+
+    def fetch(url: str) -> dict[str, object]:
+        fetched.append(url)
+        if "wikipedia" in url or "bailii" in url:
+            raise AssertionError(f"non-official host fetched: {url}")
+        return {
+            "ok": True,
+            "url": url,
+            "status": 200,
+            "content_type": "application/xml",
+            "bytes": len(SAMPLE_XML),
+            "sha256": "b" * 64,
+            "body": SAMPLE_XML,
+        }
+
+    output = tmp_path / "priority1"
+    manifest = fill_known_titles(
+        titles=["Rome I Regulation", "Rome I Regulation"],
+        output=output,
+        already_titled=set(),
+        fetch=fetch,  # type: ignore[arg-type]
+        project_root=tmp_path,
+    )
+    assert manifest["admitted"] is False
+    assert manifest["legal_gold"] is False
+    assert manifest["deduped_against"] == "evaluation_sidecar_only"
+    assert manifest["ingested_count"] == 1
+    assert manifest["skipped_count"] == 1
+    assert fetched

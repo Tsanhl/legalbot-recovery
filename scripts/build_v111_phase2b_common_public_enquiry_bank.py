@@ -522,7 +522,7 @@ def _owner_review_guide(visible_by_topic: dict[str, list[dict[str, Any]]]) -> st
 def _assert_generated_safety(root: Path) -> None:
     forbidden = (
         re.compile(rb"/Users/", re.IGNORECASE),
-        re.compile(rb"owner", re.IGNORECASE),
+        re.compile(re.escape(Path.home().name.encode()), re.IGNORECASE),
         re.compile(rb"\bAgnes\b", re.IGNORECASE),
     )
     question_ids: set[str] = set()

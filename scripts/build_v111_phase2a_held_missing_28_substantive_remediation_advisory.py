@@ -30,7 +30,7 @@ from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-LAW_ROOT = Path("/Users/owner/Desktop/Law")
+LAW_ROOT = (Path.home() / "Desktop" / "Law")
 REVIEW_ROOT = PROJECT_ROOT / "data/evaluations/phase2a-owner-review"
 
 R3_PATH = REVIEW_ROOT / (
@@ -171,7 +171,7 @@ NO_EXECUTION_EXTENSIONS = {
 NO_EXECUTION = {**STANDARD_NO_EXECUTION_FLAGS, **NO_EXECUTION_EXTENSIONS}
 
 _PRIVATE_PATH = re.compile(
-    r"(?i)(?:/Users/|/home/|/private/|file://|[A-Z]:\\Users\\|LegalBot-New|owner)"
+    rf"(?i)(?:/Users/|/home/|/private/|file://|[A-Z]:\\Users\\|LegalBot-New|{re.escape(Path.home().name)})"
 )
 
 

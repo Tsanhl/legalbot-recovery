@@ -860,7 +860,7 @@ def _manifest_and_checksums(root: Path, manifest: dict[str, Any]) -> None:
 def _assert_no_private_identifiers(root: Path) -> None:
     forbidden = (
         re.compile(rb"/Users/", re.IGNORECASE),
-        re.compile(rb"owner", re.IGNORECASE),
+        re.compile(re.escape(Path.home().name.encode()), re.IGNORECASE),
         re.compile(rb"\bAgnes\b", re.IGNORECASE),
     )
     for path in root.rglob("*"):

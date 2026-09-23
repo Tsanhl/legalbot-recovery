@@ -73,6 +73,8 @@ _SUBJECT_QUERIES = {
     "trusts": "trustees",
 }
 _JURISDICTION_SLUGS = {
+    "england": "england_wales",
+    "wales": "england_wales",
     "england and wales": "england_wales",
     "united kingdom": "united_kingdom",
     "scotland": "scotland",
@@ -460,6 +462,11 @@ class OfficialOnlineResearcher:
             try:
                 response = await self.fetcher.fetch(adapter.plan(dated_identity), policy)
                 _require_xml_content_type(response, atom=False)
+                # A dated representation can omit the latest outstanding-effects
+                # metadata. Inspect the current representation separately; neither
+                # a successful fetch nor dct:valid alone proves currentness.
+                effects_response = await self.fetcher.fetch(adapter.plan(candidate.identity), policy)
+                _require_xml_content_type(effects_response, atom=False)
                 verified = _verify_legislation(
                     response=response,
                     candidate=candidate,
@@ -467,6 +474,7 @@ class OfficialOnlineResearcher:
                     query=query,
                     as_of_date=as_of_date,
                     jurisdiction=jurisdiction,
+                    effects_response=effects_response,
                 )
                 adapter.stage(
                     canonical_url=verified.canonical_url,
@@ -755,6 +763,7 @@ def _verify_legislation(
     query: str,
     as_of_date: date,
     jurisdiction: str,
+    effects_response: FetchedResponse | None = None,
 ) -> VerifiedLegislation:
     root = _secure_xml(response.content)
     if _local_name(root) != "Legislation":
@@ -772,7 +781,38 @@ def _verify_legislation(
         raise ValueError("official_title_identity_mismatch")
     valid = _metadata_text(root, "valid")
     if valid != as_of_date.isoformat():
-        raise ValueError("official_point_in_time_mismatch")
+        # dct:valid can identify the start of the returned version, rather
+        # than the date requested. Accept this only with an exact dated route,
+        # an explicit matching start/interval and a separate effects capture.
+        requested_path = f"/{candidate.identity}/{as_of_date.isoformat()}/data.xml"
+        response_url = urlparse(response.url)
+        if not (
+            response_url.scheme == "https"
+            and response_url.hostname == "www.legislation.gov.uk"
+            and response_url.path == requested_path
+            and not response_url.query
+            and re.fullmatch(r"\d{4}-\d{2}-\d{2}", valid or "")
+            and str(root.get("RestrictStartDate", "")) == valid
+            and valid <= as_of_date.isoformat()
+            and _fragment_is_current(root, as_of_date, jurisdiction)
+            and effects_response is not None
+        ):
+            raise ValueError("official_point_in_time_mismatch")
+    effects_hash = None
+    if effects_response is not None:
+        effects_root = _secure_xml(effects_response.content)
+        effects_identities = {
+            _identity_from_legislation_url(str(item.get("href", "")))
+            for item in effects_root.iter()
+            if _local_name(item) == "link" and item.get("rel") == "self"
+        }
+        if (_local_name(effects_root) != "Legislation"
+                or candidate.identity not in effects_identities
+                or _normalised_title(_metadata_text(effects_root, "title")) != _normalised_title(candidate.title)):
+            raise ValueError("official_effects_identity_mismatch")
+        if any(_local_name(item) == "UnappliedEffect" for item in effects_root.iter()):
+            raise ValueError("official_unapplied_effects_present")
+        effects_hash = hashlib.sha256(effects_response.content).hexdigest()
     modified = _metadata_text(root, "modified")
     if not modified:
         raise ValueError("official_modified_date_missing")
@@ -832,7 +872,8 @@ def _verify_legislation(
         title,
         candidate.canonical_url,
         hashlib.sha256(response.content).hexdigest(),
-        f"point_in_time:{as_of_date.isoformat()};unapplied_effects:0",
+        (f"point_in_time:{as_of_date.isoformat()};unapplied_effects:0"
+         + (f";effects_capture:{effects_hash}" if effects_hash else "")),
         citation_data,
         tuple((locator, text) for locator, text, _ in excerpts[:MAX_EVIDENCE_SPANS]),
     )
@@ -871,8 +912,12 @@ def _extent_applies(extent: str, jurisdiction: str) -> bool:
     if normal == "united kingdom":
         return True
     codes = set(re.split(r"[+,.\s]+", extent.upper()))
+    if normal == "england":
+        return "E" in codes
+    if normal == "wales":
+        return "W" in codes
     if normal == "england and wales":
-        return bool(codes & {"E", "W"})
+        return {"E", "W"} <= codes
     if normal == "scotland":
         return "S" in codes
     if normal == "northern ireland":

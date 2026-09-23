@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-evaluation-control-plane.v2.schema.json",
+  "title": "LegalBot GE Evaluation Control Plane v2",
+  "description": "Scoped blocker and assurance states. A case-local hold must not set phase progress false. Downstream NOT_STARTED is not FAILED.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "run_id",
+    "controller_id",
+    "current_stage",
+    "authority",
+    "phase_execution_state",
+    "run_execution_state",
+    "global_hard_stop",
+    "blocker_scope",
+    "case_assurance_counts",
+    "claim_assurance_counts",
+    "principal_blocker_counts",
+    "blockers",
+    "downstream_gates",
+    "locator_evaluation_label",
+    "answer_legal_gold",
+    "training_gold",
+    "qualified_human_review_required",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-evaluation-control-plane.v2"
+    },
+    "run_id": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "controller_id": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "current_stage": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "mechanism", "authenticated", "scope_sha256"],
+      "properties": {
+        "status": { "enum": ["NOT_RECORDED", "RECORDED", "VALID", "EXPIRED", "REVOKED"] },
+        "mechanism": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "authenticated": { "type": "boolean" },
+        "scope_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "phase_execution_state": {
+      "enum": ["ACTIVE", "HARD_STOPPED"]
+    },
+    "run_execution_state": {
+      "enum": [
+        "READY",
+        "RUNNING",
+        "COMPLETE",
+        "COMPLETE_WITH_CASE_HOLDS",
+        "BLOCKED_BY_SYSTEM_ERROR"
+      ]
+    },
+    "global_hard_stop": {
+      "type": "boolean"
+    },
+    "hard_stop_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocker_scope": {
+      "enum": ["GLOBAL", "RUN", "CASE", "CLAIM", "SOURCE"]
+    },
+    "overall_progress": {
+      "type": "boolean"
+    },
+    "case_local_hold_sets_phase_progress_false": {
+      "const": false
+    },
+    "case_assurance_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["PASS", "HOLD", "FAIL_CLOSED", "SYSTEM_ERROR"],
+      "properties": {
+        "PASS": { "type": "integer", "minimum": 0 },
+        "HOLD": { "type": "integer", "minimum": 0 },
+        "FAIL_CLOSED": { "type": "integer", "minimum": 0 },
+        "SYSTEM_ERROR": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "claim_assurance_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["SUPPORTED", "PARTIALLY_SUPPORTED", "UNSUPPORTED", "NOT_REVIEWABLE"],
+      "properties": {
+        "SUPPORTED": { "type": "integer", "minimum": 0 },
+        "PARTIALLY_SUPPORTED": { "type": "integer", "minimum": 0 },
+        "UNSUPPORTED": { "type": "integer", "minimum": 0 },
+        "NOT_REVIEWABLE": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "principal_blocker_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scope", "case_id", "code", "status"],
+        "properties": {
+          "scope": { "enum": ["GLOBAL", "RUN", "CASE", "CLAIM", "SOURCE"] },
+          "case_id": { "type": ["string", "null"] },
+          "code": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["PASS", "HOLD", "FAIL_CLOSED", "SYSTEM_ERROR"] }
+        }
+      }
+    },
+    "downstream_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "qualified_legal_review",
+        "answer_legal_gold",
+        "training_gold",
+        "runtime_promoted"
+      ],
+      "properties": {
+        "qualified_legal_review": { "const": "NOT_STARTED" },
+        "answer_legal_gold": { "const": "NOT_STARTED" },
+        "training_gold": { "const": "NOT_STARTED" },
+        "runtime_promoted": { "const": "NOT_STARTED" }
+      }
+    },
+    "locator_evaluation_label": {
+      "const": "OWNER_ADOPTED_LOCATOR_EVALUATION_DECISION"
+    },
+    "answer_legal_gold": {
+      "const": false
+    },
+    "training_gold": {
+      "const": false
+    },
+    "not_started_is_not_failed": {
+      "const": true
+    },
+    "legacy_overall_state": {
+      "type": "string",
+      "minLength": 1
+    },
+    "one_held_case_sets_global_progress_false": {
+      "const": false
+    },
+    "assurance_gates_are_separate": {
+      "const": true
+    },
+    "decision_makers_are_separate": {
+      "const": true
+    },
+    "assurance_gate_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decision_maker_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "progression_disposition_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "VERIFIED_FULL_CANDIDATE",
+        "VERIFIED_LIMITED_CANDIDATE",
+        "REVIEW_READY_CURRENTNESS",
+        "REVIEW_READY_JURISDICTION",
+        "CONDITIONAL_REVIEW_READY",
+        "HOLD_MATERIAL",
+        "FAIL_CLOSED_NO_EVIDENCE",
+        "FAIL_WRONG_OR_CONTRADICTED",
+        "OUT_OF_SCOPE"
+      ],
+      "properties": {
+        "VERIFIED_FULL_CANDIDATE": { "type": "integer", "minimum": 0 },
+        "VERIFIED_LIMITED_CANDIDATE": { "type": "integer", "minimum": 0 },
+        "REVIEW_READY_CURRENTNESS": { "type": "integer", "minimum": 0 },
+        "REVIEW_READY_JURISDICTION": { "type": "integer", "minimum": 0 },
+        "CONDITIONAL_REVIEW_READY": { "type": "integer", "minimum": 0 },
+        "HOLD_MATERIAL": { "type": "integer", "minimum": 0 },
+        "FAIL_CLOSED_NO_EVIDENCE": { "type": "integer", "minimum": 0 },
+        "FAIL_WRONG_OR_CONTRADICTED": { "type": "integer", "minimum": 0 },
+        "OUT_OF_SCOPE": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "factual_hold_is_not_equivalent_failure": {
+      "const": true
+    },
+    "qualified_review_eligible_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "qualified_human_review_required": {
+      "type": "boolean"
+    },
+    "gold_eligible_count": {
+      "const": 0
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

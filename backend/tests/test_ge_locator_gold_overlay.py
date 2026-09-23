@@ -223,6 +223,8 @@ def test_resolved_r2_rows_are_locator_evaluation_gold_not_answer_gold() -> None:
         {"title": "Equality Act 2010", "locator": "section 20"}
     )
     assert approved is not None
+    assert overlay.evaluation_decision_label == "OWNER_ADOPTED_LOCATOR_EVALUATION_DECISION"
+    assert approved.evaluation_decision_label == "OWNER_ADOPTED_LOCATOR_EVALUATION_DECISION"
     assert approved.locator_evaluation_gold is True
     icc = overlay.effective_approve(
         {
@@ -242,7 +244,11 @@ def test_resolved_r2_rows_are_locator_evaluation_gold_not_answer_gold() -> None:
 
 
 def test_phase2_progress_stays_true_when_cases_are_held() -> None:
-    from app.evaluation.ge_phase2_progress import phase2_progress
+    from app.evaluation.ge_phase2_progress import (
+        AWAITING_OWNER_DIAGNOSTIC_APPROVAL,
+        HARD_STOP,
+        phase2_progress,
+    )
 
     ledger = phase2_progress(
         case_results=[
@@ -251,8 +257,8 @@ def test_phase2_progress_stays_true_when_cases_are_held() -> None:
         ]
     )
     assert ledger["overall_progress"] is True
-    assert ledger["overall_state"] == "RUNNING_WITH_CASE_BLOCKERS"
+    assert ledger["overall_state"] == AWAITING_OWNER_DIAGNOSTIC_APPROVAL
     assert ledger["held_or_fail_closed_cases"] == 1
     stopped = phase2_progress(case_results=[], hard_stop_reasons=["explicit_owner_stop"])
     assert stopped["overall_progress"] is False
-    assert stopped["overall_state"] == "HARD_STOP"
+    assert stopped["overall_state"] == HARD_STOP

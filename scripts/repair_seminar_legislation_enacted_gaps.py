@@ -15,7 +15,7 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PARENT = PROJECT_ROOT / "config/seminar_gap_official_legislation_round2.2026-08-26.v1.json"
-DEFAULT_SOURCE_ROOT = Path("/Users/owner/Desktop/Law")
+DEFAULT_SOURCE_ROOT = (Path.home() / "Desktop" / "Law")
 DEFAULT_MANIFEST = (
     PROJECT_ROOT
     / "config/seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json"

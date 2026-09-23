@@ -16,6 +16,13 @@ web/.wrangler/
 
 # Runtime data and secrets
 .env
+/.private/
+/.ge-auto-index-tests-*/
+/.cursor/
+/Log/legalbot-controller/
+data/development-runtime/
+data/research/
+*.initial-miswrite-preserved.txt
 data/catalog.sqlite3*
 data/*.sqlite*
 data/*.db*

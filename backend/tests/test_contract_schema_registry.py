@@ -80,7 +80,7 @@ def _job_event() -> dict[str, object]:
 def test_selected_registry_has_canonical_manifest_and_validates_new_event() -> None:
     registry = ContractSchemaRegistry.from_project_root(Path.cwd())
     assert registry.manifest["canonicalization"] == CANONICALIZATION_ID
-    assert len(registry.selected_schema_names) == 20
+    assert len(registry.selected_schema_names) == 26
     assert len(registry.manifest_sha256) == 64
     registry.validate_new(_job_event())
 

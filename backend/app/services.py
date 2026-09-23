@@ -21,7 +21,8 @@ from .research.freshness import KnowledgeFreshnessCoordinator
 from .research.legacy import LegacyResearchGapImporter
 from .research.scheduler import ResearchScheduler
 from .retrieval.pinned_factory import PinnedRetrieverFactory
-from .runtime_adapters import EmptyRetriever, LoopbackModelGateway
+from .model_routes import RoutedModelGateway
+from .runtime_adapters import EmptyRetriever
 
 
 @dataclass(slots=True)
@@ -30,7 +31,7 @@ class Services:
     database: Database
     cipher: LocalCipher
     retriever: EvidenceRetriever
-    model: LoopbackModelGateway
+    model: RoutedModelGateway
     observability: RuntimeObservability
     runner: AnswerRunner
     conversations: ConversationStore
@@ -57,7 +58,40 @@ def _sensitive_state_startup_lock(path: Path) -> Iterator[None]:
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
-def build_services(settings: Settings) -> Services:
+def _select_retriever(
+    settings: Settings,
+    database: Database,
+    observability: RuntimeObservability,
+    factory: PinnedRetrieverFactory,
+    candidate_build_id: str | None,
+) -> EvidenceRetriever:
+    """Select one route before constructing AnswerRunner; never fall back from a pin."""
+    if candidate_build_id is not None:
+        if settings.development_candidate_build_id is not None:
+            row = database.fetchone(
+                "SELECT status FROM index_builds WHERE id=?", (candidate_build_id,),
+            )
+            if row is None or str(row["status"]) != "candidate":
+                raise RuntimeError("development pin requires a non-ACTIVE candidate in isolated storage")
+        return factory.for_build(candidate_build_id)
+    try:
+        from .retrieval.service import HybridRetrievalService
+
+        return HybridRetrievalService(
+            settings=settings, database=database, observability=observability,
+        )
+    except (ImportError, RuntimeError):
+        return EmptyRetriever()
+
+
+def build_services(settings: Settings, *, candidate_build_id: str | None = None) -> Services:
+    configured_pin = settings.development_candidate_build_id
+    if configured_pin is not None:
+        if candidate_build_id is not None and candidate_build_id != configured_pin:
+            raise ValueError("explicit candidate differs from configured development candidate")
+        candidate_build_id = configured_pin
+    if candidate_build_id is not None and not candidate_build_id.strip():
+        raise ValueError("evaluation candidate must not be empty")
     settings.ensure_runtime_dirs()
     database = Database(settings.database_path)
     database.initialize()
@@ -106,19 +140,11 @@ def build_services(settings: Settings) -> Services:
     )
     retriever_factory = PinnedRetrieverFactory(settings, database, observability=observability)
 
-    # The import is intentionally one-way: a single new hybrid retriever or an honest empty state.
-    try:
-        from .retrieval.service import HybridRetrievalService
+    retriever = _select_retriever(
+        settings, database, observability, retriever_factory, candidate_build_id,
+    )
 
-        retriever: EvidenceRetriever = HybridRetrievalService(
-            settings=settings,
-            database=database,
-            observability=observability,
-        )
-    except (ImportError, RuntimeError):
-        retriever = EmptyRetriever()
-
-    model = LoopbackModelGateway(settings)
+    model = RoutedModelGateway(settings)
     from .conversations import ConversationQueryRewriter
 
     query_rewriter = ConversationQueryRewriter(
@@ -155,11 +181,4 @@ def build_services(settings: Settings) -> Services:
 def build_evaluation_services(settings: Settings, candidate_build_id: str) -> Services:
     """Service graph pinned to an evaluation candidate. Does not follow ACTIVE."""
 
-    services = build_services(settings)
-    if services.retriever_factory is None:
-        raise RuntimeError("evaluation services require a pinned retriever factory")
-    pinned = services.retriever_factory.for_build(candidate_build_id)
-    services.retriever = pinned
-    services.runner.retriever_factory = services.retriever_factory
-    services.runner._default_retriever = pinned
-    return services
+    return build_services(settings, candidate_build_id=candidate_build_id)

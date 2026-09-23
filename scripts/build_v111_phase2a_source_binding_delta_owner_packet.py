@@ -1168,7 +1168,7 @@ def _privacy_check_string(value: str, *, field: str) -> None:
     casefolded = value.casefold()
     if (
         "agnes" in casefolded
-        or "owner" in casefolded
+        or Path.home().name.casefold() in casefolded
         or "legalbot-new" in casefolded
         or str(PROJECT_ROOT).casefold() in casefolded
         or "file://" in casefolded

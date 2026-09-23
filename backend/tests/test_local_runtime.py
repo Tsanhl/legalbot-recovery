@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -76,3 +78,20 @@ def test_default_port_contract_and_production_launcher() -> None:
     assert "LEGALBOT_PORT=8776" in developer
     assert "LEGALBOT_MODEL_PORT=8778" in developer
     assert 'default="http://127.0.0.1:8778"' in smoke
+
+
+@pytest.mark.parametrize("override,message", [
+    ({"LEGALBOT_MODEL_MODE": "stub"}, "selected local Qwen"),
+    ({"LEGALBOT_MODEL_ADAPTER_PATH": "/unused"}, "adapters inactive"),
+    ({"LEGALBOT_MODEL_ID": "different/model"}, "pinned Qwen model"),
+    ({"LEGALBOT_DEVELOPMENT_STATE_ID": ""}, "isolated development store"),
+])
+def test_development_launcher_rejects_wrong_runtime_before_starting_services(override, message):
+    root = Path(__file__).resolve().parents[2]
+    env = {key: value for key, value in os.environ.items() if not key.startswith("LEGALBOT_")}
+    env["LEGALBOT_DEVELOPMENT_STATE_ID"] = "synthetic-check"
+    env.update(override)
+    result = subprocess.run(["bash", "scripts/dev.sh"], cwd=root, env=env,
+                            capture_output=True, text=True, timeout=5)
+    assert result.returncode == 2
+    assert message in result.stderr

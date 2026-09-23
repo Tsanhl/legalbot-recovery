@@ -20,7 +20,8 @@ from ..assessment.guidance_bundle import (
     BudgetedAssessmentGuidance,
     budget_assessment_guidance,
 )
-from ..citations.oscola import render_answer
+from ..citations.oscola import bibliography_requested, render_answer
+from .answer_structure import canonical_heading
 from ..config import Settings
 from ..crypto import LocalCipher
 from ..db import Database
@@ -43,6 +44,7 @@ from ..quality.evidence import (
     evidence_span_eligible_for_drafting,
     is_citable_authority_lane,
 )
+from ..quality.full_answer_reviewer import invoke_full_answer_reviewer
 from ..quality.policy import POLICY_SHA256, POLICY_VERSION
 from ..text_metrics import word_count
 from ..types import (
@@ -136,6 +138,7 @@ def draft_checkpoint_input_sha256(
     upload_context: Sequence[UploadContextSpan],
     assessment_bundle_sha256: str,
     model_id: str,
+    generation_config_sha256: str | None = None,
 ) -> str:
     """Canonical identity of every model-visible draft checkpoint input."""
 
@@ -178,7 +181,7 @@ def draft_checkpoint_input_sha256(
                 "prompt_contract_version": DRAFT_CHECKPOINT_PROMPT_VERSION,
                 "prompt_sha256": DRAFT_SYSTEM_PROMPT_SHA256,
                 "structured_draft_schema_sha256": STRUCTURED_DRAFT_SCHEMA_SHA256,
-                "generation_config_sha256": GENERATION_CONFIG_SHA256,
+                "generation_config_sha256": generation_config_sha256 or GENERATION_CONFIG_SHA256,
             },
             sort_keys=True,
         ).encode()
@@ -199,6 +202,7 @@ def repair_checkpoint_input_sha256s(
     section_key: str,
     assessment_bundle_sha256: str,
     model_id: str,
+    generation_config_sha256: str | None = None,
 ) -> tuple[str, str]:
     """Canonical identities for repair evidence and complete model input."""
 
@@ -263,7 +267,7 @@ def repair_checkpoint_input_sha256s(
                 "prompt_contract_version": REPAIR_CHECKPOINT_PROMPT_VERSION,
                 "prompt_sha256": DRAFT_SYSTEM_PROMPT_SHA256,
                 "structured_draft_schema_sha256": STRUCTURED_DRAFT_SCHEMA_SHA256,
-                "generation_config_sha256": GENERATION_CONFIG_SHA256,
+                "generation_config_sha256": generation_config_sha256 or GENERATION_CONFIG_SHA256,
             },
             sort_keys=True,
             separators=(",", ":"),
@@ -328,7 +332,9 @@ def _bind_model_draft_context(
     sections = [
         section.model_copy(
             update={
-                "heading": prior_headings.get(section.id, f"Analysis {position}"),
+                "heading": prior_headings.get(
+                    section.id, canonical_heading(task_type, section.id, position)
+                ),
                 "claims": [claim.model_copy(update={"material": True}) for claim in section.claims],
             }
         )
@@ -357,6 +363,7 @@ def _bind_model_draft_context(
         rubric_scores=candidate.rubric_scores,
         model_version=candidate.model_version,
         metrics=candidate.metrics,
+        input_projections=candidate.input_projections,
     )
 
 
@@ -424,6 +431,122 @@ class AnswerRunner:
     def retriever(self, value: EvidenceRetriever) -> None:
         self._default_retriever = value
 
+    def _require_development_fact_provenance(
+        self, candidate: ModelDraft, *, mode: str, question: str,
+        upload_context: Sequence[UploadContextSpan],
+    ) -> None:
+        """New development calls and resumed checkpoints need actual sent facts."""
+        if self.settings.development_candidate_build_id is None:
+            return
+        from ..runtime_adapters import verify_model_fact_provenance
+
+        if len(candidate.input_projections) != 1:
+            raise RuntimeError("development model invocation requires one input projection")
+        projection = candidate.input_projections[0]
+        if projection.get("mode") != mode:
+            raise RuntimeError("development model input projection mode differs")
+        verify_model_fact_provenance(
+            projection, question=question, upload_context=upload_context,
+            owner_identifiers=self.settings.owner_identifiers,
+        )
+
+    def _freeze_selected_runtime_inputs(
+        self,
+        *,
+        job_id: str,
+        question: str,
+        task_type: TaskType,
+        answer_route: AnswerRoute,
+        jurisdiction: str,
+        as_of_date: date,
+        issue_plan: IssuePlan,
+        evidence: Sequence[EvidenceSpan],
+        visible_facts: Mapping[str, Any],
+    ) -> Mapping[str, Any] | None:
+        """Freeze the exact selected-contract inputs before the model sees them."""
+
+        if self.settings.development_candidate_build_id is None:
+            return None
+        candidate_sha256 = self.settings.development_retrieval_manifest_sha256
+        if candidate_sha256 is None:
+            raise RuntimeError("selected runtime requires a pinned retrieval manifest digest")
+        job = self.database.job(job_id)
+        if job is None or not job["evaluation_request_sha256"]:
+            raise RuntimeError("selected runtime job request identity is missing")
+        from ..contracts.runtime_selected_chain import (
+            build_selected_runtime_inputs,
+            require_selected_runtime_inputs,
+            selected_runtime_input_sha256,
+        )
+        from ..contracts.schema_registry import ContractSchemaRegistry
+
+        registry = ContractSchemaRegistry.from_project_root(self.settings.project_root)
+        input_digest = selected_runtime_input_sha256(
+            job_id=job_id,
+            request_sha256=str(job["evaluation_request_sha256"]),
+            question=question,
+            task_type=task_type,
+            answer_route=str(answer_route),
+            jurisdiction=jurisdiction,
+            as_of_date=as_of_date,
+            issue_plan=issue_plan,
+            evidence=evidence,
+            visible_facts=visible_facts,
+            candidate_id=self.settings.development_candidate_build_id,
+            candidate_sha256=candidate_sha256,
+        )
+        completed = self.database.completed_stage_attempt(
+            job_id, "selected-contract-inputs", "whole-answer"
+        )
+        if completed is not None:
+            if completed["input_digest"] != input_digest or not completed["output_object_key"]:
+                raise RuntimeError("selected runtime checkpoint differs from frozen inputs")
+            restored = self.objects.get_json(str(completed["output_object_key"]))
+            if restored.get("input_sha256") != input_digest:
+                raise RuntimeError("selected runtime checkpoint digest differs")
+            return require_selected_runtime_inputs(restored, registry=registry)
+        frozen = build_selected_runtime_inputs(
+            job=job,
+            request_sha256=str(job["evaluation_request_sha256"]),
+            question=question,
+            task_type=task_type,
+            answer_route=str(answer_route),
+            jurisdiction=jurisdiction,
+            as_of_date=as_of_date,
+            issue_plan=issue_plan,
+            evidence=evidence,
+            visible_facts=visible_facts,
+            candidate_id=self.settings.development_candidate_build_id,
+            candidate_sha256=candidate_sha256,
+            objects=self.objects,
+            registry=registry,
+        )
+        output_object_key = self.objects.put_json(
+            namespace="selected_runtime_inputs",
+            value=frozen.value,
+            metadata={
+                "job_id": job_id,
+                "purpose": "pre_generation_selected_contract_checkpoint",
+                "input_sha256": frozen.input_sha256,
+            },
+            ttl_days=None,
+        )
+        self.database.store_stage_attempt(
+            attempt_id=str(uuid4()),
+            job_id=job_id,
+            stage_key="selected-contract-inputs",
+            section_key="whole-answer",
+            attempt_number=self.database.next_stage_attempt_number(
+                job_id, "selected-contract-inputs", "whole-answer"
+            ),
+            status="complete",
+            encrypted_output=None,
+            output_object_key=output_object_key,
+            input_digest=frozen.input_sha256,
+            evidence_pack_digest=str(frozen.value["evidence_pack"]["content_sha256"]),
+        )
+        return frozen.value
+
     def _require_normal_live_for_ordinary_job(
         self,
         row: Any,
@@ -453,7 +576,8 @@ class AnswerRunner:
             authority_value = json.loads(str(row["evaluation_authority_json"] or "{}"))
             if (
                 not isinstance(authority_value, dict)
-                or authority_value.get("lane") != "owner_quality_canary"
+                or authority_value.get("lane")
+                not in {"owner_quality_canary", "ge_qwen_visible_development", "ge_owner_development_chat"}
             ):
                 raise RuntimeError(SUPERSEDED_EVALUATION_CONTENT_CERTIFICATION_STOP)
             request_data["question"] = self.cipher.decrypt_text(row["encrypted_question"])
@@ -480,7 +604,17 @@ class AnswerRunner:
         if row is None:
             return
         pin = row["pinned_index_build_id"]
+        configured_pin = self.settings.development_candidate_build_id
+        if configured_pin is not None:
+            if str(pin or "") != configured_pin:
+                raise RuntimeError("job pin differs from configured development candidate")
+            candidate = self.database.fetchone(
+                "SELECT status FROM index_builds WHERE id=?", (configured_pin,),
+            )
+            if candidate is None or str(candidate["status"]) != "candidate":
+                raise RuntimeError("development candidate is missing or no longer non-ACTIVE")
         token = None
+        model_token = None
         if self.retriever_factory is not None:
             if not pin:
                 raise RuntimeError("answer job is missing pinned_index_build_id")
@@ -495,10 +629,23 @@ class AnswerRunner:
                     "evaluation job cannot use an ACTIVE-following retriever without a pinned factory"
                 )
         try:
+            try:
+                route_authority = json.loads(str(row["evaluation_authority_json"] or "{}"))
+            except json.JSONDecodeError:
+                route_authority = None
+            if (
+                isinstance(route_authority, dict)
+                and route_authority.get("lane") == "ge_owner_development_chat"
+            ):
+                if not hasattr(self.model, "select"):
+                    raise RuntimeError("development chat requires a route-aware model gateway")
+                model_token = self.model.select(str(route_authority.get("route_id") or ""))
             await self._run_bound(job_id, raise_on_error=raise_on_error)
         finally:
             if token is not None:
                 _JOB_RETRIEVER.reset(token)
+            if model_token is not None:
+                self.model.reset(model_token)
 
     async def _run_bound(self, job_id: str, *, raise_on_error: bool = False) -> None:
         row = self.database.job(job_id)
@@ -764,10 +911,19 @@ class AnswerRunner:
             retriever_available = False
             index_ready = False
         upload_text = " ".join(upload_preparation.review_reasons).casefold()
+        job_row = self.database.job(job_id)
+        try:
+            job_authority = json.loads(str(job_row["evaluation_authority_json"] or "{}")) if job_row is not None else {}
+        except json.JSONDecodeError:
+            job_authority = {}
         early = route_behavior(
             BehaviorSignals(
                 question=question,
                 jurisdiction=request.jurisdiction,
+                expanded_development_jurisdiction=(
+                    isinstance(job_authority, dict)
+                    and job_authority.get("lane") == "ge_owner_development_chat"
+                ),
                 upload_unreadable=any(
                     token in upload_text
                     for token in (
@@ -1025,6 +1181,41 @@ class AnswerRunner:
             await self._release_behavior(job_id, request, task_type, as_of, post, gap=gap)
             return
 
+        selected_runtime_inputs: Mapping[str, Any] | None = None
+        if self.settings.development_candidate_build_id is not None:
+            from ..runtime_adapters import (
+                expected_model_visible_fact_inputs,
+                select_fully_visible_evidence,
+            )
+
+            visible_selection = select_fully_visible_evidence(
+                qualified,
+                self.settings.owner_identifiers,
+                as_of_date=as_of,
+                maximum_spans=8,
+            )
+            qualified = list(visible_selection.spans)
+            if not qualified:
+                raise RuntimeError(
+                    "selected runtime has no whole evidence span within the model-visible budget"
+                )
+            visible_facts = expected_model_visible_fact_inputs(
+                question=question,
+                upload_context=upload_preparation.contexts,
+                owner_identifiers=self.settings.owner_identifiers,
+            )
+            selected_runtime_inputs = self._freeze_selected_runtime_inputs(
+                job_id=job_id,
+                question=question,
+                task_type=task_type,
+                answer_route=route,
+                jurisdiction=request.jurisdiction,
+                as_of_date=as_of,
+                issue_plan=issue_plan,
+                evidence=qualified,
+                visible_facts=visible_facts,
+            )
+
         self.database.store_evidence([item.model_dump(mode="json") for item in qualified])
         self._record_teaching_verify_cite(job_id, issue_plan, qualified)
         if self._stop_if_cancelled(job_id):
@@ -1065,6 +1256,7 @@ class AnswerRunner:
                 rubric_scores=candidate.rubric_scores,
                 model_version=candidate.model_version,
                 metrics=candidate.metrics,
+                input_projections=candidate.input_projections,
             )
         version_number = self.database.next_answer_version_number(job_id)
         raw_id = str(uuid4())
@@ -1091,6 +1283,7 @@ class AnswerRunner:
             parent_text=candidate.raw_text,
             subject=subject,
             upload_context=upload_preparation.contexts,
+            selected_runtime_inputs=selected_runtime_inputs,
         )
         self.database.update_job(
             job_id,
@@ -1178,7 +1371,8 @@ class AnswerRunner:
             assessment_rules=assessment_rules,
             upload_context=upload_context,
             assessment_bundle_sha256=assessment_bundle_sha256,
-            model_id=self.settings.model_id,
+            model_id=str(getattr(self.model, "selected_model_id", self.settings.model_id)),
+            generation_config_sha256=getattr(self.model, "selected_generation_config_sha256", None),
         )
         completed = self.database.completed_stage_attempt(job_id, "draft", section_key)
         if completed is not None:
@@ -1197,6 +1391,10 @@ class AnswerRunner:
                 rubric_scores={str(k): float(v) for k, v in value["rubric_scores"].items()},
                 model_version=str(value["model_version"]),
                 metrics=dict(value.get("metrics") or {}),
+                input_projections=tuple(value.get("input_projections") or ()),
+            )
+            self._require_development_fact_provenance(
+                restored, mode="draft", question=question, upload_context=upload_context,
             )
             return _bind_model_draft_context(
                 restored,
@@ -1245,6 +1443,9 @@ class AnswerRunner:
                 if not self.database.clear_model_call_deadline(job_id, call_token=call_token):
                     raise RuntimeError("model-call deadline ownership changed during draft")
             self._raise_if_cancelled(job_id)
+            self._require_development_fact_provenance(
+                candidate, mode="draft", question=question, upload_context=upload_context,
+            )
             candidate = _bind_model_draft_context(
                 candidate,
                 task_type=task_type,
@@ -1296,6 +1497,7 @@ class AnswerRunner:
             "rubric_scores": candidate.rubric_scores,
             "model_version": candidate.model_version,
             "metrics": candidate.metrics or {},
+            "input_projections": list(candidate.input_projections),
         }
         output_object_key = self.objects.put_json(
             namespace="draft_checkpoints",
@@ -1361,7 +1563,8 @@ class AnswerRunner:
             repair_round=repair_round,
             section_key=section_key,
             assessment_bundle_sha256=assessment_bundle_sha256,
-            model_id=self.settings.model_id,
+            model_id=str(getattr(self.model, "selected_model_id", self.settings.model_id)),
+            generation_config_sha256=getattr(self.model, "selected_generation_config_sha256", None),
         )
         stage_key = f"repair-{repair_round:02d}"
         completed = self.database.completed_stage_attempt(job_id, stage_key, section_key)
@@ -1405,6 +1608,10 @@ class AnswerRunner:
                 },
                 model_version=str(output["model_version"]),
                 metrics=dict(output.get("metrics") or {}),
+                input_projections=tuple(output.get("input_projections") or ()),
+            )
+            self._require_development_fact_provenance(
+                restored, mode="repair", question=question, upload_context=upload_context,
             )
             restored = _bind_model_draft_context(
                 restored,
@@ -1456,6 +1663,9 @@ class AnswerRunner:
                 if not self.database.clear_model_call_deadline(job_id, call_token=call_token):
                     raise RuntimeError("model-call deadline ownership changed during repair")
             self._raise_if_cancelled(job_id)
+            self._require_development_fact_provenance(
+                repaired, mode="repair", question=question, upload_context=upload_context,
+            )
             repaired = _bind_model_draft_context(
                 repaired,
                 task_type=prior.task_type,
@@ -1514,6 +1724,7 @@ class AnswerRunner:
             "rubric_scores": repaired.rubric_scores,
             "model_version": repaired.model_version,
             "metrics": repaired.metrics or {},
+            "input_projections": list(repaired.input_projections),
         }
         output_object_key = self.objects.put_json(
             namespace="repair_checkpoints",
@@ -1534,7 +1745,7 @@ class AnswerRunner:
                 "policy_sha256": POLICY_SHA256,
                 "assessment_bundle_sha256": assessment_bundle_sha256,
                 "model_id_sha256": hashlib.sha256(
-                    self.settings.model_id.encode("utf-8")
+                    str(getattr(self.model, "selected_model_id", self.settings.model_id)).encode("utf-8")
                 ).hexdigest(),
                 "prompt_contract_version": REPAIR_CHECKPOINT_PROMPT_VERSION,
             },
@@ -1779,6 +1990,8 @@ class AnswerRunner:
             rubric_scores=self._mean_rubric([item[1] for item in candidates]),
             model_version=candidates[0][1].model_version,
             metrics=self._aggregate_model_metrics([item[1] for item in candidates]),
+            input_projections=tuple(projection for _, item in candidates
+                                    for projection in item.input_projections),
         )
         final = await self._verify_and_repair(
             job_id=job_id,
@@ -1859,7 +2072,7 @@ class AnswerRunner:
             OWNER_ASSESSMENT_BUNDLE,
             task_type=str(task_type),
             subject=subject,
-            max_characters=1_800,
+            max_characters=getattr(self.model, "assessment_character_budget", 1_800),
         )
 
     def _assessment_rules(self, task_type: TaskType, subject: str | None) -> list[str]:
@@ -1950,7 +2163,13 @@ class AnswerRunner:
         subject: str | None = None,
         upload_context: Sequence[UploadContextSpan] = (),
         section_evidence_by_id: Mapping[str, Mapping[str, EvidenceSpan]] | None = None,
+        selected_runtime_inputs: Mapping[str, Any] | None = None,
     ) -> tuple[str, ReleaseState]:
+        if (
+            self.settings.development_candidate_build_id is not None
+            and selected_runtime_inputs is None
+        ):
+            raise RuntimeError("selected runtime inputs were not frozen before verification")
         current = candidate
         attempts = 0
         prior_failure_fingerprints: list[str] = []
@@ -1963,7 +2182,10 @@ class AnswerRunner:
                 "Verifying every material claim",
             )
             verification_started = time.perf_counter()
-            rendered = render_answer(current.structured, evidence_by_id)
+            rendered = render_answer(
+                current.structured, evidence_by_id,
+                include_bibliography=bibliography_requested(question),
+            )
             answer_id = str(uuid4())
             report = self.evaluator.evaluate(
                 answer_version_id=answer_id,
@@ -1998,9 +2220,10 @@ class AnswerRunner:
                             model=self.model,
                             draft=current.structured,
                             evidence_by_id=evidence_by_id,
-                            model_id=self.settings.model_id,
+                            model_id=str(getattr(self.model, "selected_model_id", self.settings.model_id)),
                             model_version=current.model_version,
                             policy_sha256=POLICY_SHA256,
+                            question=question,
                         )
                 finally:
                     if not self.database.clear_model_call_deadline(job_id, call_token=call_token):
@@ -2050,6 +2273,102 @@ class AnswerRunner:
                         ),
                     }
                 )
+                if selected_runtime_inputs is not None:
+                    fact_inputs = selected_runtime_inputs.get("review_fact_inputs")
+                    query_plan = selected_runtime_inputs.get("query_plan")
+                    if not isinstance(fact_inputs, list) or not isinstance(query_plan, dict):
+                        raise RuntimeError("selected runtime review inputs are incomplete")
+                    issue_ids = query_plan.get("issue_ids")
+                    if not isinstance(issue_ids, list) or not fact_inputs:
+                        raise RuntimeError("selected runtime review issue/fact inputs are missing")
+                    visible_question = str(fact_inputs[0].get("text") or "")
+                    if not visible_question:
+                        raise RuntimeError("selected runtime visible question is missing")
+                    full_call_token, _ = self.database.arm_model_call_deadline(
+                        job_id, seconds=ANSWER_MODEL_CALL_SECONDS
+                    )
+                    try:
+                        async with asyncio.timeout(ANSWER_MODEL_CALL_SECONDS):
+                            full_review = await invoke_full_answer_reviewer(
+                                model=self.model,
+                                question=visible_question,
+                                draft=current.structured,
+                                rendered_answer=rendered.markdown,
+                                evidence_by_id=evidence_by_id,
+                                fact_inputs=fact_inputs,
+                                issue_ids=issue_ids,
+                                model_id=str(getattr(self.model, "selected_model_id", self.settings.model_id)),
+                                model_version=current.model_version,
+                            )
+                    finally:
+                        if not self.database.clear_model_call_deadline(
+                            job_id, call_token=full_call_token
+                        ):
+                            raise RuntimeError(
+                                "model-call deadline ownership changed during full-answer review"
+                            )
+                    self._raise_if_cancelled(job_id)
+                    full_findings: list[QualityFinding] = []
+                    if not full_review.passed:
+                        omission_statuses = {item.status for item in full_review.omissions}
+                        full_findings.append(
+                            QualityFinding(
+                                gate="ai_full_answer_review",
+                                code=(
+                                    "ai_full_answer_material_omission"
+                                    if "material" in omission_statuses
+                                    else "ai_full_answer_omission_uncertain"
+                                ),
+                                message=(
+                                    "The separate complete-answer review found a material or "
+                                    "uncertain omission against the candidate-visible facts and "
+                                    "frozen evidence."
+                                ),
+                                severity=Severity.HARD_BLOCKER,
+                                corrective_action=(
+                                    "Hold this version and create a new bounded answer attempt "
+                                    "only when the omitted issue can be resolved from frozen inputs."
+                                ),
+                            )
+                        )
+                    report = report.model_copy(
+                        update={
+                            "ai_full_answer_review": full_review.model_dump(
+                                mode="json", by_alias=True
+                            ),
+                            "findings": [*report.findings, *full_findings],
+                            "release_state": (
+                                report.release_state
+                                if full_review.passed
+                                else ReleaseState.HELD_FOR_REVIEW
+                            ),
+                        }
+                    )
+                    if (
+                        selected_runtime_inputs.get("expected_disposition")
+                        == "hold_or_clarification"
+                    ):
+                        report = report.model_copy(
+                            update={
+                                "findings": [
+                                    *report.findings,
+                                    QualityFinding(
+                                        gate="development_expected_disposition",
+                                        code="development_expected_hold_or_clarification",
+                                        message=(
+                                            "This visible case was frozen to test an expected "
+                                            "hold or clarification after actual generation and review."
+                                        ),
+                                        severity=Severity.HARD_BLOCKER,
+                                        corrective_action=(
+                                            "Retain the reviewed candidate draft as encrypted "
+                                            "evaluation evidence and return only the held status."
+                                        ),
+                                    ),
+                                ],
+                                "release_state": ReleaseState.HELD_FOR_REVIEW,
+                            }
+                        )
             if self.observability is not None:
                 context = self.observability.context_for_job(job_id)
                 if context is not None:
@@ -2135,6 +2454,27 @@ class AnswerRunner:
             repairable = [item for item in report.findings if item.severity == Severity.REPAIRABLE]
             hard = [item for item in report.findings if item.severity == Severity.HARD_BLOCKER]
             if report.release_state == ReleaseState.VERIFIED_FULL:
+                if selected_runtime_inputs is not None:
+                    from ..contracts.runtime_selected_chain import (
+                        persist_selected_runtime_chain,
+                    )
+                    from ..contracts.schema_registry import ContractSchemaRegistry
+
+                    persist_selected_runtime_chain(
+                        database=self.database,
+                        objects=self.objects,
+                        registry=ContractSchemaRegistry.from_project_root(
+                            self.settings.project_root
+                        ),
+                        selected_inputs=selected_runtime_inputs,
+                        answer_id=answer_id,
+                        draft=current.structured,
+                        rendered_answer=rendered.markdown,
+                        report=report,
+                        model_id=str(getattr(self.model, "selected_model_id", self.settings.model_id)),
+                        model_version=current.model_version,
+                        repair_count=attempts,
+                    )
                 self._mark_released(answer_id, report.release_state)
                 return answer_id, report.release_state
             # A repair may legitimately replace a failed claim and therefore
@@ -2327,6 +2667,7 @@ class AnswerRunner:
         section_positions = {section.id: index for index, section in enumerate(sections)}
         per_section_target = max(500, min(700, round(word_target / max(1, len(sections)))))
         generated: list[ModelDraft] = []
+        repair_inputs: list[dict[str, Any]] = []
         for section_id in failed_sections:
             position = section_positions.get(section_id)
             if position is None:
@@ -2376,6 +2717,7 @@ class AnswerRunner:
             if replacement is None:
                 raise RuntimeError("long-form repair did not return the requested section")
             sections[position] = replacement.model_copy(update={"id": section_id})
+            repair_inputs.extend(repaired.input_projections)
             if not reused:
                 generated.append(repaired)
 
@@ -2393,6 +2735,7 @@ class AnswerRunner:
             rubric_scores=prior.rubric_scores,
             model_version=generated[-1].model_version if generated else prior.model_version,
             metrics=metrics,
+            input_projections=(*prior.input_projections, *repair_inputs),
         )
 
     async def _release_behavior(
@@ -2626,7 +2969,7 @@ class AnswerRunner:
                         StructuredClaimDraft(
                             id=str(uuid4()),
                             text=(
-                                "The requested answer completed drafting and bounded repair, but no substantive version passed every evidence and privacy release gate"
+                                "The requested answer completed drafting and bounded repair, but no substantive version passed every release-quality check"
                             ),
                             evidence_ids=[],
                             material=False,
@@ -2770,6 +3113,27 @@ class AnswerRunner:
 
             normal_live_verifier = replay_normal_live_authority
         started = time.perf_counter()
+        selected_publication_verifier = None
+        selected_chain = self.database.fetchone(
+            "SELECT job_id FROM selected_answer_contract_chains WHERE job_id=?",
+            (release_job_id,),
+        )
+        if self.settings.development_candidate_build_id is not None or selected_chain is not None:
+            from ..contracts import ContractSchemaRegistry, SelectedAnswerContractStore
+
+            selected_store = SelectedAnswerContractStore(
+                database=self.database,
+                objects=self.objects,
+                registry=ContractSchemaRegistry.from_project_root(self.settings.project_root),
+            )
+
+            def replay_selected_publication() -> dict[str, Any]:
+                proof = selected_store.load_publication_proof(release_job_id)
+                if proof["answer_id"] != answer_id or proof["release_state"] != str(release):
+                    raise RuntimeError("selected publication differs from requested answer release")
+                return proof
+
+            selected_publication_verifier = replay_selected_publication
         self.database.release_answer_once(
             answer_id,
             str(release),
@@ -2777,6 +3141,7 @@ class AnswerRunner:
             evaluation_authority_verifier=evaluation_verifier,
             normal_live_authority=normal_live_authority,
             normal_live_authority_verifier=normal_live_verifier,
+            selected_publication_verifier=selected_publication_verifier,
         )
         # Conversation projection is deliberately downstream of the atomic
         # release.  Evaluation jobs have no ordinary conversation binding;
@@ -3104,7 +3469,7 @@ class AnswerRunner:
             ),
             ReleaseState.VERIFIED_CONCISE: "Evidence passed; the verified answer is shorter than requested.",
             ReleaseState.VERIFIED_LIMITED: "The supported answer was released with precise limitations.",
-            ReleaseState.HELD_FOR_REVIEW: "A substantive evidence or privacy defect remains; the answer is held with named corrective actions.",
+            ReleaseState.HELD_FOR_REVIEW: "At least one release-quality check failed; the draft is held with named findings.",
             ReleaseState.SYSTEM_ERROR: "The local operation stopped and can be resumed from its checkpoint.",
         }
         return messages[release]

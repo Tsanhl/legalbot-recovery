@@ -43,6 +43,11 @@ ALLOWED_HOSTS = frozenset(
         "caselaw.nationalarchives.gov.uk",
     }
 )
+OWNER_NAMED_SECONDARY_URLS = frozenset(
+    {
+        "https://www.gov.uk/government/publications/changes-to-the-definition-of-deprivation-of-liberty/uk-supreme-court-2026-judgment-on-what-constitutes-a-deprivation-of-liberty",
+    }
+)
 DO_NOT_ADMIT_TITLES = frozenset(
     {
         "mediation act 2025",
@@ -59,6 +64,11 @@ TITLE_ALIASES = {
     "wills act 1837 section 9 as it had effect on 2024-01-15": (
         "wills act 1837 (as at 2024-01-15)"
     ),
+    "mcculloch and others v forth valley health board": (
+        "mcculloch and others v forth valley health board (scotland)"
+    ),
+    "osborn v parole board": "osborn v the parole board",
+    "r (moseley) v haringey": "r (moseley) v london borough of haringey",
 }
 USER_AGENT = "LegalBot-v111-factual-gap-fill/1.0 (evaluation; no admission; no gold)"
 AS_OF = "2026-08-28"
@@ -76,6 +86,35 @@ OFFICIAL_REGISTRY: dict[str, dict[str, str]] = {
         "identifier": "uksi/2026/82",
     },
     "competition act 1998": {"kind": "legislation", "identifier": "ukpga/1998/41"},
+    "the competition act 1998 (vertical agreements block exemption) order 2022": {
+        "kind": "legislation",
+        "identifier": "uksi/2022/516",
+        "title": "The Competition Act 1998 (Vertical Agreements Block Exemption) Order 2022",
+    },
+    "land registration act 2002": {"kind": "legislation", "identifier": "ukpga/2002/9"},
+    "land registration act 2002 schedule 4": {
+        "kind": "legislation",
+        "identifier": "ukpga/2002/9/schedule/4",
+        "title": "Land Registration Act 2002",
+    },
+    "land registration act 2002 schedule 8": {
+        "kind": "legislation",
+        "identifier": "ukpga/2002/9/schedule/8",
+        "title": "Land Registration Act 2002",
+    },
+    "senior courts act 1981": {"kind": "legislation", "identifier": "ukpga/1981/54"},
+    "senior courts act 1981 section 37": {
+        "kind": "legislation",
+        "identifier": "ukpga/1981/54/section/37",
+        "title": "Senior Courts Act 1981",
+    },
+    "the civil procedure rules 1998 part 25": {
+        "kind": "legislation",
+        "identifier": "uksi/1998/3132/part/25",
+        "title": "The Civil Procedure Rules 1998",
+    },
+    "equality act 2010": {"kind": "legislation", "identifier": "ukpga/2010/15"},
+    "law of property act 1925": {"kind": "legislation", "identifier": "ukpga/1925/20"},
     "enterprise act 2002": {"kind": "legislation", "identifier": "ukpga/2002/40"},
     "mental capacity act 2005": {"kind": "legislation", "identifier": "ukpga/2005/9"},
     "human fertilisation and embryology act 1990": {"kind": "legislation", "identifier": "ukpga/1990/37"},
@@ -144,10 +183,102 @@ OFFICIAL_REGISTRY: dict[str, dict[str, str]] = {
         "kind": "judgment",
         "url": "https://caselaw.nationalarchives.gov.uk/ewhc/comm/2002/2059/data.xml",
     },
+    "the civil procedure rules 1998": {
+        "kind": "legislation",
+        "identifier": "uksi/1998/3132",
+        "part_identifiers": "uksi/1998/3132/part/1,uksi/1998/3132/part/3,uksi/1998/3132/part/44",
+        "title": "The Civil Procedure Rules 1998",
+    },
+    "a reference by the attorney general for northern ireland of a devolution issue under paragraph 34 of schedule 10 to the northern ireland act 1998": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2026/16/data.xml",
+        "title": (
+            "A Reference by the Attorney General for Northern Ireland of a devolution "
+            "issue under paragraph 34 of Schedule 10 to the Northern Ireland Act 1998"
+        ),
+        "issue_limit": "article_5_deprivation_of_liberty_only",
+    },
+    "[2026] uksc 16": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2026/16/data.xml",
+        "title": (
+            "A Reference by the Attorney General for Northern Ireland of a devolution "
+            "issue under paragraph 34 of Schedule 10 to the Northern Ireland Act 1998"
+        ),
+        "issue_limit": "article_5_deprivation_of_liberty_only",
+    },
+    "osborn v the parole board": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2013/61/data.xml",
+        "title": "Osborn v The Parole Board",
+    },
+    "montgomery v lanarkshire health board": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2015/11/data.xml",
+        "title": "Montgomery v Lanarkshire Health Board",
+    },
+    "mcculloch and others v forth valley health board": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2023/26/data.xml",
+        "title": "McCulloch and others v Forth Valley Health Board (Scotland)",
+    },
+    "mcculloch and others v forth valley health board (scotland)": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2023/26/data.xml",
+        "title": "McCulloch and others v Forth Valley Health Board (Scotland)",
+    },
+    "byers and others v saudi national bank": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2023/51/data.xml",
+        "title": "Byers and others v Saudi National Bank",
+    },
+    "rukhadze and others v recovery partners gp ltd and another": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2025/10/data.xml",
+        "title": "Rukhadze and others v Recovery Partners GP Ltd and another",
+    },
+    "stevens v hotel portfolio ii uk ltd (in liquidation) and another": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2025/28/data.xml",
+        "title": "Stevens v Hotel Portfolio II UK Ltd (In Liquidation) and another",
+    },
+    "mitchell and another (joint liquidators of mbi international & partners inc (in liquidation)) v sheikh mohamed bin issa al jaber": {
+        "kind": "judgment",
+        "url": "https://caselaw.nationalarchives.gov.uk/uksc/2025/43/data.xml",
+        "title": (
+            "Mitchell and another (Joint Liquidators of MBI International & Partners Inc "
+            "(In Liquidation)) v Sheikh Mohamed Bin Issa Al Jaber"
+        ),
+    },
+    "uk supreme court 2026 judgment on what constitutes a deprivation of liberty": {
+        "kind": "official_secondary",
+        "url": (
+            "https://www.gov.uk/government/publications/changes-to-the-definition-of-deprivation-of-liberty/"
+            "uk-supreme-court-2026-judgment-on-what-constitutes-a-deprivation-of-liberty"
+        ),
+        "title": "UK Supreme Court 2026 judgment on what constitutes a deprivation of liberty",
+        "lane": "official_secondary",
+    },
 }
 
+PRIORITY1_TITLES: tuple[str, ...] = (
+    "The Civil Procedure Rules 1998",
+    "A Reference by the Attorney General for Northern Ireland of a devolution issue under paragraph 34 of Schedule 10 to the Northern Ireland Act 1998",
+    "R (Moseley) v London Borough of Haringey",
+    "Osborn v The Parole Board",
+    "Montgomery v Lanarkshire Health Board",
+    "McCulloch and others v Forth Valley Health Board",
+    "Byers and others v Saudi National Bank",
+    "Rukhadze and others v Recovery Partners GP Ltd and another",
+    "Stevens v Hotel Portfolio II UK Ltd (In Liquidation) and another",
+    "Mitchell and another (Joint Liquidators of MBI International & Partners Inc (In Liquidation)) v Sheikh Mohamed Bin Issa Al Jaber",
+    "UK Supreme Court 2026 judgment on what constitutes a deprivation of liberty",
+)
+
 _TITLE_NOISE = re.compile(r"\s+")
-_R_PACK = re.compile(r"^LegalBot-GE-\d{4}-\d{2}-\d{2}-(?:evaluation-staged-chunks|factual-gap-fill)-r\d+$")
+_R_PACK = re.compile(
+    r"^LegalBot-GE-\d{4}-\d{2}-\d{2}-(?:evaluation-staged-chunks|factual-gap-fill|priority1-authority-intake)-r\d+$"
+)
 _ATOM_NS = "http://www.w3.org/2005/Atom"
 _LEGISLATION_TYPES = frozenset(
     {
@@ -189,23 +320,29 @@ def canonical_title_key(title: str) -> str:
 
 
 def official_urls(spec: Mapping[str, str]) -> tuple[str, ...]:
-    if spec.get("kind") == "judgment":
+    if spec.get("kind") in {"judgment", "official_secondary"}:
         return (str(spec["url"]),)
-    identifier = str(spec["identifier"])
+    raw_parts = str(spec.get("part_identifiers") or "")
+    identifiers = [part.strip() for part in raw_parts.split(",") if part.strip()]
+    if not identifiers:
+        identifiers = [str(spec["identifier"])]
     as_of = str(spec.get("as_of") or AS_OF)
-    xml = (
-        f"https://www.legislation.gov.uk/{identifier}/{as_of}/data.xml",
-        f"https://www.legislation.gov.uk/{identifier}/data.xml",
-    )
-    pdf = (
-        f"https://www.legislation.gov.uk/{identifier}/{as_of}/data.pdf",
-        f"https://www.legislation.gov.uk/{identifier}/data.pdf",
-    )
-    return xml + pdf
+    urls: list[str] = []
+    for identifier in identifiers:
+        urls.append(f"https://www.legislation.gov.uk/{identifier}/{as_of}/data.xml")
+        urls.append(f"https://www.legislation.gov.uk/{identifier}/data.xml")
+    for identifier in identifiers:
+        urls.append(f"https://www.legislation.gov.uk/{identifier}/{as_of}/data.pdf")
+        urls.append(f"https://www.legislation.gov.uk/{identifier}/data.pdf")
+    return tuple(urls)
 
 
 def host_allowed(url: str) -> bool:
-    host = urlparse(url).hostname or ""
+    parsed = urlparse(url)
+    canonical = parsed._replace(query="", fragment="").geturl().rstrip("/")
+    if canonical in OWNER_NAMED_SECONDARY_URLS:
+        return True
+    host = parsed.hostname or ""
     return host in ALLOWED_HOSTS
 
 
@@ -400,7 +537,12 @@ def resolve_official(title: str, fetch: FetchFn | None = None) -> dict[str, str]
 def title_already_present(title: str, already: set[str]) -> bool:
     keys = {canonical_title_key(title), normalize_title(title)}
     spec = lookup_official(title)
-    if spec and spec.get("title"):
+    identifier = str((spec or {}).get("identifier") or "")
+    specific_provision = any(
+        marker in identifier
+        for marker in ("/schedule/", "/part/", "/section/", "/article/")
+    )
+    if spec and spec.get("title") and not specific_provision:
         keys.add(canonical_title_key(str(spec["title"])))
     return bool(keys & already)
 
@@ -545,6 +687,14 @@ def existing_titles(
 
 
 def latest_visible_results(project_root: Path = PROJECT_ROOT) -> Path | None:
+    frozen_r2 = (
+        ge_eval_root(project_root)
+        / "LegalBot-GE-2026-09-02-visible-331-diagnostic-r2"
+        / "visible"
+        / "RESULTS.jsonl"
+    )
+    if frozen_r2.is_file():
+        return frozen_r2
     preferred = (
         ge_eval_root(project_root)
         / "LegalBot-GE-2026-09-02-visible-331-diagnostic-r1"
@@ -564,11 +714,26 @@ def latest_visible_results(project_root: Path = PROJECT_ROOT) -> Path | None:
     return candidates[0] if candidates else None
 
 
+def existing_sidecar_titles(project_root: Path = PROJECT_ROOT) -> set[str]:
+    manifests = [pack / "STAGED-SOURCE-MANIFEST.json" for pack in sidecar_packs(project_root)]
+    return existing_titles(manifests, project_root=project_root)
+
+
 def next_output_pack(project_root: Path = PROJECT_ROOT, day: str | None = None) -> Path:
     stamp = day or datetime.now(UTC).strftime("%Y-%m-%d")
     n = 1
     while True:
         candidate = ge_eval_root(project_root) / f"LegalBot-GE-{stamp}-factual-gap-fill-r{n}"
+        if not candidate.exists() and not candidate.is_symlink():
+            return candidate
+        n += 1
+
+
+def next_priority1_pack(project_root: Path = PROJECT_ROOT, day: str | None = None) -> Path:
+    stamp = day or datetime.now(UTC).strftime("%Y-%m-%d")
+    n = 1
+    while True:
+        candidate = ge_eval_root(project_root) / f"LegalBot-GE-{stamp}-priority1-authority-intake-r{n}"
         if not candidate.exists() and not candidate.is_symlink():
             return candidate
         n += 1
@@ -619,6 +784,210 @@ def remaining_fetchable_titles(
             continue
         remaining.append(title)
     return remaining
+
+
+def fill_known_titles(
+    *,
+    titles: Sequence[str],
+    output: Path,
+    already_titled: set[str],
+    fetch: FetchFn = default_fetch,
+    project_root: Path = PROJECT_ROOT,
+) -> dict[str, Any]:
+    """Issue-led official intake. Dedupes against evaluation sidecars only."""
+
+    if output.exists() or output.is_symlink():
+        raise FileExistsError(f"create-only pack exists: {output}")
+    output.mkdir(parents=True, mode=0o700)
+    os.chmod(output, 0o700)
+    (output / "raw").mkdir(mode=0o700)
+    db_path = output / "chunks.sqlite3"
+    connection = sqlite3.connect(db_path)
+    connection.executescript(
+        """
+        PRAGMA journal_mode=DELETE;
+        PRAGMA synchronous=FULL;
+        CREATE TABLE chunk_meta(
+          chunk_id TEXT PRIMARY KEY,
+          source_version_id TEXT NOT NULL,
+          title TEXT NOT NULL,
+          locator TEXT NOT NULL,
+          body TEXT NOT NULL,
+          ordinal INTEGER NOT NULL
+        );
+        """
+    )
+    registry = ParserRegistry.default()
+    chunker = StructuralChunker()
+    aliaser = PIIAliaser(b"legalbot-factual-gap-fill-alias")
+    ingested: list[dict[str, Any]] = []
+    failed: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    present = set(already_titled)
+
+    for title in titles:
+        key = canonical_title_key(title)
+        if key in DO_NOT_ADMIT_TITLES or "mediation act 2025" in key:
+            failed.append(
+                {"title": title, "error": "do_not_admit_unidentified_title", "factual": False}
+            )
+            continue
+        if title_already_present(title, present):
+            skipped.append({"title": title, "reason": "already_staged_evaluation_sidecar"})
+            continue
+        spec = resolve_official(title, fetch)
+        if spec is None:
+            failed.append(
+                {
+                    "title": title,
+                    "error": "no_official_identifier",
+                    "factual": False,
+                    "detail": "no registry hit and no unique official exact-title match",
+                    "fail_closed": True,
+                }
+            )
+            continue
+        display_title = str(spec.get("title") or title)
+        lane = str(spec.get("lane") or "primary_authority")
+        seen_sha: set[str] = set()
+        last_error: dict[str, Any] | None = None
+        ingested_here = 0
+        for url in official_urls(spec):
+            if str(url).endswith(".pdf") and ingested_here > 0:
+                continue
+            if not host_allowed(url):
+                last_error = {
+                    "title": title,
+                    "url": url,
+                    "error": "host_not_allowlisted",
+                    "factual": False,
+                }
+                continue
+            candidate = fetch(url)
+            if not candidate.get("ok"):
+                last_error = {
+                    "title": title,
+                    "error": candidate.get("error") or "fetch_failed",
+                    "url": candidate.get("url"),
+                    "fail_closed": True,
+                    "factual": False,
+                }
+                continue
+            digest = str(candidate.get("sha256") or "")
+            if digest in seen_sha:
+                continue
+            seen_sha.add(digest)
+            filename = _filename_for(
+                str(candidate.get("url") or ""), str(candidate.get("content_type") or "")
+            )
+            dest = (
+                output
+                / "raw"
+                / re.sub(r"[^a-zA-Z0-9._-]+", "-", key)[:80]
+                / f"{len(seen_sha):02d}-{filename}"
+            )
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            _write_bytes(dest, candidate["body"])
+            result = ingest_official_bytes(
+                title=display_title,
+                body=candidate["body"],
+                filename=filename,
+                connection=connection,
+                registry=registry,
+                chunker=chunker,
+                aliaser=aliaser,
+            )
+            result["source_url"] = candidate.get("url")
+            result["file_sha256"] = digest
+            result["lane"] = lane
+            result["issue_limit"] = spec.get("issue_limit") or ""
+            if result.get("ok"):
+                ingested.append(result)
+                ingested_here += 1
+                present.add(canonical_title_key(display_title))
+                present.add(key)
+            else:
+                last_error = result
+            connection.commit()
+        if ingested_here == 0:
+            failed.append(
+                last_error
+                or {
+                    "title": title,
+                    "error": "fetch_failed",
+                    "factual": False,
+                    "fail_closed": True,
+                }
+            )
+
+    connection.commit()
+    connection.close()
+    sources = [
+        {
+            "source_version_id": row["source_version_id"],
+            "title": row["title"],
+            "identity_verified": True,
+            "currentness_verified": False,
+            "full_current_law_verification_eligible": False,
+            "provision_extent_status": "unverified",
+            "jurisdiction": "United Kingdom",
+            "lane": row.get("lane") or "primary_authority",
+            "review_status": "staged",
+            "admitted": False,
+            "legal_gold": False,
+            "canonical_url": row.get("source_url"),
+            "stable_identifier": row["title"],
+            "authority_identity_id": row["title"],
+            "unapplied_effect_count": None,
+            "issue_limit": row.get("issue_limit") or "",
+        }
+        for row in ingested
+    ]
+    manifest = {
+        "schema": "legalbot.ge-factual-gap-fill.v1",
+        "recorded_at_utc": datetime.now(UTC).isoformat(),
+        "results_path": "owner_named_priority1_titles",
+        "live_catalogue_insert": False,
+        "writes_active": False,
+        "embeddings_enqueued": False,
+        "admitted": False,
+        "legal_gold": False,
+        "full_current_law_eligible": False,
+        "qualified_legal_review": False,
+        "answer_weight_training": False,
+        "deduped_against": "evaluation_sidecar_only",
+        "factual_requirement": "exact_official_bytes_and_locator_bound_operative_chunks_only",
+        "wrong_routes_indexed": False,
+        "ingested_count": len(ingested),
+        "failed_count": len(failed),
+        "skipped_count": len(skipped),
+        "sources": sources,
+        "chunks_sqlite": "chunks.sqlite3",
+    }
+    _write_json(output / "STAGED-SOURCE-MANIFEST.json", manifest)
+    _write_json(
+        output / "GAP-FILL-LOG.json",
+        {
+            "requested_titles": list(titles),
+            "ingested": ingested,
+            "failed": failed,
+            "skipped": skipped,
+        },
+    )
+    _write_text(
+        output / "README.md",
+        """# Priority 1 official authority intake
+
+Create-only evaluation sidecar. Deduped against staged evaluation sources only,
+not against the 85-source recovery-b corpus. Official allowlisted bytes, plus
+one owner-named GOV.UK official-secondary URL. Not gold, not admitted, not ACTIVE.
+UKSC 16 is issue-limited to Article 5 deprivation of liberty. Moseley stays
+fail-closed unless Find Case Law returns a unique exact-title match.
+""",
+    )
+    if ingested:
+        write_index_pointer(output, project_root=project_root)
+    return manifest
 
 
 def fill_gaps(

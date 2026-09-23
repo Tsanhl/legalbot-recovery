@@ -1,9 +1,17 @@
 export type TaskMode = "auto" | "essay" | "problem" | "general";
 export type Jurisdiction =
   | "England and Wales"
+  | "England"
+  | "Wales"
+  | "Scotland"
+  | "Northern Ireland"
   | "Hong Kong"
   | "European Union"
   | "United States"
+  | "US federal"
+  | "California"
+  | "New York"
+  | "Texas"
   | "Other";
 export type OnlineMode = "auto" | "always" | "local_only";
 
@@ -64,6 +72,9 @@ export interface JobRecord {
   answer_id: string | null;
   release_state: ReleaseState | null;
   message: string | null;
+  jurisdiction: string | null;
+  as_of_date: string | null;
+  conversation_id: string | null;
   trace_id: string;
   last_progress_at: string;
   created_at: string;

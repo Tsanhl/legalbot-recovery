@@ -3,9 +3,12 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from typing import TYPE_CHECKING
+from types import SimpleNamespace
+from .fact_provenance import verified_application_quotes
 from uuid import uuid4
 
 from ..assessment.standards_scoring import score_applicable_standards
+from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE, applicable_guidance_rules
 from ..currentness import is_legislation_source
 from ..jurisdictions import compatible
 from ..legal_roles import MATERIAL_CASE_ROLES
@@ -116,6 +119,16 @@ class QualityEvaluator:
             for claim in section.claims:
                 if not claim.material:
                     continue
+                try:
+                    fact_quotes = verified_application_quotes(claim, draft, question)
+                except ValueError as exc:
+                    fact_quotes = ()
+                    findings.append(QualityFinding(
+                        gate="fact_provenance", code="unsupported_material_fact",
+                        message=str(exc), severity=Severity.HARD_BLOCKER,
+                        section_id=section.id, claim_id=claim.id,
+                        corrective_action="Bind exact question facts and a supported legal-rule claim; do not invent premises.",
+                    ))
                 atomicity_reasons = non_atomic_material_claim_reasons(claim.text)
                 if atomicity_reasons:
                     findings.append(
@@ -173,6 +186,7 @@ class QualityEvaluator:
                             "exact_authority_identity",
                             "exact_legislation_reference",
                             "hybrid_rrf",
+                            "frozen_reviewed_research_receipt",
                         }
                         and span.retrieval_threshold is not None
                         and span.retrieval_threshold_policy_sha256 is not None
@@ -406,7 +420,10 @@ class QualityEvaluator:
                             ),
                         )
                     )
-                unsupported_facts = unsupported_material_facts(claim.text, bound_spans)
+                # Only typed factual values may be supported by exact question
+                # quotes. Legal support/currentness gates still use law alone.
+                fact_inputs = [*bound_spans, *(SimpleNamespace(text=q, locator="") for q in fact_quotes)]
+                unsupported_facts = unsupported_material_facts(claim.text, fact_inputs)
                 if unsupported_facts:
                     fact_kinds = ", ".join(sorted({fact.kind for fact in unsupported_facts}))
                     findings.append(
@@ -426,7 +443,7 @@ class QualityEvaluator:
                             ),
                         )
                     )
-                unsupported_quotes = false_quotations(claim.text, bound_spans)
+                unsupported_quotes = false_quotations(claim.text, fact_inputs)
                 if unsupported_quotes:
                     findings.append(
                         QualityFinding(
@@ -493,21 +510,34 @@ class QualityEvaluator:
             supported_claim_ids=supported_claim_ids,
         )
         if not standards.avoidance_passed:
-            findings.append(
-                QualityFinding(
+            rules = {rule.rule_id: rule for rule in applicable_guidance_rules(
+                OWNER_ASSESSMENT_BUNDLE, task_type=str(draft.task_type), subject=subject,
+            )}
+            for failed in (item for item in standards.scores if item.avoidance_rule and not item.passed):
+                # A writing-quality failure still blocks release, but must have
+                # an actionable bounded scope. It is not an immutable evidence
+                # or privacy defect that prohibits a changed-input repair.
+                preferred = {
+                    "thesis": ("thesis", "direct-answer", "issues"),
+                    "issue_spotting": ("application", "issues", "analysis"),
+                    "analysis": ("application", "analysis", "legal-framework"),
+                    "application": ("application",),
+                }.get(failed.criterion, ())
+                section = next(
+                    (section for key in preferred for section in draft.sections if section.id == key),
+                    draft.sections[0],
+                )
+                findings.append(QualityFinding(
                     gate="assessment_standards",
                     code="applicable_avoidance_standard_failed",
                     message=(
-                        "One or more applicable 50-59 or 60-69 avoidance rules "
-                        "failed deterministic scoring."
+                        f"Advisory writing check {failed.rule_id} failed ({failed.score:.2f}). "
+                        + rules[failed.rule_id].positive_target
                     ),
                     severity=Severity.HARD_BLOCKER,
-                    corrective_action=(
-                        "Hold the answer and address the failed avoidance rules in a "
-                        "new explicitly scoped version before fresh verification."
-                    ),
-                )
-            )
+                    section_id=section.id,
+                    corrective_action=rules[failed.rule_id].repair_action,
+                ))
         if rubric_scores:
             findings.append(
                 QualityFinding(
@@ -560,6 +590,19 @@ class QualityEvaluator:
             word_target=word_target,
             has_gaps=bool(draft.limitations) or current_law_limits,
         )
+
+        if word_count > int(word_target * 1.15):
+            # A fluent answer must not silently overrun the requested length.
+            # This is repairable quality, not an evidence-safety defect. Scope
+            # edits to the longest section; never mechanically cut sentences.
+            longest = max(draft.sections, key=lambda s: sum(len(c.text.split()) for c in s.claims))
+            findings.append(QualityFinding(
+                gate="requested_length", code="longer_than_requested",
+                message=f"The answer has {word_count} substantive words against a target of {word_target}.",
+                severity=Severity.REPAIRABLE, section_id=longest.id,
+                corrective_action="Condense repetition in this section while preserving every material rule, application and qualification; do not truncate legal prose.",
+            ))
+            release = ReleaseState.HELD_FOR_REVIEW
 
         if word_count < max(100, int(word_target * 0.8)):
             findings.append(

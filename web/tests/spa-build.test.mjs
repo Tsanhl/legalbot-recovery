@@ -204,6 +204,14 @@ test("research queue copy stays first-live and WebSocket reconnect hydrates by j
   assert.match(admin, /Enabled only after the separate connected-crawler canary/);
   assert.match(appSource, /URLSearchParams\(window\.location\.search\)\.get\("job"\)/);
   assert.match(appSource, /await api\.job\(activeJobId\)/);
+  assert.match(appSource, /job\.conversation_id/);
+  assert.match(appSource, /conversationId\.current = job\.conversation_id/);
+  assert.match(appSource, /job\.jurisdiction/);
+  assert.match(appSource, /job\.as_of_date/);
+  assert.match(appSource, /as_of_date: asOfDate \|\| undefined/);
+  for (const jurisdiction of ["Wales", "Scotland", "Northern Ireland", "US federal", "California", "New York", "Texas"]) {
+    assert.match(appSource, new RegExp(`value: "${jurisdiction}"`));
+  }
   assert.match(appSource, /new WebSocket\(/);
   assert.match(appSource, /socket\.onerror = \(\) => \{/);
   assert.match(appSource, /lastSequence/);
@@ -215,6 +223,18 @@ test("research queue copy stays first-live and WebSocket reconnect hydrates by j
     appSource,
     /const endWithoutAnswer[\s\S]*?submitIdempotency\.current = "";[\s\S]*?clearJobQuery\(\)/,
   );
+});
+
+test("the evidence dialog and attachment controls expose keyboard semantics", async () => {
+  const [appSource, drawer] = await Promise.all([
+    read("app/components/LegalBotApp.tsx"),
+    read("app/components/EvidenceDrawer.tsx"),
+  ]);
+  assert.match(appSource, /aria-label={`Remove \$\{item\.display_name\}`}/);
+  assert.match(drawer, /aria-labelledby="evidence-drawer-title"/);
+  assert.match(drawer, /event\.key !== "Tab"/);
+  assert.match(drawer, /returnFocus\?\.focus\(\)/);
+  assert.match(drawer, /closeButtonRef\.current\?\.focus\(\)/);
 });
 
 test("the owner SPA is loopback-only and proxies only the versioned API", async () => {

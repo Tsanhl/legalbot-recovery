@@ -1,0 +1,24 @@
+# Four exposed cases: source and answer-quality review
+
+Scope: GE01, GE02 with its supplied follow-up, ES01 and PB01 from `PRACTICE_QUESTIONS_50.md`. This is an exposed development review, not an unseen result, qualified legal sign-off, source admission or weight-training set. The four full draft answers were given to the owner in the chat for review.
+
+## Issues corrected in the drafting standard
+
+- A citation must support the exact legal issue, jurisdiction and **23 September 2026** date. A source title, matching topic or valid OSCOLA string does not prove the proposition.
+- An essay must distinguish a binding holding from an observation, and promissory estoppel from estoppel by convention or proprietary estoppel.
+- A problem answer must trace each remedy to its rule, explain election/acceptance limits and prevent double recovery.
+
+These are non-weight guidance changes in `backend/app/assessment/guidance_bundle.py`, now `owner-standards-2026-09-23.3` with the same 18 rule identities. The old `.2` diagnostic outputs and receipts retain their original provenance. All 8/13/12 applicable GE/Essay/PB rules fit the hosted 8,000-character budget in the focused check (3,209 / 5,262 / 4,586 characters; zero omitted). The targeted guidance, scoring and prompt tests passed (30 tests); `scripts/check_system_design.py` passed (26 selected schemas, four legacy schemas, 18 maintained documents).
+
+## Case-specific source and quality checkpoints
+
+| Case | Necessary point | Primary source check | Remaining product state |
+| --- | --- | --- | --- |
+| GE01 | A clear rejection within 30 days of 4 September may invoke the short-term refund route. The six-month delivery presumption in CRA s 19(14) is expressly for repair/replacement and final remedies, not the short-term rejection. The retailer bears reasonable collection costs; the statutory 14-day refund deadline runs from agreement of entitlement. | [Consumer Rights Act 2015, ss 9, 19, 20, 22, 31](https://www.legislation.gov.uk/ukpga/2015/15/contents) | The actual API index remains a 5 September consumer generation, not a qualified 23 September pack. |
+| GE02 | Existing private ASTs ordinarily converted on 1 May 2026; the old written fixed-term expiry is not itself an eviction. A sale ground needs a genuine Ground 1A claim, at least four months' notice on **Form 3A or a substantially equivalent form**, and a court route. The 21 September plain email is not that notice. | [Renters' Rights Act overview](https://www.gov.uk/guidance/renters-rights-act-overview-for-tenants); [post-1 May repossession guidance](https://www.gov.uk/guidance/repossessing-your-privately-rented-property-after-1-may-2026); [Ground 1A guidance](https://www.gov.uk/government/publications/grounds-for-possession-tenant-guidance/grounds-for-possession-guidance-for-tenants) | No tenancy source set or currentness approval is bound to the actual API. |
+| ES01 | *Rock Advertising* [2018] UKSC 24 [18] discusses tension between *Williams*, *Foakes* and *Selectmove* but expressly leaves the consideration issue undecided. *Tinkler* [2021] UKSC 39 [75]-[77] distinguishes promissory estoppel's no-cause-of-action limit from the estoppel-by-convention issue it decided. | [*Rock Advertising* judgment](https://supremecourt.uk/uploads/uksc_2016_0152_judgment_847e3e02dc.pdf); [*Tinkler* judgment](https://supremecourt.uk/uploads/uksc_2019_0183_judgment_3850d6b799.pdf) | Direct case, later-treatment and approved scholarship packets are not yet in the actual candidate index. |
+| PB01 | The £1,500 demand is tested for contractual variation and economic duress. Misrepresentation Act 1967 s 2(1) places the reasonable-belief proof on OvenWorks; a pre-sale specification alone does not prove Daniel's fraud. The non-reliance clause engages s 3 reasonableness. UCTA 1977 ss 3 and 6 have different triggers. Hire cost, profit and reversal of the contract require separate tests. | [*Times Travel* judgment](https://supremecourt.uk/uploads/uksc_2019_0142_judgment_906bbad04b.pdf); [*First Tower* judgment](https://www.bailii.org/ew/cases/EWCA/Civ/2018/1396.html); [Misrepresentation Act 1967](https://www.legislation.gov.uk/ukpga/1967/7/contents); [Unfair Contract Terms Act 1977](https://www.legislation.gov.uk/ukpga/1977/50/contents) | The actual API has no admitted contract-law case pack; no conclusion is published from this review. |
+
+## Training and release boundary
+
+The answers are owner-visible draft examples. They are not automatically fine-tuning targets. An answer becomes eligible for weight training only after exact answer and source versions receive the required legal/quality decisions and are held separate from an unseen evaluation set. The actual API still needs reviewed issue/date-specific sources and one complete retrieval-to-publication trace. A rule update or a good stand-alone chat answer does not create that trace.

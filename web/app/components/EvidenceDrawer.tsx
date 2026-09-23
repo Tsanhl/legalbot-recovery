@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { api, formatApiError } from "../lib/api";
 import type { AnswerEvidence, EvidenceRecord } from "../lib/contracts";
 import { citationLabelContent } from "./AnswerMarkdown";
@@ -26,6 +26,8 @@ function sourceTitle(evidence: EvidenceRecord): string {
 export function EvidenceDrawer({ selection, onClose }: EvidenceDrawerProps) {
   const [response, setResponse] = useState<AnswerEvidence | null>(null);
   const [failure, setFailure] = useState<{ answerId: string; message: string } | null>(null);
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const bundle = response?.answer_id === selection?.answerId ? response : null;
   const error = failure && failure.answerId === selection?.answerId ? failure.message : "";
 
@@ -49,11 +51,40 @@ export function EvidenceDrawer({ selection, onClose }: EvidenceDrawerProps) {
 
   useEffect(() => {
     if (!selection) return;
+    const returnFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    closeButtonRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab" || !drawerRef.current) return;
+      const focusable = [...drawerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), summary, textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )].filter((element) => !element.hidden && element.getAttribute("aria-hidden") !== "true");
+      if (!focusable.length) {
+        event.preventDefault();
+        drawerRef.current.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable.at(-1) || first;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      returnFocus?.focus();
+    };
   }, [selection, onClose]);
 
   const record = useMemo(
@@ -70,14 +101,21 @@ export function EvidenceDrawer({ selection, onClose }: EvidenceDrawerProps) {
 
   return (
     <>
-      <button className="drawer-scrim" aria-label="Close evidence" onClick={onClose} />
-      <aside className="evidence-drawer" aria-label="Source evidence" aria-modal="true" role="dialog">
+      <button className="drawer-scrim" aria-label="Close evidence" onClick={onClose} tabIndex={-1} />
+      <aside
+        aria-labelledby="evidence-drawer-title"
+        aria-modal="true"
+        className="evidence-drawer"
+        ref={drawerRef}
+        role="dialog"
+        tabIndex={-1}
+      >
         <div className="evidence-head">
           <div>
             <span className="eyebrow">Source of truth</span>
-            <h2>Claim evidence</h2>
+            <h2 id="evidence-drawer-title">Claim evidence</h2>
           </div>
-          <button className="icon-button" type="button" onClick={onClose} aria-label="Close evidence drawer">
+          <button className="icon-button" ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close evidence drawer">
             <Icons.close />
           </button>
         </div>

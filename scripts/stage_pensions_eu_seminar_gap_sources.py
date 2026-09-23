@@ -24,7 +24,7 @@ from app.ingestion.models import ParseStatus
 from app.ingestion.parsers import ParserRegistry
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE_ROOT = Path("/Users/owner/Desktop/Law")
+DEFAULT_SOURCE_ROOT = (Path.home() / "Desktop" / "Law")
 DEFAULT_RELATIVE_DIRECTORY = Path(
     "Official Legislation/seminar-gap-official-2026-08-26/eu-judgments"
 )

@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-LAW_ROOT = Path("/Users/owner/Desktop/Law")
+LAW_ROOT = (Path.home() / "Desktop" / "Law")
 OUTPUT_PARENT = PROJECT_ROOT / "data/evaluations/phase2b-question-drafts"
 RUN_NAME = "LegalBot-Phase2B-2026-08-28-question-bank-draft-r2"
 OUTPUT_ROOT = OUTPUT_PARENT / RUN_NAME
@@ -3331,7 +3331,7 @@ def _write_json(path: Path, value: Any) -> None:
 def _assert_generated_safety(root: Path) -> None:
     forbidden_patterns = (
         re.compile(rb"/Users/", re.IGNORECASE),
-        re.compile(rb"owner", re.IGNORECASE),
+        re.compile(re.escape(Path.home().name.encode()), re.IGNORECASE),
         re.compile(rb"\bAgnes\b", re.IGNORECASE),
         re.compile(rb"\bZ\d{6,}\b", re.IGNORECASE),
     )

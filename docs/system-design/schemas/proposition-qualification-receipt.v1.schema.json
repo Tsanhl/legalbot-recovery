@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/proposition-qualification-receipt.v1.schema.json",
+  "title": "LegalBot Proposition Qualification Receipt v1",
+  "description": "Sidecar receipt binding a locator, proposition and evidence span. Separate from knowledge-generation-manifest.v1. Does not set answer gold or qualified legal review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_version_id",
+    "official_bytes_sha256",
+    "canonical_sha256",
+    "locator",
+    "material_date",
+    "jurisdiction",
+    "extent_verified",
+    "commencement_verified",
+    "transitional_position",
+    "material_effects_reviewed",
+    "proposition_id",
+    "proposition_text_sha256",
+    "evidence_span_ids",
+    "evidence_span_sha256s",
+    "legal_role",
+    "later_treatment_checked_through",
+    "decision",
+    "ai_research_recommendation",
+    "owner_adoption",
+    "qualified_legal_review",
+    "answer_legal_gold",
+    "training_gold",
+    "runtime_promoted",
+    "receipt_sha256",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.proposition-qualification-receipt.v1"
+    },
+    "source_version_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "official_bytes_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "canonical_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "locator": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "material_date": {
+      "type": "string",
+      "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$"
+    },
+    "jurisdiction": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "extent_verified": {
+      "type": "boolean"
+    },
+    "commencement_verified": {
+      "type": "boolean"
+    },
+    "transitional_position": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "material_effects_reviewed": {
+      "type": "boolean"
+    },
+    "proposition_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "proposition_text_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidence_span_ids": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_span_sha256s": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "legal_role": {
+      "enum": [
+        "STATUTORY_RULE",
+        "RATIO",
+        "HOLDING",
+        "OBITER",
+        "PROCEDURAL_HISTORY",
+        "PARTY_SUBMISSION",
+        "BACKGROUND_FACT",
+        "OFFICIAL_SECONDARY_GUIDANCE"
+      ]
+    },
+    "later_treatment_checked_through": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "contrary_authority_checked": {
+      "type": "boolean"
+    },
+    "limiting_authority": {
+      "oneOf": [
+        {
+          "type": "string",
+          "maxLength": 400
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "authority_dependency_role": {
+      "enum": [
+        "CONTROLLING",
+        "REQUIRED",
+        "REQUIRED_IF_CONTRACT_INCORPORATES_THAT_EDITION",
+        "SUPPLEMENTARY",
+        "SUPPLEMENTARY_CASE_MANAGEMENT_AUTHORITY",
+        "ALTERNATIVE_ROUTE",
+        "REDUNDANT",
+        "REJECTED_ROUTE"
+      ]
+    },
+    "decision": {
+      "enum": ["APPROVE", "HOLD", "REJECT", "PENDING"]
+    },
+    "ai_research_recommendation": {
+      "enum": ["APPROVE", "HOLD", "REJECT", "PENDING", "NOT_MADE"]
+    },
+    "owner_adoption": {
+      "enum": ["APPROVE", "HOLD", "REJECT", "PENDING", "NOT_MADE"]
+    },
+    "qualified_legal_review": {
+      "const": false
+    },
+    "answer_legal_gold": {
+      "const": false
+    },
+    "training_gold": {
+      "const": false
+    },
+    "runtime_promoted": {
+      "const": false
+    },
+    "source_identity_verified": {
+      "type": "boolean"
+    },
+    "source_staged": {
+      "type": "boolean"
+    },
+    "source_runtime_admitted": {
+      "const": false
+    },
+    "locator_evaluation_approved": {
+      "type": "boolean"
+    },
+    "locator_currentness_verified": {
+      "type": "boolean"
+    },
+    "locator_extent_verified": {
+      "type": "boolean"
+    },
+    "proposition_qualified": {
+      "const": false
+    },
+    "decision_maker_note": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

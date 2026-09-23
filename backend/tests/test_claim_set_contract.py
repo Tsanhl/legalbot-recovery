@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from app.contracts import (
     ContractSchemaRegistry,
     MaterialityBasis,
     build_claim_set,
+    validate_claim_support_graph,
 )
 
 
@@ -62,11 +64,17 @@ def test_materiality_is_derived_and_closed_claims_validate() -> None:
         (
             _claim("claim-rule"),
             _claim(
+                "claim-fact",
+                kind="user_fact",
+                facts=("fact-1",),
+                evidence=(),
+            ),
+            _claim(
                 "claim-application",
                 kind="application",
                 basis="outcome_premise",
                 facts=("fact-1",),
-                depends=("claim-rule",),
+                depends=("claim-rule", "claim-fact"),
             ),
             _claim(
                 "claim-limitation",
@@ -81,7 +89,7 @@ def test_materiality_is_derived_and_closed_claims_validate() -> None:
 
     claims = value["claims"]
     assert isinstance(claims, list)
-    assert [claim["material"] for claim in claims] == [True, True, False]
+    assert [claim["material"] for claim in claims] == [True, True, True, False]
     _registry().validate_new(value)
 
 
@@ -99,4 +107,82 @@ def test_dependencies_must_be_internal_and_acyclic() -> None:
                 _claim("claim-one", depends=("claim-two",)),
                 _claim("claim-two", depends=("claim-one",)),
             )
+        )
+
+
+def test_material_application_requires_rule_and_fact_dependencies() -> None:
+    with pytest.raises(ValueError, match="legal-rule and user-fact"):
+        _build(
+            (
+                _claim("claim-rule"),
+                _claim(
+                    "claim-application",
+                    kind="application",
+                    basis="outcome_premise",
+                    facts=("fact-1",),
+                    depends=("claim-rule",),
+                ),
+            )
+        )
+
+
+def test_material_rule_and_user_fact_require_direct_support() -> None:
+    rule = _build((_claim("claim-rule"),))
+    rule["claims"][0]["evidence_ids"] = []
+    with pytest.raises(ValueError, match="legal-rule claim requires evidence"):
+        validate_claim_support_graph(rule)
+
+    user_fact = _build(
+        (_claim("claim-fact", kind="user_fact", facts=("fact-1",), evidence=()),)
+    )
+    user_fact["claims"][0]["fact_ids"] = []
+    with pytest.raises(ValueError, match="user-fact claim requires fact provenance"):
+        validate_claim_support_graph(user_fact)
+
+
+def test_release_scope_validation_rejects_cross_bound_evidence_and_facts() -> None:
+    value = _build(
+        (
+            _claim("claim-rule"),
+            _claim("claim-fact", kind="user_fact", facts=("fact-1",), evidence=()),
+            _claim(
+                "claim-application",
+                kind="application",
+                basis="outcome_premise",
+                facts=("fact-1",),
+                depends=("claim-rule", "claim-fact"),
+            ),
+        )
+    )
+    facts = [
+        {
+            "fact_id": "fact-1",
+            "status": "confirmed",
+            "affected_issue_ids": ["issue-1"],
+        }
+    ]
+    validate_claim_support_graph(
+        value,
+        issue_ids=("issue-1",),
+        evidence_ids=("evidence-1",),
+        facts=facts,
+    )
+
+    changed = deepcopy(value)
+    changed["claims"][0]["evidence_ids"] = ["evidence-other"]
+    with pytest.raises(ValueError, match="outside the selected evidence pack"):
+        validate_claim_support_graph(
+            changed,
+            issue_ids=("issue-1",),
+            evidence_ids=("evidence-1",),
+            facts=facts,
+        )
+
+    stale_facts = [{**facts[0], "status": "superseded"}]
+    with pytest.raises(ValueError, match="unresolved or stale fact"):
+        validate_claim_support_graph(
+            value,
+            issue_ids=("issue-1",),
+            evidence_ids=("evidence-1",),
+            facts=stale_facts,
         )

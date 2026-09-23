@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from typing import Any, Protocol
 
@@ -22,6 +22,9 @@ class ModelDraft:
     rubric_scores: dict[str, float]
     model_version: str
     metrics: dict[str, Any] | None = None
+    # Exact host-built prompt projections belong only in encrypted checkpoints,
+    # never operational metrics or a default dataclass representation.
+    input_projections: tuple[dict[str, Any], ...] = field(default_factory=tuple, repr=False)
 
 
 class EvidenceRetriever(Protocol):

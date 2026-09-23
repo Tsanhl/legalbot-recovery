@@ -17,7 +17,7 @@ from app.ingestion.service import ingest_explicit_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = PROJECT_ROOT / "config/seminar_gap_official_ewhc_divisions.2026-08-26.v1.json"
-DEFAULT_SOURCE_ROOT = Path("/Users/owner/Desktop/Law")
+DEFAULT_SOURCE_ROOT = (Path.home() / "Desktop" / "Law")
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
     / "data/review_queue/seminar-gap-official-ewhc-divisions-2026-08-26-explicit-ingestion.json"

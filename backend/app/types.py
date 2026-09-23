@@ -530,6 +530,7 @@ class QualityReport(Record):
     rubric_caps: list[str] = Field(default_factory=list)
     ai_evidence_review: dict[str, Any] | None = None
     ai_evidence_adjudication: dict[str, Any] | None = None
+    ai_full_answer_review: dict[str, Any] | None = None
     assessment_standards: dict[str, Any] | None = None
     findings: list[QualityFinding] = Field(default_factory=list)
     release_state: ReleaseState
@@ -555,6 +556,21 @@ class StructuredClaimDraft(Record):
     material: bool = True
     kind: str = Field(default="legal_proposition", min_length=1, max_length=127)
     proposition_hash: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    fact_quotes: list[str] = Field(default_factory=list, max_length=12)
+    rule_claim_ids: list[str] = Field(default_factory=list, max_length=12)
+
+    @model_validator(mode="after")
+    def application_provenance_shape(self) -> Self:
+        if any(not quote.strip() or len(quote) > 4000 for quote in self.fact_quotes):
+            raise ValueError("fact quotes must be nonempty bounded question excerpts")
+        if self.kind == "application":
+            if not self.fact_quotes or not self.rule_claim_ids:
+                raise ValueError("application requires fact quotes and legal-rule dependencies")
+        elif self.fact_quotes or self.rule_claim_ids:
+            raise ValueError("only application claims may carry assumed question facts")
+        if len(set(self.rule_claim_ids)) != len(self.rule_claim_ids):
+            raise ValueError("application rule dependencies must be unique")
+        return self
 
     @field_validator("evidence_ids")
     @classmethod
@@ -773,7 +789,9 @@ class JobView(Record):
     message: str | None = None
     route: AnswerRoute
     word_target: int
+    jurisdiction: str | None = None
     as_of_date: date | None = None
+    conversation_id: str | None = None
     pinned_index_build_id: str | None = None
     evaluation_request_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     worker_prompt_version: str | None = None

@@ -39,6 +39,17 @@ from ..evaluation.live_suite_admission import (
     Live60EvaluationAdmissionBinding,
     validate_live60_api_admission,
 )
+from ..evaluation.ge_qwen_development_authority import (
+    GEQwenDevelopmentAdmissionBinding,
+    GE_QWEN_DEVELOPMENT_LANE,
+    validate_ge_qwen_development_api_admission,
+)
+from ..evaluation.ge_development_chat_authority import (
+    GEDevelopmentChatAdmissionBinding,
+    GE_DEVELOPMENT_CHAT_LANE,
+    validate_development_chat_admission,
+    validate_development_chat_read_access,
+)
 from ..evaluation.owner_quality_canary_runtime import (
     OwnerCanaryAdmissionBinding,
     build_owner_canary_runtime_attempt_envelope,
@@ -661,6 +672,13 @@ app.add_middleware(
         "X-Owner-Canary-Input-Revision",
         "X-Owner-Canary-Request-Seal",
         "X-Owner-Canary-Lane",
+        "X-GE-Development-Run-ID",
+        "X-GE-Development-Case-ID",
+        "X-GE-Development-Authority-SHA256",
+        "X-Development-Chat-Authority-SHA256",
+        "X-Development-Chat-Access-Key",
+        "X-Development-Chat-Route",
+        "X-Development-Chat-Remote-Consent",
     ],
 )
 app.include_router(evaluation_router)
@@ -831,10 +849,12 @@ def _require_released_job_read_authority(
             release_authority_value = json.loads(str(job["evaluation_authority_json"] or ""))
         except json.JSONDecodeError:
             release_authority_value = None
-        if (
-            not isinstance(release_authority_value, dict)
-            or release_authority_value.get("lane") != "owner_quality_canary"
-        ):
+        release_lane = (
+            str(release_authority_value.get("lane") or "")
+            if isinstance(release_authority_value, dict)
+            else ""
+        )
+        if release_lane not in {"owner_quality_canary", GE_QWEN_DEVELOPMENT_LANE, GE_DEVELOPMENT_CHAT_LANE}:
             raise HTTPException(
                 409,
                 "TECHNICAL_IMPLEMENTATION_REQUIRED:"
@@ -856,35 +876,93 @@ def _require_released_job_read_authority(
             request_value["question"] = services.cipher.decrypt_text(
                 bytes(job["encrypted_question"])
             )
+            replay_kwargs: dict[str, Any] = {}
+            if release_lane == "owner_quality_canary":
+                replay_kwargs = {
+                    "answer_id": str(answer_row["id"]),
+                    "owner_canary_publication_phase": "released",
+                }
             replayed_authority = replay_evaluation_job_authority(
                 settings=services.settings,
                 database=services.database,
                 cipher=services.cipher,
                 row=job,
                 payload=QuestionRequest.model_validate(request_value),
-                answer_id=str(answer_row["id"]),
-                owner_canary_publication_phase="released",
                 connection=connection,
+                **replay_kwargs,
             )
-            content_graph = verified_owner_canary_content_graph(replayed_authority)
-            if (
-                outbox["owner_canary_content_graph_sha256"] != content_graph.graph_sha256
-                or outbox["answer_sha256"] != content_graph.answer_sha256
-                or content_graph.job_id != str(job["id"])
-                or content_graph.answer_id != str(answer_row["id"])
-            ):
-                raise RuntimeError("released owner-canary content graph differs")
+            if release_lane == "owner_quality_canary":
+                content_graph = verified_owner_canary_content_graph(replayed_authority)
+                if (
+                    outbox["owner_canary_content_graph_sha256"] != content_graph.graph_sha256
+                    or outbox["answer_sha256"] != content_graph.answer_sha256
+                    or content_graph.job_id != str(job["id"])
+                    or content_graph.answer_id != str(answer_row["id"])
+                ):
+                    raise RuntimeError("released owner-canary content graph differs")
+            else:
+                from ..contracts import ContractSchemaRegistry, SelectedAnswerContractStore
+
+                selected_store = SelectedAnswerContractStore(
+                    database=services.database.snapshot_view(connection),
+                    objects=services.runner.objects,
+                    registry=ContractSchemaRegistry.from_project_root(
+                        services.settings.project_root
+                    ),
+                )
+                proof = selected_store.load_publication_proof(str(job["id"]))
+                if (
+                    outbox["owner_canary_content_graph_sha256"] not in (None, "")
+                    or outbox["answer_sha256"] != proof.get("answer_content_sha256")
+                    or proof.get("answer_id") != str(answer_row["id"])
+                    or proof.get("release_state") != str(answer_row["release_state"])
+                ):
+                    raise RuntimeError("released development selected chain differs")
         except (TypeError, ValueError, RuntimeError, OSError, json.JSONDecodeError):
             raise HTTPException(409, "Released evaluation authority replay failed") from None
         evaluation_run_id = str(job["evaluation_run_id"])
         evaluation_case_id = str(job["evaluation_case_id"])
-        supplied = (
-            request.headers.get("x-owner-canary-run-id")
-            or request.headers.get("x-evaluation-run-id"),
-            request.headers.get("x-owner-canary-case-id")
-            or request.headers.get("x-evaluation-case-id"),
-        )
-        if supplied != (evaluation_run_id, evaluation_case_id):
+        if release_lane == GE_DEVELOPMENT_CHAT_LANE:
+            supplied = (
+                request.headers.get("x-development-chat-authority-sha256"),
+                request.headers.get("x-development-chat-access-key"),
+                request.headers.get("x-development-chat-route"),
+            )
+            try:
+                route_sha = validate_development_chat_read_access(
+                    settings=services.settings,
+                    supplied_authority_file_sha256=str(supplied[0] or ""),
+                    access_key=str(supplied[1] or ""),
+                    route_id=str(supplied[2] or ""),
+                )
+            except (TypeError, ValueError, RuntimeError, OSError):
+                raise HTTPException(403, "Exact development chat owner authority is required") from None
+            if (
+                route_sha != release_authority_value.get("route_sha256")
+                or supplied[0] != release_authority_value.get("authority_file_sha256")
+            ):
+                raise HTTPException(403, "Development chat route identity differs")
+            return outbox
+        if release_lane == GE_QWEN_DEVELOPMENT_LANE:
+            supplied = (
+                request.headers.get("x-ge-development-run-id"),
+                request.headers.get("x-ge-development-case-id"),
+                request.headers.get("x-ge-development-authority-sha256"),
+            )
+            expected = (
+                evaluation_run_id,
+                evaluation_case_id,
+                str(release_authority_value.get("authority_file_sha256") or ""),
+            )
+        else:
+            supplied = (
+                request.headers.get("x-owner-canary-run-id")
+                or request.headers.get("x-evaluation-run-id"),
+                request.headers.get("x-owner-canary-case-id")
+                or request.headers.get("x-evaluation-case-id"),
+            )
+            expected = (evaluation_run_id, evaluation_case_id)
+        if supplied != expected:
             raise HTTPException(403, "Exact evaluation review identity is required")
         return outbox
     if outbox["release_audience"] != "normal_live":
@@ -963,12 +1041,44 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
         "x-owner-canary-lane",
     )
     owner_header_values = tuple(request.headers.get(name) for name in owner_header_names)
+    development_header_names = (
+        "x-ge-development-run-id",
+        "x-ge-development-case-id",
+        "x-ge-development-authority-sha256",
+    )
+    development_header_values = tuple(
+        request.headers.get(name) for name in development_header_names
+    )
+    chat_header_names = (
+        "x-development-chat-authority-sha256",
+        "x-development-chat-access-key",
+        "x-development-chat-route",
+    )
+    chat_header_values = tuple(request.headers.get(name) for name in chat_header_names)
     if any(value is not None for value in owner_header_values) and not all(
         value is not None for value in owner_header_values
     ):
         raise HTTPException(422, "Owner-canary runtime headers must be supplied together")
     if evaluation_run_id is not None and all(value is not None for value in owner_header_values):
         raise HTTPException(422, "Owner-canary and legacy evaluation headers cannot be combined")
+    if any(value is not None for value in development_header_values) and not all(
+        value is not None for value in development_header_values
+    ):
+        raise HTTPException(422, "GE development runtime headers must be supplied together")
+    if all(value is not None for value in development_header_values) and (
+        evaluation_run_id is not None or all(value is not None for value in owner_header_values)
+    ):
+        raise HTTPException(422, "GE development headers cannot be combined with evaluation headers")
+    if any(value is not None for value in chat_header_values) and not all(
+        value is not None for value in chat_header_values
+    ):
+        raise HTTPException(422, "Development chat headers must be supplied together")
+    if all(value is not None for value in chat_header_values) and (
+        evaluation_run_id is not None
+        or any(value is not None for value in owner_header_values)
+        or any(value is not None for value in development_header_values)
+    ):
+        raise HTTPException(422, "Development chat cannot combine with evaluation headers")
     raw_idempotency = request.headers.get("x-idempotency-key")
     idempotency_key = None
     if raw_idempotency is not None:
@@ -992,7 +1102,12 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
 
     canary_build_id = request.headers.get("x-legalbot-canary-build-id")
     if canary_build_id:
-        if evaluation_run_id is not None or all(value is not None for value in owner_header_values):
+        if (
+            evaluation_run_id is not None
+            or all(value is not None for value in owner_header_values)
+            or all(value is not None for value in development_header_values)
+            or all(value is not None for value in chat_header_values)
+        ):
             raise HTTPException(
                 status.HTTP_422_UNPROCESSABLE_ENTITY,
                 "Diagnostic canary cannot combine with Live60 evaluation headers",
@@ -1008,6 +1123,8 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
     ordinary_request = (
         evaluation_run_id is None
         and not all(value is not None for value in owner_header_values)
+        and not all(value is not None for value in development_header_values)
+        and not all(value is not None for value in chat_header_values)
         and canary_build_id is None
     )
     if ordinary_request:
@@ -1029,6 +1146,8 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
         Live60AdmissionBinding
         | Live60EvaluationAdmissionBinding
         | OwnerCanaryAdmissionBinding
+        | GEQwenDevelopmentAdmissionBinding
+        | GEDevelopmentChatAdmissionBinding
         | None
     ) = None
     if evaluation_run_id is not None and evaluation_case_id is not None:
@@ -1107,6 +1226,49 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
         evaluation_run_id = owner_binding.run_id
         evaluation_case_id = owner_binding.case_id
         assert idempotency_key is not None
+    if all(value is not None for value in development_header_values):
+        if raw_idempotency is None or idempotency_key is None:
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_ENTITY,
+                "GE development generation requires its deterministic idempotency key",
+            )
+        try:
+            development_binding = validate_ge_qwen_development_api_admission(
+                settings=services.settings,
+                run_id=cast(str, development_header_values[0]),
+                case_id=cast(str, development_header_values[1]),
+                supplied_authority_file_sha256=cast(str, development_header_values[2]),
+                raw_idempotency_key=raw_idempotency,
+                payload=payload,
+            )
+        except (TypeError, ValueError, RuntimeError, OSError, json.JSONDecodeError):
+            raise HTTPException(
+                status.HTTP_409_CONFLICT,
+                "GE development generation is not authorised by its exact pinned inputs",
+            ) from None
+        live60_binding = development_binding
+        evaluation_run_id = development_binding.run_id
+        evaluation_case_id = development_binding.case_id
+    if all(value is not None for value in chat_header_values):
+        if raw_idempotency is None or idempotency_key is None:
+            raise HTTPException(422, "Development chat requires an idempotency key")
+        try:
+            chat_binding = validate_development_chat_admission(
+                settings=services.settings,
+                supplied_authority_file_sha256=cast(str, chat_header_values[0]),
+                access_key=cast(str, chat_header_values[1]),
+                route_id=cast(str, chat_header_values[2]),
+                raw_idempotency_key=raw_idempotency,
+                payload=payload,
+                remote_processing_consent=(
+                    request.headers.get("x-development-chat-remote-consent") == "yes"
+                ),
+            )
+        except (TypeError, ValueError, RuntimeError, OSError, json.JSONDecodeError):
+            raise HTTPException(409, "Development chat is not authorised by its pinned inputs") from None
+        live60_binding = chat_binding
+        evaluation_run_id = chat_binding.run_id
+        evaluation_case_id = chat_binding.case_id
     if live60_binding is not None and payload.conversation_id is not None:
         raise HTTPException(422, "Evaluation jobs cannot join ordinary conversation history")
     if payload.upload_ids:
@@ -1207,7 +1369,13 @@ async def create_question(payload: QuestionRequest, request: Request) -> Questio
 
     answer_policy = policy_for(JobType.ANSWER)
     pinned_index_build_id: str | None
-    if isinstance(live60_binding, Live60EvaluationAdmissionBinding | OwnerCanaryAdmissionBinding):
+    if isinstance(
+        live60_binding,
+        Live60EvaluationAdmissionBinding
+        | OwnerCanaryAdmissionBinding
+        | GEQwenDevelopmentAdmissionBinding
+        | GEDevelopmentChatAdmissionBinding,
+    ):
         pinned_index_build_id = live60_binding.candidate_build_id
         serving = services.database.active_index_id()
         if serving and serving != pinned_index_build_id:
@@ -1362,6 +1530,9 @@ async def get_job(job_id: str, request: Request) -> JobView:
         except json.JSONDecodeError:
             request_value = {}
         as_of_value = request_value.get("as_of_date") if isinstance(request_value, dict) else None
+        jurisdiction_value = (
+            request_value.get("jurisdiction") if isinstance(request_value, dict) else None
+        )
         projection = JobView(
             id=row["id"],
             status=row["status"],
@@ -1373,7 +1544,9 @@ async def get_job(job_id: str, request: Request) -> JobView:
             message=_released_job_message(row),
             route=row["route"],
             word_target=int(row["word_target"]),
+            jurisdiction=jurisdiction_value,
             as_of_date=as_of_value,
+            conversation_id=_conversation_id_for_job(services, str(row["id"])),
             pinned_index_build_id=row["pinned_index_build_id"],
             evaluation_request_sha256=row["evaluation_request_sha256"],
             worker_prompt_version=row["worker_prompt_version"] or None,

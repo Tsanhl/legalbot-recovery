@@ -4,6 +4,7 @@ from app.orchestration.behavior import (
     BehaviorAction,
     BehaviorSignals,
     FailureReasonCode,
+    looks_like_missing_document,
     route_behavior,
 )
 from app.types import ReleaseState
@@ -143,3 +144,56 @@ def test_healthy_path_may_proceed_to_model() -> None:
     )
     assert decision.reason_code == FailureReasonCode.PROCEED
     assert decision.invoke_model is True
+
+
+def test_explicit_england_label_is_inside_england_and_wales_product_scope() -> None:
+    decision = route_behavior(
+        BehaviorSignals(
+            question="Consumer refund rights for a purchase dated 20 August 2026",
+            jurisdiction="England",
+        )
+    )
+    assert decision.reason_code == FailureReasonCode.PROCEED
+    assert decision.invoke_model is True
+
+
+def test_complete_consumer_facts_do_not_trigger_duplicate_questions() -> None:
+    question = (
+        "Today is 23 September 2026. I live in England. On 2 September 2026 "
+        "I ordered a laptop for £799 from a UK retailer for personal use. It was "
+        "delivered on 4 September, faulty on first use, and I rejected it by email "
+        "on 16 September. Can I insist on a refund rather than store credit?"
+    )
+    assert route_behavior(BehaviorSignals(question=question, jurisdiction="England")).reason_code == FailureReasonCode.PROCEED
+
+
+def test_uk_tenancy_asks_for_nation_then_accepts_same_case_followup() -> None:
+    first = (
+        "Today is 23 September 2026. I rent a flat in the UK and pay £1,000 "
+        "per month. On 21 September my landlord emailed saying I must leave "
+        "by 5 October because they want to sell. I have no court papers."
+    )
+    decision = route_behavior(BehaviorSignals(question=first, jurisdiction="England and Wales"))
+    assert decision.reason_code == FailureReasonCode.MISSING_USER_FACTS
+    assert "Which UK nation" in decision.user_message
+    assert "how much" not in decision.user_message.casefold()
+    followup = first + " The flat is in Birmingham, England. I rent the entire flat as my main home. The landlord does not live here. The email is the only notice."
+    assert route_behavior(BehaviorSignals(question=followup, jurisdiction="England")).reason_code == FailureReasonCode.PROCEED
+
+
+def test_worldwide_development_scope_reaches_retrieval_gate() -> None:
+    decision = route_behavior(BehaviorSignals(
+        question="Explain a California consumer issue dated 1 September 2026.",
+        jurisdiction="California", expanded_development_jurisdiction=True,
+        retrieval_attempted=True, retrieval_hit_count=0,
+    ))
+    assert decision.reason_code == FailureReasonCode.HEALTHY_RETRIEVAL_ZERO_HITS
+
+
+def test_described_agreement_and_quoted_clause_are_not_missing_documents() -> None:
+    assert not looks_like_missing_document(
+        "My written tenancy agreement was for 12 months; the email is the only notice.", 0
+    )
+    assert not looks_like_missing_document(
+        'The signed contract states: "No liability for loss of profit." What is its effect?', 0
+    )

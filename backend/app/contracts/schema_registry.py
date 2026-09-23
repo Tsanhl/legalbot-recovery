@@ -31,6 +31,7 @@ SELECTED_SCHEMA_FILES: tuple[str, ...] = (
     "answer-job.v1.schema.json",
     "job-event.v1.schema.json",
     "knowledge-generation-manifest.v1.schema.json",
+    "research-empty-baseline.v1.schema.json",
     "retrieval-result.v1.schema.json",
     "evidence-pack.v1.schema.json",
     "claim-set.v1.schema.json",
@@ -45,6 +46,11 @@ SELECTED_SCHEMA_FILES: tuple[str, ...] = (
     "ge-diagnostic-case-result.v1.schema.json",
     "ge-cycle-assessment.v2.schema.json",
     "training-experiment.v1.schema.json",
+    "proposition-qualification-receipt.v1.schema.json",
+    "ge-run-lineage-manifest.v1.schema.json",
+    "ge-effective-source-set-manifest.v1.schema.json",
+    "ge-evaluation-control-plane.v2.schema.json",
+    "ge-currentness-review-packet.v1.schema.json",
 )
 
 LEGACY_SCHEMA_FILES: tuple[str, ...] = (

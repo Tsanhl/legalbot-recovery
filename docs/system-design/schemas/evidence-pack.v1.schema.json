@@ -182,7 +182,8 @@
             "enum": [
               "exact_authority_identity",
               "exact_legislation_reference",
-              "hybrid_rrf"
+              "hybrid_rrf",
+              "frozen_reviewed_research_receipt"
             ]
           },
           "retrieval_score": {

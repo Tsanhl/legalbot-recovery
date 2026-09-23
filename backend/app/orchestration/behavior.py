@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
@@ -56,16 +57,7 @@ _FACT_MARKERS = (
     " ms ",
     "between ",
 )
-_DOCUMENT_CUES = (
-    "attach",
-    "the contract",
-    "the will",
-    "the lease",
-    "the agreement",
-    "the judgment",
-    "this clause",
-    "the instrument",
-)
+_DOCUMENT_REQUEST_CUES = ("attached", "attachment", "uploaded", "enclosed", "see the document")
 
 
 @dataclass(frozen=True, slots=True)
@@ -85,6 +77,7 @@ class BehaviorSignals:
     missing_named_document: bool = False
     current_law_escalation_approved: bool = False
     retrieval_failure_code: str | None = None
+    expanded_development_jurisdiction: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -105,7 +98,8 @@ class BehaviorDecision:
 def route_behavior(signals: BehaviorSignals) -> BehaviorDecision:
     """Choose a named pre-model outcome. Never invents legal gold."""
 
-    if signals.jurisdiction.casefold().strip() not in {
+    if not signals.expanded_development_jurisdiction and signals.jurisdiction.casefold().strip() not in {
+        "england",
         "england and wales",
         "england & wales",
         "e&w",
@@ -117,6 +111,18 @@ def route_behavior(signals: BehaviorSignals) -> BehaviorDecision:
             None,
             "LegalBot v1 is limited to England and Wales. A Scotland, Northern Ireland, or other-jurisdiction answer was not attempted.",
             ("outside_product_jurisdiction: no model call and no cross-jurisdiction inference.",),
+        )
+
+    if _uk_tenancy_location_missing(signals.question):
+        return BehaviorDecision(
+            FailureReasonCode.MISSING_USER_FACTS,
+            BehaviorAction.CLARIFY,
+            False,
+            None,
+            "Which UK nation is the flat in? Do you rent the whole flat as your main home, "
+            "and does the landlord live or share accommodation with you? Have you received "
+            "any notice besides the email?",
+            ("UK housing rules differ by nation and occupation arrangement.",),
         )
 
     if signals.unsafe_question and not signals.mixed_unsafe_remainder:
@@ -263,6 +269,29 @@ def _missing_user_facts(question: str) -> bool:
     return not any(char.isdigit() for char in question)
 
 
+def _uk_tenancy_location_missing(question: str) -> bool:
+    text = question.casefold()
+    if not any(term in text for term in ("landlord", "tenancy", "rent a flat", "rent a house")):
+        return False
+    if not any(term in text for term in (" uk", "united kingdom", "britain")):
+        return False
+    return not any(term in text for term in (
+        "england", "wales", "scotland", "northern ireland",
+    ))
+
+
 def looks_like_missing_document(question: str, retrieval_hit_count: int) -> bool:
     text = question.casefold()
-    return retrieval_hit_count == 0 and any(cue in text for cue in _DOCUMENT_CUES)
+    if retrieval_hit_count != 0:
+        return False
+    # Negated document descriptions are facts, not requests to inspect a file.
+    document_text = re.sub(
+        r"\b(?:no|without)\b[^.!?\n]{0,100}\b(?:attachment|attached|uploaded|enclosed)\b",
+        "", text,
+    )
+    if any(cue in document_text for cue in _DOCUMENT_REQUEST_CUES):
+        return True
+    # A reference to a numbered clause without its wording needs the document.
+    # A supplied quotation is self-contained even if the source is absent.
+    has_quoted_text = any(mark in question for mark in ('“', '”', '"'))
+    return bool(re.search(r"\b(?:clause|paragraph)\s+\d+[a-z]?\b", text)) and not has_quoted_text

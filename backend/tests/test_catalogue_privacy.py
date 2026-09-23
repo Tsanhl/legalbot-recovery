@@ -61,7 +61,7 @@ def test_absolute_users_path_in_public_title_fails_privacy_audit(database, tmp_p
 
 
 def test_public_helper_detects_users_paths() -> None:
-    assert contains_absolute_private_path("see /Users/owner/Desktop/Law/file.pdf")
+    assert contains_absolute_private_path("see /Users/test-owner/Desktop/Law/file.pdf")
     assert not contains_absolute_private_path("data/vault/objects/sha256/ab/abcd")
     assert not contains_absolute_private_path("ukpga:1977:50:latest-available@2026-08-12")
 

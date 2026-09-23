@@ -398,7 +398,9 @@ def test_failed_applicable_avoidance_rule_is_an_ordinary_release_blocker(
         and finding.severity == Severity.HARD_BLOCKER
         for finding in report.findings
     )
-    assert is_deterministic_safety_failure("applicable_avoidance_standard_failed")
+    assert not is_deterministic_safety_failure("applicable_avoidance_standard_failed")
+    assert any(finding.corrective_action for finding in report.findings
+               if finding.code == "applicable_avoidance_standard_failed")
 
 
 def test_unmet_70_plus_target_does_not_substitute_for_release_gates(

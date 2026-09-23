@@ -1,7 +1,42 @@
 # LegalBot v1.11 system design - three phases, General Enquiries first
 
-Date: 1 September 2026. Status: **current living system design; owner-accepted;
+## 23 September final-check result — latest owner development direction
+
+The owner's latest “FINAL CHECK” authorizes the scoped Codex/API development checks and non-weight repairs recorded in the [final report](testing/FINAL_CHECK_2026-09-23.md); it supersedes the old planning-only pause for this work. Five GE cases, two essays and one PB have been tested. Actual API r6 accepted nine messages: seven holds and two UUID/privacy-scanner crashes; the two repaired messages in r8 now hold correctly for missing qualifying evidence. The effective result is one necessary clarification and eight evidence holds, with no substantive publication. Separate actual signed-in Codex research diagnostics generated all eight outputs; their same-model marks do not establish a full 70+ pass. Length and material source-support gaps remain. Source scope stays the reviewed England consumer-law generation at 5 September; current-date and worldwide qualification and online chat research are still incomplete.
+
+Repairs cover provider budgets and identity, safe section roles, fact/rule provenance, actionable quality repair, excessive length, default OSCOLA/requested grouped bibliography, missing-document negation, UUID-safe gap storage and strict legislation version/effects checks. The active guide is owner-standards-2026-09-23.3 (18 rules; no applicable rule omitted for hosted/Codex at the tested budget). Its latest non-weight revision requires issue/date-specific authority, doctrine and holding precision, and remedy-election checks. Law OCR completed for 15 distinct PDFs/191 pages into encrypted storage; general assessment criteria were reviewed, but not every individual marker comment has been admitted as guidance. Fifty exposed practice questions are prepared (30 GE/12 Essay/8 PB). Backend/browser checks and remaining gates are in the report. All owned services stopped; protected-bank attempts, ACTIVE, source admission, training and production gates are unchanged. Do not claim only training remains or restart historical construction workers from this update.
+
+
+## Model-route extension — development implementation, 23 September 2026
+
+The owner requested website-selectable own Qwen, linked local-model, Codex and hosted-API routes, then answered **“both”** to implementation plus design. The [maintained plan and implementation status](system-design/GE_PRE_BROWSER_IMPROVEMENT_PLAN.md#23-september-development-chat-implementation-and-exact-remaining-gates) describe the scoped owner-development code. It extends the previous exclusive-Qwen choice while retaining Qwen. The earlier accepted design and immutable evidence remain preserved; this is not an actual provider qualification, new protected evaluation or live authorization.
+
+The shared product path is website → authenticated API → durable worker → AnswerRunner → scoped facts/guidance/retrieval → selected provider → independent review → selected contracts → atomic publication. A provider adapter changes generation transport, not evidence eligibility or release authority. All reachable model stages, including rewriting, repair and review, have explicit route bindings; embeddings/reranking remain independently pinned to the retrieval generation.
+
+Use a frozen connection/route per job, protected credential references, provider-specific capabilities, exact host-sent input provenance, scoped tools and separate source/infrastructure/route/live readiness. Codex running on the Mac may use a remote model. Its agent process must be isolated from unrelated files, credentials, plugins and the protected bank. Website model selection grants no raw database, shell or publication access. The first deployment remains owner-local; remote user-device pairing and multi-tenancy require separate implementation and qualification.
+
+Reuse SQLite durable jobs/events, encrypted artifacts and immutable LanceDB generations. No blanket re-embedding or database replacement is needed for an answer-provider change. Stream safe progress and publish reviewed final answers; retain existing factual-first, currentness, citation, custody and live gates. Complete the shared infrastructure with exposed real-route tests independently of Qwen training, then qualify each provider/workflow separately. Training is optional and corpus-specific, and no provider switch creates an extra protected unseen attempt.
+
+The prior dated state below is historical context. The current selector additionally supports Claude and Gemini. A signed-in Codex call reached a real reviewed-index draft and quality gate in the scoped development lane; the answer was held and no publication followed. Hosted API calls, current-date/wider-jurisdiction indexing, answer-time online research and a supported final answer remain unproved. This does not establish that only training remains.
+
+Updated: 5 September 2026. Status: **current living system design; owner-accepted;
 implementation and release incomplete**.
+
+Current GE work: `CODEX_UNSEEN_UK_US_CREATION_RUNNING` for
+`LegalBot-GE-2026-09-05-codex-unseen-r1`, still in preseal working creation.
+The owner now directs UK and USA first, with other countries later; this supersedes
+the current England-and-Wales-only scope. The [scope amendment](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-05-codex-unseen-r1/UK-USA-SCOPE-AMENDMENT.json)
+is recorded and verified. The [everyday-law contract](system-design/GE_EVERYDAY_UNSEEN.md)
+plans 420 legal cases across 35 domains (210 UK + 210 USA) plus 23 separate system
+cases, and retains creation/review/one-pass authority with exact bank/runtime
+readiness checks and no repeat approval. UK/USA authoring has started; no question/source-review completion is claimed,
+`bank_sealed=false` and `candidate_executed=false`.
+
+The owner now also authorizes official-source gap research, chunking, embedding
+inference and non-live database indexing. The [full integration plan](system-design/GE_KNOWLEDGE_GAP_AUTOMATION.md)
+records the existing components, missing end-to-end wiring, review gates and
+unseen-data isolation. This remains non-weight improvement inside Phase 2; it
+does not authorize training or allow a later feature into an already frozen run.
 
 The owner selected exactly three delivery phases: **1. System design;
 2. Evaluation -> training/improvement -> unseen testing; 3. Live (last)**.
@@ -16,7 +51,8 @@ The owner acceptance of the delivered GE-visible-r3 wording and review
 specifications remains recorded in a separate immutable overlay. Neither
 acceptance creates legal gold or authorizes source/currentness adoption, model
 transport, evaluation, training, unseen use, promotion, deletion, Git mutation or
-live activation. The private unseen package remains separate and unchanged.
+live activation. The historical unseen artifacts remain separate and unchanged;
+the consumed 306 bank is retired and excluded from current work.
 The owner also approved the three Phase-2 preparation recommendations: all visible
 GE cases with separately reported system scenarios, factual-first then quality
 review, and diagnosis/non-weight improvement before any separately decided weight
@@ -59,7 +95,7 @@ committed answer is released to the client.
 | Evidence selection | Hybrid fusion -> pinned reranker -> qualified top-K within a token budget | Ranking alone does not establish legal support; allow fewer results or a gap |
 | User context | Application-encrypted message content plus a typed scoped fact adapter | Remember what the user said without treating it as verified law; allowlisted metadata remains plaintext |
 | Answer safety | Prompt/tool constraints, retrieval qualification, output checks and explicit fallback | Unsupported material claims must not reach the user |
-| First deployment scope | Local, England-and-Wales pilot | Wider public access needs the later privacy, access and operational decisions |
+| Product scope and deployment boundary | UK and USA first; local owner pilot, live deferred | Other countries are for later; release still needs operational readiness and the final live decision |
 
 The detailed contracts and full architecture diagram follow below. The
 [working design folder](system-design/README.md) contains the architecture,
@@ -128,13 +164,27 @@ preserve relevant information and indicate when qualified human help is needed.
 Do not claim a lawyer-client relationship, legal representation, guaranteed
 outcomes or complete coverage of every legal issue.
 
-The current implementation is a single-owner, local pilot whose first release serves
-England and Wales. Broader access belongs to an explicitly approved rollout within
-phase 3, not an authorization to add public endpoints or accounts now. The system
-must support three question types through the same evidence
-controls. A topic title or a draft question involving another jurisdiction does
-not expand the approved release scope; comparative authorities require explicit
-jurisdiction qualification and must not be presented as England-and-Wales law.
+The current implementation remains a single-owner local pilot. The owner's current
+product focus is UK and USA first; further countries come later. This replaces
+the earlier England-and-Wales-only design scope without certifying implementation
+coverage or authorizing live use. Public endpoints or accounts remain subject to
+the later Phase-3 rollout decision.
+
+The current GE plan allocates 210 UK cases: England 70, Wales 70, Scotland 35 and
+Northern Ireland 35; 210 USA cases cover all 50 states plus DC with explicit
+locations and 4–5 cases each. Determine federal/state applicability per USA issue
+and the applicable UK law/procedure per constituent nation. England and Wales share
+one legal system; nation-specific applicability is checked within that system,
+alongside the distinct systems of Scotland and Northern Ireland. These limited samples
+do not prove every legal area in every state or UK jurisdiction. Explicitly route
+or defer US territories, tribal law and unsupported law. The current domain
+`cross-border-trade-regulation` maps to historical `eu-internal-market-law`;
+old scope records and immutable artifacts retain their original identifiers.
+
+All three question types use the same evidence controls. A source's country,
+topic label or a draft's location alone does not establish applicable law. The
+consumer/CRA example is a UK illustration only; USA rules require their own
+applicable authority.
 
 | User mode | Internal type | Expected answer | Evaluation emphasis |
 | --- | --- | --- | --- |
@@ -372,7 +422,7 @@ that it has passed a new end-to-end baseline.
 | Structured matter lookup | Retrieve attributed facts for the exact conversation snapshot | Target `backend/app/matter_facts/` adapter over current conversation/job/upload identities; selected schemas in `system-design/SCHEMA_REGISTRY.md` | Add the typed store/contract, ownership checks and synthetic wrong-conversation/contradiction tests |
 | Evaluation and governance | Immutable packages, exact candidate/contract binding, decisions and private custody | Retained specialized scaffolding in `backend/app/evaluation/`, `backend/app/governance/` | Add a GE package verifier/loader, minimal projection, family-aware ordering, isolated conversations and separate result projection; existing code is not a ready GE harness |
 | Operations | Privacy-safe events, incidents, storage alerts and backup/restore | `backend/app/observability/`, `scripts/create_catalogue_backup_restore_drill.py` | Obtain current recovery evidence; no automatic pruning or compaction |
-| Training | Optional future weight-changing experiment | No approved custom-training dataset or pipeline established | Separate design, rights/privacy review, dataset and execution approval required |
+| Training | Scoped local LoRA experiment complete; adapter inactive | 13 exact owner-authorized hashes only; r1 memory failure preserved and r2 complete | Adapter fresh-visible gate failed; no further training or activation authorized |
 
 ## 4. Data ownership and immutable contracts
 
@@ -553,6 +603,7 @@ before persistence. The worker then:
 7. Applies the relevant Essay/PB/General quality overlay and bounded named repairs.
    The present automated 70+ academic rubric remains advisory pending human
    calibration; it cannot override a hard evidence or privacy failure.
+   For the owner-authorized 20-case AI evaluation route recorded on 4 September 2026, Codex may issue `AI_ACCEPT` only after 100% review coverage of declared material claims and answer-level propositions, factual pass, score >=70 and all critical floors. This produces an AI evaluation candidate, not professional calibration, qualified legal review or answer legal gold.
 8. Commits one release through the transactional outbox. The browser receives
    metadata-only progress and only the final verified content.
 
@@ -1049,16 +1100,91 @@ quality criterion is reached; an increased score on the training set is not evid
 of better legal performance. If root-cause findings justify only retrieval/prompt
 repairs, record that explicitly instead of falsely reporting that weights were trained.
 
-All 331 principal questions/answers, all 32 system scenarios/results, every visible
-diagnostic/result, external evaluation gold, model answers, reviewer notes, logs,
-user conversations/uploads and private unseen material/findings are excluded from
-training. No current bank is relabelled as training data. Weight training may start
-only after a separate owner gate binds the exact corpus, rights/privacy decisions,
-leakage report, base model, recipe, resources, stop criteria and rollback. Do not
-create a training export, invoke training or activate an adapter under this design.
-Any future weight change invalidates the affected model/evaluation evidence and
-must pass the required gates again. Never claim a post-training test is unseen after
-its content or findings have been used for improvement.
+By default, all 331 principal questions/answers, all 32 system
+scenarios/results, every visible diagnostic/result, external evaluation gold,
+model answers, reviewer notes, logs, user conversations/uploads and private unseen
+material/findings are excluded from training. No relabelling or paraphrase bypasses
+that rule.
+
+The owner supplied one narrow exception on 4 September 2026 for the 13 exact
+accepted hashes in `LegalBot-GE-2026-09-04-ai-auto-quality-review-r1`. Those
+records passed the owner-authorized AI factual/70+ gate, were separately
+rights/privacy reviewed, and are now retired from external scoring. No other
+visible row entered the corpus: the seven holds and the other 310 rows remained
+excluded, while the private 306 bank remained sealed and uninspected. The first
+immutable training attempt stopped before an optimizer update on Metal memory
+exhaustion. Its targeted r2 successor completed a local one-layer rank-2 LoRA
+experiment with 9 training, 3 internal-validation and 1 internal-test record.
+The base model remained unchanged and the adapter remains inactive.
+
+The internal validation loss improvement from 2.193 to 2.082 and internal-test
+loss improvement from 1.529 to 1.447 establish successful execution only. They
+do not prove 70+ legal-answer quality or external generalisation. The owner later
+authorized a fresh visible comparison. The preserved r1 attempt failed before
+model load on an isolated-environment import; the targeted r2 successor completed
+23 new cases and 46 blind answer reviews with 142/142 declared claims checked.
+The adapter produced 10 factual passes and 8 full 70+/floor passes, versus 9 and
+8 for the base, and introduced one factual regression. It failed the frozen
+all-case gate and remains inactive. The visible-only repair subsequently passed
+all 15 changed hashes. A separate 23-question, 23-locator evaluation of the
+non-weight Codex evidence-bound route then reached 23/23 factual and 23/23 full
+passes with zero recorded regressions. Its same-provider author/reviewer design
+does not establish professional or independent second-model assurance. The owner
+then authorized one-pass sealed-unseen execution.
+`LegalBot-GE-2026-09-04-sealed-unseen-codex-evaluation-r1` consumed the 306-case
+bank once and returned 157 full passes and 149 holds. The terminal state is
+`SEALED_UNSEEN_ONE_PASS_COMPLETE_HOLD_NO_REPAIR`. That bank and its findings are
+permanently excluded from training and repair. Later new-bank custody and execution
+authority are described below. Clean visible
+work after that run did not access the consumed prompts or findings. Two earlier
+routes and their bounded exposed repairs were preserved; the final distinct
+`LegalBot-GE-2026-09-04-post-unseen-fresh-audited-route-r1` used 23 further new
+official-source titles and separate author, coverage-plan, answer,
+source/plan-audit and blind-review contexts. It passed 23/23 factual and 23/23
+70+/critical-floor gates with 108/108 declared material claims reviewed. Its state
+is `POST_UNSEEN_FRESH_AUDITED_ROUTE_PASS_AWAITING_NEW_UNSEEN_BANK_DESIGN`.
+This remains same-provider AI visible evidence, not professional assurance,
+qualified legal review or answer legal gold. The adapter remains inactive;
+further training, promotion and live remain closed. New unseen execution authority
+was supplied later for the successor below. The historical question-free design is
+`LegalBot-GE-2026-09-04-new-unseen-bank-design-r1`: 92 legal cases, four per GE
+domain, and 23 separately scored system cases. Its recorded state is
+`NEW_UNSEEN_BANK_DESIGN_PREPARED_AWAITING_OWNER_CREATION_AUTHORIZATION`. No
+question or answer text was created by that package. Its independent-custodian and
+separate later execution gates are superseded for the current successor only.
+
+The owner first authorized the expanded question-free creation request on
+5 September; `LegalBot-GE-2026-09-05-expanded-bank-creation-r1` and its original
+verifier/history remain unchanged. The owner then selected separate Codex author/researcher/reviewer roles
+and authorized "Create, review, then run once; no training".
+The governing successor is `LegalBot-GE-2026-09-05-codex-unseen-r1`, state
+`CODEX_UNSEEN_UK_US_CREATION_RUNNING`, with the scope amendment
+being prepared as described above. Prior stopped drafts remain preserved and
+excluded; new UK/USA creation and question/source-review completion are not claimed.
+No bank is sealed and no candidate has executed. For this pack only,
+external/different-provider-only custody and the
+ask-again exact-run gate are superseded. Complete creation review, freeze and bind
+exact bank/runtime hashes, then run once without another authorization request.
+
+The [everyday GE working design](system-design/GE_EVERYDAY_UNSEEN.md) retains
+420 legal cases across 35 domains, split 210 UK and 210 USA, and 23 separate system
+cases under the location/applicability allocation above. It requires
+scenario-first questions, preseal factual/currentness and fair-oracle review,
+actual synthetic uploads with ingestion proof, withheld future turns, scoring
+rules frozen before answers, and all material claims/omissions checked before
+70+/floor scoring. Source-before-case construction is prohibited. Holds/errors
+remain in the full 420 denominator; system results stay separate.
+
+The upcoming run is a scoped experimental scenario-first Codex diagnostic.
+Same-provider roles on the same host, accessible to the owner, do not establish
+external custody, provider independence or professional assurance. The designated
+restricted root is not for documentation/general development access; an encrypted
+sealed copy is required. No Claude account is required. The earlier 23/23
+source-supplied visible result does not prove the broader upload/retrieval runtime,
+guarantee 100% correctness or certify product deployment. No weight training,
+adapter activation, source admission, legal gold, qualified legal review, promotion
+or live use is authorized. The r2 adapter remains inactive/excluded and the retired
+306 bank remains excluded with no access.
 
 After GE closure, a GitHub update remains a separate reviewed publication gate.
 Prepare the exact diff, validation evidence, retained-artifact inventory,

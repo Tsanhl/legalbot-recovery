@@ -12,17 +12,24 @@ from scripts.check_system_design import synthesize
 
 from app.contracts import (
     AnswerIntegrityChainVerifier,
+    ClaimContractInput,
     ContractSchemaRegistry,
     IntegrityChainError,
+    QualifiedEvidenceInput,
     SelectedAnswerContractStore,
+    ValidationCheckInput,
+    build_claim_set,
     build_committed_terminal_event,
     build_complete_answer_job,
+    build_retrieval_evidence_contracts,
+    build_validation_report,
     build_verified_release,
     canonical_json_bytes,
     committed_terminal_event_id,
     seal_contract,
 )
 from app.orchestration.object_store import EncryptedObjectStore
+from app.types import EvidenceSpan, MaterialLane
 
 ROOT = Path.cwd()
 SCHEMAS = ROOT / "docs" / "system-design" / "schemas"
@@ -38,8 +45,6 @@ def _make(name: str) -> dict[str, Any]:
             jurisdiction_status="explicit",
             as_of_date_status="explicit",
         )
-    if name == "claim-set.v1.schema.json":
-        value["claims"][0]["fact_ids"] = ["fact-abc"]
     if "content_sha256" in document.get("properties", {}):
         value = seal_contract(value)
     return value
@@ -60,6 +65,24 @@ def _chain() -> tuple[ContractSchemaRegistry, dict[str, Any]]:
         conversation_id="conversation-1",
         conversation_revision=1,
     )
+    fact_item_schema = json.loads(
+        (SCHEMAS / "matter-fact-snapshot.v2.schema.json").read_text(encoding="utf-8")
+    )["properties"]["facts"]["items"]
+    fact_item = synthesize(fact_item_schema)
+    fact_item.update(
+        fact_id="fact-1",
+        fact_key="consumer.condition",
+        data_type="text",
+        encrypted_value_ref="encrypted-fact-1",
+        value_sha256="a" * 64,
+        origin="user_confirmation",
+        status="confirmed",
+        supersedes_fact_id=None,
+        conflict_group_id=None,
+        affected_issue_ids=["issue-1"],
+        derivation_rule_sha256=None,
+    )
+    fact["facts"] = [fact_item]
     fact = seal_contract(fact)
     plan = _make("query-plan.v2.schema.json")
     plan.update(
@@ -78,41 +101,145 @@ def _chain() -> tuple[ContractSchemaRegistry, dict[str, Any]]:
         schema_selection_sha256=registry.manifest_sha256,
         jurisdiction="England and Wales",
         requested_as_of_date="2026-09-01",
+        issue_ids=["issue-1"],
     )
+    plan["budgets"]["final_top_k"] = 1
+    plan["budgets"]["context_tokens"] = 200
     plan_sha256 = hashlib.sha256(canonical_json_bytes(plan)).hexdigest()
-    retrieval = _make("retrieval-result.v1.schema.json")
-    retrieval.update(
-        query_plan_id="query-plan-1",
+    contracts = build_retrieval_evidence_contracts(
+        query_plan=plan,
         query_plan_sha256=plan_sha256,
-        candidate_id="candidate-1",
         candidate_sha256="2" * 64,
-    )
-    retrieval = seal_contract(retrieval)
-    evidence = _make("evidence-pack.v1.schema.json")
-    evidence.update(
-        query_plan_id="query-plan-1",
-        query_plan_sha256=plan_sha256,
-        retrieval_result_sha256=retrieval["content_sha256"],
+        evidence=(
+            QualifiedEvidenceInput(
+                span=EvidenceSpan(
+                    id="evidence-1",
+                    source_version_id="source-version-1",
+                    chunk_id="chunk-1",
+                    text="Private evidence text is held outside the contract.",
+                    locator="section 1",
+                    lane=MaterialLane.PRIMARY_AUTHORITY,
+                    jurisdiction="England and Wales",
+                    subject="consumer",
+                    citation_data={
+                        "reviewed_as_of": "2026-09-01",
+                        "commencement_status": "not_applicable",
+                    },
+                    currentness_status="qualified_current",
+                    content_sha256="b" * 64,
+                    index_build_id="candidate-1",
+                    retrieval_relevance_score=0.9,
+                    retrieval_route="hybrid_rrf",
+                    retrieval_threshold=0.5,
+                    retrieval_threshold_policy_sha256="c" * 64,
+                    retrieval_threshold_qualified=True,
+                    retrieval_qualification_reason="threshold_qualified",
+                    legal_role="statutory_rule",
+                    provision_extent_status="verified",
+                    identity_verified=True,
+                    currentness_verified=True,
+                ),
+                issue_ids=("issue-1",),
+                selected_token_count=100,
+                selected_rank=1,
+            ),
+        ),
         fact_snapshot_sha256=fact["content_sha256"],
-        candidate_id="candidate-1",
+        created_at=__import__("datetime").datetime(
+            2026, 9, 1, tzinfo=__import__("datetime").UTC
+        ),
+        registry=registry,
     )
-    evidence = seal_contract(evidence)
-    claims = _make("claim-set.v1.schema.json")
-    claims.update(
+    retrieval = dict(contracts.retrieval_result)
+    evidence = dict(contracts.evidence_pack)
+    claims = build_claim_set(
         job_id="job-1",
+        draft_id="draft-1",
+        draft_sha256="d" * 64,
         query_plan_sha256=plan_sha256,
         fact_snapshot_sha256=fact["content_sha256"],
         evidence_pack_sha256=evidence["content_sha256"],
+        claims=(
+            ClaimContractInput(
+                claim_id="claim-rule",
+                kind="legal_rule",
+                encrypted_text_ref="encrypted-claim-rule",
+                text_sha256="e" * 64,
+                materiality_basis="issue_element",
+                issue_ids=("issue-1",),
+                evidence_ids=("evidence-1",),
+            ),
+            ClaimContractInput(
+                claim_id="claim-fact",
+                kind="user_fact",
+                encrypted_text_ref="encrypted-claim-fact",
+                text_sha256="f" * 64,
+                materiality_basis="issue_element",
+                issue_ids=("issue-1",),
+                fact_ids=("fact-1",),
+            ),
+            ClaimContractInput(
+                claim_id="claim-application",
+                kind="application",
+                encrypted_text_ref="encrypted-claim-application",
+                text_sha256="0" * 64,
+                materiality_basis="outcome_premise",
+                issue_ids=("issue-1",),
+                fact_ids=("fact-1",),
+                evidence_ids=("evidence-1",),
+                depends_on_claim_ids=("claim-rule", "claim-fact"),
+            ),
+        ),
+        created_at=__import__("datetime").datetime(
+            2026, 9, 1, tzinfo=__import__("datetime").UTC
+        ),
+        registry=registry,
     )
-    claims = seal_contract(claims)
-    validation = _make("validation-report.v1.schema.json")
-    validation.update(
-        validation_report_id="validation-report-1",
+    all_claims = ("claim-rule", "claim-fact", "claim-application")
+    checks = []
+    affected_by_kind = {
+        "identity": all_claims,
+        "privacy": all_claims,
+        "output_shape": all_claims,
+        "fact_provenance": ("claim-fact", "claim-application"),
+        "evidence_support": ("claim-rule", "claim-application"),
+        "currentness": ("claim-rule", "claim-application"),
+        "citation": ("claim-rule", "claim-application"),
+        "contradiction": ("claim-rule", "claim-application"),
+    }
+    for number, (kind, affected_ids) in enumerate(affected_by_kind.items(), start=1):
+        checks.append(
+            ValidationCheckInput(
+                check_id=f"check-{number}",
+                kind=kind,  # type: ignore[arg-type]
+                result="PASS",
+                material=True,
+                reason_code="verified",
+                affected_ids=affected_ids,
+                validator_sha256=str(number) * 64,
+                input_sha256=str(number) * 64,
+            )
+        )
+    frozen_validation = build_validation_report(
+        draft_id="draft-1",
+        draft_sha256="d" * 64,
+        validator_bundle_sha256="9" * 64,
+        checks=tuple(checks),
+        advisory_status="PASS",
+        advisory_report_sha256="8" * 64,
+        repair_parent_id=None,
+        requested_disposition="verified_full",
         claim_set_sha256=claims["content_sha256"],
         evidence_pack_sha256=evidence["content_sha256"],
         fact_snapshot_sha256=fact["content_sha256"],
+        policy_sha256=plan["policy_sha256"],
+        created_at=__import__("datetime").datetime(
+            2026, 9, 1, tzinfo=__import__("datetime").UTC
+        ),
+        registry=registry,
     )
-    validation_sha256 = hashlib.sha256(canonical_json_bytes(validation)).hexdigest()
+    validation = frozen_validation.value
+    validation_sha256 = frozen_validation.content_sha256
     release = _make("verified-release.v1.schema.json")
     release.update(
         release_id="release-1",
@@ -125,7 +252,7 @@ def _chain() -> tuple[ContractSchemaRegistry, dict[str, Any]]:
         evidence_pack_sha256=evidence["content_sha256"],
         claim_set_sha256=claims["content_sha256"],
         verification_report_sha256=validation_sha256,
-        validation_report_id="validation-report-1",
+        validation_report_id=validation["validation_report_id"],
         schema_selection_sha256=registry.manifest_sha256,
         conversation_revision=1,
         response_disposition="ANSWER",
@@ -201,6 +328,39 @@ def test_substituted_retrieval_digest_stops_release() -> None:
     values["evidence_pack"]["retrieval_result_sha256"] = "f" * 64
     values["evidence_pack"] = seal_contract(values["evidence_pack"])
     with pytest.raises(IntegrityChainError, match="evidence retrieval digest"):
+        AnswerIntegrityChainVerifier(registry).verify_complete(**values)
+
+
+def test_release_stops_when_application_loses_fact_dependency() -> None:
+    registry, values = _chain()
+    application = next(
+        claim
+        for claim in values["claim_set"]["claims"]
+        if claim["claim_id"] == "claim-application"
+    )
+    application["depends_on_claim_ids"] = ["claim-rule"]
+    values["claim_set"] = seal_contract(values["claim_set"])
+    with pytest.raises(ValueError, match="legal-rule and user-fact"):
+        AnswerIntegrityChainVerifier(registry).verify_complete(**values)
+
+
+def test_release_stops_when_currentness_review_predates_requested_date() -> None:
+    registry, values = _chain()
+    values["evidence_pack"]["selected"][0]["reviewed_as_of"] = "2026-08-31"
+    values["evidence_pack"] = seal_contract(values["evidence_pack"])
+    with pytest.raises(ValueError, match="predates the requested date"):
+        AnswerIntegrityChainVerifier(registry).verify_complete(**values)
+
+
+def test_release_stops_when_material_claim_has_no_check_coverage() -> None:
+    registry, values = _chain()
+    check = next(
+        item
+        for item in values["validation_report"]["checks"]
+        if item["kind"] == "evidence_support"
+    )
+    check["affected_ids"] = ["claim-rule"]
+    with pytest.raises(ValueError, match="material claim lacks a passing evidence_support"):
         AnswerIntegrityChainVerifier(registry).verify_complete(**values)
 
 
@@ -418,6 +578,11 @@ def test_selected_chain_binds_atomically_to_normal_live_outbox(
     )
     store.persist_verified_unpublished(**values)
     proof = store.load_publication_proof("job-1")
+    with pytest.raises(RuntimeError, match="atomically replayed normal-live authority"):
+        database.release_answer_once(
+            "answer-one", "verified_full", selected_publication_verifier=lambda: proof,
+        )
+    assert database.fetchone("SELECT COUNT(*) AS n FROM release_outbox")["n"] == 0
     authority = {
         "schema": "legalbot.owner-quality-normal-live-release-authority.v1",
         "normal_live_ready": True,

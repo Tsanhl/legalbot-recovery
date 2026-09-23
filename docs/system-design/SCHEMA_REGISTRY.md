@@ -12,6 +12,7 @@ implementation or authorization to execute.
 | Answer job | `answer-job.v1.schema.json` | Durable stage, attempt, lease and frozen input chain |
 | Browser job event | `job-event.v1.schema.json` | Replay-safe progress, reset and distinct terminal release event |
 | Knowledge generation | `knowledge-generation-manifest.v1.schema.json` | Complete source/parser/chunker/model/index closure and seal |
+| Empty research baseline | `research-empty-baseline.v1.schema.json` | Zero-source, zero-row, 1024-dimensional non-live starting point for isolated online research only; no source qualification or production admission |
 | Retrieval result | `retrieval-result.v1.schema.json` | Route, rank, qualification, issue allocation, timing and gaps |
 | Evidence pack | `evidence-pack.v1.schema.json` | Qualified selected EvidenceSpans and named gaps |
 | Claim set | `claim-set.v1.schema.json` | Atomic fact/rule/application/limitation provenance |
@@ -26,6 +27,11 @@ implementation or authorization to execute.
 | GE diagnostic case result | `ge-diagnostic-case-result.v1.schema.json` | One factual-first diagnostic result outside the fixed visible and system denominators |
 | GE cycle assessment | `ge-cycle-assessment.v2.schema.json` | Immutable loop status, exact owner-authorized 23-domain coverage topology, decision basis, retry stop, custody checks, builder-local side-effect record and owner-acceptance exit state |
 | Training experiment | `training-experiment.v1.schema.json` | Rights/privacy/leakage-reviewed optional weight-change experiment |
+| Proposition qualification receipt | `proposition-qualification-receipt.v1.schema.json` | Locator/proposition/span sidecar; not knowledge-generation v1 and not answer gold |
+| GE run lineage | `ge-run-lineage-manifest.v1.schema.json` | Distinct historical-r1, r1-rescored, and r2 generated/scored tracks |
+| GE effective source set | `ge-effective-source-set-manifest.v1.schema.json` | Recovery-b plus evaluation-sidecar closure for a diagnostic run |
+| GE evaluation control plane v2 | `ge-evaluation-control-plane.v2.schema.json` | Scoped phase/run/case/claim blocker states plus progression-disposition counts; FACTUAL_HOLD is not equivalent failure |
+| GE currentness review packet | `ge-currentness-review-packet.v1.schema.json` | Case-level currentness dossier; not owner currentness approval or gold |
 
 ## Legacy read-only schemas
 

@@ -26,9 +26,9 @@ class PinnedRetrieverFactory:
         self.database = database
         self.observability = observability
         self._lock = threading.RLock()
-        self._cache: dict[str, HybridRetrievalService] = {}
+        self._cache: dict[str, EvidenceRetriever] = {}
 
-    def for_build(self, build_id: str) -> HybridRetrievalService:
+    def for_build(self, build_id: str) -> EvidenceRetriever:
         if not str(build_id or "").strip():
             raise RuntimeError("answer job is missing pinned_index_build_id")
         key = str(build_id)
@@ -36,6 +36,15 @@ class PinnedRetrieverFactory:
             existing = self._cache.get(key)
             if existing is not None:
                 return existing
+            if self.settings.development_retrieval_manifest_sha256 is not None:
+                if key != self.settings.development_candidate_build_id:
+                    raise RuntimeError("development retrieval pin differs from configured candidate")
+                from .reviewed_research_generation import ReviewedResearchGenerationRetriever
+
+                service = ReviewedResearchGenerationRetriever(self.settings, key)
+                service._load()
+                self._cache[key] = service
+                return service
             service = HybridRetrievalService(
                 settings=self.settings,
                 database=self.database,

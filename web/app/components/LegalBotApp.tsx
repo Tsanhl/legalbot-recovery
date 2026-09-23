@@ -29,9 +29,17 @@ const TASKS: Array<{ value: TaskMode; label: string; description: string }> = [
 
 const JURISDICTIONS: Array<{ value: Jurisdiction; label: string }> = [
   { value: "England and Wales", label: "England & Wales" },
+  { value: "England", label: "England" },
+  { value: "Wales", label: "Wales" },
+  { value: "Scotland", label: "Scotland" },
+  { value: "Northern Ireland", label: "Northern Ireland" },
   { value: "Hong Kong", label: "Hong Kong" },
   { value: "European Union", label: "European Union" },
   { value: "United States", label: "United States" },
+  { value: "US federal", label: "United States — federal" },
+  { value: "California", label: "United States — California" },
+  { value: "New York", label: "United States — New York" },
+  { value: "Texas", label: "United States — Texas" },
   { value: "Other", label: "Other / specify in question" },
 ];
 
@@ -249,8 +257,22 @@ export function LegalBotApp() {
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [answer, setAnswer] = useState<AnswerRecord | null>(null);
   const [health, setHealth] = useState<HealthRecord | null>(null);
+  const [developmentChat, setDevelopmentChat] = useState(false);
+  const [developmentAuthoritySha, setDevelopmentAuthoritySha] = useState("");
+  const [developmentAccessKey, setDevelopmentAccessKey] = useState("");
+  const [developmentRoute, setDevelopmentRoute] = useState<"qwen_local" | "local_endpoint" | "hosted_api" | "anthropic_api" | "gemini_api" | "codex_bridge">("qwen_local");
+  const [developmentRemoteConsent, setDevelopmentRemoteConsent] = useState(false);
   const [taskMode, setTaskMode] = useState<TaskMode>("auto");
   const [jurisdiction, setJurisdiction] = useState<Jurisdiction>("England and Wales");
+  const [customJurisdiction, setCustomJurisdiction] = useState("");
+  const developmentHistory = useRef<string[]>([]);
+  const [asOfDate, setAsOfDate] = useState(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  });
   const [onlineMode, setOnlineMode] = useState<OnlineMode>("local_only");
   const [targetWords, setTargetWords] = useState(1500);
   const [prompt, setPrompt] = useState("");
@@ -268,6 +290,14 @@ export function LegalBotApp() {
   const messageEnd = useRef<HTMLDivElement>(null);
   const submitIdempotency = useRef("");
   const conversationId = useRef(`conversation-${crypto.randomUUID()}`);
+
+  useEffect(() => {
+    api.setDevelopmentChatConnection(
+      developmentChat && /^[0-9a-f]{64}$/.test(developmentAuthoritySha) && developmentAccessKey
+        ? { authoritySha256: developmentAuthoritySha, accessKey: developmentAccessKey, routeId: developmentRoute, remoteConsent: developmentRemoteConsent }
+        : null,
+    );
+  }, [developmentChat, developmentAuthoritySha, developmentAccessKey, developmentRoute, developmentRemoteConsent]);
 
   const refreshConversations = useCallback(async () => {
     try {
@@ -370,7 +400,12 @@ export function LegalBotApp() {
 
     const handleJob = async (job: JobRecord) => {
       if (!current) return;
-      setCurrentQuestion(job.question_summary);
+      if (job.conversation_id) conversationId.current = job.conversation_id;
+      if (job.jurisdiction && JURISDICTIONS.some((item) => item.value === job.jurisdiction)) {
+        setJurisdiction(job.jurisdiction as Jurisdiction);
+      }
+      if (job.as_of_date) setAsOfDate(job.as_of_date);
+      if (job.question_summary !== "Private encrypted question") setCurrentQuestion(job.question_summary);
       setStage(job.stage);
       setProgress(job.progress);
       setStageDetail(job.message || "");
@@ -447,6 +482,17 @@ export function LegalBotApp() {
       };
     };
 
+    if (developmentChat) {
+      void hydrate();
+      const poll = window.setInterval(() => {
+        if (current && !terminal) void hydrate();
+      }, 1200);
+      return () => {
+        current = false;
+        window.clearInterval(poll);
+      };
+    }
+
     void hydrate().then(() => {
       if (current && !terminal) connect();
     });
@@ -455,7 +501,7 @@ export function LegalBotApp() {
       if (reconnectTimer !== null) window.clearTimeout(reconnectTimer);
       socket?.close();
     };
-  }, [activeEventsUrl, activeJobId, installAnswer]);
+  }, [activeEventsUrl, activeJobId, installAnswer, developmentChat, developmentAuthoritySha, developmentAccessKey, developmentRoute, developmentRemoteConsent]);
 
   useEffect(() => {
     messageEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -495,20 +541,64 @@ export function LegalBotApp() {
   const submit = async () => {
     const question = prompt.trim();
     if (!question || activeJobId) return;
+    const connectionIntent = question.toLowerCase().replace(/[.!?]+$/, "");
+    const requestedRoute = (
+      /^(link|connect|use) codex$/.test(connectionIntent) ? "codex_bridge"
+        : /^(link|connect|use) (api|openai api)$/.test(connectionIntent) ? "hosted_api"
+          : /^(link|connect|use) (claude|anthropic api)$/.test(connectionIntent) ? "anthropic_api"
+            : /^(link|connect|use) (gemini|gemini api)$/.test(connectionIntent) ? "gemini_api"
+          : /^(link|connect|use) (local model|my local model)$/.test(connectionIntent) ? "local_endpoint"
+            : null
+    );
+    if (requestedRoute) {
+      setDevelopmentChat(true);
+      setDevelopmentRoute(requestedRoute);
+      setPrompt("");
+      setServiceError("Enter the pinned owner development authority and access key, then ask a legal question.");
+      return;
+    }
     setServiceError("");
     setTerminalNotice(null);
     try {
+      if (developmentChat) {
+        if (!/^[0-9a-f]{64}$/.test(developmentAuthoritySha) || !developmentAccessKey) {
+          throw new Error("Enter the pinned development authority SHA-256 and owner access key.");
+        }
+        if (attachments.length) {
+          throw new Error("Development chat currently accepts text only; remove staged uploads.");
+        }
+        api.setDevelopmentChatConnection({
+          authoritySha256: developmentAuthoritySha,
+          accessKey: developmentAccessKey,
+          routeId: developmentRoute,
+          remoteConsent: developmentRemoteConsent,
+        });
+      } else {
+        api.setDevelopmentChatConnection(null);
+      }
+      const selectedJurisdiction = jurisdiction === "Other" ? customJurisdiction.trim() : jurisdiction;
+      if (!selectedJurisdiction || selectedJurisdiction.length > 120) {
+        throw new Error("Enter a specific jurisdiction (country and, where relevant, state or region).");
+      }
+      const contextualQuestion = developmentChat && developmentHistory.current.length
+        ? `Earlier messages in this case:\n${developmentHistory.current.map((item, index) => `${index + 1}. ${item}`).join("\n\n")}\n\nCurrent message:\n${question}`
+        : question;
+      if (contextualQuestion.length > 30_000) {
+        throw new Error("This case history is too long. Start a new development chat.");
+      }
       if (!submitIdempotency.current) submitIdempotency.current = crypto.randomUUID();
       const created = await api.createAnswer({
-        question,
+        question: contextualQuestion,
         task_type: taskMode,
-        jurisdiction,
+        jurisdiction: selectedJurisdiction,
+        as_of_date: asOfDate || undefined,
         word_target: targetWords,
-        online_mode: onlineMode,
-        upload_ids: attachments.map((item) => item.upload_id),
-        conversation_id: conversationId.current,
+        online_mode: developmentChat ? "local_only" : onlineMode,
+        upload_ids: developmentChat ? [] : attachments.map((item) => item.upload_id),
+        conversation_id: developmentChat ? undefined : conversationId.current,
       }, submitIdempotency.current);
       if (created.conversation_id) conversationId.current = created.conversation_id;
+      if (developmentChat) developmentHistory.current = [...developmentHistory.current, question].slice(-4);
       setCurrentQuestion(question);
       setAnswer(null);
       setSelectedAnswerId("");
@@ -567,7 +657,9 @@ export function LegalBotApp() {
   const selectedTask = useMemo(() => TASKS.find((item) => item.value === taskMode) || TASKS[0], [taskMode]);
   const hasResearch = Boolean(currentQuestion || answer);
   const systemReady = Boolean(
-    health?.database_ready && health?.model_ready && health?.worker_ready && health?.active_index,
+    developmentChat
+      ? health?.database_ready && health?.worker_ready
+      : health?.status === "ready" && health?.database_ready && health?.model_ready && health?.worker_ready && health?.active_index,
   );
 
   return (
@@ -604,8 +696,8 @@ export function LegalBotApp() {
         <footer className="sidebar-footer">
           <div className={`system-dot ${systemReady ? "ready" : ""}`} />
           <div>
-            <strong>{systemReady ? "Local system ready" : serviceError ? "API unavailable" : "Checking local system"}</strong>
-            <span>{health?.model_id || "Qwen legal model"}</span>
+            <strong>{developmentChat && systemReady ? "Development backend connected" : systemReady ? "Local system ready" : serviceError ? "API unavailable" : "Checking local system"}</strong>
+            <span>{developmentChat ? "Route checked on submission" : health?.model_id || "Qwen legal model"}</span>
           </div>
         </footer>
       </aside>
@@ -627,6 +719,13 @@ export function LegalBotApp() {
                 {JURISDICTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
               </select>
             </label>
+            {jurisdiction === "Other" && (
+              <label>Jurisdiction
+                <input aria-label="Specify jurisdiction" value={customJurisdiction}
+                  onChange={(event) => setCustomJurisdiction(event.target.value)}
+                  placeholder="Country and state or region" maxLength={120} />
+              </label>
+            )}
             <a className="admin-shortcut" href="/admin" aria-label="Open operations dashboard"><Icons.dashboard size={18} /></a>
           </div>
         </header>
@@ -682,7 +781,7 @@ export function LegalBotApp() {
               <div>
                 <strong>{STAGE_LABELS[terminalNotice.stage]}</strong>
                 <p>{terminalNotice.message}</p>
-                <small>No unsupported draft was persisted or shown as a legal answer.</small>
+                <small>No unsupported draft was released or shown as a legal answer.</small>
               </div>
               <button type="button" onClick={() => setTerminalNotice(null)}>Dismiss</button>
             </section>
@@ -692,6 +791,43 @@ export function LegalBotApp() {
         </div>
 
         <div className="composer-dock">
+          <div className="development-chat-controls">
+            <label>
+              <input type="checkbox" checked={developmentChat} onChange={(event) => {
+                setDevelopmentChat(event.target.checked);
+                developmentHistory.current = [];
+                if (!event.target.checked) api.setDevelopmentChatConnection(null);
+              }} /> Owner development chat
+            </label>
+            {developmentChat && (
+              <>
+                <label>Model
+                  <select aria-label="Development model route" value={developmentRoute} onChange={(event) => {
+                    developmentHistory.current = [];
+                    setDevelopmentRoute(event.target.value as typeof developmentRoute);
+                  }}>
+                    <option value="qwen_local">Own local Qwen</option>
+                    <option value="local_endpoint">Linked local model</option>
+                    <option value="hosted_api">OpenAI API</option>
+                    <option value="anthropic_api">Claude API</option>
+                    <option value="gemini_api">Gemini API</option>
+                    <option value="codex_bridge">Codex bridge</option>
+                  </select>
+                </label>
+                <label>Authority SHA-256
+                  <input aria-label="Development authority SHA-256" type="text" value={developmentAuthoritySha} onChange={(event) => setDevelopmentAuthoritySha(event.target.value.trim())} autoComplete="off" />
+                </label>
+                <label>Owner access key
+                  <input aria-label="Development owner access key" type="password" value={developmentAccessKey} onChange={(event) => setDevelopmentAccessKey(event.target.value)} autoComplete="off" />
+                </label>
+                {(["hosted_api", "anthropic_api", "gemini_api", "codex_bridge"] as const).includes(developmentRoute as "hosted_api" | "anthropic_api" | "gemini_api" | "codex_bridge") && (
+                  <label><input type="checkbox" checked={developmentRemoteConsent} onChange={(event) => setDevelopmentRemoteConsent(event.target.checked)} />
+                    Send this question and selected evidence to the remote model</label>
+                )}
+                <span>Isolated candidate and reviewed index only. Text questions; no uploads or conversation history.</span>
+              </>
+            )}
+          </div>
           {serviceError && (
             <div className="service-alert" role="alert">
               <Icons.alert size={16} /><span>{serviceError}</span><button type="button" onClick={() => setServiceError("")}>Dismiss</button>
@@ -700,7 +836,7 @@ export function LegalBotApp() {
           {attachments.length > 0 && (
             <div className="attachment-row">
               {attachments.map((item) => (
-                <span key={item.upload_id}><Icons.file size={15} />{item.display_name}<button type="button" onClick={() => setAttachments((current) => current.filter((file) => file.upload_id !== item.upload_id))}>×</button></span>
+                <span key={item.upload_id}><Icons.file size={15} />{item.display_name}<button aria-label={`Remove ${item.display_name}`} type="button" onClick={() => setAttachments((current) => current.filter((file) => file.upload_id !== item.upload_id))}>×</button></span>
               ))}
             </div>
           )}
@@ -720,20 +856,24 @@ export function LegalBotApp() {
               value={prompt}
             />
             <div className="composer-toolbar">
-              <button className="attach-control" disabled={uploading || Boolean(activeJobId)} type="button" onClick={() => fileInput.current?.click()}>
+              <button className="attach-control" disabled={developmentChat || uploading || Boolean(activeJobId)} type="button" onClick={() => fileInput.current?.click()}>
                 {uploading ? <span className="mini-spinner" /> : <Icons.paperclip size={18} />}
                 {uploading ? "Processing…" : "Attach sources"}
               </button>
               <input ref={fileInput} type="file" hidden multiple accept=".pdf,.docx,.pptx,.odt,.txt,.md,.html" onChange={(event) => void addFiles(event.target.files)} />
               <label className="compact-control">
                 <span>Online</span>
-                <select value={onlineMode} onChange={(event) => setOnlineMode(event.target.value as OnlineMode)}>
+                <select value={developmentChat ? "local_only" : onlineMode} disabled={developmentChat} onChange={(event) => setOnlineMode(event.target.value as OnlineMode)}>
                   <option value="auto">Auto</option><option value="always">Always</option><option value="local_only">Local only</option>
                 </select>
               </label>
               <label className="compact-control">
                 <span>Words</span>
                 <input min={100} max={10000} step={100} type="number" value={targetWords} onChange={(event) => setTargetWords(Math.max(100, Math.min(10000, Number(event.target.value) || 1500)))} />
+              </label>
+              <label className="compact-control date-control">
+                <span>Law as of</span>
+                <input aria-label="Law as of date" type="date" value={asOfDate} onChange={(event) => setAsOfDate(event.target.value)} />
               </label>
               <span className="composer-spacer" />
               <button className="send-button" disabled={!prompt.trim() || Boolean(activeJobId) || !systemReady} type="button" onClick={() => void submit()}>

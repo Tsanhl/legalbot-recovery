@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-currentness-review-packet.v1.schema.json",
+  "title": "LegalBot GE Currentness Review Packet v1",
+  "description": "Case-level currentness-review dossier. Packet preparation only. Does not set owner currentness approval, qualified legal review, answer gold, admission, training, unseen, promotion or live.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "case_id",
+    "topic",
+    "subtopic",
+    "question",
+    "candidate_answer",
+    "material_claims",
+    "factual_status",
+    "claim_support_status",
+    "hold_reason",
+    "currentness_subreason",
+    "currentness_subreasons",
+    "jurisdiction",
+    "owner_currentness_cutoff",
+    "applicable_law_date",
+    "applicable_law_date_basis",
+    "applicable_law_date_status",
+    "packet_status",
+    "review_status",
+    "currentness_status",
+    "owner_decision",
+    "owner_currentness_decision",
+    "answer_hash",
+    "question_hash",
+    "evidence_manifest_hash",
+    "packet_hash",
+    "locators",
+    "locator_count",
+    "missing_fields",
+    "currentness_evidence_gaps",
+    "next_route",
+    "qualified_legal_review",
+    "answer_legal_gold",
+    "legal_gold",
+    "admitted",
+    "full_current_law_eligible",
+    "answer_weight_training",
+    "sealed_unseen_execution",
+    "promotion",
+    "live"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-currentness-review-packet.v1"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180
+    },
+    "topic": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "subtopic": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "question": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "candidate_answer": {
+      "type": "string",
+      "maxLength": 120000
+    },
+    "material_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "text"],
+        "properties": {
+          "kind": { "type": "string", "maxLength": 80 },
+          "text": { "type": "string", "maxLength": 4000 }
+        }
+      }
+    },
+    "factual_status": {
+      "const": "FACTUAL_HOLD"
+    },
+    "claim_support_status": {
+      "const": "PASS"
+    },
+    "hold_reason": {
+      "const": "CURRENTNESS_UNRESOLVED"
+    },
+    "currentness_subreason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "currentness_subreasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      }
+    },
+    "jurisdiction": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "owner_currentness_cutoff": {
+      "const": "2026-08-28"
+    },
+    "applicable_law_date": {
+      "type": "string",
+      "pattern": "^$|^20[0-9]{2}-[0-9]{2}-[0-9]{2}$"
+    },
+    "applicable_law_date_basis": {
+      "enum": [
+        "QUESTION_AS_OF_DATE",
+        "QUESTION_DATE_EQUALS_CUTOFF",
+        "DEFAULT_OWNER_CUTOFF_NO_HISTORIC_DATE",
+        "INVALID_OR_AMBIGUOUS"
+      ]
+    },
+    "applicable_law_date_status": {
+      "enum": ["PARSED", "DEFAULTED_TO_OWNER_CUTOFF", "INVALID_OR_AMBIGUOUS"]
+    },
+    "packet_status": {
+      "enum": [
+        "READY_FOR_OWNER_CURRENTNESS_REVIEW",
+        "INCOMPLETE",
+        "INCOMPLETE_FINAL"
+      ]
+    },
+    "review_status": {
+      "const": "NOT_STARTED"
+    },
+    "currentness_status": {
+      "const": "UNRESOLVED"
+    },
+    "owner_decision": {
+      "const": ""
+    },
+    "owner_currentness_decision": {
+      "const": "NOT_STARTED"
+    },
+    "answer_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "question_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidence_manifest_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "packet_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "locators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/locator_record" }
+    },
+    "locator_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 120
+      }
+    },
+    "currentness_evidence_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 200
+      }
+    },
+    "next_route": {
+      "enum": [
+        "CURRENTNESS_PACKET_REPAIR",
+        "DEFERRED_OWNER_CURRENTNESS_REVIEW",
+        "CURRENTNESS_METADATA_REPAIR_EXHAUSTED"
+      ]
+    },
+    "repair_pass": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "metadata_repair_status": {
+      "enum": [
+        "NOT_ATTEMPTED",
+        "RECOVERED",
+        "EXHAUSTED_UNCHANGED",
+        "EXHAUSTED_STILL_INCOMPLETE"
+      ]
+    },
+    "exact_failure_reason": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 240 }
+    },
+    "exact_missing_reason": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "qualified_legal_review": { "const": "NOT_STARTED" },
+    "answer_legal_gold": { "const": "NOT_STARTED" },
+    "legal_gold": { "const": false },
+    "admitted": { "const": false },
+    "full_current_law_eligible": { "const": false },
+    "answer_weight_training": { "const": "NOT_STARTED" },
+    "sealed_unseen_execution": { "const": "NOT_STARTED" },
+    "promotion": { "const": "NOT_STARTED" },
+    "live": { "const": "NOT_STARTED" }
+  },
+  "$defs": {
+    "locator_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_title",
+        "source_type",
+        "official_identifier",
+        "exact_locator",
+        "exact_supporting_passage",
+        "source_byte_hash",
+        "evidence_span_sha256",
+        "source_version_id",
+        "chunk_id",
+        "retrieval_date",
+        "source_version_date",
+        "relevant_legal_date",
+        "territorial_extent",
+        "in_force_or_status_information",
+        "amendments_effective_by_relevant_date",
+        "prospective_amendments",
+        "prospective_amendment_treated_as_in_force",
+        "commencement_information",
+        "transitional_or_savings_provisions",
+        "repeal_or_substitution_information",
+        "later_treatment_or_appeal_status",
+        "later_treatment_search_coverage",
+        "later_treatment_search_date",
+        "negative_treatment_found",
+        "owner_status_decision",
+        "authority_status",
+        "unresolved_currentness_question",
+        "currentness_evidence_collected",
+        "owner_decision"
+      ],
+      "properties": {
+        "source_title": { "type": "string", "maxLength": 400 },
+        "source_type": {
+          "enum": [
+            "PRIMARY_LEGISLATION",
+            "SECONDARY_LEGISLATION",
+            "CASE_LAW",
+            "PROCEDURAL_RULE",
+            "CONTRACTUAL_RULE",
+            "TREATY_OR_AGREEMENT",
+            "ASSIMILATED_INSTRUMENT",
+            "OTHER_INSTRUMENT"
+          ]
+        },
+        "official_identifier": { "type": "string", "maxLength": 240 },
+        "canonical_url": { "type": "string", "maxLength": 500 },
+        "exact_locator": { "type": "string", "maxLength": 240 },
+        "exact_supporting_passage": { "type": "string", "maxLength": 20000 },
+        "stored_text": { "type": "string", "maxLength": 20000 },
+        "source_byte_hash": { "type": "string", "maxLength": 64 },
+        "evidence_span_sha256": { "type": "string", "pattern": "^$|^[0-9a-f]{64}$" },
+        "source_version_id": { "type": "string", "maxLength": 255 },
+        "chunk_id": { "type": "string", "maxLength": 255 },
+        "retrieval_date": { "type": "string", "maxLength": 40 },
+        "source_version_date": { "type": "string", "maxLength": 40 },
+        "relevant_legal_date": { "type": "string", "maxLength": 40 },
+        "territorial_extent": { "type": "string", "maxLength": 200 },
+        "in_force_or_status_information": { "type": "string", "maxLength": 400 },
+        "amendments_effective_by_relevant_date": { "type": "string", "maxLength": 400 },
+        "prospective_amendments": { "type": "string", "maxLength": 400 },
+        "prospective_amendment_treated_as_in_force": { "const": false },
+        "commencement_information": { "type": "string", "maxLength": 400 },
+        "transitional_or_savings_provisions": { "type": "string", "maxLength": 400 },
+        "repeal_or_substitution_information": { "type": "string", "maxLength": 400 },
+        "later_treatment_or_appeal_status": { "type": "string", "maxLength": 400 },
+        "later_treatment_search_coverage": { "type": "string", "maxLength": 120 },
+        "later_treatment_search_date": { "type": "string", "maxLength": 40 },
+        "negative_treatment_found": { "type": "boolean" },
+        "owner_status_decision": { "const": "NOT_STARTED" },
+        "authority_status": { "const": "UNRESOLVED" },
+        "unresolved_currentness_question": { "type": "string", "maxLength": 1000 },
+        "currentness_evidence_collected": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 240 }
+        },
+        "owner_decision": { "const": "" }
+      }
+    }
+  }
+}

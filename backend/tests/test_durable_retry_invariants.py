@@ -707,3 +707,86 @@ def test_expired_answer_lease_uses_owner_resume_ledger_and_repeat_stop(
     assert int(database.job("answer-expired-lease")["attempt_count"]) == 2
     with pytest.raises(RuntimeError, match="new linked job/version identity"):
         database.resume_answer_job("answer-expired-lease")
+
+
+def test_expired_evaluation_model_call_is_indeterminate_and_not_resumable(
+    database: Database,
+) -> None:
+    database.create_job(
+        job_id="evaluation-model-call-lease-loss",
+        encrypted_question=b"encrypted",
+        question_summary=PRIVATE_QUESTION_SUMMARY,
+        request={"job_type": JobType.ANSWER, "word_target": 500},
+        job_type=JobType.ANSWER,
+        evaluation_run_id="visible-evaluation-run",
+        evaluation_case_id="visible-case-01",
+    )
+    first = database.claim_next_job(
+        "evaluation-model-call-worker-1", job_types=(JobType.ANSWER,)
+    )
+    assert first is not None and int(first["attempt_count"]) == 1
+    database.execute(
+        """
+        UPDATE jobs
+        SET stage='drafting', model_call_token='opaque-model-call-token',
+            lease_expires_at=?
+        WHERE id='evaluation-model-call-lease-loss'
+        """,
+        ((datetime.now(UTC) - timedelta(minutes=1)).isoformat(),),
+    )
+    database.execute(
+        """
+        INSERT INTO job_stage_attempts(
+          id, job_id, stage_key, section_key, attempt_number, status,
+          metrics_json, started_at
+        ) VALUES (
+          'evaluation-model-call-stage-attempt',
+          'evaluation-model-call-lease-loss', 'draft', 'whole-answer', 1,
+          'running', '{}', ?
+        )
+        """,
+        (datetime.now(UTC).isoformat(),),
+    )
+
+    assert (
+        database.claim_next_job(
+            "evaluation-model-call-observer", job_types=(JobType.ANSWER,)
+        )
+        is None
+    )
+    row = database.job("evaluation-model-call-lease-loss")
+    assert row is not None
+    assert row["status"] == "system_error"
+    assert row["error_code"] == "indeterminate_model_call_after_lease_loss"
+    assert row["terminal_reason_code"] == "indeterminate_model_call_after_lease_loss"
+    checkpoint = json.loads(str(row["checkpoint_json"]))
+    assert checkpoint["resumable"] is False
+    assert checkpoint["model_call_output_indeterminate"] is True
+    assert checkpoint["publication_allowed"] is False
+    assert checkpoint["continuation_requires_new_linked_job_identity"] is True
+    attempts = database.fetchall(
+        "SELECT * FROM job_stage_attempts WHERE job_id=?",
+        ("evaluation-model-call-lease-loss",),
+    )
+    assert len(attempts) == 1
+    assert attempts[0]["status"] == "interrupted"
+    assert attempts[0]["error_code"] == "indeterminate_model_call_after_lease_loss"
+    assert attempts[0]["finished_at"] is not None
+    events = database.job_events("evaluation-model-call-lease-loss")
+    terminal_event = events[-1]
+    assert terminal_event["stage"] == "system_error"
+    terminal_payload = json.loads(str(terminal_event["payload_json"]))
+    assert terminal_payload["failure_code"] == (
+        "indeterminate_model_call_after_lease_loss"
+    )
+    assert terminal_payload["model_call_output_indeterminate"] is True
+    assert terminal_payload["publication_allowed"] is False
+    assert terminal_payload["resumable"] is False
+    trace = database.retry_decisions("job", "evaluation-model-call-lease-loss")
+    assert [str(item["decision_action"]) for item in trace] == ["stop"]
+    assert str(trace[0]["decision_reason"]) == "non_retryable_failure"
+    assert str(trace[0]["retry_operation"]) == (
+        "terminalize_indeterminate_evaluation_model_call"
+    )
+    with pytest.raises(ValueError, match="evaluation-bound jobs cannot be manually resumed"):
+        database.resume_answer_job("evaluation-model-call-lease-loss")

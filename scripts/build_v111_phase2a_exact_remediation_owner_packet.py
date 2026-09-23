@@ -275,7 +275,7 @@ def _portable_path(path: Path) -> str:
 
 
 def _owner_identifiers() -> frozenset[str]:
-    identifiers = {"agnes", "owner"}
+    identifiers = {"agnes", Path.home().name.casefold()}
     parts = PROJECT_ROOT.parts
     if len(parts) >= 3 and parts[1].casefold() == "users":
         identifiers.add(parts[2].casefold())

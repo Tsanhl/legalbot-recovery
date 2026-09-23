@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/ge-effective-source-set-manifest.v1.schema.json",
+  "title": "LegalBot GE Effective Source Set Manifest v1",
+  "description": "Binds the 85-source recovery-b corpus and evaluation-sidecar sources so a diagnostic run cannot claim it used only the old 85-source set.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "base_source_manifest_sha256",
+    "evaluation_sidecar_manifest_sha256",
+    "effective_source_set_sha256",
+    "components",
+    "live_catalogue_insert",
+    "admitted",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.ge-effective-source-set-manifest.v1"
+    },
+    "base_source_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evaluation_sidecar_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "effective_source_set_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["component_id", "kind", "manifest_sha256"],
+        "properties": {
+          "component_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": ["recovery_b_approved_sources", "evaluation_sidecar"]
+          },
+          "manifest_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "live_catalogue_insert": {
+      "const": false
+    },
+    "admitted": {
+      "const": false
+    },
+    "legal_gold": {
+      "const": false
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -914,7 +914,7 @@ def _privacy_check(values: Sequence[Any]) -> None:
             lowered = value.casefold()
             if (
                 "/users/" in lowered
-                or "owner" in lowered
+                or Path.home().name.casefold() in lowered
                 or "legalbot-new" in lowered
                 or "file://" in lowered
                 or value.startswith(("~/", "~\\"))

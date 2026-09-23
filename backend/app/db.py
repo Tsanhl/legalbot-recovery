@@ -4620,7 +4620,7 @@ class Database:
     ) -> sqlite3.Row | None:
         """Claim one queued or expired leased job atomically."""
 
-        from .jobs import policy_for
+        from .jobs import TERMINAL_INDETERMINATE_MODEL_CALL, policy_for
         from .orchestration.retry_policy import MAX_ATTEMPTS
         from .types import JobType
 
@@ -4662,6 +4662,26 @@ class Database:
                 else []
             )
             for lost in expired:
+                evaluation_bound = bool(
+                    lost["evaluation_run_id"] is not None
+                    or lost["evaluation_case_id"] is not None
+                    or lost["evaluation_request_sha256"] is not None
+                    or lost["evaluation_authority_json"] is not None
+                    or lost["evaluation_authority_sha256"] is not None
+                    or lost["trace_full_retention"]
+                )
+                model_call_was_in_flight = bool(lost["model_call_token"])
+                indeterminate_model_call = evaluation_bound and model_call_was_in_flight
+                failure_reason = (
+                    TERMINAL_INDETERMINATE_MODEL_CALL
+                    if indeterminate_model_call
+                    else "lease_lost"
+                )
+                retry_operation = (
+                    "terminalize_indeterminate_evaluation_model_call"
+                    if indeterminate_model_call
+                    else "owner_resume_after_lease_loss"
+                )
                 request_identity = hashlib.sha256(
                     str(lost["request_json"] or "{}").encode("utf-8")
                 ).hexdigest()
@@ -4682,47 +4702,101 @@ class Database:
                     work_id=str(lost["id"]),
                     attempt_number=int(lost["attempt_count"]),
                     stage=str(lost["stage"] or JobType.ANSWER),
-                    failure_reason="lease_lost",
+                    failure_reason=failure_reason,
                     input_identity_sha256=request_identity,
                     max_attempts=min(policy_for(JobType.ANSWER).max_attempts, MAX_ATTEMPTS),
-                    retryable=True,
-                    input_or_condition_changed=lease_condition is not None,
+                    retryable=not indeterminate_model_call,
+                    input_or_condition_changed=(
+                        lease_condition is not None and not indeterminate_model_call
+                    ),
                     condition_identity_sha256=lease_condition,
-                    retry_operation="owner_resume_after_lease_loss",
+                    retry_operation=retry_operation,
                 )
                 checkpoint = {
+                    "schema": "legalbot.expired-answer-lease.v2",
                     "resumable": decision.should_retry,
                     "attempt_count": int(lost["attempt_count"]),
                     "job_type": JobType.ANSWER,
+                    "evaluation_bound": evaluation_bound,
+                    "model_call_output_indeterminate": indeterminate_model_call,
+                    "publication_allowed": False,
                     "retry_policy": {
                         "decision": decision.action,
                         "reason": decision.reason,
                         "failure_fingerprint_sha256": decision.failure_fingerprint,
                         "retries_remaining": decision.retries_remaining,
-                        "operation": "owner_resume_after_lease_loss",
-                        "condition_changed": lease_condition is not None,
+                        "operation": retry_operation,
+                        "condition_changed": (
+                            lease_condition is not None and not indeterminate_model_call
+                        ),
                     },
                     "continuation_requires_new_linked_job_identity": not decision.should_retry,
                 }
                 conn.execute(
                     """
                     UPDATE jobs SET status='system_error', stage='system_error', progress=1,
-                      terminal_reason_code=?, error_code='lease_lost',
+                      terminal_reason_code=?, error_code=?,
                       checkpoint_json=?, lease_owner=NULL, lease_expires_at=NULL,
                       heartbeat_at=NULL, user_message=?, last_progress_at=?, updated_at=?
                     WHERE id=?
                     """,
                     (
-                        None if decision.should_retry else decision.reason,
+                        (
+                            TERMINAL_INDETERMINATE_MODEL_CALL
+                            if indeterminate_model_call
+                            else None
+                            if decision.should_retry
+                            else decision.reason
+                        ),
+                        failure_reason,
                         json.dumps(checkpoint, sort_keys=True),
                         (
-                            "The answer job lost its lease; an exact owner resume is available under the bounded retry ledger."
+                            "The evaluation model call lost its lease before output persistence; its outcome is indeterminate and it will not be regenerated automatically."
+                            if indeterminate_model_call
+                            else "The answer job lost its lease; an exact owner resume is available under the bounded retry ledger."
                             if decision.should_retry
                             else "The answer job lost its lease and stopped under the bounded retry circuit."
                         ),
                         now_text,
                         now_text,
                         lost["id"],
+                    ),
+                )
+                conn.execute(
+                    """
+                    UPDATE job_stage_attempts
+                    SET status='interrupted', error_code=?, finished_at=?
+                    WHERE job_id=? AND status='running'
+                    """,
+                    (failure_reason, now_text, lost["id"]),
+                )
+                terminal_message = (
+                    "The evaluation model call lost its lease before output persistence; its outcome is indeterminate and it will not be regenerated automatically."
+                    if indeterminate_model_call
+                    else "The answer job lost its lease; an exact owner resume is available under the bounded retry ledger."
+                    if decision.should_retry
+                    else "The answer job lost its lease and stopped under the bounded retry circuit."
+                )
+                conn.execute(
+                    """
+                    INSERT INTO job_events(
+                      job_id, stage, progress, message, payload_json, created_at
+                    ) VALUES (?, 'system_error', 1, ?, ?, ?)
+                    """,
+                    (
+                        lost["id"],
+                        terminal_message,
+                        json.dumps(
+                            {
+                                "failure_code": failure_reason,
+                                "model_call_output_indeterminate": indeterminate_model_call,
+                                "publication_allowed": False,
+                                "resumable": decision.should_retry,
+                            },
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        ),
+                        now_text,
                     ),
                 )
                 self._extend_upload_retention_for_job(conn, str(lost["id"]), now=now_text)
@@ -5888,17 +5962,26 @@ class Database:
                         "TECHNICAL_IMPLEMENTATION_REQUIRED:"
                         "superseded_evaluation_release_content_certification_missing"
                     )
+                evaluation_lane = str(evaluation_authority.get("lane") or "")
                 if (
                     evaluation_authority.get("schema")
                     != "legalbot.persisted-evaluation-job-authority.v1"
-                    or evaluation_authority.get("lane") != "owner_quality_canary"
+                    or evaluation_lane
+                    not in {"owner_quality_canary", "ge_qwen_visible_development", "ge_owner_development_chat"}
                     or evaluation_authority.get("release_allowed") is not True
                     or evaluation_authority.get("writes_active") is not False
                     or evaluation_authority.get("seal_sha256") != authority_seal
                     or authority_seal != expected_evaluation_authority_sha256
                 ):
                     raise RuntimeError("evaluation lane is not authorised to publish a release")
-                owner_canary_evaluation = evaluation_authority.get("lane") == "owner_quality_canary"
+                if (
+                    evaluation_lane in {"ge_qwen_visible_development", "ge_owner_development_chat"}
+                    and preverified_selected_publication is None
+                ):
+                    raise RuntimeError(
+                        "development evaluation requires a selected answer publication proof"
+                    )
+                owner_canary_evaluation = evaluation_lane == "owner_quality_canary"
                 self._verify_owner_canary_runtime_release_frontier(conn, evaluation_authority)
                 if evaluation_authority.get("lane") == "owner_quality_canary":
                     from .evaluation.evaluation_job_authority import (
@@ -5930,9 +6013,11 @@ class Database:
                 if (
                     normal_live_authority is not None
                     or normal_live_authority_verifier is not None
-                    or preverified_selected_publication is not None
                 ):
                     raise RuntimeError("evaluation work cannot use normal-live authority")
+                # Selected content proof is additional integrity evidence, not
+                # normal-live authority. Evaluation still requires its own
+                # independently replayed lane capability above.
             else:
                 if normal_live_authority is None or normal_live_authority_verifier is None:
                     raise RuntimeError(
@@ -6010,7 +6095,7 @@ class Database:
             selected_release_sha256: str | None = None
             selected_terminal_event_id: str | None = None
             selected_answer_job_sha256: str | None = None
-            if not evaluation_bound:
+            if not evaluation_bound or preverified_selected_publication is not None:
                 proof = dict(preverified_selected_publication or {})
                 proof_material = dict(proof)
                 supplied_proof_sha256 = str(proof_material.pop("content_sha256", ""))

@@ -1094,7 +1094,7 @@ def test_known_composite_authority_is_an_explicit_non_admission_hold() -> None:
     "unsafe",
     [
         {"nested": [{"path": "/tmp/private-source.json"}]},
-        {"nested": {"owner": "owner"}},
+        {"nested": {"owner": Path.home().name}},
         {"nested": {"api_key": "not-permitted"}},
         {"nested": {"original_filename": "private-notes.docx"}},
     ],
@@ -1550,7 +1550,7 @@ def test_cli_failure_is_sanitized(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     def fail_build(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
-        raise RuntimeError("/Users/owner/private-secret-token")
+        raise RuntimeError("/Users/test-owner/private-secret-token")
 
     monkeypatch.setattr(builder, "build", fail_build)
     manifest = json.loads(representation_binding.path.read_bytes())
@@ -1574,6 +1574,6 @@ def test_cli_failure_is_sanitized(
     captured = capsys.readouterr()
     assert captured.out == ""
     assert "/Users" not in captured.err
-    assert "owner" not in captured.err
+    assert Path.home().name not in captured.err
     assert "private-secret-token" not in captured.err
     assert '"reason_code": "phase2a_exact_packet_unexpected_runtimeerror"' in captured.err

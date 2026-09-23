@@ -9,6 +9,35 @@ if [[ "${LEGALBOT_HOST:-127.0.0.1}" != "127.0.0.1" ]]; then
   exit 2
 fi
 
+# Development exercises the selected local-Qwen route. A default stub service
+# cannot establish its readiness, and this route does not activate an adapter.
+if [[ "${LEGALBOT_MODEL_MODE:-mlx}" != "mlx" ]]; then
+  echo "Development requires the selected local Qwen runtime (LEGALBOT_MODEL_MODE=mlx)." >&2
+  exit 2
+fi
+if [[ -n "${LEGALBOT_MODEL_ADAPTER_PATH:-}${LEGALBOT_ADAPTER_PATH:-}${LEGALBOT_LORA_PATH:-}" ]]; then
+  echo "The current development route keeps answer adapters inactive." >&2
+  exit 2
+fi
+if [[ -z "${LEGALBOT_DEVELOPMENT_STATE_ID:-}" ]]; then
+  echo "Set LEGALBOT_DEVELOPMENT_STATE_ID to a named isolated development store." >&2
+  exit 2
+fi
+export LEGALBOT_MODEL_MODE=mlx
+export LEGALBOT_MODEL_EAGER_LOAD=true
+export LEGALBOT_ENV=development
+export LEGALBOT_LIVE_PROFILE=standard
+export LEGALBOT_TEST_MODE=false
+if [[ "${LEGALBOT_MODEL_ID:-mlx-community/Qwen3.5-9B-4bit}" != "mlx-community/Qwen3.5-9B-4bit" ]] \
+  || [[ "${LEGALBOT_MODEL_REVISION:-8b2b98c00a6b4d291155e4890773ca8f769aee53}" != "8b2b98c00a6b4d291155e4890773ca8f769aee53" ]] \
+  || [[ "${LEGALBOT_MODEL_PATH:-$project_dir/models/runtime/Qwen3.5-9B-4bit}" != "$project_dir/models/runtime/Qwen3.5-9B-4bit" ]]; then
+  echo "Development requires the pinned Qwen model identity and workspace path." >&2
+  exit 2
+fi
+export LEGALBOT_MODEL_ID=mlx-community/Qwen3.5-9B-4bit
+export LEGALBOT_MODEL_REVISION=8b2b98c00a6b4d291155e4890773ca8f769aee53
+export LEGALBOT_MODEL_PATH="$project_dir/models/runtime/Qwen3.5-9B-4bit"
+
 model_pid=""
 api_pid=""
 web_pid=""

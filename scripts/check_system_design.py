@@ -25,24 +25,40 @@ MAINTAINED_DOCS = [
 ]
 
 
-def synthesize(schema: dict | bool, name: str = "", *, salt: int = 0):
+def synthesize(
+    schema: dict | bool,
+    name: str = "",
+    *,
+    salt: int = 0,
+    root: dict | None = None,
+):
     if schema is True:
         return None
     if schema is False:
         raise AssertionError(f"cannot synthesize forbidden schema at {name}")
+    if root is None:
+        root = schema
+    if "$ref" in schema:
+        reference = schema["$ref"]
+        if not reference.startswith("#/"):
+            raise AssertionError(f"cannot synthesize external reference at {name}: {reference}")
+        target = root
+        for component in reference[2:].split("/"):
+            target = target[component.replace("~1", "/").replace("~0", "~")]
+        return synthesize(target, name, salt=salt, root=root)
     if "const" in schema:
         return schema["const"]
     if "enum" in schema:
         values = [value for value in schema["enum"] if value is not None]
         return values[salt % len(values)] if values else None
     if "oneOf" in schema:
-        return synthesize(schema["oneOf"][0], name, salt=salt)
+        return synthesize(schema["oneOf"][0], name, salt=salt, root=root)
     value_type = schema.get("type")
     if isinstance(value_type, list):
         value_type = next((item for item in value_type if item != "null"), "null")
     if value_type == "object" or ("properties" in schema and value_type is None):
         return {
-            key: synthesize(schema["properties"][key], key, salt=salt)
+            key: synthesize(schema["properties"][key], key, salt=salt, root=root)
             for key in schema.get("required", [])
             if key in schema.get("properties", {})
         }
@@ -54,6 +70,7 @@ def synthesize(schema: dict | bool, name: str = "", *, salt: int = 0):
                 prefix_items[index] if index < len(prefix_items) else item_schema,
                 f"{name}[{index}]",
                 salt=index if schema.get("uniqueItems") is True else 0,
+                root=root,
             )
             for index in range(schema.get("minItems", 0))
         ]
@@ -69,6 +86,11 @@ def synthesize(schema: dict | bool, name: str = "", *, salt: int = 0):
         if schema.get("format") == "date":
             return "2026-09-01"
         pattern = schema.get("pattern", "")
+        if pattern in {
+            r"^20[0-9]{2}-[0-9]{2}-[0-9]{2}$",
+            r"^$|^20[0-9]{2}-[0-9]{2}-[0-9]{2}$",
+        }:
+            return "2026-09-01"
         if "0-9a-f" in pattern and "{64}" in pattern:
             return f"{salt:064x}"[-64:]
         if "A-Za-z0-9" in pattern:

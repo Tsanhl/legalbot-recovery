@@ -18,6 +18,16 @@ from ..config import Settings
 from ..crypto import LocalCipher
 from ..db import Database
 from ..types import QuestionRequest
+from .ge_qwen_development_authority import (
+    GEQwenDevelopmentAdmissionBinding,
+    GE_QWEN_DEVELOPMENT_LANE,
+    replay_ge_qwen_development_admission,
+)
+from .ge_development_chat_authority import (
+    GEDevelopmentChatAdmissionBinding,
+    GE_DEVELOPMENT_CHAT_LANE,
+    replay_development_chat_admission,
+)
 from .live_suite import sealed_sha256
 from .live_suite_admission import (
     Live60AdmissionBinding,
@@ -74,7 +84,13 @@ class VerifiedEvaluationReleaseAuthority:
         if (
             _token is not _VERIFIED_EVALUATION_RELEASE_TOKEN
             or not _SHA256.fullmatch(seal_sha256)
-            or _lane not in {"owner_quality_canary", "live60_evaluation_v2", "live60_o04_v1"}
+            or _lane not in {
+                "owner_quality_canary",
+                GE_QWEN_DEVELOPMENT_LANE,
+                GE_DEVELOPMENT_CHAT_LANE,
+                "live60_evaluation_v2",
+                "live60_o04_v1",
+            }
             or (_lane == "owner_quality_canary")
             != (type(_owner_canary_snapshot) is OwnerCanaryReleaseFilesystemSnapshot)
             or (_owner_canary_content_graph is not None and _lane != "owner_quality_canary")
@@ -162,7 +178,9 @@ def _seal(value: Mapping[str, Any]) -> dict[str, Any]:
 def build_evaluation_job_authority(
     binding: Live60AdmissionBinding
     | Live60EvaluationAdmissionBinding
-    | OwnerCanaryAdmissionBinding,
+    | OwnerCanaryAdmissionBinding
+    | GEQwenDevelopmentAdmissionBinding
+    | GEDevelopmentChatAdmissionBinding,
 ) -> dict[str, Any]:
     """Project one already-replayed API admission into a durable lane contract."""
 
@@ -193,6 +211,49 @@ def build_evaluation_job_authority(
                 ),
                 "owned_runtime_frontier_generation": (binding.owned_runtime_frontier_generation),
                 "owned_runtime_state": binding.owned_runtime_state,
+                "writes_active": False,
+                "release_allowed": True,
+            }
+        )
+    if isinstance(binding, GEQwenDevelopmentAdmissionBinding):
+        return _seal(
+            {
+                "schema": EVALUATION_JOB_AUTHORITY_SCHEMA,
+                "lane": GE_QWEN_DEVELOPMENT_LANE,
+                "mode": "candidate_pinned_reviewed_release",
+                "run_id": binding.run_id,
+                "case_id": binding.case_id,
+                "request_sha256": binding.request_sha256,
+                "candidate_build_id": binding.candidate_build_id,
+                "authority_file_sha256": binding.authority_file_sha256,
+                "authorization_seal_sha256": binding.authority_seal_sha256,
+                "owner_scope_sha256": binding.owner_scope_sha256,
+                "runtime_binding_sha256": binding.runtime_binding_sha256,
+                "idempotency_key_sha256": binding.idempotency_key_sha256,
+                "expected_disposition": binding.expected_disposition,
+                "writes_active": False,
+                "release_allowed": True,
+            }
+        )
+    if isinstance(binding, GEDevelopmentChatAdmissionBinding):
+        return _seal(
+            {
+                "schema": EVALUATION_JOB_AUTHORITY_SCHEMA,
+                "lane": GE_DEVELOPMENT_CHAT_LANE,
+                "mode": "candidate_pinned_reviewed_release",
+                "run_id": binding.run_id,
+                "case_id": binding.case_id,
+                "request_sha256": binding.request_sha256,
+                "candidate_build_id": binding.candidate_build_id,
+                "authority_file_sha256": binding.authority_file_sha256,
+                "authorization_seal_sha256": binding.authority_seal_sha256,
+                "owner_scope_sha256": binding.owner_scope_sha256,
+                "runtime_binding_sha256": binding.runtime_binding_sha256,
+                "idempotency_key_sha256": binding.idempotency_key_sha256,
+                "route_id": binding.route_id,
+                "route_sha256": binding.route_sha256,
+                "remote_processing_consent": binding.remote_processing_consent,
+                "expected_disposition": binding.expected_disposition,
                 "writes_active": False,
                 "release_allowed": True,
             }
@@ -369,6 +430,31 @@ def replay_evaluation_job_authority(
             "release_allowed",
             "seal_sha256",
         },
+        GE_QWEN_DEVELOPMENT_LANE: {
+            "schema",
+            "lane",
+            "mode",
+            "run_id",
+            "case_id",
+            "request_sha256",
+            "candidate_build_id",
+            "authority_file_sha256",
+            "authorization_seal_sha256",
+            "owner_scope_sha256",
+            "runtime_binding_sha256",
+            "idempotency_key_sha256",
+            "expected_disposition",
+            "writes_active",
+            "release_allowed",
+            "seal_sha256",
+        },
+        GE_DEVELOPMENT_CHAT_LANE: {
+            "schema", "lane", "mode", "run_id", "case_id", "request_sha256",
+            "candidate_build_id", "authority_file_sha256", "authorization_seal_sha256",
+            "owner_scope_sha256", "runtime_binding_sha256", "idempotency_key_sha256",
+            "route_id", "route_sha256", "remote_processing_consent", "expected_disposition", "writes_active",
+            "release_allowed", "seal_sha256",
+        },
         "live60_evaluation_v2": {
             "schema",
             "lane",
@@ -400,11 +486,11 @@ def replay_evaluation_job_authority(
     }
     if set(value) != exact_keys_by_lane.get(str(lane), set()):
         raise RuntimeError("evaluation_job_authority_shape_invalid")
-    expected_mode = (
-        "active_bound_o04_evaluation_release"
-        if lane == "live60_o04_v1"
-        else "candidate_pinned_evaluation_release"
-    )
+    expected_mode = {
+        "live60_o04_v1": "active_bound_o04_evaluation_release",
+        GE_QWEN_DEVELOPMENT_LANE: "candidate_pinned_reviewed_release",
+        GE_DEVELOPMENT_CHAT_LANE: "candidate_pinned_reviewed_release",
+    }.get(str(lane), "candidate_pinned_evaluation_release")
     if value.get("mode") != expected_mode:
         raise RuntimeError("evaluation_job_authority_mode_invalid")
     run_id = str(value["run_id"])
@@ -516,6 +602,59 @@ def replay_evaluation_job_authority(
             value.get("owned_runtime_before_checkpoint_sha256"),
             value.get("owned_runtime_frontier_generation"),
             value.get("owned_runtime_state"),
+        )
+    elif lane == GE_QWEN_DEVELOPMENT_LANE:
+        development_binding = replay_ge_qwen_development_admission(
+            settings=settings,
+            row=row,
+            payload=payload,
+            authority=value,
+        )
+        observed = (
+            development_binding.request_sha256,
+            development_binding.candidate_build_id,
+            development_binding.authority_file_sha256,
+            development_binding.authority_seal_sha256,
+            development_binding.owner_scope_sha256,
+            development_binding.runtime_binding_sha256,
+            development_binding.idempotency_key_sha256,
+            development_binding.expected_disposition,
+        )
+        expected = (
+            value.get("request_sha256"),
+            value.get("candidate_build_id"),
+            value.get("authority_file_sha256"),
+            value.get("authorization_seal_sha256"),
+            value.get("owner_scope_sha256"),
+            value.get("runtime_binding_sha256"),
+            value.get("idempotency_key_sha256"),
+            value.get("expected_disposition"),
+        )
+    elif lane == GE_DEVELOPMENT_CHAT_LANE:
+        candidate_row = replay_database.fetchone(
+            "SELECT status FROM index_builds WHERE id=?",
+            (str(value["candidate_build_id"]),),
+        )
+        if candidate_row is None or str(candidate_row["status"]) != "candidate":
+            raise RuntimeError("development_chat_candidate_is_not_non_active")
+        chat_binding = replay_development_chat_admission(
+            settings=settings, row=row, payload=payload, authority=value,
+        )
+        observed = (
+            chat_binding.request_sha256, chat_binding.candidate_build_id,
+            chat_binding.authority_file_sha256, chat_binding.authority_seal_sha256,
+            chat_binding.owner_scope_sha256, chat_binding.runtime_binding_sha256,
+            chat_binding.idempotency_key_sha256, chat_binding.route_id,
+            chat_binding.route_sha256, chat_binding.remote_processing_consent,
+            chat_binding.expected_disposition,
+        )
+        expected = (
+            value.get("request_sha256"), value.get("candidate_build_id"),
+            value.get("authority_file_sha256"), value.get("authorization_seal_sha256"),
+            value.get("owner_scope_sha256"), value.get("runtime_binding_sha256"),
+            value.get("idempotency_key_sha256"), value.get("route_id"),
+            value.get("route_sha256"), value.get("remote_processing_consent"),
+            value.get("expected_disposition"),
         )
     elif lane in {"live60_evaluation_v2", "live60_o04_v1"}:
         live_binding = validate_live60_api_admission(

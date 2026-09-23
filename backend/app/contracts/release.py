@@ -7,9 +7,27 @@ from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 from typing import Any, Literal
 
+from .claim_set import validate_claim_support_graph
+from .retrieval_evidence import validate_retrieval_evidence_scope
 from .schema_registry import ContractSchemaRegistry, canonical_json_bytes, seal_contract
 
 PublicReleaseState = Literal["verified_full", "verified_concise", "verified_limited"]
+
+_GLOBAL_RELEASE_CHECKS = frozenset({"identity", "privacy", "output_shape"})
+_CLAIM_CHECKS = {
+    "user_fact": frozenset({"fact_provenance"}),
+    "legal_rule": frozenset({"evidence_support", "currentness", "citation", "contradiction"}),
+    "application": frozenset(
+        {
+            "fact_provenance",
+            "evidence_support",
+            "currentness",
+            "citation",
+            "contradiction",
+        }
+    ),
+    "limitation": frozenset({"evidence_support", "citation", "contradiction"}),
+}
 
 
 def _utc(value: datetime) -> str:
@@ -33,6 +51,44 @@ def committed_terminal_event_id(
         )
     ).hexdigest()
     return f"event-{identity[:40]}"
+
+
+def validate_release_checks(
+    *,
+    claim_set: Mapping[str, Any],
+    validation_report: Mapping[str, Any],
+) -> None:
+    """Require positive, claim-addressed validation before public release."""
+
+    if validation_report["advisory_review"]["status"] in {"FAIL", "UNCERTAIN"}:
+        raise ValueError("unresolved advisory review cannot publish")
+    checks = list(validation_report["checks"])
+    passed_global = {
+        check["kind"]
+        for check in checks
+        if check["result"] == "PASS" and check["material"]
+    }
+    missing_global = _GLOBAL_RELEASE_CHECKS - passed_global
+    if missing_global:
+        raise ValueError(
+            "release is missing mandatory global validation checks: "
+            + ",".join(sorted(missing_global))
+        )
+    pass_coverage: dict[str, set[str]] = {}
+    for check in checks:
+        if check["result"] == "PASS" and check["material"]:
+            pass_coverage.setdefault(check["kind"], set()).update(check["affected_ids"])
+    for claim in claim_set["claims"]:
+        if not claim["material"]:
+            continue
+        required = set(_CLAIM_CHECKS[claim["kind"]])
+        if claim["materiality_basis"] == "remedy_or_deadline":
+            required.add("date_amount")
+        for kind in required:
+            if claim["claim_id"] not in pass_coverage.get(kind, set()):
+                raise ValueError(
+                    f"material claim lacks a passing {kind} validation: {claim['claim_id']}"
+                )
 
 
 def build_verified_release(
@@ -75,6 +131,18 @@ def build_verified_release(
         validation_report,
     ):
         registry.validate_new(value)
+    validate_retrieval_evidence_scope(
+        query_plan=query_plan,
+        retrieval_result=retrieval_result,
+        evidence_pack=evidence_pack,
+    )
+    validate_claim_support_graph(
+        claim_set,
+        issue_ids=query_plan["issue_ids"],
+        evidence_ids=[item["evidence_id"] for item in evidence_pack["selected"]],
+        facts=fact_snapshot["facts"],
+    )
+    validate_release_checks(claim_set=claim_set, validation_report=validation_report)
     if validation_report["final_disposition"] != release_state:
         raise ValueError("validation disposition does not authorize this release state")
     if any(
@@ -105,6 +173,16 @@ def build_verified_release(
             validation_report["evidence_pack_sha256"],
             evidence_pack["content_sha256"],
             "validation evidence",
+        ),
+        (validation_report["fact_snapshot_sha256"], fact_snapshot["content_sha256"], "validation facts"),
+        (validation_report["policy_sha256"], query_plan["policy_sha256"], "validation policy"),
+        (validation_report["draft_id"], claim_set["draft_id"], "validation draft"),
+        (validation_report["draft_sha256"], claim_set["draft_sha256"], "validation draft digest"),
+        (evidence_pack["candidate_id"], query_plan["candidate_id"], "evidence candidate"),
+        (
+            evidence_pack["index_generation_sha256"],
+            retrieval_result["candidate_sha256"],
+            "evidence generation",
         ),
         (
             validation_report_sha256,
@@ -280,4 +358,5 @@ __all__ = [
     "build_complete_answer_job",
     "build_verified_release",
     "committed_terminal_event_id",
+    "validate_release_checks",
 ]

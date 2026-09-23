@@ -7,7 +7,13 @@ from .capability import (
     build_runtime_capability_manifest,
     require_runtime_operation,
 )
-from .claim_set import ClaimContractInput, ClaimKind, MaterialityBasis, build_claim_set
+from .claim_set import (
+    ClaimContractInput,
+    ClaimKind,
+    MaterialityBasis,
+    build_claim_set,
+    validate_claim_support_graph,
+)
 from .integrity_chain import (
     AnswerIntegrityChainVerifier,
     IntegrityChainError,
@@ -29,11 +35,13 @@ from .release import (
     build_complete_answer_job,
     build_verified_release,
     committed_terminal_event_id,
+    validate_release_checks,
 )
 from .retrieval_evidence import (
     QualifiedEvidenceInput,
     RetrievalEvidenceContracts,
     build_retrieval_evidence_contracts,
+    validate_retrieval_evidence_scope,
 )
 from .schema_registry import (
     CanonicalJSONError,
@@ -98,4 +106,7 @@ __all__ = [
     "load_json_strict",
     "require_runtime_operation",
     "seal_contract",
+    "validate_claim_support_graph",
+    "validate_release_checks",
+    "validate_retrieval_evidence_scope",
 ]

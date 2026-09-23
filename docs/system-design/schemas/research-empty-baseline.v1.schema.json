@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.legalbot.invalid/schemas/research-empty-baseline.v1.schema.json",
+  "title": "LegalBot Non-live Research Empty Baseline v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "generation_id",
+    "source_manifest_sha256",
+    "qualification_policy_sha256",
+    "sources",
+    "toolchain",
+    "counts",
+    "file_manifest_sha256",
+    "closure_status",
+    "attestations",
+    "created_at",
+    "sealed_at",
+    "content_sha256",
+    "non_live",
+    "production_admission",
+    "training"
+  ],
+  "properties": {
+    "schema": {
+      "const": "legalbot.research-empty-baseline.v1"
+    },
+    "generation_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,254}$"
+    },
+    "source_manifest_sha256": {
+      "const": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "qualification_policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parser_sha256",
+        "ocr_sha256",
+        "chunker_sha256",
+        "tokenizer_sha256",
+        "embedding_model_sha256",
+        "lexical_config_sha256",
+        "vector_schema_sha256",
+        "reranker_model_sha256"
+      ],
+      "properties": {
+        "parser_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ocr_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "chunker_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "tokenizer_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "embedding_model_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "lexical_config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "vector_schema_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "reranker_model_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_versions",
+        "canonical_objects",
+        "chunks",
+        "lexical_rows",
+        "vector_rows",
+        "embedding_dimensions"
+      ],
+      "properties": {
+        "source_versions": {
+          "const": 0
+        },
+        "canonical_objects": {
+          "const": 0
+        },
+        "chunks": {
+          "const": 0
+        },
+        "lexical_rows": {
+          "const": 0
+        },
+        "vector_rows": {
+          "const": 0
+        },
+        "embedding_dimensions": {
+          "const": 1024
+        }
+      }
+    },
+    "file_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "closure_status": {
+      "const": "validated"
+    },
+    "attestations": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "status",
+          "evidence_sha256",
+          "reason_code"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_RUN"
+            ]
+          },
+          "evidence_sha256": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason_code": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:-]{0,127}$"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sealed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "non_live": {
+      "const": true
+    },
+    "production_admission": {
+      "const": false
+    },
+    "training": {
+      "const": false
+    }
+  },
+  "description": "Exact zero-source common baseline for isolated online research evaluation only. It is not source qualification, a production generation, admission, training, promotion or live authority."
+}

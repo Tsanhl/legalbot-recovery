@@ -33,7 +33,6 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 DETERMINISTIC_SAFETY_FAILURE_CODES = frozenset(
     {
-        "applicable_avoidance_standard_failed",
         "authority_identity_failed",
         "case_subsequent_treatment_unverified",
         "chunk_embedding_count_mismatch",

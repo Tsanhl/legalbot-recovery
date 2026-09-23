@@ -21,7 +21,7 @@ DEFAULT_MANIFESTS = (
     PROJECT_ROOT
     / "config/seminar_gap_official_legislation_round2.2026-08-26.v2-enacted-repair.json",
 )
-DEFAULT_SOURCE_ROOT = Path("/Users/owner/Desktop/Law")
+DEFAULT_SOURCE_ROOT = (Path.home() / "Desktop" / "Law")
 DEFAULT_OUTPUT = (
     PROJECT_ROOT
     / "data/review_queue/seminar-gap-official-legislation-round2-2026-08-26-explicit-ingestion.json"

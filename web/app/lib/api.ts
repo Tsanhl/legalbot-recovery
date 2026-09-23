@@ -40,6 +40,25 @@ import type {
 const configuredBase = import.meta.env.VITE_LEGAL_API_BASE?.replace(/\/$/, "");
 export const API_BASE = configuredBase || "/api/v1";
 
+export interface DevelopmentChatConnection {
+  authoritySha256: string;
+  accessKey: string;
+  routeId: "qwen_local" | "local_endpoint" | "hosted_api" | "anthropic_api" | "gemini_api" | "codex_bridge";
+  remoteConsent: boolean;
+}
+
+let developmentChatConnection: DevelopmentChatConnection | null = null;
+
+function developmentHeaders(): Record<string, string> {
+  if (!developmentChatConnection) return {};
+  return {
+    "X-Development-Chat-Authority-SHA256": developmentChatConnection.authoritySha256,
+    "X-Development-Chat-Access-Key": developmentChatConnection.accessKey,
+    "X-Development-Chat-Route": developmentChatConnection.routeId,
+    ...(developmentChatConnection.remoteConsent ? { "X-Development-Chat-Remote-Consent": "yes" } : {}),
+  };
+}
+
 export class ApiError extends Error {
   status: number;
   code: string;
@@ -107,16 +126,19 @@ export function jobWebSocketUrl(jobId: string, supplied?: string, after = 0): st
 }
 
 export const api = {
+  setDevelopmentChatConnection: (connection: DevelopmentChatConnection | null) => {
+    developmentChatConnection = connection;
+  },
   health: () => request<HealthRecord>("/health"),
   conversations: () => items<ConversationSummary>("/conversations"),
   createAnswer: (body: QuestionRequest, idempotencyKey: string) =>
     request<QuestionAccepted>("/questions", {
       method: "POST",
       body: JSON.stringify(body),
-      headers: { "X-Idempotency-Key": idempotencyKey },
+      headers: { "X-Idempotency-Key": idempotencyKey, ...developmentHeaders() },
     }),
-  answer: (id: string) => request<AnswerRecord>(`/answers/${encodeURIComponent(id)}`),
-  job: (id: string) => request<JobRecord>(`/jobs/${encodeURIComponent(id)}`),
+  answer: (id: string) => request<AnswerRecord>(`/answers/${encodeURIComponent(id)}`, { headers: developmentHeaders() }),
+  job: (id: string) => request<JobRecord>(`/jobs/${encodeURIComponent(id)}`, { headers: developmentHeaders() }),
   cancelJob: (id: string) =>
     request<{ job_id: string; cancel_requested: boolean }>(
       `/jobs/${encodeURIComponent(id)}/cancel`,
@@ -126,7 +148,7 @@ export const api = {
   jobEventsWebSocketUrl: (id: string, supplied?: string, after = 0) =>
     jobWebSocketUrl(id, supplied, after),
   evidence: (answerId: string) =>
-    request<AnswerEvidence>(`/answers/${encodeURIComponent(answerId)}/evidence`),
+    request<AnswerEvidence>(`/answers/${encodeURIComponent(answerId)}/evidence`, { headers: developmentHeaders() }),
   feedback: (answerId: string, body: AnswerFeedbackRequest) =>
     request<AnswerFeedbackResult>(`/answers/${encodeURIComponent(answerId)}/feedback`, {
       method: "POST",

@@ -1,6 +1,16 @@
 # LegalBot v1.11 delivery roadmap — three phases
 
-Date: 1 September 2026. The owner has accepted the current system-design
+## Development route extension — 23 September 2026
+
+The [shared-backend/model-route plan](system-design/GE_PRE_BROWSER_IMPROVEMENT_PLAN.md#23-september-development-chat-implementation-and-exact-remaining-gates) adds Codex, API and linked local-model routes alongside Qwen. After the owner answered “both,” a scoped owner-development admission, provider seam and website selector were implemented. The work still fits the existing three phases:
+
+1. **System design:** provider boundaries, connection UX, schema mapping, data/tool policy and acceptance criteria.
+2. **Evaluation → improvement/conditional training → unseen:** finish shared development admission, reviewed retrieval and answer/review/publication; implement adapters; prove the real website route and expected holds; qualify each advertised route; diagnose Qwen separately; preserve the exact protected one-pass gate.
+3. **Live last:** complete the exact chosen route's operational, source, privacy and owner activation requirements.
+
+The first alternate-provider milestone remains one supported answer and one expected hold through the actual API/worker/AnswerRunner and website with every shared control active. Synthetic admission/transport tests and a frontend build pass. The actual Qwen route produced a held draft and a model-call timeout, with no published answer. A narrow Codex CLI/filesystem isolation check passed; actual Codex/API inference, full isolation and provider identity remain unproved. No training run, protected dispatch or live readiness is claimed. Shared infrastructure work need not wait for Qwen training or unfinished protected-bank construction. Earlier roadmap status is historical where it conflicts with the later “both” instruction.
+
+Updated: 5 September 2026. The owner has accepted the current system-design
 amendments. The design remains editable in place; a requested design improvement
 does not create another phase, archive or approval receipt.
 
@@ -45,20 +55,53 @@ contracts and schemas are in [system-design/](system-design/README.md). Future
 design changes update these files directly.
 
 The visible GE review bank retains all 331 accepted cases. The 32 synthetic system
-scenarios are counted separately. The 306 private unseen drafts remain in separate
-custody and do not enter visible review, calibration or training. Essay and PB
+scenarios are counted separately. The 306 private unseen drafts were later consumed
+once and retired; they do not enter visible review, calibration or training. Essay and PB
 packages remain present. These question packages are drafts and review inputs,
 not legal gold or training authority.
 
 ## Phase 2 — evaluation → training/improvement → unseen
 
-**Status: active at the technical-rebuild and evaluation-preparation
-prerequisites. The diagnostic 331+60 pack was returned for revision on
-2 September 2026. Exact legal/model/review inputs and their applicable owner
-decisions are still required before authorizing answer-model evaluation.**
+**Status: `CODEX_UNSEEN_UK_US_CREATION_RUNNING`.**
+The current run remains `LegalBot-GE-2026-09-05-codex-unseen-r1` in preseal working
+creation. The owner directs UK and USA first, other countries later; the
+[scope amendment](../data/evaluations/general-enquiries/LegalBot-GE-2026-09-05-codex-unseen-r1/UK-USA-SCOPE-AMENDMENT.json) is recorded and verified.
+Plan 420 legal cases across 35 domains: 210 UK (England 70, Wales 70, Scotland 35,
+Northern Ireland 35) and 210 USA (all 50 states plus DC, explicit locations,
+4–5 cases each, federal/state applicability per issue), plus 23 separate system
+cases. These limited samples do not prove all legal areas in every state.
+Explicitly route or defer US territories, tribal law and unsupported law.
+Use `cross-border-trade-regulation`, retaining the historical
+`eu-internal-market-law` mapping.
 
-The technical rebuild and verification are prerequisites inside Phase 2. They do
-not create a fourth phase. The order is:
+"Create, review, then run once; no training" remains authorized with separate Codex
+author/researcher/reviewer roles and no further execution approval for this pack.
+The UK/USA authoring pilot has started. Prior stopped drafts,
+failed files, immutable artifacts and original verifiers remain preserved.
+Question creation and verified-source/review completion are not claimed;
+`bank_sealed=false`, `candidate_executed=false`, and no candidate answers exist.
+
+Complete preseal factual/currentness and fair-oracle review, verify actual upload
+ingestion, withhold future turns and freeze scoring rules before candidate answers.
+Bind exact bank/runtime hashes, then run once without another authorization request.
+Keep all 420 cases in the legal denominator and all 23 system results separate.
+This is a scoped experimental scenario-first Codex diagnostic with same-provider
+role separation, not professional assurance or product deployment certification.
+The earlier 23/23 supplied-source visible pass does not prove broader runtime
+capability or guarantee 100% correctness. No weight training, adapter activation,
+promotion or live use is authorized. The consumed 306 bank remains excluded.
+See the [governing working design](system-design/GE_EVERYDAY_UNSEEN.md).
+
+Automatic official-source research, chunking, embedding inference and non-live DB
+indexing are now authorized for actual gaps, with the [full integration plan](system-design/GE_KNOWLEDGE_GAP_AUTOMATION.md)
+kept inside Phase 2. This feature is not yet connected end to end. It needs visible
+validation and an exact runtime binding before an unseen run can test it. Bank
+reference selections and unseen findings cannot feed shared development/training.
+Indexing is non-weight improvement; the current no-training instruction persists.
+
+The technical rebuild and verification remain inside Phase 2. The sequence below
+retains the earlier visible/training/unseen history; the current 420+23 successor
+above governs its own authorized work and does not reopen the frozen 331.
 
 1. Verify the technical baseline, qualified sources, currentness, gold, model
    transport, resources, private review roots and exact evaluation contract.
@@ -80,25 +123,43 @@ not create a fourth phase. The order is:
    prompt/code, output validation or gold. For missing knowledge, use allowlisted
    official-source quarantine/review followed by deterministic chunks and embeddings
    in a new immutable non-ACTIVE generation; never write directly to the active
-   vector generation. Weight training remains a separate later gate and uses only a
-   new approved corpus that excludes all evaluation, user and unseen material.
-8. After targeted verification, rerun all 331 principal cases, all separate 32
-   system scenarios and all accumulated diagnostics on the exact improved candidate.
-   Repeat diagnosis, repair and complete rerun until the GE exit gate passes. Stop a
-   path before a third attempt when the same stable fingerprint has failed twice
-   despite targeted repairs.
+   vector generation. The owner later approved one exact-hash training exception:
+   13 AI-accepted visible answers, now retired from external scoring. The local r2
+   LoRA run completed with all seven holds, the other 310 rows, user material and
+   the sealed private bank excluded; the adapter remains inactive.
+8. Under a separate owner gate, run a fresh visible successor evaluation on the
+   exact base-plus-adapter candidate, excluding the 13 training hashes. Apply the
+   same factual and 70+/critical-floor gates. Internal loss improvement does not
+   satisfy this step. Diagnose and repair any failure without reopening the frozen
+   331 or using sealed unseen as a debugging source. The owner-authorized r2
+   comparison completed with 10/23 adapter factual passes, 8/23 full passes and
+   one factual regression, so it returned HOLD. The visible-only repair then
+   passed all 15 changed hashes. A separate Codex-route evaluation used 23 new
+   questions and new official locators and passed 23/23 factual, 23/23
+   70+/critical-floor and all regression gates. It is same-provider AI evidence,
+   not professional legal sign-off or independent second-model assurance.
 9. Accept GE closure only when every principal answer passes the factual gate and
    the 70+ critical-floor standard, every system scenario and diagnostic passes, no
    critical/high finding, in-scope gap, unverified repair or material regression
    remains, exact run identities match and unseen custody/exposure is clean.
-10. Only after owner acceptance, run the separately protected unseen scope once. Never
-   tune the tested candidate using unseen prompts or findings.
+   The owner-authorized AI route may advance exact answers into an AI evaluation-gold candidate set. The later 13-hash training authorization is exhausted by the completed r2 experiment; neither action closes GE or creates answer legal gold.
+10. The separately authorized protected unseen run completed once. It returned
+   HOLD and retired the 306-case bank from fresh-unseen use. Never tune the tested
+   candidate using those prompts or findings. The later 420+23 successor has its
+   own creation/review/one-pass authority and Codex role separation. Clean visible
+   work after that run did not access the consumed prompts or findings. Two early
+   fresh routes and their bounded repairs were retained as diagnostic evidence;
+   the final distinct source/plan-audited route passed 23/23 factual and 23/23
+   70+/floor with 108/108 declared claims reviewed. That result permits preparation
+   of a concrete new-bank design and custody proposal. Creation and execution
+   authority came from the later owner decision above, not from that score.
 
-The 331 questions/answers, 32 system scenarios/results, every visible diagnostic,
-external gold/reviewer material, user histories/uploads and private unseen content
-or findings never become training data. A change to a tested candidate or any bound
-input requires a new attributable run. This is run reproducibility, not a freeze of
-the system design. Technical run validity alone is not GE closure.
+The default training exclusion covers the 331 questions/answers, 32 system
+scenarios/results, every visible diagnostic, external gold/reviewer material, user
+histories/uploads and private unseen content or findings. The 4 September owner
+decision supersedes that default only for the named 13 exact hashes, which are now
+retired from external scoring. A change to a tested candidate or any bound input
+requires a new attributable run. Technical run validity alone is not GE closure.
 
 After the GE exit and owner acceptance, the requested GitHub update is handled by a
 separate reviewed publication gate. That gate binds the exact diff, validation
@@ -111,8 +172,9 @@ or push is claimed or authorized merely by this roadmap update.
 
 After Phase 2 acceptance, complete operational readiness, promotion, backup and
 restore proof, rollback, reconnect/cancellation behaviour, monitoring, incident
-handling and the final live decision. The first release remains a loopback-only,
-England-and-Wales owner pilot.
+handling and the final live decision. The deployment boundary remains a loopback-only
+owner pilot. The current design focuses on UK and USA, with other countries later;
+this scope amendment does not establish release coverage or authorize live use.
 
 The product goal is accessible lawyer-like information and triage. It must not
 claim legal representation, a lawyer-client relationship, guaranteed outcomes or

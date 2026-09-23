@@ -3,7 +3,8 @@
 An unsigned or PENDING overlay is a no-op. Only an owner-signed APPROVE
 receipt may satisfy currentness and verified-extent checks. Effects must be
 reviewed; they do not have to be zero. This module never sets legal gold by
-itself.
+itself. The frozen resolved pack still stores `locator_evaluation_gold`; the
+active label for that field is OWNER_ADOPTED_LOCATOR_EVALUATION_DECISION.
 """
 
 from __future__ import annotations
@@ -14,6 +15,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+LOCATOR_EVALUATION_LABEL = "OWNER_ADOPTED_LOCATOR_EVALUATION_DECISION"
 
 _MONTHS = {
     "january": "01",
@@ -85,6 +88,10 @@ class LocatorGoldReceipt:
     mandatory_evidence_route: bool
 
     @property
+    def evaluation_decision_label(self) -> str:
+        return LOCATOR_EVALUATION_LABEL
+
+    @property
     def is_effective_approve(self) -> bool:
         return (
             self.owner_signed is True
@@ -153,6 +160,10 @@ class LocatorGoldOverlay:
     evaluation_as_of_date: str
     receipts: tuple[LocatorGoldReceipt, ...]
     owner_pack_signed: bool
+
+    @property
+    def evaluation_decision_label(self) -> str:
+        return LOCATOR_EVALUATION_LABEL
 
     def lookup(self, row: Mapping[str, Any]) -> LocatorGoldReceipt | None:
         source_id = str(row.get("source_version_id") or "")

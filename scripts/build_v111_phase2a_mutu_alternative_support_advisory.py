@@ -986,7 +986,7 @@ def _privacy_check(value: Any) -> None:
             lowered = nested.casefold()
             if (
                 "/users/" in lowered
-                or "owner" in lowered
+                or Path.home().name.casefold() in lowered
                 or "legalbot-new" in lowered
                 or "file://" in lowered
                 or nested.startswith(("~/", "~\\"))

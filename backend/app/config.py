@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -33,6 +34,21 @@ class Settings:
     host: str = os.getenv("LEGALBOT_HOST", "127.0.0.1")
     port: int = int(os.getenv("LEGALBOT_PORT", "8777"))
     environment: str = os.getenv("LEGALBOT_ENV", "development")
+    development_state_id: str | None = field(
+        default_factory=lambda: os.getenv("LEGALBOT_DEVELOPMENT_STATE_ID") or None
+    )
+    development_candidate_build_id: str | None = field(
+        default_factory=lambda: os.getenv("LEGALBOT_DEVELOPMENT_CANDIDATE_BUILD_ID") or None
+    )
+    development_authority_sha256: str | None = field(
+        default_factory=lambda: os.getenv("LEGALBOT_DEVELOPMENT_AUTHORITY_SHA256") or None
+    )
+    development_chat_authority_sha256: str | None = field(
+        default_factory=lambda: os.getenv("LEGALBOT_DEVELOPMENT_CHAT_AUTHORITY_SHA256") or None
+    )
+    development_retrieval_manifest_sha256: str | None = field(
+        default_factory=lambda: os.getenv("LEGALBOT_DEVELOPMENT_RETRIEVAL_MANIFEST_SHA256") or None
+    )
     live_profile: str = os.getenv("LEGALBOT_LIVE_PROFILE", STANDARD_LIVE_PROFILE)
     test_mode: bool = _env_bool("LEGALBOT_TEST_MODE")
     model_url: str = os.getenv("LEGALBOT_MODEL_URL", "http://127.0.0.1:8778")
@@ -91,6 +107,47 @@ class Settings:
     )
 
     def __post_init__(self) -> None:
+        if self.development_candidate_build_id is not None and (
+            self.development_state_id is None
+            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", self.development_candidate_build_id)
+        ):
+            raise ValueError("development candidate requires isolated state and a valid build ID")
+        if self.development_state_id is not None:
+            if (
+                self.environment != "development"
+                or self.live_profile != STANDARD_LIVE_PROFILE
+                or self.host != "127.0.0.1"
+                or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", self.development_state_id)
+            ):
+                raise ValueError("isolated state requires a named loopback development runtime")
+            root = self.project_root.resolve()
+            isolated = root / "data" / "development-runtime" / self.development_state_id
+            if isolated.resolve() != isolated:
+                raise ValueError("isolated development state cannot follow symlinks")
+        if self.development_authority_sha256 is not None and (
+            self.development_state_id is None
+            or self.development_candidate_build_id is None
+            or not re.fullmatch(r"[0-9a-f]{64}", self.development_authority_sha256)
+        ):
+            raise ValueError(
+                "development authority requires isolated state, a candidate, and a SHA-256"
+            )
+        if self.development_chat_authority_sha256 is not None and (
+            self.development_state_id is None
+            or self.development_candidate_build_id is None
+            or not re.fullmatch(r"[0-9a-f]{64}", self.development_chat_authority_sha256)
+        ):
+            raise ValueError(
+                "development chat authority requires isolated state, a candidate, and a SHA-256"
+            )
+        if self.development_retrieval_manifest_sha256 is not None and (
+            self.development_state_id is None
+            or self.development_candidate_build_id is None
+            or not re.fullmatch(r"[0-9a-f]{64}", self.development_retrieval_manifest_sha256)
+        ):
+            raise ValueError(
+                "development retrieval manifest requires isolated state, a candidate, and a SHA-256"
+            )
         if self.live_profile not in {
             STANDARD_LIVE_PROFILE,
             FIRST_LIVE_LOCAL_ONLY_PROFILE,
@@ -142,6 +199,11 @@ class Settings:
 
     @property
     def data_dir(self) -> Path:
+        if self.development_state_id is not None:
+            return (
+                self.project_root.resolve() / "data" / "development-runtime"
+                / self.development_state_id / "data"
+            )
         return self.project_root / "data"
 
     @property
@@ -181,6 +243,26 @@ class Settings:
         return self.data_dir / "evaluations"
 
     @property
+    def development_authority_path(self) -> Path:
+        """Fixed, isolated capability file for candidate-bound visible work."""
+
+        if self.development_state_id is None:
+            raise RuntimeError("development authority requires isolated state")
+        return self.data_dir.parent / "GE-QWEN-DEVELOPMENT-AUTHORITY.json"
+
+    @property
+    def development_chat_authority_path(self) -> Path:
+        if self.development_state_id is None:
+            raise RuntimeError("development chat authority requires isolated state")
+        return self.data_dir.parent / "GE-DEVELOPMENT-CHAT-AUTHORITY.json"
+
+    @property
+    def development_retrieval_manifest_path(self) -> Path:
+        if self.development_state_id is None:
+            raise RuntimeError("development retrieval manifest requires isolated state")
+        return self.data_dir.parent / "GE-QWEN-DEVELOPMENT-RETRIEVAL.json"
+
+    @property
     def completion_memory_policy_path(self) -> Path:
         """Fixed owner-private completion-preflight memory policy location."""
 
@@ -194,6 +276,8 @@ class Settings:
 
     @property
     def logs_dir(self) -> Path:
+        if self.development_state_id is not None:
+            return self.data_dir.parent / "logs"
         return self.project_root / "logs"
 
     @property
@@ -293,6 +377,8 @@ class Settings:
             self.operational_metrics_dir,
             self.operational_traces_dir,
         ):
+            if self.development_state_id is not None and path.resolve() != path:
+                raise ValueError("isolated development directories cannot follow symlinks")
             path.mkdir(parents=True, exist_ok=True)
             path.chmod(0o700)
 

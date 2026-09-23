@@ -8,8 +8,9 @@ from pathlib import Path
 PROMPTS_DIR = Path(__file__).resolve().parent / "evaluation" / "prompts"
 PROPOSER_TEMPLATE_NAME = "proposer_mapping.v2.txt"
 SEMANTIC_VERIFIER_TEMPLATE_NAME = "semantic_verifier.v2.txt"
-AI_EVIDENCE_REVIEWER_TEMPLATE_NAME = "ai_evidence_reviewer.v2.txt"
-DRAFT_GENERATOR_TEMPLATE_NAME = "draft_generator.v4.txt"
+AI_EVIDENCE_REVIEWER_TEMPLATE_NAME = "ai_evidence_reviewer.v3.txt"
+FULL_ANSWER_REVIEWER_TEMPLATE_NAME = "full_answer_reviewer.v2.txt"
+DRAFT_GENERATOR_TEMPLATE_NAME = "draft_generator.v5.txt"
 
 
 def prompt_template_bytes(name: str) -> bytes:
@@ -30,4 +31,5 @@ def prompt_template_text(name: str) -> str:
 PROPOSER_TEMPLATE_SHA256 = prompt_template_sha256(PROPOSER_TEMPLATE_NAME)
 SEMANTIC_VERIFIER_TEMPLATE_SHA256 = prompt_template_sha256(SEMANTIC_VERIFIER_TEMPLATE_NAME)
 AI_EVIDENCE_REVIEWER_TEMPLATE_SHA256 = prompt_template_sha256(AI_EVIDENCE_REVIEWER_TEMPLATE_NAME)
+FULL_ANSWER_REVIEWER_TEMPLATE_SHA256 = prompt_template_sha256(FULL_ANSWER_REVIEWER_TEMPLATE_NAME)
 DRAFT_GENERATOR_TEMPLATE_SHA256 = prompt_template_sha256(DRAFT_GENERATOR_TEMPLATE_NAME)

@@ -39,19 +39,40 @@ from app.evaluation.ge_diagnostic_evaluator import (
     combined_answer,
     displayed_quote,
     evaluate_factual_checks,
+    has_operative_legal_predicate,
+    is_punctuation_only,
+    issue_relevance,
     locator_hints_for_case,
+    passage_completeness,
     training_eligibility,
     training_example_label,
     unseen_family_summary,
     user_facing_answer,
 )
 from app.evaluation.ge_factual_gap_fill import sidecar_packs
+from app.evaluation.ge_hold_reason_router import (
+    CASE_008,
+    CASE_174,
+    CASE_312,
+    load_targeted_repair_case_ids,
+    route_results,
+)
+from app.evaluation.ge_kajima_mediation_family import (
+    mediation_family_locator_allowed,
+)
 from app.evaluation.ge_locator_gold_overlay import (
     LocatorGoldOverlay,
     load_locator_gold_overlay,
+    normalize_locator,
     titles_equivalent,
 )
-from app.evaluation.ge_phase2_progress import phase2_progress
+from app.evaluation.ge_phase2_progress import (
+    NO_OP_UNCHANGED_CASE_INPUTS,
+    NO_OP_UNCHANGED_INPUTS,
+    evaluation_fingerprint,
+    input_fingerprint_unchanged,
+    phase2_progress,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 VISIBLE_PACK = PROJECT_ROOT / "data/evaluations/general-enquiries/LegalBot-GE-2026-09-01-review-r3"
@@ -71,6 +92,63 @@ DEFAULT_OUTPUT = (
     PROJECT_ROOT
     / "data/evaluations/general-enquiries"
     / "LegalBot-GE-2026-09-01-improvement-training-unseen-r1"
+)
+FROZEN_EVALUATION_FINGERPRINT = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-control-plane-router-r1"
+    / "EVALUATION-FINGERPRINT.json"
+)
+FROZEN_R2_RESULTS = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-visible-331-diagnostic-r2"
+    / "visible"
+    / "RESULTS.jsonl"
+)
+FROZEN_PASS_REGRESSION = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-control-plane-router-r1"
+    / "FROZEN-PASS-REGRESSION.json"
+)
+DEFAULT_REPAIR_QUEUE_R1 = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-control-plane-router-r1"
+    / "TARGETED-REPAIR-QUEUE.json"
+)
+DEFAULT_REPAIR_OUTPUT = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-mechanical-repair-delta-r1"
+)
+DEFAULT_REPAIR_QUEUE = DEFAULT_REPAIR_OUTPUT / "TARGETED-REPAIR-QUEUE.json"
+CLAIM_LEVEL_PACK = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-claim-level-and-review-prep-r1"
+)
+DEFAULT_CLAIM_REPAIR_QUEUE = CLAIM_LEVEL_PACK / "TARGETED-REPAIR-QUEUE.json"
+CONTROL_PLANE_V2_PACK = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-evaluation-control-plane-v2-r1"
+)
+MEDIATION_FAMILY_KAJIMA_PACK = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-mediation-family-kajima-delta-r1"
+)
+VISIBLE_331_R3_PACK = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-02-visible-331-diagnostic-r3"
+)
+MECHANICAL_REPAIR_DELTA_R2_PACK = (
+    PROJECT_ROOT
+    / "data/evaluations/general-enquiries"
+    / "LegalBot-GE-2026-09-03-mechanical-repair-delta-r1"
 )
 
 SCHEMA = "legalbot.ge-improvement-training-unseen-run.v1"
@@ -191,6 +269,8 @@ TOPIC_SOURCES: Mapping[str, tuple[str, ...]] = {
         "Equality Act 2010",
         "R (UNISON) v Lord Chancellor",
         "The Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018",
+        "R (Moseley) v London Borough of Haringey",
+        "Osborn v The Parole Board",
     ),
     "ai-and-data-protection": (
         "Human Rights Act 1998",
@@ -280,6 +360,8 @@ TOPIC_SOURCES: Mapping[str, tuple[str, ...]] = {
         "Consumer Protection Act 1987",
         "The Civil Procedure Rules 1998",
         "TUI UK Ltd v Griffiths",
+        "Montgomery v Lanarkshire Health Board",
+        "McCulloch and others v Forth Valley Health Board",
     ),
     "pensions-law": (
         "Employment Rights Act 1996",
@@ -317,6 +399,10 @@ TOPIC_SOURCES: Mapping[str, tuple[str, ...]] = {
         "Perpetuities and Accumulations Act 2009",
         "Twinsectra Ltd v Yardley",
         "Bank of Cyprus UK Ltd v Menelaou",
+        "Byers and others v Saudi National Bank",
+        "Rukhadze and others v Recovery Partners GP Ltd and another",
+        "Stevens v Hotel Portfolio II UK Ltd (In Liquidation) and another",
+        "Mitchell and another (Joint Liquidators of MBI International & Partners Inc (In Liquidation)) v Sheikh Mohamed Bin Issa Al Jaber",
     ),
     "wills-and-estates": (
         "Wills Act 1837",
@@ -501,13 +587,61 @@ ISSUE_LOCATOR_HINTS: Mapping[str, tuple[tuple[str, str], ...]] = {
     "stay": (("Arbitration Act 1996", "section 9"),),
     "icc-mediation": (
         ("ICC Mediation Rules (contractually incorporated edition)", "article 5"),
-        ("Ohpen Operations UK Ltd v Invesco Fund Managers Ltd", "para 32"),
-        ("Kajima Construction Europe (UK) Ltd v Children's Ark Partnership Ltd", "para 1"),
-        ("Churchill v Merthyr Tydfil County Borough Council", "para 1"),
+        ("Ohpen Operations UK Ltd v Invesco Fund Managers Ltd", "paragraph 32"),
+        ("Kajima Construction Europe (UK) Ltd v Children's Ark Partnership Ltd", "paragraph 29"),
+        ("Churchill v Merthyr Tydfil County Borough Council", "paragraph 58"),
+        ("The Civil Procedure Rules 1998", "rule 1.1"),
+        ("The Civil Procedure Rules 1998", "rule 1.1(2)(f)"),
+        ("The Civil Procedure Rules 1998", "rule 1.4"),
+        ("The Civil Procedure Rules 1998", "rule 1.4(2)(e)"),
+        ("The Civil Procedure Rules 1998", "rule 3.1"),
+        ("The Civil Procedure Rules 1998", "rule 3.1(2)(g)"),
+        ("The Civil Procedure Rules 1998", "rule 3.1(2)(o)"),
+        ("The Civil Procedure Rules 1998", "rule 44.2"),
+        ("The Civil Procedure Rules 1998", "rule 44.2(5)(e)"),
+    ),
+    "mediation": (
+        ("ICC Mediation Rules (contractually incorporated edition)", "article 5"),
+        ("Ohpen Operations UK Ltd v Invesco Fund Managers Ltd", "paragraph 32"),
+        ("Kajima Construction Europe (UK) Ltd v Children's Ark Partnership Ltd", "paragraph 29"),
+        ("Kajima Construction Europe (UK) Ltd v Children's Ark Partnership Ltd", "paragraph 30"),
+        ("Churchill v Merthyr Tydfil County Borough Council", "paragraph 58"),
+        ("The Civil Procedure Rules 1998", "rule 1.1(2)(f)"),
+        ("The Civil Procedure Rules 1998", "rule 1.4(2)(e)"),
+        ("The Civil Procedure Rules 1998", "rule 3.1(2)(g)"),
+        ("The Civil Procedure Rules 1998", "rule 3.1(2)(o)"),
+        ("The Civil Procedure Rules 1998", "rule 44.2(5)(e)"),
     ),
     "multi-tier-clause": (
         ("ICC Mediation Rules (contractually incorporated edition)", "article 5"),
-        ("Ohpen Operations UK Ltd v Invesco Fund Managers Ltd", "para 32"),
+        ("Ohpen Operations UK Ltd v Invesco Fund Managers Ltd", "paragraph 32"),
+        ("Kajima Construction Europe (UK) Ltd v Children's Ark Partnership Ltd", "paragraph 29"),
+        ("Kajima Construction Europe (UK) Ltd v Children's Ark Partnership Ltd", "paragraph 30"),
+    ),
+    "consultation": (
+        ("R (Moseley) v London Borough of Haringey", "paragraph 24"),
+        ("Osborn v The Parole Board", "paragraph 67"),
+    ),
+    "procedural-fairness": (("Osborn v The Parole Board", "paragraph 67"),),
+    "informed-consent": (
+        ("Montgomery v Lanarkshire Health Board", "paragraph 87"),
+        ("McCulloch and others v Forth Valley Health Board", "paragraph 57"),
+    ),
+    "material-risk": (("Montgomery v Lanarkshire Health Board", "paragraph 87"),),
+    "knowing-receipt": (
+        ("Byers and others v Saudi National Bank", "paragraph 30"),
+        ("Mitchell and another (Joint Liquidators of MBI International & Partners Inc (In Liquidation)) v Sheikh Mohamed Bin Issa Al Jaber", "paragraph 1"),
+    ),
+    "dishonest-assistance": (
+        ("Twinsectra Ltd v Yardley", "paragraph 1"),
+        ("Stevens v Hotel Portfolio II UK Ltd (In Liquidation) and another", "paragraph 1"),
+    ),
+    "fiduciary-duty": (("Rukhadze and others v Recovery Partners GP Ltd and another", "paragraph 1"),),
+    "deprivation-of-liberty": (
+        (
+            "A Reference by the Attorney General for Northern Ireland of a devolution issue under paragraph 34 of Schedule 10 to the Northern Ireland Act 1998",
+            "paragraph 53",
+        ),
     ),
     "video-will": (
         ("Wills Act 1837 (as at 2024-01-15)", "section 9"),
@@ -524,6 +658,41 @@ ISSUE_LOCATOR_HINTS: Mapping[str, tuple[tuple[str, str], ...]] = {
         ("The Civil Procedure Rules 1998", "rule 25.1"),
         ("Senior Courts Act 1981", "section 37"),
     ),
+    "ai-record-retention": (
+        ("UK GDPR", "article 5"),
+        ("UK GDPR", "article 17"),
+        ("UK GDPR", "article 15"),
+    ),
+    "ai-inferred-sensitive-data": (
+        ("UK GDPR", "article 5"),
+        ("UK GDPR", "article 9"),
+        ("UK GDPR", "article 16"),
+        ("UK GDPR", "article 22A"),
+        ("UK GDPR", "article 22B"),
+        ("UK GDPR", "article 22C"),
+    ),
+    "ai-workplace-monitoring": (
+        ("UK GDPR", "article 5"),
+        ("UK GDPR", "article 6"),
+        ("UK GDPR", "article 21"),
+        ("UK GDPR", "article 22A"),
+        ("UK GDPR", "article 22C"),
+    ),
+    "competition-exclusivity": (
+        ("Competition Act 1998", "section 2"),
+        ("Competition Act 1998", "section 9"),
+        (
+            "The Competition Act 1998 (Vertical Agreements Block Exemption) Order 2022",
+            "article 10",
+        ),
+    ),
+    "ge-family-land-forged-transfer": (
+        ("Land Registration Act 2002", "schedule 4"),
+        ("Land Registration Act 2002", "schedule 8"),
+        ("Senior Courts Act 1981", "section 37"),
+        ("The Civil Procedure Rules 1998", "rule 25.1"),
+    ),
+    "ge-family-tort-development-flood": (),
 }
 
 GENERIC_ISSUE_TAGS = frozenset(
@@ -959,6 +1128,148 @@ def _evidence_from_row(
     )
 
 
+def _source_titles(sources: Mapping[str, Mapping[str, Any]]) -> tuple[str, ...]:
+    return tuple(
+        str(meta.get("title") or "")
+        for meta in sources.values()
+        if str(meta.get("title") or "").strip()
+    )
+
+
+def _titles_match(left: str, right: str) -> bool:
+    return bool(left) and bool(right) and (left == right or titles_equivalent(left, right))
+
+
+def _title_allowed_for_topic(title: str, topic: str) -> bool:
+    return any(_titles_match(title, allowed) for allowed in TOPIC_SOURCES.get(topic, ()))
+
+
+def _actual_titles(
+    names: Sequence[str],
+    sources: Mapping[str, Mapping[str, Any]],
+    overlay: LocatorGoldOverlay | None,
+) -> tuple[str, ...]:
+    available = _source_titles(sources)
+    ordered: list[str] = []
+    seen: set[str] = set()
+    for name in names:
+        for actual in available:
+            if actual in seen or not _titles_match(name, actual):
+                continue
+            if _is_rejected_mandatory(actual, overlay):
+                continue
+            seen.add(actual)
+            ordered.append(actual)
+    return tuple(ordered)
+
+
+def _retrieval_titles(
+    *,
+    topic: str,
+    issue_tags: Sequence[str],
+    sources: Mapping[str, Mapping[str, Any]],
+    overlay: LocatorGoldOverlay | None,
+) -> tuple[str, ...]:
+    names: list[str] = []
+    names.extend(_hinted_titles(topic, issue_tags))
+    names.extend(MISSING_PRIMARY_BY_TOPIC.get(topic, ()))
+    for tag in issue_tags:
+        names.extend(MISSING_PRIMARY_BY_TAG.get(str(tag).casefold(), ()))
+    names.extend(TOPIC_SOURCES.get(topic, ()))
+    return _actual_titles(names, sources, overlay)
+
+
+def _passage_usable_for_retrieval(*, locator: str, body: str) -> bool:
+    text = str(body or "").strip()
+    pin = str(locator or "").strip()
+    if not pin or not has_operative_legal_predicate(text):
+        return False
+    quote = displayed_quote(text, pin)
+    return not is_punctuation_only(quote)
+
+
+def _frozen_pass_case_ids(project_root: Path = PROJECT_ROOT) -> set[str]:
+    blocked = {CASE_008, CASE_174, CASE_312}
+    if FROZEN_PASS_REGRESSION.is_file():
+        raw = json.loads(FROZEN_PASS_REGRESSION.read_text(encoding="utf-8"))
+        for row in raw.get("rows") or []:
+            if isinstance(row, Mapping) and row.get("case_id"):
+                blocked.add(str(row["case_id"]))
+    terminal = (
+        project_root
+        / "data/evaluations/general-enquiries"
+        / "LegalBot-GE-2026-09-02-control-plane-router-r1"
+        / "HOLD-REASON-MANIFEST.json"
+    )
+    if terminal.is_file():
+        raw = json.loads(terminal.read_text(encoding="utf-8"))
+        for row in raw.get("rows") or []:
+            if isinstance(row, Mapping) and row.get("machine_repairable") is not True:
+                blocked.add(str(row.get("case_id") or ""))
+    latest = (
+        project_root
+        / "data/evaluations/general-enquiries"
+        / "LegalBot-GE-2026-09-02-mechanical-repair-delta-r1"
+        / "HOLD-REASON-MANIFEST.json"
+    )
+    if latest.is_file():
+        raw = json.loads(latest.read_text(encoding="utf-8"))
+        for row in raw.get("rows") or []:
+            if isinstance(row, Mapping) and row.get("machine_repairable") is not True:
+                blocked.add(str(row.get("case_id") or ""))
+    claim_pack = (
+        project_root
+        / "data/evaluations/general-enquiries"
+        / "LegalBot-GE-2026-09-02-claim-level-and-review-prep-r1"
+        / "CLAIM-EXHAUSTED-CASE-IDS.json"
+    )
+    if claim_pack.is_file():
+        raw = json.loads(claim_pack.read_text(encoding="utf-8"))
+        for item in raw.get("case_ids") or []:
+            blocked.add(str(item))
+    blocked.discard("")
+    return blocked
+
+
+def _active_repair_queue() -> Path:
+    if DEFAULT_CLAIM_REPAIR_QUEUE.is_file():
+        return DEFAULT_CLAIM_REPAIR_QUEUE
+    return DEFAULT_REPAIR_QUEUE
+
+
+def _latest_fingerprint_path() -> Path | None:
+    for path in (
+        MECHANICAL_REPAIR_DELTA_R2_PACK / "EVALUATION-FINGERPRINT.json",
+        VISIBLE_331_R3_PACK / "EVALUATION-FINGERPRINT.json",
+        MEDIATION_FAMILY_KAJIMA_PACK / "EVALUATION-FINGERPRINT.json",
+        CONTROL_PLANE_V2_PACK / "EVALUATION-FINGERPRINT.json",
+        CLAIM_LEVEL_PACK / "EVALUATION-FINGERPRINT.json",
+        DEFAULT_REPAIR_OUTPUT / "EVALUATION-FINGERPRINT.json",
+        FROZEN_EVALUATION_FINGERPRINT,
+    ):
+        if path.is_file():
+            return path
+    return None
+
+
+def repair_case_set(requested: Sequence[str], *, project_root: Path = PROJECT_ROOT) -> set[str]:
+    blocked = _frozen_pass_case_ids(project_root)
+    return {str(item) for item in requested if str(item) and str(item) not in blocked}
+
+
+def _load_results_by_id(path: Path) -> dict[str, dict[str, Any]]:
+    rows: dict[str, dict[str, Any]] = {}
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            case_id = str(row.get("case_id") or "")
+            if case_id:
+                rows[case_id] = row
+    return rows
+
+
 def _locator_aliases(locator: str) -> tuple[str, ...]:
     text = str(locator or "").strip()
     lowered = text.casefold()
@@ -967,6 +1278,8 @@ def _locator_aliases(locator: str) -> tuple[str, ...]:
         aliases.add("paragraph " + lowered[5:])
     if lowered.startswith("paragraph "):
         aliases.add("para " + lowered[10:])
+    if lowered.startswith("rule ") and "(" in lowered:
+        aliases.add(lowered.split("(", 1)[0].strip())
     if lowered == "schedule 2":
         aliases.update({"schedule 2", "schedule 2 paragraphs 1-2"})
     return tuple(sorted(aliases))
@@ -1011,27 +1324,29 @@ def _exact_locator_candidates(
     sources: Mapping[str, Mapping[str, Any]],
     overlay: LocatorGoldOverlay | None = None,
 ) -> tuple[Evidence, ...]:
-    allowed_titles = set(TOPIC_SOURCES.get(topic, ()))
     exact_hints = locator_hints_for_case(issue_tags, ISSUE_LOCATOR_HINTS)
 
     candidates: list[Evidence] = []
     seen: set[tuple[str, str]] = set()
     for title, locator in exact_hints:
-        if title not in allowed_titles or (title, locator) in seen:
+        if not _title_allowed_for_topic(title, topic):
             continue
         if _is_rejected_mandatory(title, overlay):
             continue
-        seen.add((title, locator))
+        actuals = _actual_titles((title,), sources, overlay)
+        if not actuals:
+            actuals = (title,)
         aliases = _locator_aliases(locator)
-        placeholders = ",".join("?" for _ in aliases)
+        placeholders_loc = ",".join("?" for _ in aliases)
+        placeholders_title = ",".join("?" for _ in actuals)
         rows = connection.execute(
             f"""
             SELECT chunk_id, source_version_id, title, locator, body, ordinal
             FROM chunk_meta
-            WHERE lower(title) = lower(?) AND lower(locator) IN ({placeholders})
+            WHERE lower(title) IN ({placeholders_title}) AND lower(locator) IN ({placeholders_loc})
             ORDER BY ordinal, chunk_id
             """,
-            (title, *aliases),
+            tuple(item.casefold() for item in actuals) + aliases,
         ).fetchall()
         rows = [
             row
@@ -1048,6 +1363,10 @@ def _exact_locator_candidates(
         if assembled is None:
             continue
         primary = next(row for row in rows if str(row["chunk_id"]) == assembled.primary_chunk_id)
+        key = (str(primary["title"]), str(primary["locator"]))
+        if key in seen:
+            continue
+        seen.add(key)
         meta = sources.get(str(primary["source_version_id"]))
         if meta is None:
             raise RuntimeError("exact locator returned a source outside the exact manifest")
@@ -1067,6 +1386,66 @@ def _exact_locator_candidates(
         if alphanumeric_token_count(evidence.text) >= 8 or assembled.punctuation_only:
             candidates.append(evidence)
     return tuple(candidates)
+
+
+def _select_fts_candidates(
+    candidates: Sequence[tuple[float, Evidence]],
+    *,
+    token_set: set[str],
+    min_overlap: int,
+    min_score: float,
+    limit: int,
+) -> list[Evidence]:
+    selected: list[Evidence] = []
+    seen_chunks: set[str] = set()
+    for score, evidence in candidates:
+        if evidence.chunk_id in seen_chunks:
+            continue
+        evidence_words = set(re.findall(r"[a-z0-9]{3,}", evidence.text.casefold()))
+        if len(token_set.intersection(evidence_words)) < min_overlap or score < min_score:
+            continue
+        selected.append(evidence)
+        seen_chunks.add(evidence.chunk_id)
+        if len(selected) >= limit:
+            break
+    return selected
+
+
+def _usable_evidence_for_case(
+    evidence: Sequence[Evidence],
+    case: Mapping[str, Any],
+) -> tuple[Evidence, ...]:
+    """Keep only complete, on-issue locators. Attachable is not automatic attach."""
+
+    prompt = str(case.get("prompt") or case.get("question") or "")
+    tags = tuple(str(tag) for tag in case.get("issue_tags") or ())
+    kept: list[Evidence] = []
+    for item in evidence:
+        allowed, _reason = mediation_family_locator_allowed(
+            item.title, item.locator, prompt, tags
+        )
+        if not allowed:
+            continue
+        quote = displayed_quote(item.text, item.locator)
+        completeness = passage_completeness(
+            title=item.title,
+            locator=item.locator,
+            stored_text=item.text,
+            displayed_quote_text=quote,
+        )
+        if completeness.outcome != "PASS":
+            continue
+        relevance = issue_relevance(
+            question=prompt,
+            issue_tags=tags,
+            title=item.title,
+            locator=item.locator,
+            quote=quote,
+        )
+        if relevance.outcome != "PASS":
+            continue
+        kept.append(item)
+    return tuple(kept)
 
 
 def _retrieve(
@@ -1094,21 +1473,10 @@ def _retrieve(
     if tag_set & VIDEO_WILL_TAGS:
         return exact
     if exact:
-        return exact
-    titles = list(_hinted_titles(topic, tags))
-    available_titles = {str(value.get("title") or "") for value in sources.values()}
-    for name in MISSING_PRIMARY_BY_TOPIC.get(topic, ()):
-        if name in available_titles and name not in titles:
-            titles.append(name)
-    for tag in tags:
-        for name in MISSING_PRIMARY_BY_TAG.get(str(tag).casefold(), ()):
-            if name in available_titles and name not in titles:
-                titles.append(name)
-    titles = [
-        title
-        for title in titles
-        if title in available_titles and not _is_rejected_mandatory(title, overlay)
-    ]
+        usable = _usable_evidence_for_case(exact, case)
+        if usable:
+            return usable
+    titles = _retrieval_titles(topic=topic, issue_tags=tags, sources=sources, overlay=overlay)
     if not titles:
         return ()
     query_tokens = _tokens(case.get("prompt"), tags, case.get("scenario_family_id"))
@@ -1128,7 +1496,7 @@ def _retrieve(
         (query, *titles),
     ).fetchall()
     token_set = set(query_tokens)
-    candidates: list[tuple[float, Evidence]] = []
+    scored: list[tuple[float, Evidence]] = []
     for row in rows:
         meta = sources.get(str(row["source_version_id"]))
         if meta is None:
@@ -1137,7 +1505,7 @@ def _retrieve(
             continue
         body = str(row["body"] or "").strip()
         locator = str(row["locator"] or "").strip()
-        if alphanumeric_token_count(body) < 8 or not locator:
+        if not _passage_usable_for_retrieval(locator=locator, body=body):
             continue
         words = set(re.findall(r"[a-z0-9]{3,}", f"{locator} {body}".casefold()))
         overlap = len(token_set.intersection(words)) / max(1, len(token_set))
@@ -1147,23 +1515,21 @@ def _retrieve(
             if re.match(r"(?i)^(section|article|regulation|rule|paragraph)\b", locator)
             else 0.0
         )
-        score = overlap + title_bonus + locator_bonus - (float(row["rank"]) / 100.0)
+        predicate_bonus = 0.08 if has_operative_legal_predicate(body) else 0.0
+        score = overlap + title_bonus + locator_bonus + predicate_bonus - (float(row["rank"]) / 100.0)
         evidence = _evidence_from_row(row, meta=meta, rank=float(row["rank"]))
-        candidates.append((score, evidence))
-    candidates.sort(key=lambda item: (-item[0], item[1].rank, item[1].chunk_id))
-    selected: list[Evidence] = []
-    seen_chunks: set[str] = set()
-    for score, evidence in candidates:
-        if evidence.chunk_id in seen_chunks:
-            continue
-        evidence_words = set(re.findall(r"[a-z0-9]{3,}", evidence.text.casefold()))
-        if len(token_set.intersection(evidence_words)) < 2 or score < 0.18:
-            continue
-        selected.append(evidence)
-        seen_chunks.add(evidence.chunk_id)
-        if len(selected) >= limit:
-            break
-    return tuple(selected)
+        scored.append((score, evidence))
+    scored.sort(key=lambda item: (-item[0], item[1].rank, item[1].chunk_id))
+    selected = _select_fts_candidates(
+        scored, token_set=token_set, min_overlap=2, min_score=0.18, limit=limit
+    )
+    if not selected:
+        selected = _select_fts_candidates(
+            scored, token_set=token_set, min_overlap=1, min_score=0.08, limit=limit
+        )
+    if not selected:
+        selected = [item[1] for item in scored[:limit]]
+    return _usable_evidence_for_case(tuple(selected), case)
 
 
 def _locator_abbreviation(locator: str) -> str:
@@ -1764,49 +2130,152 @@ def run(
     diagnostic_probe: str = "omit",
     owner_instruction: Mapping[str, Any] | None = None,
     locator_overlay_path: Path | None = None,
+    allow_unchanged_full_rerun: bool = False,
+    allow_full_visible_331: bool = False,
+    repair_case_ids: Sequence[str] | None = None,
+    baseline_results_path: Path | None = None,
+    carry_forward_case_ids: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     if diagnostic_probe not in {"omit", "exposed-regression"}:
         raise ValueError("diagnostic_probe must be omit or exposed-regression")
     output = output.resolve()
+    overlay_path = locator_overlay_path or (
+        DEFAULT_LOCATOR_OVERLAY if DEFAULT_LOCATOR_OVERLAY.is_file() else None
+    )
+    visible, visible_manifest = _load_visible()
+    locator_hash = _sha256_file(overlay_path) if overlay_path and overlay_path.is_file() else ""
+    visible_hash = str(visible_manifest.get("content_sha256") or "")
+    current_fp = evaluation_fingerprint(
+        project_root=PROJECT_ROOT,
+        locator_manifest_hash=locator_hash,
+        answer_set_hash="",
+        visible_pack_hash=visible_hash,
+    )
+    repair_set = repair_case_set(repair_case_ids) if repair_case_ids is not None else None
+    if repair_set is not None and not repair_set:
+        return _sealed(
+            {
+                "schema": "legalbot.ge-evaluation-noop.v1",
+                "result": NO_OP_UNCHANGED_CASE_INPUTS,
+                "reason": (
+                    "No changed-input mechanically runnable cases remain. "
+                    "Generic topic retrieval of claim-exhausted cases is prohibited."
+                ),
+                "repair_queue_count": 0,
+                "non_authorizing": {
+                    "qualified_legal_review": "NOT_STARTED",
+                    "legal_gold": "NOT_STARTED",
+                    "answer_weight_training": "NOT_STARTED",
+                    "sealed_unseen": "NOT_STARTED",
+                    "promotion": "NOT_STARTED",
+                    "live": "NOT_STARTED",
+                },
+            }
+        )
+    frozen_fp_path = _latest_fingerprint_path()
+    if frozen_fp_path is not None and not allow_unchanged_full_rerun:
+        frozen = _load_json(frozen_fp_path)
+        if input_fingerprint_unchanged(current_fp, frozen):
+            return _sealed(
+                {
+                    "schema": "legalbot.ge-evaluation-noop.v1",
+                    "result": NO_OP_UNCHANGED_INPUTS,
+                    "reason": (
+                        "Code commit, locator manifest, evidence sidecar, visible pack, "
+                        "evaluator, retrieval planner and evaluation policy are unchanged. "
+                        "A full 331 rerun is prohibited."
+                    ),
+                    "frozen_fingerprint_sha256": frozen.get("fingerprint_sha256"),
+                    "input_fingerprint_sha256": current_fp.get("input_fingerprint_sha256"),
+                    "fingerprint_path": frozen_fp_path.as_posix(),
+                    "non_authorizing": {
+                        "qualified_legal_review": "NOT_STARTED",
+                        "legal_gold": "NOT_STARTED",
+                        "answer_weight_training": "NOT_STARTED",
+                        "sealed_unseen": "NOT_STARTED",
+                        "promotion": "NOT_STARTED",
+                        "live": "NOT_STARTED",
+                    },
+                }
+            )
+    if repair_set is None and not allow_full_visible_331:
+        raise RuntimeError(
+            "Full 331 rerun is prohibited after frozen diagnostic r2. "
+            "Pass --repair-queue for the machine-repairable subset, or "
+            "--allow-full-visible-331 only after a changed dependency requires it."
+        )
+    if repair_set is not None and diagnostic_probe != "omit":
+        raise ValueError("targeted repair must omit the diagnostic unseen probe")
     if output.exists() or output.is_symlink():
         raise FileExistsError(f"create-only run root already exists: {output}")
     output.mkdir(parents=True, mode=0o700)
     os.chmod(output, stat.S_IRWXU)
     started = datetime.now(UTC)
 
-    visible, visible_manifest = _load_visible()
     source_manifest = _load_json(SOURCE_MANIFEST)
     sources = _source_lookup(source_manifest)
-    overlay_path = locator_overlay_path or (
-        DEFAULT_LOCATOR_OVERLAY if DEFAULT_LOCATOR_OVERLAY.is_file() else None
-    )
     overlay = load_locator_gold_overlay(overlay_path)
     available_titles = {str(value.get("title") or "") for value in sources.values()}
     fts_path = output / "retrieval/approved-sources-fts.sqlite3"
     _create_fts(fts_path, sources)
+    carry_set = {str(item) for item in (carry_forward_case_ids or ()) if str(item)}
+    baseline_by_id: dict[str, dict[str, Any]] = {}
+    if repair_set is not None or carry_set:
+        baseline_path = baseline_results_path or FROZEN_R2_RESULTS
+        if not baseline_path.is_file():
+            raise RuntimeError(f"frozen r2 baseline results missing: {baseline_path}")
+        baseline_by_id = _load_results_by_id(baseline_path)
+        for case_id, row in baseline_by_id.items():
+            factual = row.get("factual_result")
+            if not isinstance(factual, Mapping):
+                continue
+            if str(factual.get("outcome") or "") != "FACTUAL_PASS":
+                continue
+            if repair_set is not None and case_id in repair_set:
+                continue
+            carry_set.add(case_id)
+        missing_baseline = [cid for cid in (repair_set or set()) | carry_set if cid not in {
+            str(case.get("question_id") or case.get("case_id") or "") for case in visible
+        }]
+        if missing_baseline:
+            raise RuntimeError(f"repair queue contains unknown case_ids: {missing_baseline[:8]}")
 
     connection = sqlite3.connect(f"file:{fts_path}?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     unseen: list[dict[str, Any]] = []
     unseen_results: list[dict[str, Any]] = []
     leakage: dict[str, Any] | None = None
+    repaired_ids: list[str] = []
+    carried_ids: list[str] = []
     try:
-        visible_results = [
-            _result_for_case(
-                case=case,
-                evidence=_retrieve(
-                    connection, case=case, sources=sources, overlay=overlay
-                ),
-                source_manifest_sha256=str(source_manifest["manifest_sha256"]),
-                ordinal=index,
-                lane="visible",
-                overlay=overlay,
-                available_titles=available_titles,
+        visible_results = []
+        for index, case in enumerate(visible, start=1):
+            case_id = str(case.get("question_id") or case.get("case_id") or "")
+            if (repair_set is not None and case_id not in repair_set) or case_id in carry_set:
+                copied = baseline_by_id.get(case_id)
+                if copied is None:
+                    raise RuntimeError(f"baseline is missing carried-forward case {case_id}")
+                visible_results.append(copied)
+                carried_ids.append(case_id)
+                continue
+            visible_results.append(
+                _result_for_case(
+                    case=case,
+                    evidence=_retrieve(
+                        connection, case=case, sources=sources, overlay=overlay
+                    ),
+                    source_manifest_sha256=str(source_manifest["manifest_sha256"]),
+                    ordinal=index,
+                    lane="visible",
+                    overlay=overlay,
+                    available_titles=available_titles,
+                )
             )
-            for index, case in enumerate(visible, start=1)
-        ]
+            repaired_ids.append(case_id)
         _write_jsonl(output / "visible/RESULTS.jsonl", visible_results)
-        training = [_training_row(row) for row in visible_results]
+        training = [_training_row(row) for row in visible_results if row["case_id"] in set(repaired_ids)]
+        if repair_set is None:
+            training = [_training_row(row) for row in visible_results]
         _write_jsonl(output / "training/RETRIEVAL-TRAINING-CANDIDATES.jsonl", training)
         training_manifest = _sealed(
             {
@@ -1857,12 +2326,21 @@ def run(
             "schema": "legalbot.owner-session-instruction-record.v1",
             "recorded_at": started.isoformat(),
             "instruction_summary": (
-                "Owner adopted the 67-locator evaluation-gold resolution r2 and "
-                "authorized visible diagnostic 331 r2. Locator APPROVE is evaluation "
-                "gold only. Case-level holds do not set global progress false. This "
-                "does not set qualified legal review, answer gold, runtime admission, "
-                "full-current-law eligibility, answer-weight training, sealed unseen, "
-                "promotion or live."
+                "Scoped diagnostic approval of the r1-versus-r2 report. r2 is frozen. "
+                "This run is a targeted mechanical-repair delta of machine-repairable "
+                "holds only. Locator review stays complete. Downstream gates stay "
+                "NOT_STARTED. This does not set qualified legal review, answer gold, "
+                "runtime admission, full-current-law eligibility, answer-weight "
+                "training, sealed unseen, promotion or live."
+                if repair_set is not None
+                else (
+                    "Owner adopted the 67-locator evaluation-gold resolution r2 and "
+                    "authorized visible diagnostic 331 r2. Locator APPROVE is evaluation "
+                    "gold only. Case-level holds do not set global progress false. This "
+                    "does not set qualified legal review, answer gold, runtime admission, "
+                    "full-current-law eligibility, answer-weight training, sealed unseen, "
+                    "promotion or live."
+                )
             ),
             "evaluation_state": True,
             "authorized": [
@@ -1871,6 +2349,7 @@ def run(
                 "factual_first_evaluation_gate",
                 "evaluator_retrieval_non_weight_planner_repairs",
                 "case_scoped_progress_not_global_stall",
+                "targeted_mechanical_repair_delta",
             ],
             "not_authorized_or_not_supplied": [
                 "answer_weight_training",
@@ -1884,6 +2363,8 @@ def run(
                 "live_activation",
                 "git_mutation",
                 "deletion",
+                "locator_package_reopen",
+                "tick_sheet",
             ],
             "signature_status": "session_instruction_not_cryptographic_signature",
         }
@@ -1897,13 +2378,106 @@ def run(
         locator_hold = sum(item.owner_decision == "HOLD" for item in overlay.receipts)
         locator_pending = sum(item.owner_decision == "PENDING" for item in overlay.receipts)
         locator_reject = sum(item.owner_decision == "REJECT" for item in overlay.receipts)
+    routed = route_results(
+        visible_results,
+        attempt_counts={case_id: 2 for case_id in repaired_ids},
+    )
+    if CASE_008 in {row["case_id"] for row in routed["holds"]}:
+        raise RuntimeError("case 008 must remain frozen FACTUAL_PASS")
+    row_174 = next((row for row in visible_results if row.get("case_id") == CASE_174), None)
+    if row_174 is not None:
+        titles_174 = " ".join(
+            str(item.get("title") or "")
+            for item in (row_174.get("evidence") or [])
+            if isinstance(item, dict)
+        ).casefold()
+        if "cable & wireless" in titles_174:
+            raise RuntimeError("case 174 must not receive Cable & Wireless")
+        if "arbitration act 1996" in titles_174:
+            raise RuntimeError("case 174 must not receive Arbitration Act 1996")
+        if str((row_174.get("factual_result") or {}).get("outcome") or "") == "FACTUAL_PASS":
+            raise RuntimeError("case 174 jurisdiction-scope hold must not convert to FACTUAL_PASS")
     progress = phase2_progress(
         case_results=visible_results,
         locator_hold_count=locator_hold,
         locator_pending_count=locator_pending,
         locator_reject_count=locator_reject,
+        diagnostic_execution="COMPLETE",
+        diagnostic_report="APPROVED_SCOPED" if repair_set is not None else "WRITTEN",
+        routed=repair_set is not None,
+        runnable_queue_count=routed["runnable_queue_count"] if repair_set is not None else 0,
     )
     _write_json(output / "PROGRESS-AND-BLOCKER-LEDGER.json", _sealed(progress))
+    if repair_set is not None:
+        _write_json(
+            output / "HOLD-REASON-MANIFEST.json",
+            _sealed(
+                {
+                    "schema": "legalbot.ge-hold-reason-manifest.v1",
+                    "source_run_id": output.name,
+                    "baseline_run_id": "LegalBot-GE-2026-09-02-visible-331-diagnostic-r2",
+                    "rows": routed["holds"],
+                }
+            ),
+        )
+        _write_json(
+            output / "HOLD-REASON-SUMMARY.json",
+            _sealed(
+                {
+                    "schema": "legalbot.ge-hold-reason-summary.v1",
+                    "source_run_id": output.name,
+                    "hold_count": routed["hold_count"],
+                    "factual_pass_count": routed["factual_pass_count"],
+                    "counts_by_hold_reason_code": routed["counts_by_hold_reason_code"],
+                    "counts_by_next_route": routed["counts_by_next_route"],
+                    "runnable_queue_count": routed["runnable_queue_count"],
+                    "terminal_queue_count": routed["terminal_queue_count"],
+                    "targeted_repair_case_ids": routed["targeted_repair_case_ids"],
+                    "repaired_case_ids": repaired_ids,
+                    "carried_forward_case_ids": carried_ids,
+                }
+            ),
+        )
+        _write_json(
+            output / "TARGETED-REPAIR-DELTA.json",
+            _sealed(
+                {
+                    "schema": "legalbot.ge-targeted-repair-delta.v1",
+                    "repaired_count": len(repaired_ids),
+                    "carried_forward_count": len(carried_ids),
+                    "full_331_rerun": False,
+                    "named_case_invariants": {
+                        CASE_008: "FACTUAL_PASS_FROZEN_REGRESSION",
+                        CASE_174: "JURISDICTION_SCOPE_REVIEW_NO_CABLE_NO_ARB_S9",
+                        CASE_312: "FACT_DEPENDENT_OUTCOME_NO_FURTHER_RETRIEVAL",
+                    },
+                    "tick_sheet_created_or_modified": False,
+                    "gold_admission_training_unseen_promotion_live_changed": False,
+                }
+            ),
+        )
+        _write_json(
+            output / "TARGETED-REPAIR-QUEUE.json",
+            _sealed(
+                {
+                    "schema": "legalbot.ge-targeted-repair-queue.v1",
+                    "case_ids": routed["targeted_repair_case_ids"],
+                    "count": routed["runnable_queue_count"],
+                    "full_331_rerun": False,
+                    "source_run_id": output.name,
+                }
+            ),
+        )
+
+    _write_json(
+        output / "EVALUATION-FINGERPRINT.json",
+        evaluation_fingerprint(
+            project_root=PROJECT_ROOT,
+            locator_manifest_hash=locator_hash,
+            answer_set_hash=_sha256_file(output / "visible/RESULTS.jsonl"),
+            visible_pack_hash=visible_hash,
+        ),
+    )
 
     artifacts: list[dict[str, Any]] = []
     for path in sorted(output.rglob("*")):
@@ -1967,15 +2541,38 @@ def run(
             "unseen_custody": unseen_custody,
             "diagnostic_probe": diagnostic_probe,
             "evaluation_state": True,
-            "visible_331_rerun_authorized": True,
+            "visible_331_rerun_authorized": allow_full_visible_331,
+            "targeted_repair": repair_set is not None,
+            "repaired_case_count": len(repaired_ids),
+            "carried_forward_case_count": len(carried_ids),
             "locator_overlay_path": str(overlay_path) if overlay_path else None,
             "locator_overlay_signed": bool(overlay and overlay.owner_pack_signed),
             "locator_evaluation_gold": True,
             "answer_legal_gold": False,
+            "evaluation_fingerprint": evaluation_fingerprint(
+                project_root=PROJECT_ROOT,
+                locator_manifest_hash=locator_hash,
+                answer_set_hash=_sha256_file(output / "visible/RESULTS.jsonl"),
+                visible_pack_hash=visible_hash,
+            ),
             "progress": {
                 "overall_progress": progress["overall_progress"],
                 "overall_state": progress["overall_state"],
                 "held_or_fail_closed_cases": progress["held_or_fail_closed_cases"],
+                "runnable_queue_count": progress.get("runnable_queue_count", 0),
+                "phase2_r2_complete": progress.get("phase2_r2_complete"),
+            },
+            "stage_states": {
+                "locator_review": "COMPLETE",
+                "diagnostic_r2_execution": "COMPLETE",
+                "diagnostic_report": "APPROVED_SCOPED" if repair_set is not None else "WRITTEN",
+                "qualified_legal_review": "NOT_STARTED",
+                "answer_legal_gold": "NOT_STARTED",
+                "catalogue_admission": "NOT_STARTED",
+                "answer_weight_training": "NOT_STARTED",
+                "sealed_unseen_execution": "NOT_STARTED",
+                "promotion": "NOT_STARTED",
+                "live": "NOT_STARTED",
             },
             "staged_source_count": max(0, len(sources) - 85),
             "artifacts": artifacts,
@@ -1999,7 +2596,7 @@ def run(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--output", type=Path, default=None)
     parser.add_argument(
         "--diagnostic-probe",
         choices=("omit", "exposed-regression"),
@@ -2012,15 +2609,50 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Optional per-locator gold overlay. Unsigned drafts are a no-op.",
     )
+    parser.add_argument(
+        "--repair-queue",
+        type=Path,
+        nargs="?",
+        const=_active_repair_queue(),
+        default=None,
+        help="Machine-repairable case-id JSON. Default queue is used when the flag is present without a path.",
+    )
+    parser.add_argument(
+        "--baseline-results",
+        type=Path,
+        default=FROZEN_R2_RESULTS,
+        help="Frozen diagnostic r2 RESULTS.jsonl used to carry forward unrerun cases.",
+    )
+    parser.add_argument(
+        "--allow-unchanged-full-rerun",
+        action="store_true",
+        help="Forbidden by default. Unchanged fingerprint must return NO_OP_UNCHANGED_INPUTS.",
+    )
+    parser.add_argument(
+        "--allow-full-visible-331",
+        action="store_true",
+        help="Forbidden by default after frozen r2. Targeted repair is the allowed continuation.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    repair_ids = None
+    output = args.output
+    if args.repair_queue is not None:
+        repair_ids = load_targeted_repair_case_ids(args.repair_queue)
+        output = output or DEFAULT_REPAIR_OUTPUT
+    else:
+        output = output or DEFAULT_OUTPUT
     manifest = run(
-        args.output,
+        output,
         diagnostic_probe=args.diagnostic_probe,
         locator_overlay_path=args.locator_overlay,
+        allow_unchanged_full_rerun=args.allow_unchanged_full_rerun,
+        allow_full_visible_331=args.allow_full_visible_331,
+        repair_case_ids=repair_ids,
+        baseline_results_path=args.baseline_results,
     )
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
     return 0

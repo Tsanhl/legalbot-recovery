@@ -341,7 +341,7 @@ def exact_source_roots(settings: Settings) -> tuple[Path, Path, Path]:
     """Return only the three approved clean-room roots for this run."""
 
     return (
-        Path("/Users/owner/Desktop/Law"),
+        (Path.home() / "Desktop" / "Law"),
         settings.project_root / "sources" / "materials-2026-08-12",
         settings.project_root / "sources" / "phase2a-approved-2026-08-27",
     )
