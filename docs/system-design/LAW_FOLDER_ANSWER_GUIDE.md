@@ -1,8 +1,9 @@
-# Answer guide from the Law folder (public copy; owner-approved)
+# Answer guide from the Law folder (owner-approved)
 
 Built 25 September 2026 from a full read of every marked script, formative,
 general-feedback document, assessment-criteria document, writing guide and
-OSCOLA 5 guide in `~/Desktop/Law`. The evidence and marks behind each rule are kept in a private, unpublished copy. Once approved, it replaces the
+OSCOLA 5 guide in `~/Desktop/Law`. Each rule notes, in paraphrase, the kind of feedback it comes from. Marks,
+verbatim marker comments and the owner's scripts are deliberately not recorded. Once approved, it replaces the
 18-rule `owner-standards-2026-09-23.3` bundle, and Qwen receives a compact
 version (section 9).
 
@@ -11,6 +12,18 @@ not legal authority and does not guarantee a mark.
 
 ---
 
+## 1. What was read
+
+The owner's marked essays, problem answers, exams and a dissertation across
+private international law, law and medicine, pensions, land, trusts, commercial,
+EU internal market, competition, criminal law and law-in-context coursework;
+module general-feedback documents; the university's published band
+descriptors; module writing guidance; and the OSCOLA 5 quick reference.
+Pieces in the First band shared accurate application or insightful argument,
+ample primary and secondary authority, and a clear position. Lower-band pieces
+lost credit for misapplied rules, missing key authority, words spent on the
+wrong issue, description instead of answering, too few secondary sources, or
+material outside the question.
 
 ## 2. What separates 70+ from 60s and 50s
 
@@ -24,7 +37,7 @@ University band descriptors, with the differences highlighted:
 | Analysis | ranks issues **persuasively**; **persuasive synthesis in context**; defends personal opinion on reform **persuasively** | ranks issues **justifiably**; a **good** synthesis; opinion defended **in a reasoned manner** | ranks issues **in a reasoned manner**; **some** synthesis; **offers** opinions |
 | Communication | complex ideas with **economy, clarity and confidence** | all but the most complex ideas | straightforward ideas |
 
-the Law & Medicine convenor's summary of the same scale: 3rd understands others' arguments; 2:2
+A module convenor's summary of the same scale: 3rd understands others' arguments; 2:2
 *offers and defends* opinions; 2:1 does so *in a reasoned manner*; First does
 so *persuasively*.
 
@@ -38,27 +51,33 @@ Each rule gives what to do, what to avoid, and the evidence.
 Do: every section advances an answer to the precise statement, party or
 outcome asked about. Avoid: a correct but question-neutral review of the
 topic.
+*Evidence (paraphrased):* a coursework essay was marked down for analysing the set statement only in its final sections; general exam guidance stresses answering the question actually set.
 
 **U2. Take a clear position and defend it; do not sit on the fence.**
 Do: state the conclusion, then show why the competing view is weaker. Avoid:
 "likely", "clearly", "it depends" with no decision; hiding behind the jury.
+*Evidence (paraphrased):* exam feedback criticised fence-sitting; criminal law guidance says to reach a view rather than defer to the jury or hedge with words like "likely".
 
 **U3. Show the other side, then take a position.**
 Do: give the strongest counterargument or alternative interpretation (a
 dissent, a disputing academic, a narrower reading), then resolve it.
+*Evidence (paraphrased):* a briefing paper was told to acknowledge a disputed point and an opposing academic view before taking a position; top-band work was still told to address counterarguments and dissents more fully.
 
 **U4. Support every material proposition with authority at the point it is made.**
 Do: statute section or case (with pinpoint) beside the proposition; an
 academic source beside every evaluative or empirical claim ("commentary
 suggests", "regulatory failure", economic cost, statistics).
+*Evidence (paraphrased):* several pieces were told that evaluative, empirical or economic claims needed a reference; criminal law guidance says correct law without cited authority will not score well.
 
 **U5. Use the controlling authority, and the highest court.**
 Do: find the case that goes "to the heart" of the issue; cite the appellate
 decision rather than the first-instance one; check it has not been overruled.
 Order: UKSC, CA, High Court, then specialist tribunals and ombudsmen.
+*Evidence (paraphrased):* feedback repeatedly named a missing controlling case (in EU, criminal and medical law answers) and preferred Court of Appeal to High Court citations of the same case.
 
 **U6. State the precise provision, not just the Act.**
 Do: name the operative section, rule or paragraph that decides the point.
+*Evidence (paraphrased):* commercial and pensions feedback asked for the specific operative section (for example within the Sale of Goods Act, the Consumer Rights Act or the Pensions Act 2004) rather than the Act generally.
 
 **U7. Represent authority precisely: ratio vs obiter, majority vs dissent, exact formulation.**
 
@@ -66,22 +85,29 @@ Do: name the operative section, rule or paragraph that decides the point.
 Do: at least one academic view per major argument; group like-minded authors
 and contrast opposing camps; draw on the module reading list. Avoid: case law
 only.
+*Evidence (paraphrased):* pensions feedback noted that a Supreme Court decision was a 3:2 split, that the relied-on remarks were obiter, and that two judges' formulations of the test differed in wording.
+*Evidence (paraphrased):* work relying mainly on case law was told to engage much more with scholarly opinion; stronger essays were still encouraged to use a wider range of academic writing.
 
 **U9. Spend words on the issues that allow deep analysis; compress the easy ones.**
 Do: give one or two sentences to uncontroversial preliminaries (e.g.
 dominance, settled definitions); give the budget to disputed or complex issues.
+*Evidence (paraphrased):* a land problem answer spent too many words on a simple easement point and ran short on the harder actual-occupation analysis; a competition answer was told to reduce an uncontested preliminary issue to a sentence or two.
 
 **U10. Depth over breadth: fewer points, fully argued.**
 
 **U11. Stay within the question and the syllabus; cut irrelevant material.**
+*Evidence (paraphrased):* an essay covering too many points was told it could have reached the top band with fewer, fully argued points; a dissertation was told to develop fewer points in greater depth.
+*Evidence (paraphrased):* answers were marked down for material outside the syllabus or the question (for example secondary liability in a criminal paper not covering it).
 
 **U12. Use the whole word budget.**
 Do: land within 90–110% of the target.
+*Evidence (paraphrased):* land feedforward criticised answers that left hundreds of words unused and were therefore superficial.
 
 **U13. Be precise with legal terms and facts.**
 Do: use terms in their legal meaning ("intent", "assault", "embryo", "subsidy
 type" vs "allocation method"); keep the facts right. Avoid internal
 contradictions.
+*Evidence (paraphrased):* feedback corrected imprecise legal terms (assault is not mere threatening behaviour; "intent" has a technical meaning) and flagged internal contradictions and misread facts.
 
 **U14. Explain, do not assert, the link between the evidence and the point.**
 
@@ -90,6 +116,8 @@ Do: clear, concise sentences (about 2 lines); short paragraphs (about 6 lines);
 defined short forms (e.g. **Eligible Adult Dependant** ("**EAD**")); no
 contractions, colloquialisms or flowery vocabulary; zero spelling, punctuation
 and grammar errors. Avoid bullet lists inside academic argument.
+*Evidence (paraphrased):* feedback asked for the explanation linking evidence to the point and for more specificity; the writing guidance says citations do not replace argument.
+*Evidence (paraphrased):* pensions and land guidance set short sentences and paragraphs, defined terms and error-free spelling and grammar; a dissertation was told bullet-style presentation weakens academic prose.
 
 ---
 
@@ -100,6 +128,7 @@ Direct it at the question; define terms of art; state the position the essay
 will defend and the 2–3 issues it uses. First person ("I shall argue") or
 "It will be argued" are both acceptable. Avoid an opening that only narrates
 cases, and bare roadmaps ("This essay will discuss…").
+*Evidence (paraphrased):* model introductions approved in medical law teaching state the thesis and the issues; an introduction that only describes cases was criticised as signalling a descriptive answer.
 
 **E2. Define key terms early.**
 
@@ -108,51 +137,67 @@ Each section tests the thesis: state the law, then analyse it (its purpose
 against its operation, flaws and limitations, analogies, your own examples),
 then show what that section contributes to the thesis. Compare authorities
 against each other.
+*Evidence (paraphrased):* medical law guidance asks for key terms to be defined in the first or second paragraph.
+*Evidence (paraphrased):* guidance warns that mere summary limits the grade; top-band essays were praised for insightful comparison and well-made arguments.
 
 **E4. Engage context: economic, social and political pressures, data, rationale.**
 
 **E5. Offer a persuasive, defended view on effectiveness and reform, with its trade-offs.**
+*Evidence (paraphrased):* the First-class descriptor requires insight into economic, social and political pressures; strong work was praised for using relevant data and rationale.
+*Evidence (paraphrased):* the First-class descriptor requires persuasive defended opinions on reform; a dissertation was asked to weigh the economic trade-offs of its proposals.
 
 **E6. Explain scope choices.**
 If you focus on one area (e.g. tort cases), say why.
+*Evidence (paraphrased):* a strong essay was asked to explain why it focused on one area of case law.
 
 **E7. Conclusion answers the question and follows from the analysis.**
 
 ---
+*Evidence (paraphrased):* a well-expressed conclusion was noted as a strength; see also U1.
 
 ## 5. Problem question (PB) rules
 
 **P1. Structure by party or issue, following the question's own structure.**
 Use subheadings for each party or claim. Open each party with a one-line
 finding.
+*Evidence (paraphrased):* land and criminal guidance ask for sections per party and a clear summary finding for each.
 
 **P2. Spot every issue, including separate interests hidden in the facts.**
 Work through the facts line by line; each right, act or document is a
 potential issue (e.g. the option to purchase, the consent agreement).
+*Evidence (paraphrased):* land feedforward noted that many answers missed an option to purchase, a separate consent agreement and overreaching.
 
 **P3. State each element of the full legal test, then apply each element to specific facts.**
 Never apply a partial test; include the exceptions (e.g. Sch 3 para 2
 exceptions; s29 LRA). Build towards the conclusion: element, how the courts
 interpret it, the facts, a finding.
+*Evidence (paraphrased):* land feedforward criticised partial legal tests and missed statutory exceptions; exam feedback asked for fuller requirements and clearer application.
 
 **P4. Apply, do not restate.**
 Use the facts to argue, not to retell.
+*Evidence (paraphrased):* land, trusts and criminal feedback all asked answers to apply the law to the facts rather than restate either.
 
 **P5. Identify missing or ambiguous facts, state a reasonable assumption, and follow it through consistently.**
 
 **P6. Deploy the strongest route first; consider every materially available alternative route and remedy.**
+*Evidence (paraphrased):* pensions feedback identified spotting missing or ambiguous facts, making reasonable assumptions and avoiding contradictions as the main areas for improvement.
+*Evidence (paraphrased):* pensions guidance says to use the strongest rules first; trusts feedback pointed to a stronger alternative claim and to missed remedies.
 
 **P7. Solve by elimination where the facts allow; it saves words.**
 
 **P8. Distinguish or draw parallels with the facts of decided cases.**
+*Evidence (paraphrased):* pensions feedback showed that eliminating those outside a class first simplified the analysis and saved words.
+*Evidence (paraphrased):* land and pensions guidance ask answers to compare and distinguish the facts of decided cases.
 
 **P9. No generic introductions or conclusions in PB; no "the next issue is".**
 Go straight to the analysis; conclude per party. Do not explain that both
 actus reus and mens rea are required.
+*Evidence (paraphrased):* criminal law presentation guidance; essay guidance shows the rule applies to problem questions only.
 
 **P10. Grade harm, liability and remedy against the specific standard.**
 
 ---
+*Evidence (paraphrased):* criminal law guidance on grading harm using case law and prosecution charging standards; trusts feedback on distinguishing fiduciary from non-fiduciary duties.
 
 ## 6. GE (general enquiry) rules — adapted
 
@@ -175,7 +220,7 @@ to a plain-language answer. They carry lower evidential weight than sections 3�
 ## 7. Citation and OSCOLA rules
 
 **C1. In-text OSCOLA in brackets after the supported sentence** (owner
-preference; Criminal lecture: "Use in text citations, not footnotes"). The host
+preference, matching criminal law guidance to cite in text rather than in footnotes). The host
 renders citations from verified metadata. The model never writes them.
 
 **C2. Pinpoint every case, article or book** to the paragraph (square brackets

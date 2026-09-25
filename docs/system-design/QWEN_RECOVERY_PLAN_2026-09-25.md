@@ -155,7 +155,9 @@ backup-pruning rule says to keep both until a newer restore drill exists.
 
 ## 8. Progress, 25 September (evening)
 
-- **Lecture notes (done):** 124 of 128 decks are rephrased in
+- **Lecture notes (done, law-only):** 124 of 128 decks were rephrased, then cut
+  on the owner's direction to law-only summaries (rules with their cases and
+  statutes; no lecture structure, examples or explanation) in
   `data/knowledge/lecture-notes/`. Four pensions decks are skipped, and the two
   pensions notes are cut to statute and case points only, because the slides
   forbid AI use (`_SKIPPED.txt`).

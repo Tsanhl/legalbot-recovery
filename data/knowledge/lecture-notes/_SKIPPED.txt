@@ -1,0 +1,1 @@
+Decks 90 91 92 95 (pensions law series) deliberately not rewritten: the slides carry a copyright notice prohibiting use for AI training or response generation. Owner decision 2026-09-25: keep only law-only statute/case summaries (pensions-01, pensions-02), skip the remaining decks.
