@@ -46,7 +46,7 @@ CASE = re.compile(r"\b([A-Z][\w.'&\- ]{1,80}\s+v\.?\s+[A-Z][\w.'&\- ]{1,80}?)\s*
 
 
 STUDENT_WORK = re.compile(
-    r"(?i)([id]|anonymous code|word count:\s*\d|completed date|digital receipt|"
+    r"(?i)([A-Za-z]\d{7}\b|anonymous code|word count:\s*\d|completed date|digital receipt|"
     r"submission id|change summary \(before|formative (?:essay|assessment)|"
     r"great scrape and the great scan)"
 )
