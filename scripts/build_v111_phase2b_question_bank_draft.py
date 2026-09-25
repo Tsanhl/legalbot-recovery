@@ -120,101 +120,17 @@ def _register(
     }
 
 
-STYLE_REFERENCES = (
-    (
-        "competition-formative-question",
-        LAW_ROOT
-        / "Competition Law/Competitive law formative/Competition law formative question .docx",
-        "academic_problem_question_style",
-    ),
-    (
-        "competition-summative-question",
-        LAW_ROOT
-        / "Competition Law/Competitive law summative/QUESTION_LAWxxxx-Competition-Law_June2026.docx",
-        "advanced_academic_problem_question_style",
-    ),
-    (
-        "commercial-summative-question",
-        LAW_ROOT
-        / "Law/Commerical law revision/Summative/1. QUESTION_LAWxxxx_Commercial_JUNE 2025.pdf",
-        "short_critical_essay_style",
-    ),
-    (
-        "criminal-formative-question",
-        LAW_ROOT / "Law/Criminal law /Formative /Formative Question.docx",
-        "multi_actor_problem_question_style",
-    ),
-    (
-        "criminal-examination-question",
-        LAW_ROOT / "Law/Exam/Criminal law exam/2221 QUESTION_LAWxxxx_Criminal _Law June2025.pdf",
-        "essay_and_problem_examination_style",
-    ),
-    (
-        "international-commercial-mediation-handbook",
-        LAW_ROOT
-        / "International Commercial Mediation/International Commercial Mediation Handbook 2025-2026.pdf",
-        "topic_scope_and_learning_outcomes",
-    ),
-    (
-        "law-and-medicine-examination-question",
-        LAW_ROOT / "Law and medicine/Law and medicine exam/EXAM-Law-Medicine_June2026.pdf",
-        "cross_topic_problem_and_reform_essay_style",
-    ),
-    (
-        "law-and-medicine-handbook",
-        LAW_ROOT
-        / "Law and medicine/Tutorial /Law and Medicine Module Handbook with tutorial questions.pdf",
-        "topic_scope_and_tutorial_question_style",
-    ),
-    (
-        "land-law-examination-question",
-        LAW_ROOT / "Law/Exam/Land law exam/Land law question.docx",
-        "essay_and_problem_examination_style",
-    ),
-    (
-        "pensions-formative-question",
-        LAW_ROOT
-        / "Pensions Law/Pensions law formative/25FE102025-v1  PLM2025 Formative Essay Questions.docx",
-        "dense_fact_pattern_and_structured_advice_style",
-    ),
-    (
-        "pensions-general-feedback",
-        LAW_ROOT
-        / "Pensions Law/Pensions law formative/6A122025-V2 - PLM 2025 FE Gen Feedback.docx",
-        "difficulty_and_assessment_quality_profile",
-    ),
-    (
-        "private-international-law-formative",
-        LAW_ROOT / "Private International Law/Formative/PrivIL - Formative Assessment 2025-26.pdf",
-        "quotation_led_open_essay_style",
-    ),
-    (
-        "trusts-formative-question-one",
-        LAW_ROOT / "Law/Trusts law/Formative in comments/Formative 1 Question.docx",
-        "testamentary_trust_problem_style",
-    ),
-    (
-        "trusts-formative-question-two",
-        LAW_ROOT / "Law/Trusts law/Formative in comments/Formative 2 Question.docx",
-        "fiduciary_and_tracing_problem_style",
-    ),
-    (
-        "biolaw-question-choice",
-        LAW_ROOT / "Law/Biolaw/Summative 1/Choice of Biolaw Question for part A and B.docx",
-        "emerging_technology_essay_and_briefing_style",
-    ),
-    (
-        "business-law-enterprise-scope",
-        LAW_ROOT
-        / "Law/Business law/14. Legal Requirements when Establishing a Business Enterprise _ Law Trove.pdf",
-        "business_organisation_topic_scope",
-    ),
-    (
-        "business-law-management-scope",
-        LAW_ROOT / "Law/Business law/17. The Management of Corporations _ Law Trove.pdf",
-        "corporate_management_topic_scope",
-    ),
-)
+def _load_style_references() -> tuple[tuple[str, Path, str], ...]:
+    """Read the owner's local file list; it is gitignored because it names private course files."""
+
+    config = Path(__file__).resolve().parents[1] / "config/local/style_references.json"
+    if not config.is_file():
+        return ()
+    rows = json.loads(config.read_text(encoding="utf-8"))["references"]
+    return tuple((key, LAW_ROOT / relative, style) for key, relative, style in rows)
+
+
+STYLE_REFERENCES = _load_style_references()
 
 
 _register(

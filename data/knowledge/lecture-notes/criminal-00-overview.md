@@ -1,6 +1,6 @@
 ---
 subject: criminal
-topic: Criminal law revision and answer technique
+topic: Criminal law overview: key frameworks
 source_kind: law-only summary of statutes and cases (knowledge lane; never cited as authority; no lecture content reproduced)
 ---
 ## Quick frameworks
@@ -13,5 +13,5 @@ source_kind: law-only summary of statutes and cases (knowledge lane; never cited
 - Mens rea: intentional penetration and no reasonable belief in consent (s 1(2), taking account of all the circumstances).
 - **Self-defence.** Common law, the Criminal Law Act 1967, s 3 and the Criminal Justice and Immigration Act 2008, s 76 (see the self-defence note).
 
-## Seminar pointers (general principles)
+## General principles
 - **Innocent agency.** D is the principal where D acts through an agent who is not criminally responsible. In Michael (1840) 9 C & P 356, the nurse and the five-year-old child were innocent agents in the poisoning.

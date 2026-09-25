@@ -18,6 +18,6 @@ source_kind: law-only summary of statutes and cases (knowledge lane; never cited
 - R v Enoch (1833): independent circulation.
 - effects on abortion law through the Infant Life (Preservation) Act 1929, which turns on a fetus "capable of being born alive".
 
-## Seminar problem types
+## Problem types
 - **Medical error injuring a gestateling.** Recourse depends on its legal status. If it is born alive, compare the Congenital Disabilities (Civil Liability) Act 1976. Also consider the parents' own claims and the consent and experimental-treatment framework.
 - Legal motherhood rests on gestation (HFEA 2008, s 33), so with no gestating woman the law has a gap.

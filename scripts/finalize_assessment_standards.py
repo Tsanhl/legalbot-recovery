@@ -416,7 +416,7 @@ PROPOSED_GENERAL_RULES: tuple[dict[str, Any], ...] = (
         "remediation_text": (
             "Create a short issue map, then apply rule, facts and conclusion for each material issue in order."
         ),
-        "rationale": "Problem-method theme across owner's feedback: incomplete IRAC/ILAC sequencing.",
+        "rationale": "Problem-method theme across the owner's feedback: incomplete IRAC/ILAC sequencing.",
     },
     {
         "id": "assessment-proposed-general-essay-roadmap-v1",

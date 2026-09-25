@@ -419,7 +419,7 @@ format_table_text(factual, 8.7)
 set_all_table_borders(factual)
 
 add_heading(doc, '4. Layer 2 — quality standard', 1)
-add_body(doc, 'The quality target adapts the official published first-class criteria and the owner’s owner's feedback. It is a diagnostic product standard, not a university award. The target is accurate, detailed and comprehensive knowledge; insight; complete issue identification; persuasive application; relevant primary and secondary research; synthesis and critical evaluation; independent judgment; and clear, economical, confident communication.')
+add_body(doc, 'The quality target adapts published 70+ grading criteria and the owner’s marked feedback. It is a diagnostic product standard, not a university award. The target is accurate, detailed and comprehensive knowledge; insight; complete issue identification; persuasive application; relevant primary and secondary research; synthesis and critical evaluation; independent judgment; and clear, economical, confident communication.')
 
 mode_table = doc.add_table(rows=1, cols=3)
 add_table_header(mode_table, ['Mode', '70+ quality target', 'Practical emphasis'])
@@ -588,7 +588,7 @@ add_body(doc, 'Those decisions are requested only when the exact, reviewable inp
 add_heading(doc, '9. Reference basis for the 70+ target', 1)
 add_body(doc, 'The quality framework was adapted from permitted owner reference materials in the Law folder. These materials guide answer quality; they do not establish legal truth and are not instructions to execute the system.')
 add_list(doc, [
-    'Official published Assessment Criteria: first-class (70–100) descriptors for knowledge, problem solving, research, synthesis, evaluation, independence and communication.',
+    'Published assessment criteria: 70–100 descriptors for knowledge, problem solving, research, synthesis, evaluation, independence and communication.',
     'Y3 Pensions Law general feedback: current authority, counterarguments, missing/ambiguous facts, independent research, sound calculations, SPaG and OSCOLA precision.',
     'Selected Y3 feedback examples: stronger criticism of judgments, rationale and dissent, wider academic writing, secondary sources and pinpoint citations; strong work combined legal/policy analysis, academic views and evidence while still improving counterarguments.',
 ])

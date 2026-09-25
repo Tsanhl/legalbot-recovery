@@ -160,3 +160,6 @@ docs/reports/retrieval-v1-freeze-*.md
 # Local-only: licensed official downloads (re-fetch with
 # scripts/fetch_baseline_gap_sources.py).
 data/official-staging/
+
+# Local-only list of the owner's private course files.
+config/local/

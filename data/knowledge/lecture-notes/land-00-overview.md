@@ -1,6 +1,6 @@
 ---
 subject: land
-topic: Revision map and exam technique
+topic: Overview of key rules
 source_kind: law-only summary of statutes and cases (knowledge lane; never cited as authority; no lecture content reproduced)
 ---
 ## Registered-land problem checklist

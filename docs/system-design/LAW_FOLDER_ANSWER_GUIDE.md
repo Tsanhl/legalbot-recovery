@@ -1,8 +1,7 @@
 # Answer guide from the Law folder (owner-approved)
 
-Built 25 September 2026 from a full read of every marked script, formative,
-general-feedback document, assessment-criteria document, writing guide and
-OSCOLA 5 guide in `~/Desktop/Law`. Each rule notes, in paraphrase, the kind of feedback it comes from. Marks,
+Built 25 September 2026 from the owner's marked law work, feedback, grading
+criteria, writing guides and the OSCOLA 5 guide. Each rule notes, in paraphrase, the kind of feedback it comes from. Marks,
 verbatim marker comments and the owner's scripts are deliberately not recorded. Once approved, it replaces the
 18-rule `owner-standards-2026-09-23.3` bundle, and Qwen receives a compact
 version (section 9).
@@ -14,22 +13,20 @@ not legal authority and does not guarantee a mark.
 
 ## 1. What was read
 
-The owner's marked essays, problem answers, exams and a dissertation across
-private international law, law and medicine, pensions, land, trusts, commercial,
-EU internal market, competition, criminal law and law-in-context coursework;
-module general-feedback documents; the university's published band
-descriptors; module writing guidance; and the OSCOLA 5 quick reference.
-Pieces in the First band shared accurate application or insightful argument,
-ample primary and secondary authority, and a clear position. Lower-band pieces
-lost credit for misapplied rules, missing key authority, words spent on the
-wrong issue, description instead of answering, too few secondary sources, or
-material outside the question.
+The owner's marked law answers (essays, problem answers and a long research
+paper) with their feedback, general feedback documents, published grading
+descriptors, writing guidance and the OSCOLA 5 quick reference. Stronger
+answers shared accurate application or insightful argument, ample primary and
+secondary authority, and a clear position. Weaker ones lost credit for
+misapplied rules, missing key authority, words spent on the wrong issue,
+description instead of answering, too few secondary sources, or material
+outside the question.
 
 ## 2. What separates 70+ from 60s and 50s
 
-University band descriptors, with the differences highlighted:
+Published grading descriptors, with the differences highlighted:
 
-| Skill | First (70+) | Upper second (60–69) | Lower second (50–59) |
+| Skill | 70+ | 60–69 | 50–59 |
 | --- | --- | --- | --- |
 | Knowledge | accurate, **detailed and comprehensive**; **real insight** into economic, social and political pressures | accurate knowledge of a **substantial majority**; an **appreciation** of pressures | accurate knowledge of **the majority**; **some** appreciation |
 | Problem solving | **insightful** conclusions supported by **persuasive** argument, where doctrine is clear **and where it is disputed** | **reasonable** conclusions supported by legal argument | conclusions supported by legal argument |
@@ -37,9 +34,8 @@ University band descriptors, with the differences highlighted:
 | Analysis | ranks issues **persuasively**; **persuasive synthesis in context**; defends personal opinion on reform **persuasively** | ranks issues **justifiably**; a **good** synthesis; opinion defended **in a reasoned manner** | ranks issues **in a reasoned manner**; **some** synthesis; **offers** opinions |
 | Communication | complex ideas with **economy, clarity and confidence** | all but the most complex ideas | straightforward ideas |
 
-A module convenor's summary of the same scale: 3rd understands others' arguments; 2:2
-*offers and defends* opinions; 2:1 does so *in a reasoned manner*; First does
-so *persuasively*.
+In short: at 50–59 opinions are *offered*; at 60–69 they are defended *in a
+reasoned manner*; at 70+ they are defended *persuasively*.
 
 ---
 
@@ -51,7 +47,7 @@ Each rule gives what to do, what to avoid, and the evidence.
 Do: every section advances an answer to the precise statement, party or
 outcome asked about. Avoid: a correct but question-neutral review of the
 topic.
-*Evidence (paraphrased):* a coursework essay was marked down for analysing the set statement only in its final sections; general exam guidance stresses answering the question actually set.
+*Evidence (paraphrased):* a coursework essay was marked down for analysing the set statement only in its final sections; general guidance stresses answering the question actually set.
 
 **U2. Take a clear position and defend it; do not sit on the fence.**
 Do: state the conclusion, then show why the competing view is weaker. Avoid:
@@ -83,7 +79,7 @@ Do: name the operative section, rule or paragraph that decides the point.
 
 **U8. Use secondary sources to carry the analysis.**
 Do: at least one academic view per major argument; group like-minded authors
-and contrast opposing camps; draw on the module reading list. Avoid: case law
+and contrast opposing camps; draw on the subject reading list. Avoid: case law
 only.
 *Evidence (paraphrased):* pensions feedback noted that a Supreme Court decision was a 3:2 split, that the relied-on remarks were obiter, and that two judges' formulations of the test differed in wording.
 *Evidence (paraphrased):* work relying mainly on case law was told to engage much more with scholarly opinion; stronger essays were still encouraged to use a wider range of academic writing.
@@ -96,7 +92,7 @@ dominance, settled definitions); give the budget to disputed or complex issues.
 **U10. Depth over breadth: fewer points, fully argued.**
 
 **U11. Stay within the question and the syllabus; cut irrelevant material.**
-*Evidence (paraphrased):* an essay covering too many points was told it could have reached the top band with fewer, fully argued points; a dissertation was told to develop fewer points in greater depth.
+*Evidence (paraphrased):* an essay covering too many points was told it could have reached the top band with fewer, fully argued points; a long research paper was told to develop fewer points in greater depth.
 *Evidence (paraphrased):* answers were marked down for material outside the syllabus or the question (for example secondary liability in a criminal paper not covering it).
 
 **U12. Use the whole word budget.**
@@ -117,7 +113,7 @@ defined short forms (e.g. **Eligible Adult Dependant** ("**EAD**")); no
 contractions, colloquialisms or flowery vocabulary; zero spelling, punctuation
 and grammar errors. Avoid bullet lists inside academic argument.
 *Evidence (paraphrased):* feedback asked for the explanation linking evidence to the point and for more specificity; the writing guidance says citations do not replace argument.
-*Evidence (paraphrased):* pensions and land guidance set short sentences and paragraphs, defined terms and error-free spelling and grammar; a dissertation was told bullet-style presentation weakens academic prose.
+*Evidence (paraphrased):* pensions and land guidance set short sentences and paragraphs, defined terms and error-free spelling and grammar; a long research paper was told bullet-style presentation weakens academic prose.
 
 ---
 
@@ -143,8 +139,8 @@ against each other.
 **E4. Engage context: economic, social and political pressures, data, rationale.**
 
 **E5. Offer a persuasive, defended view on effectiveness and reform, with its trade-offs.**
-*Evidence (paraphrased):* the First-class descriptor requires insight into economic, social and political pressures; strong work was praised for using relevant data and rationale.
-*Evidence (paraphrased):* the First-class descriptor requires persuasive defended opinions on reform; a dissertation was asked to weigh the economic trade-offs of its proposals.
+*Evidence (paraphrased):* the 70+ descriptor requires insight into economic, social and political pressures; strong work was praised for using relevant data and rationale.
+*Evidence (paraphrased):* the 70+ descriptor requires persuasive defended opinions on reform; a long research paper was asked to weigh the economic trade-offs of its proposals.
 
 **E6. Explain scope choices.**
 If you focus on one area (e.g. tort cases), say why.
@@ -201,7 +197,7 @@ actus reus and mens rea are required.
 
 ## 6. GE (general enquiry) rules — adapted
 
-No module examines GE, so these rules adapt the PB and communication evidence
+No subject examines GE, so these rules adapt the PB and communication evidence
 to a plain-language answer. They carry lower evidential weight than sections 3–5.
 
 - **G1** Direct answer first (U1, U2), then the decisive conditions, then what to
@@ -246,7 +242,7 @@ The renderer in `backend/app/citations/oscola.py` needs an OSCOLA 5 check
 - Paul Craig, 'Theory, "Pure Theory" and Values in Public Law' [2005] PL 440, 441
 - Law Commission, *Reforming Bribery* (Law Com No 313, 2008) paras 3.12–3.17
 
-**C5. Pensions Ombudsman determinations** (OSCOLA is silent; module rule):
+**C5. Pensions Ombudsman determinations** (OSCOLA is silent; subject rule):
 *S Mr* [24696] Pensions Ombudsman Determination (30 December 2019), with only
 the name italicised.
 
@@ -374,12 +370,12 @@ Legislation` folder. The rest rest on marker authority; the verification pass
 5. Add reviewer checks for U2 (fence-sitting phrases), U11 (off-question
    content) and U13 (internal contradiction).
 
-## 11. Conflicts between modules and how they are resolved
+## 11. Conflicts between subjects and how they are resolved
 
 - **Introductions:** Criminal says no introduction in PB; L&M and the essay
   guidance require a thesis-led introduction in essays. Resolved by mode.
 - **Numbering:** Pensions requires numbered headings; the general Pensions note
- and the dissertation markers reject numbering and bullets inside academic
+ and the research paper markers reject numbering and bullets inside academic
   prose. Resolved: headings allowed; no numbered or bulleted argument in essays.
-- **Footnotes vs in-text:** most modules use footnotes; Criminal and the owner
+- **Footnotes vs in-text:** most subjects use footnotes; Criminal and the owner
   prefer in-text. The owner's choice wins (C1).
