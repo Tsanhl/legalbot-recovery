@@ -1,5 +1,17 @@
 # LegalBot v1.11 recovery-workspace agent rules
 
+## 25 September 2026 owner direction (supersedes route and index sections below)
+
+The owner removed the hosted-API and Codex answer routes: **local Qwen is the
+only answering model**. Do not reintroduce them. All citable sources are being
+embedded into one unified index (`data/indexes/unified-local-v1`); the chat
+runs in owner-approved **research mode**, where unreviewed sources are used but
+labelled "[unverified source]". The drafting standard is
+`docs/system-design/LAW_FOLDER_ANSWER_GUIDE.md` (owner-approved; bundle
+`owner-law-folder-2026-09-25.1`). Plan and remaining steps:
+`docs/system-design/QWEN_RECOVERY_PLAN_2026-09-25.md` and
+`docs/CURRENT_STATE.md`. No ACTIVE, promotion or training has occurred.
+
 ## 23 September r29 UI continuation: Sol access and one GE fixture
 
 r28 is terminal: its first Astra job was cancelled during review after saving a

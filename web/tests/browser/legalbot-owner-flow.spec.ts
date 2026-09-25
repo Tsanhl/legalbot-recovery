@@ -205,34 +205,3 @@ test("two browser sessions create distinct conversation identities", async ({ br
   expect(identities[0]).not.toBe(identities[1]);
   await Promise.all([firstContext.close(), secondContext.close()]);
 });
-
-test("development chat sends the selected Codex route and carries a case follow-up", async ({ page }) => {
-  const submissions: Array<{ body: Record<string, unknown>; headers: Record<string, string> }> = [];
-  await installApi(page, (body, headers) => submissions.push({ body, headers }));
-  await page.goto("/");
-  await page.getByLabel("Jurisdiction").selectOption("Other");
-  await page.getByLabel("Specify jurisdiction").fill("India, Maharashtra");
-  await page.getByLabel("Law as of date").fill("2026-09-23");
-  await page.getByLabel("Owner development chat").check();
-  await expect(page.getByText("API and worker ready", { exact: true })).toBeVisible();
-  await page.getByLabel("Development model route").selectOption("codex_bridge");
-  await expect(page.getByText(/Uses the signed-in Codex CLI on this server/)).toBeVisible();
-  await page.getByLabel("Development model route").selectOption("anthropic_api");
-  await expect(page.getByText(/Uses this server's Claude API key/)).toBeVisible();
-  await page.getByLabel("Development model route").selectOption("codex_bridge");
-  await page.getByLabel("Development authority SHA-256").fill("a".repeat(64));
-  await page.getByLabel("Development owner access key").fill("local-test-access-key");
-  await page.getByLabel("Send this question and selected evidence to the remote model").check();
-  await page.getByLabel("Legal research question").fill("A tenancy question with missing facts.");
-  await page.getByRole("button", { name: "Research", exact: true }).click();
-  await expect(page.getByText("The released explanation is supported by")).toBeVisible();
-  await page.getByLabel("Legal research question").fill("Here are the missing facts. Continue the same case.");
-  await page.getByRole("button", { name: "Research", exact: true }).click();
-  expect(submissions).toHaveLength(2);
-  expect(submissions[0].headers["x-development-chat-route"]).toBe("codex_bridge");
-  expect(submissions[0].headers["x-development-chat-remote-consent"]).toBe("yes");
-  expect(submissions[0].body.jurisdiction).toBe("India, Maharashtra");
-  expect(submissions[0].body.conversation_id).toBeUndefined();
-  expect(String(submissions[1].body.question)).toContain("A tenancy question with missing facts.");
-  expect(String(submissions[1].body.question)).toContain("Here are the missing facts.");
-});

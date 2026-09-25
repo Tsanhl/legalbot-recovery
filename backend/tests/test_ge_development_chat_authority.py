@@ -158,14 +158,13 @@ def test_chat_file_mutation_fails_closed(tmp_path):
         )
 
 
-def test_remote_route_requires_explicit_consent_and_replays_it(tmp_path):
+@pytest.mark.parametrize("kind", ["hosted_api", "anthropic_api", "gemini_api", "codex_bridge", "local_endpoint"])
+def test_authority_listing_a_removed_route_is_rejected(tmp_path, kind):
     settings, request, key, path = _fixture(tmp_path)
     authority = json.loads(path.read_text())
     authority["routes"].append({
-        "route_id": "hosted_api", "kind": "hosted_api",
-        "model_id": "synthetic-snapshot",
-        "endpoint": "https://api.openai.com/v1/responses",
-        "credential_env": "OPENAI_API_KEY",
+        "route_id": kind, "kind": kind, "model_id": "synthetic-snapshot",
+        "endpoint": None, "credential_env": None,
     })
     authority["seal_sha256"] = sealed_sha256(authority)
     raw = canonical_json_bytes(authority)
@@ -177,18 +176,13 @@ def test_remote_route_requires_explicit_consent_and_replays_it(tmp_path):
         development_retrieval_manifest_sha256=settings.development_retrieval_manifest_sha256,
         development_chat_authority_sha256=hashlib.sha256(raw).hexdigest(),
     )
-    kwargs = dict(
-        settings=settings,
-        supplied_authority_file_sha256=str(settings.development_chat_authority_sha256),
-        access_key=key, route_id="hosted_api", raw_idempotency_key="chat-remote-001",
-        payload=request,
-    )
-    with pytest.raises(RuntimeError, match="remote_processing_consent_required"):
-        validate_development_chat_admission(**kwargs)
-    binding = validate_development_chat_admission(
-        **kwargs, remote_processing_consent=True,
-    )
-    assert build_evaluation_job_authority(binding)["remote_processing_consent"] is True
+    with pytest.raises(RuntimeError, match="development_chat_route_invalid"):
+        validate_development_chat_admission(
+            settings=settings,
+            supplied_authority_file_sha256=str(settings.development_chat_authority_sha256),
+            access_key=key, route_id=kind, raw_idempotency_key="chat-remote-001",
+            payload=request,
+        )
 
 
 @pytest.mark.asyncio

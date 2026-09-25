@@ -14,16 +14,7 @@ export type Jurisdiction =
   | "Texas"
   | "Other";
 export type OnlineMode = "auto" | "always" | "local_only";
-export type DevelopmentRouteId =
-  | "qwen_local"
-  | "local_endpoint"
-  | "hosted_api"
-  | "anthropic_api"
-  | "gemini_api"
-  | "codex_bridge"
-  | "codex_bridge_sol"
-  | "codex_bridge_astra"
-  | "codex_bridge_luna";
+export type DevelopmentRouteId = "qwen_local";
 
 export type JobStage =
   | "queued"

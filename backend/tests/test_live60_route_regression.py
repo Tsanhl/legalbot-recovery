@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from collections import Counter
 from datetime import date
 from pathlib import Path
@@ -10,7 +9,6 @@ from app.evaluation.live_suite_owner_decisions import build_issue_decision_pack
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 BUNDLE_ROOT = PROJECT_ROOT / "benchmarks/evaluation/live-evaluation-60-v1"
-VERIFIED_PATH = PROJECT_ROOT / "Live60-2026-08-16/go-execution/route-integrity-verified.json"
 
 
 def test_live_pack_matches_registry_research_routes_with_zero_mismatch() -> None:
@@ -28,22 +26,7 @@ def test_live_pack_matches_registry_research_routes_with_zero_mismatch() -> None
     ]
     assert mismatches == []
     assert pack["route_field_used"] == "expected_research_route"
-    verified = {
-        "schema": "legalbot.live60-route-integrity-verified.v1",
-        "mismatch_count": 0,
-        "research_route_counts": pack["research_route_counts"],
-        "selected_research_route_counts": pack["selected_research_route_counts"],
-        "route_field_used": pack["route_field_used"],
-        "previously_coerced_full_enquiry_case_ids": [
-            case.case_id
-            for case in bundle.registry.cases
-            if case.expected_research_route == "full_enquiry"
-        ],
-    }
-    VERIFIED_PATH.parent.mkdir(parents=True, exist_ok=True)
-    VERIFIED_PATH.write_text(
-        json.dumps(verified, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+
 
 
 def test_controlling_live60_route_composition() -> None:

@@ -400,3 +400,21 @@ def test_renderer_rejects_canonical_identity_mismatch(evidence) -> None:
     mismatched = evidence.model_copy(update={"canonical_citation": "Invented Act 2026"})
     with pytest.raises(CitationMetadataError, match="does not match"):
         render_answer(item, {mismatched.id: mismatched})
+
+
+def test_oscola5_high_court_identifiers_and_no_retrospective_neutral_citations() -> None:
+    # OSCOLA 5 (2026) 2.1.5 and 1.1.1, using the guide's own examples.
+    assert render_oscola({
+        "source_type": "case", "case_name": "Donoghue v Stevenson",
+        "neutral_citation": "[1932] UKHL 100", "report_citation": "[1932] AC 562",
+        "court_identifier": "HL",
+    }) == "*Donoghue v Stevenson* [1932] AC 562 (HL)"
+    assert render_oscola({
+        "source_type": "case", "case_name": "JEB Fasteners Ltd v Marks, Bloom & Co",
+        "report_citation": "[1981] 3 All ER 289", "court_identifier": "QB",
+    }) == "*JEB Fasteners Ltd v Marks, Bloom & Co* [1981] 3 All ER 289 (QBD)"
+    # A modern neutral citation keeps its own division tag.
+    assert render_oscola({
+        "source_type": "case", "case_name": "Bunt v Tilley",
+        "neutral_citation": "[2006] EWHC 407 (QB)", "report_citation": "[2006] 3 All ER 336",
+    }, "[1]") == "*Bunt v Tilley* [2006] EWHC 407 (QB), [2006] 3 All ER 336 [1]"

@@ -17,6 +17,7 @@ from app.assessment.guidance_bundle import (
     validate_guidance_rule,
     verified_rules_from_reviewed_records,
 )
+from app.runtime_adapters import MAX_ASSESSMENT_RULE_CHARS
 
 
 def test_owner_bundle_expresses_70_and_lower_band_repair_semantics() -> None:
@@ -29,31 +30,24 @@ def test_owner_bundle_expresses_70_and_lower_band_repair_semantics() -> None:
     assert all(rule.positive_target and rule.anti_pattern is None for rule in positives)
     assert all(rule.anti_pattern and rule.repair_action for rule in [*sixty, *fifty])
     assert all(rule.source_span_hash for rule in OWNER_ASSESSMENT_BUNDLE.rules)
-    assert len(OWNER_ASSESSMENT_BUNDLE.rules) == 18
-    assert {"owner-request-pinpoint-treatment-v1", "owner-request-concise-material-analysis-v1"} <= {
+    assert len(OWNER_ASSESSMENT_BUNDLE.rules) == 31
+    assert {"law-p5-state-assumptions-v1", "law-a-fence-sitting-v1"} <= {
         rule.rule_id for rule in OWNER_ASSESSMENT_BUNDLE.rules
     }
-    assert OWNER_ASSESSMENT_BUNDLE.version == "owner-standards-2026-09-23.4"
+    assert OWNER_ASSESSMENT_BUNDLE.version == "owner-law-folder-2026-09-25.1"
     rules = {rule.rule_id: rule.positive_target for rule in OWNER_ASSESSMENT_BUNDLE.rules}
-    assert "legal date" in rules["owner-universal-authority-at-claim-v1"]
-    assert "double recovery" in rules["owner-problem-ranked-outcomes-v1"]
-    assert "obiter" in rules["owner-essay-authority-synthesis-v1"]
+    assert "exceptions" in rules["law-p3-full-test-applied-v1"]
+    assert "obiter" in rules["law-u7-exact-authority-v1"]
+    assert "counterargument" in rules["law-u3-counterargument-then-position-v1"]
 
 
-def test_audit_candidate_assessment_rules_are_not_live() -> None:
-    path = (
-        Path(__file__).resolve().parents[2]
-        / "Live60-2026-08-16"
-        / "go-execution"
-        / "candidate-assessment-rules-2026-08-16.json"
-    )
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    live_ids = {rule.rule_id for rule in OWNER_ASSESSMENT_BUNDLE.rules}
-    candidate_ids = {item["Candidate rule ID"] for item in payload["rules"]}
-    assert payload["not_live"] is True
-    assert payload["do_not_bulk_approve"] is True
-    assert payload["oscola_fourth_edition_must_not_overwrite_oscola_5"] is True
-    assert live_ids.isdisjoint(candidate_ids)
+def test_compact_budget_gives_qwen_every_applicable_rule() -> None:
+    for task in ("general", "essay", "problem"):
+        guidance = budget_assessment_guidance(
+            OWNER_ASSESSMENT_BUNDLE, task_type=task, subject=None,
+            max_characters=MAX_ASSESSMENT_RULE_CHARS, compact=True,
+        )
+        assert guidance.omitted_rule_ids == ()
 
 
 def test_bundle_sha_is_stable_and_content_sensitive() -> None:

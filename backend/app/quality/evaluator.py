@@ -9,7 +9,7 @@ from uuid import uuid4
 from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE, applicable_guidance_rules
 from ..assessment.standards_scoring import score_applicable_standards
 from ..currentness import is_legislation_source
-from ..jurisdictions import compatible
+from ..jurisdictions import attributed_foreign_use, compatible
 from ..legal_roles import MATERIAL_CASE_ROLES
 from ..privacy import prompt_injection_hits, scrub_pii
 from ..types import (
@@ -24,11 +24,13 @@ from ..types import (
 )
 from .academic import AcademicRubricScorer
 from .evidence import (
+    RESEARCH_ROUTES,
     currentness_qualifies_for_answer,
     false_quotations,
     is_citable_authority_lane,
     is_substantively_related,
     non_atomic_material_claim_reasons,
+    research_mode_unverified,
     unsupported_material_facts,
 )
 from .fact_provenance import application_binding_repair_hint, verified_application_quotes
@@ -188,6 +190,7 @@ class QualityEvaluator:
                             "exact_legislation_reference",
                             "hybrid_rrf",
                             "frozen_reviewed_research_receipt",
+                            *RESEARCH_ROUTES,
                         }
                         and span.retrieval_threshold is not None
                         and span.retrieval_threshold_policy_sha256 is not None
@@ -230,7 +233,9 @@ class QualityEvaluator:
                                 ),
                             )
                         )
-                    if not compatible(draft.jurisdiction, span.jurisdiction, span.citation_data):
+                    if not compatible(
+                        draft.jurisdiction, span.jurisdiction, span.citation_data
+                    ) and not attributed_foreign_use(claim.text, span.jurisdiction):
                         findings.append(
                             QualityFinding(
                                 gate="jurisdiction",
@@ -239,10 +244,35 @@ class QualityEvaluator:
                                 severity=Severity.HARD_BLOCKER,
                                 section_id=section.id,
                                 claim_id=claim.id,
-                                corrective_action="Replace it with qualifying authority for the selected jurisdiction.",
+                                corrective_action=(
+                                    "Replace it with qualifying authority for the selected "
+                                    "jurisdiction, or name the other legal system in the claim "
+                                    "if the material is used as EU-law or comparative material."
+                                ),
                             )
                         )
-                    if not span.identity_verified:
+                    research_unverified = research_mode_unverified(span)
+                    if research_unverified:
+                        findings.append(
+                            QualityFinding(
+                                gate="authority_identity",
+                                code="unverified_source_research_mode",
+                                message=(
+                                    "Research mode: identity and current version checked against "
+                                    "the official record; provision-level review is incomplete."
+                                    if span.identity_verified and span.currentness_verified
+                                    else "Research mode: identity checked against the official "
+                                    "record; currentness is not verified."
+                                    if span.identity_verified
+                                    else "Research mode: this source has not passed identity and "
+                                    "currentness review; the answer labels it unverified."
+                                ),
+                                severity=Severity.INFORMATIONAL,
+                                section_id=section.id,
+                                claim_id=claim.id,
+                            )
+                        )
+                    elif not span.identity_verified:
                         findings.append(
                             QualityFinding(
                                 gate="authority_identity",
@@ -285,7 +315,7 @@ class QualityEvaluator:
                                     ),
                                 )
                             )
-                    if material_update_blocked:
+                    if material_update_blocked or research_unverified:
                         pass
                     elif is_case and not currentness_qualifies_for_answer(
                         span,

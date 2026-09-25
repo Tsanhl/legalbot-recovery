@@ -31,21 +31,22 @@ from .types import (
 
 PROMPT_VERSION = "evidence-first-structured-json-v5"
 
-MODEL_CONTEXT_TOKENS = 8192
-# The 9B MLX runtime must finish a complete JSON object inside the durable
-# worker's 300-second model-call boundary.  The previous 2,048-token request
-# could still be generating when that boundary closed; 1,600 retains the
-# observed 1,388-token visible draft while bounding worst-case generation.
-MODEL_OUTPUT_TOKENS = 1600
+MODEL_CONTEXT_TOKENS = 16384
+# 16k context (2026-09-25): all owner rules, about twice the evidence, and room
+# for a complete 700-word essay draft in structured JSON. The worst case
+# (maximum question plus full evidence and rules) stays within the input limit.
+MODEL_OUTPUT_TOKENS = 3072
 PROMPT_SAFETY_TOKENS = 844
 MAX_INPUT_ESTIMATED_TOKENS = MODEL_CONTEXT_TOKENS - MODEL_OUTPUT_TOKENS - PROMPT_SAFETY_TOKENS
-EVIDENCE_PROMPT_CHAR_BUDGET = 8500
-EVIDENCE_PROMPT_TOKEN_BUDGET = 2800
-REPAIR_EVIDENCE_CHAR_BUDGET = 6000
-REPAIR_EVIDENCE_TOKEN_BUDGET = 1900
+EVIDENCE_PROMPT_CHAR_BUDGET = 14500
+EVIDENCE_PROMPT_TOKEN_BUDGET = 4800
+REPAIR_EVIDENCE_CHAR_BUDGET = 12000
+REPAIR_EVIDENCE_TOKEN_BUDGET = 4000
 MAX_EVIDENCE_SPAN_CHARS = 4000
 MAX_QUESTION_CHARS = 3500
-MAX_ASSESSMENT_RULE_CHARS = 1800
+# Compact "Target:/Avoid:" rules for every applicable owner rule fit in 3,500
+# characters (largest mode, problem, measured at 3,380 on 2026-09-25).
+MAX_ASSESSMENT_RULE_CHARS = 3500
 UPLOAD_CONTEXT_CHAR_BUDGET = 3500
 UPLOAD_CONTEXT_TOKEN_BUDGET = 1100
 
@@ -575,6 +576,7 @@ def verify_model_fact_provenance(
 class LoopbackModelGateway:
     max_question_chars = MAX_QUESTION_CHARS
     assessment_character_budget = MAX_ASSESSMENT_RULE_CHARS
+    compact_assessment_rules = True
     evidence_character_budget = EVIDENCE_PROMPT_CHAR_BUDGET
     evidence_token_budget = EVIDENCE_PROMPT_TOKEN_BUDGET
     repair_evidence_character_budget = REPAIR_EVIDENCE_CHAR_BUDGET
@@ -598,7 +600,7 @@ class LoopbackModelGateway:
         self.expected_model = settings.model_id
         self.allow_test_stub = settings.test_mode
         self.owner_identifiers = settings.owner_identifiers
-        self._timeout = httpx.Timeout(connect=5, read=300, write=30, pool=5)
+        self._timeout = httpx.Timeout(connect=5, read=600, write=30, pool=5)
         self._capture_vault = settings.vault_dir if settings.development_chat_authority_sha256 else None
 
     def _preserve_invocation(self, envelope: Mapping[str, Any], body: Mapping[str, Any]) -> None:

@@ -17,6 +17,7 @@ from ..currentness import (
     is_legislation_source,
     normalise_currentness_status,
 )
+from ..jurisdictions import RESEARCH_FOREIGN_ROUTE
 from ..types import EvidenceSpan, MaterialLane
 
 if TYPE_CHECKING:
@@ -602,6 +603,22 @@ def currentness_qualifies_for_answer(
     return True
 
 
+RESEARCH_MODE_ROUTE = "unified_local_research_mode"
+RESEARCH_ROUTES = frozenset({RESEARCH_MODE_ROUTE, RESEARCH_FOREIGN_ROUTE})
+
+
+def research_mode_unverified(span: EvidenceSpan) -> bool:
+    """A research-mode span, which has not had full provision-level review.
+
+    Only ``UnifiedLocalRetriever`` (constructed when ``research_mode`` is on)
+    sets these routes. Its spans are at most checked against the official
+    record (identity, latest revised version), never reviewed for provision
+    extent, commencement or case treatment, so they always take the labelled
+    research path rather than the reviewed-evidence gates.
+    """
+    return span.retrieval_route in RESEARCH_ROUTES
+
+
 def evidence_span_eligible_for_drafting(
     span: EvidenceSpan,
     *,
@@ -615,6 +632,8 @@ def evidence_span_eligible_for_drafting(
     must echo the specific reviewed ``proposition_hash`` it relies upon.
     """
 
+    if research_mode_unverified(span):
+        return True
     if not span.identity_verified:
         return False
     if not is_case_source(span.citation_data):

@@ -156,3 +156,9 @@ docs/reports/retrieval-v1-freeze-*.md
 
 .DS_Store
 *.log
+
+# Local-only (owner decision 2026-09-25): copyrighted teaching rephrasings,
+# licensed official downloads, and the owner's marks and feedback.
+data/knowledge/
+data/official-staging/
+docs/private/

@@ -6,7 +6,6 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
-from scripts.ge_prepare_development_chat import codex_routes
 from test_ge_development_chat_authority import _fixture
 
 from app.api.main import app
@@ -16,7 +15,6 @@ from app.conversations.store import ConversationStore
 from app.db import utc_iso
 from app.evaluation.ge_development_chat_authority import GE_SESSION_CHAT_SCHEMA, _load_authority
 from app.evaluation.live_suite import sealed_sha256
-from app.model_routes import RoutedModelGateway
 
 
 def v2(tmp_path, database, cipher):
@@ -62,93 +60,26 @@ def v2(tmp_path, database, cipher):
     return services, request, path
 
 
-def test_signed_in_session_offers_three_distinct_codex_models():
-    routes = codex_routes("gpt-6-astra", "chatgpt_signin", session_ui=True)
-    assert {route["model_id"] for route in routes} == {
-        "gpt-6-sol", "gpt-6-astra", "gpt-6-luna"
-    }
-    assert len({route["route_id"] for route in routes}) == 3
-    assert all(route["kind"] == "codex_bridge" and route["auth_mode"] == "chatgpt_signin" for route in routes)
-    assert len(codex_routes("gpt-6-astra", "chatgpt_signin", session_ui=False)) == 1
-    assert len(codex_routes("gpt-6-astra", "dedicated_api_key", session_ui=True)) == 1
-
-
-def test_each_codex_choice_binds_its_own_pinned_gateway(tmp_path, database, cipher):
-    services, _, path = v2(tmp_path, database, cipher)
-    authority = json.loads(path.read_bytes())
-    routes = codex_routes("gpt-6-astra", "chatgpt_signin", session_ui=True)
-    authority["routes"].extend(routes)
-    authority["seal_sha256"] = sealed_sha256(authority)
-    raw = canonical_json_bytes(authority)
-    path.write_bytes(raw)
-    settings = replace(
-        services.settings,
-        development_chat_authority_sha256=hashlib.sha256(raw).hexdigest(),
-    )
-    vault = ConnectionStore(database, cipher)
-    session, _ = vault.create_session()
-    gateway = RoutedModelGateway(settings)
-    for route in routes:
-        connection = vault.create(session, route, secret=None, remember=False)
-        token = gateway.select(
-            route["route_id"], connection_id=connection["id"], connection_store=vault
-        )
-        try:
-            assert gateway.selected_model_id == route["model_id"]
-        finally:
-            gateway.reset(token)
-
-
-def test_credentials_encrypted_expired_and_revoked(database, cipher):
+def test_qwen_connection_is_session_owned_and_revocable(database, cipher):
     vault = ConnectionStore(database, cipher)
     owner, token = vault.create_session()
     stranger, _ = vault.create_session()
     route = {
-        "route_id": "hosted_api",
-        "kind": "hosted_api",
-        "model_id": "test-model",
-        "endpoint": "https://api.openai.com/v1/responses",
-        "credential_env": "OPENAI_API_KEY",
+        "route_id": "qwen_local", "kind": "qwen_local", "model_id": "qwen",
+        "endpoint": "http://127.0.0.1:8778", "credential_env": None,
     }
-    conn = vault.create(owner, route, secret="not-a-real-key-12345", remember=False)
-    assert "secret" not in conn
-    assert vault.secret(conn["id"]) == "not-a-real-key-12345"
-    assert b"not-a-real-key" not in database.path.read_bytes()
+    conn = vault.create(owner, route)
+    assert "secret" not in conn and "remembered" not in conn
     with pytest.raises(ConnectionUnavailable):
         vault.get(conn["id"], stranger)
-    # Independent worker instance sees protected temporary credentials.
-    assert ConnectionStore(database, cipher).secret(conn["id"]) == "not-a-real-key-12345"
+    with pytest.raises(ConnectionUnavailable):
+        vault.create(owner, {**route, "route_id": "hosted_api", "kind": "hosted_api"})
     vault.disconnect(conn["id"], owner)
     with pytest.raises(ConnectionUnavailable):
-        vault.secret(conn["id"])
+        vault.get(conn["id"], owner)
     database.execute("UPDATE chat_browser_sessions SET expires_at=?", (time.time() - 1,))
     with pytest.raises(ConnectionUnavailable):
         vault.session(token)
-
-
-def test_remember_requires_os_vault_and_disconnect_deletes(database, cipher):
-    class Vault:
-        def __init__(self):
-            self.keys = {}
-
-        def set_password(self, s, k, v):
-            self.keys[(s, k)] = v
-
-        def get_password(self, s, k):
-            return self.keys.get((s, k))
-
-        def delete_password(self, s, k):
-            self.keys.pop((s, k))
-
-    native = Vault()
-    store = ConnectionStore(database, cipher, vault=native)
-    owner, _ = store.create_session()
-    route = {"route_id": "gemini_api", "kind": "gemini_api", "model_id": "test-model"}
-    conn = store.create(owner, route, secret="secret-key-test", remember=True)
-    assert store.get(conn["id"])["secret"] is None
-    assert store.secret(conn["id"]) == "secret-key-test"
-    store.disconnect(conn["id"], owner)
-    assert not native.keys
 
 
 @pytest.mark.asyncio

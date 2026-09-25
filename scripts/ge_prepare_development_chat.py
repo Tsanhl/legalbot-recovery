@@ -30,43 +30,12 @@ from app.evaluation.ge_development_chat_authority import (  # noqa: E402
 from app.evaluation.live_suite import sealed_sha256  # noqa: E402
 
 
-def codex_routes(model_id: str, auth_mode: str, *, session_ui: bool) -> list[dict[str, object]]:
-    credential_env = None if auth_mode == "chatgpt_signin" else "LEGALBOT_CODEX_BRIDGE_KEY"
-    routes: list[dict[str, object]] = [{
-        "route_id": "codex_bridge", "kind": "codex_bridge",
-        "model_id": model_id, "endpoint": None,
-        "credential_env": credential_env, "auth_mode": auth_mode,
-    }]
-    if session_ui and auth_mode == "chatgpt_signin":
-        for choice, suffix in (
-            ("gpt-6-sol", "sol"),
-            ("gpt-6-astra", "astra"),
-            ("gpt-6-luna", "luna"),
-        ):
-            if choice != model_id:
-                routes.append({
-                    "route_id": f"codex_bridge_{suffix}",
-                    "kind": "codex_bridge", "model_id": choice,
-                    "endpoint": None, "credential_env": None,
-                    "auth_mode": "chatgpt_signin",
-                })
-    return routes
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session-ui", action="store_true", help="Issue v2 session/conversation/online-research capability")
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--owner-scope-sha256", required=True)
     parser.add_argument("--hours", type=int, default=24)
-    parser.add_argument("--local-url")
-    parser.add_argument("--local-model")
-    parser.add_argument("--local-version")
-    parser.add_argument("--api-model")
-    parser.add_argument("--claude-model")
-    parser.add_argument("--gemini-model")
-    parser.add_argument("--codex-model")
-    parser.add_argument("--codex-auth-mode", choices=("dedicated_api_key", "chatgpt_signin"), default="dedicated_api_key")
     args = parser.parse_args()
     settings = Settings()
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{2,127}", args.run_id):
@@ -82,10 +51,6 @@ def main() -> int:
         parser.error("isolated state, non-ACTIVE candidate and pinned retrieval manifest are required")
     if not 1 <= args.hours <= 168:
         parser.error("--hours must be between 1 and 168")
-    if (args.local_url is None) != (args.local_model is None):
-        parser.error("--local-url and --local-model must be supplied together")
-    if args.local_version is not None and args.local_model is None:
-        parser.error("--local-version requires --local-model")
     try:
         with sqlite3.connect(f"file:{settings.database_path}?mode=ro", uri=True) as db:
             row = db.execute(
@@ -108,36 +73,6 @@ def main() -> int:
         "model_id": settings.model_id, "endpoint": settings.model_url.rstrip("/"),
         "credential_env": None,
     }]
-    if args.local_url is not None:
-        routes.append({
-            "route_id": "local_endpoint", "kind": "local_endpoint",
-            "model_id": args.local_model, "endpoint": args.local_url,
-            "credential_env": None,
-            **({"model_version": args.local_version} if args.local_version else {}),
-        })
-    if args.api_model is not None:
-        routes.append({
-            "route_id": "hosted_api", "kind": "hosted_api",
-            "model_id": args.api_model,
-            "endpoint": "https://api.openai.com/v1/responses",
-            "credential_env": "OPENAI_API_KEY",
-        })
-    if args.claude_model is not None:
-        routes.append({
-            "route_id": "anthropic_api", "kind": "anthropic_api",
-            "model_id": args.claude_model,
-            "endpoint": "https://api.anthropic.com/v1/messages",
-            "credential_env": "ANTHROPIC_API_KEY",
-        })
-    if args.gemini_model is not None:
-        routes.append({
-            "route_id": "gemini_api", "kind": "gemini_api",
-            "model_id": args.gemini_model,
-            "endpoint": f"https://generativelanguage.googleapis.com/v1beta/models/{args.gemini_model}:generateContent",
-            "credential_env": "GEMINI_API_KEY",
-        })
-    if args.codex_model is not None:
-        routes.extend(codex_routes(args.codex_model, args.codex_auth_mode, session_ui=args.session_ui))
     if not all(_valid_route(settings, route) for route in routes):
         parser.error("a configured route has an invalid model identity or endpoint")
     access_key = secrets.token_urlsafe(40)

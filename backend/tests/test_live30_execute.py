@@ -420,7 +420,7 @@ async def test_executor_serially_captures_only_encrypted_answers_and_finalizes_r
     assert len(outcomes) == 30
     assert client.submissions == [f"live30-q{number:02d}" for number in range(1, 31)]
     assert all(outcome.released for outcome in outcomes)
-    assert "owner-problem-conclusory-application-v1" in (outcomes[0].triggered_assessment_rule_ids)
+    assert "law-a-partial-test-restated-facts-v1" in (outcomes[0].triggered_assessment_rule_ids)
     repeated = await executor.execute(pass_number=1, stability_sample=False)
     assert tuple(item.answer_sha256 for item in repeated) == tuple(
         item.answer_sha256 for item in outcomes

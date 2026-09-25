@@ -16,7 +16,6 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
-from urllib.parse import urlsplit
 
 from ..assessment.guidance_bundle import OWNER_ASSESSMENT_BUNDLE
 from ..config import Settings
@@ -35,7 +34,7 @@ GE_DEVELOPMENT_CHAT_SCHEMA = "legalbot.ge-owner-development-chat-authority.v1"
 GE_SESSION_CHAT_SCHEMA = "legalbot.ge-owner-development-chat-authority.v2"
 _SHA = re.compile(r"^[0-9a-f]{64}$")
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$")
-_ROUTE_KINDS = frozenset({"qwen_local", "local_endpoint", "hosted_api", "anthropic_api", "gemini_api", "codex_bridge"})
+_ROUTE_KINDS = frozenset({"qwen_local"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,7 +73,8 @@ def chat_runtime_binding_sha256(settings: Settings, route: Mapping[str, Any]) ->
             "contracts/runtime_selected_chain.py", "research/runtime.py",
             "quality/evaluator.py", "assessment/guidance_bundle.py",
             "assessment/rules.py", "assessment/standards_scoring.py",
-            "retrieval/reviewed_research_generation.py",
+            "retrieval/reviewed_research_generation.py", "retrieval/unified_local.py",
+            "jurisdictions.py", "quality/evidence.py",
             "retrieval/development_query.py", "connections.py", "api/chat.py",
             "conversations/chat_facts.py", "conversations/clarification.py",
             "research/licence_permissions.py", "research/official_capture.py", "research/case_source_review.py",
@@ -85,12 +85,6 @@ def chat_runtime_binding_sha256(settings: Settings, route: Mapping[str, Any]) ->
             "evaluation/prompts/full_answer_reviewer.v2.txt",
         )
     }
-    codex_wrapper_sha256 = None
-    if route.get("kind") == "codex_bridge":
-        wrapper = settings.project_root / "scripts" / "legalbot_codex_isolation_wrapper.py"
-        if wrapper.is_symlink() or not wrapper.is_file():
-            raise RuntimeError("development_chat_codex_wrapper_unavailable")
-        codex_wrapper_sha256 = hashlib.sha256(wrapper.read_bytes()).hexdigest()
     return hashlib.sha256(canonical_json_bytes({
         "schema": "legalbot.ge-owner-development-chat-runtime.v1",
         "development_state_id": settings.development_state_id,
@@ -100,67 +94,30 @@ def chat_runtime_binding_sha256(settings: Settings, route: Mapping[str, Any]) ->
         "route_adapter_sha256": route_adapter_sha256,
         "prompt_gateway_sha256": prompt_gateway_sha256,
         "answer_path_sha256": answer_path_sha256,
-        "codex_wrapper_sha256": codex_wrapper_sha256,
         "prompt_version": PROMPT_VERSION,
         "policy_sha256": POLICY_SHA256,
         "assessment_bundle_sha256": OWNER_ASSESSMENT_BUNDLE.sha256,
         "online_mode": settings.online_default,
         "official_research_enabled": settings.official_research_enabled,
+        "research_mode": settings.research_mode,
         "official_registry_sha256": hashlib.sha256((settings.project_root / "config/official_sources.json").read_bytes()).hexdigest(),
         "adapter_id": None,
     })).hexdigest()
 
 
 def _valid_route(settings: Settings, route: object) -> bool:
-    required_keys = {"route_id", "kind", "model_id", "endpoint", "credential_env"}
-    if not isinstance(route, dict) or (
-        set(route) != required_keys
-        and not (route.get("kind") == "local_endpoint" and set(route) == required_keys | {"model_version"})
-        and not (route.get("kind") == "codex_bridge" and set(route) == required_keys | {"auth_mode"})
-    ):
+    """Only the local Qwen route exists; hosted and Codex routes were removed."""
+    if not isinstance(route, dict) or set(route) != {
+        "route_id", "kind", "model_id", "endpoint", "credential_env",
+    }:
         return False
-    if (
-        not _ID.fullmatch(str(route.get("route_id") or ""))
-        or route.get("kind") not in _ROUTE_KINDS
-        or not isinstance(route.get("model_id"), str)
-        or not 3 <= len(route["model_id"]) <= 200
-    ):
-        return False
-    kind = route["kind"]
-    endpoint = route["endpoint"]
-    credential_env = route["credential_env"]
-    if kind == "qwen_local":
-        return (
-            route["model_id"] == settings.model_id
-            and endpoint == settings.model_url.rstrip("/")
-            and credential_env is None
-        )
-    if kind == "local_endpoint":
-        parsed = urlsplit(str(endpoint))
-        return (
-            parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost"}
-            and parsed.port is not None and not parsed.username and not parsed.password
-            and parsed.path in {"", "/"} and not parsed.query and not parsed.fragment
-            and credential_env is None
-            and isinstance(route.get("model_version", route["model_id"]), str)
-            and 3 <= len(route.get("model_version", route["model_id"])) <= 200
-        )
-    if kind == "hosted_api":
-        return (
-            endpoint == "https://api.openai.com/v1/responses"
-            and credential_env == "OPENAI_API_KEY"
-        )
-    if kind == "anthropic_api":
-        return endpoint == "https://api.anthropic.com/v1/messages" and credential_env == "ANTHROPIC_API_KEY"
-    if kind == "gemini_api":
-        return (
-            endpoint == f"https://generativelanguage.googleapis.com/v1beta/models/{route['model_id']}:generateContent"
-            and credential_env == "GEMINI_API_KEY"
-            and re.fullmatch(r"[A-Za-z0-9._-]+", route["model_id"]) is not None
-        )
-    if route.get("auth_mode") == "chatgpt_signin":
-        return endpoint is None and credential_env is None
-    return endpoint is None and credential_env == "LEGALBOT_CODEX_BRIDGE_KEY"
+    return (
+        _ID.fullmatch(str(route.get("route_id") or "")) is not None
+        and route.get("kind") in _ROUTE_KINDS
+        and route["model_id"] == settings.model_id
+        and route["endpoint"] == settings.model_url.rstrip("/")
+        and route["credential_env"] is None
+    )
 
 
 def _load_authority(settings: Settings) -> tuple[dict[str, Any], str]:
@@ -276,9 +233,7 @@ def validate_development_chat_admission(
     ):
         raise RuntimeError("development_chat_access_key_invalid")
     route = load_development_chat_route(settings, route_id)
-    if route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"} and not remote_processing_consent:
-        raise RuntimeError("development_chat_remote_processing_consent_required")
-    remote_processing_consent = route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"} or payload.online_mode != OnlineMode.LOCAL_ONLY
+    remote_processing_consent = payload.online_mode != OnlineMode.LOCAL_ONLY
     return GEDevelopmentChatAdmissionBinding(
         run_id=str(value["run_id"]),
         case_id=_case_id(raw_idempotency_key),
@@ -307,7 +262,7 @@ def replay_development_chat_admission(
         value["owner_scope_sha256"], chat_runtime_binding_sha256(settings, route),
         route_sha256(route), development_request_sha256(payload),
         str(row["idempotency_key"] or ""),
-        route["kind"] in {"hosted_api", "anthropic_api", "gemini_api", "codex_bridge"} or payload.online_mode != OnlineMode.LOCAL_ONLY,
+        payload.online_mode != OnlineMode.LOCAL_ONLY,
     )
     observed = (
         authority.get("run_id"), authority.get("authority_file_sha256"),

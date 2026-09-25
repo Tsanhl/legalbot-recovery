@@ -1,6 +1,53 @@
 # LegalBot current state
 
-## Latest owner direction: faster private review and one GE check with 6 Sol
+## 25 September 2026: Qwen only, one unified index, research mode
+
+Diagnosis: the chat's answers failed because retrieval found nothing (the
+reviewed index held only the Consumer Rights Act) and the gates rejected every
+unreviewed source, not because of Qwen's weights. See
+[the recovery plan](system-design/QWEN_RECOVERY_PLAN_2026-09-25.md).
+
+Done on the owner's instructions:
+
+- **Qwen is the only answering route.** Hosted-API (OpenAI, Claude, Gemini),
+  local-endpoint and Codex routes, API-key storage and their UI were removed.
+- **One unified index** (`data/indexes/unified-local-v1`, built by
+  `scripts/build_unified_local_index.py`) is embedding every citable authority,
+  scholarship and official-secondary document; about 16 hours on this Mac.
+- **Research mode** (`LEGALBOT_RESEARCH_MODE`, set by the chat launcher): the
+  unified retriever returns reviewed and unreviewed sources. Unreviewed ones
+  render as "Title [unverified source]" and raise an informational finding
+  instead of a hard blocker. Jurisdiction, quotation, support, contradiction
+  and teaching-lane gates still apply.
+- **New answer standard** from a full read of the Law folder:
+  [LAW_FOLDER_ANSWER_GUIDE.md](system-design/LAW_FOLDER_ANSWER_GUIDE.md),
+  approved and encoded as bundle `owner-law-folder-2026-09-25.1` (31 rules, each
+  scored). Qwen receives every applicable rule in compact form.
+- **Qwen runtime:** 16k context, 3,072 output tokens, 14.5k evidence characters;
+  answer workflow 45 minutes, model call 10 minutes. The 16k load has not yet
+  been measured on hardware (the GPU is busy embedding).
+- OSCOLA 5 court identifiers and the pre-2001 neutral-citation rule; a question
+  for England or Wales now accepts England-and-Wales and UK sources.
+
+Also done (evening):
+- the lecture-note rewrite and a law-and-rules knowledge lane for issue spotting;
+- labelled EU and comparative material;
+- fixes to three research-mode release blockers;
+- a first official-record verification pass (legislation.gov.uk and Find Case
+  Law) via `VERIFICATION.json`.
+
+See section 8 of the recovery plan.
+
+Not yet done:
+- finish the embedding, apply exclusions, and build the search indexes and the
+  knowledge lane;
+- Qwen titling for the roughly 930 untitled sources, then verify those;
+- a Qwen hardware test and the baseline quality run;
+- then training, only if needed.
+
+Nothing is ACTIVE, promoted or trained.
+
+## Earlier (superseded): faster private review and one GE check with 6 Sol
 
 The r28 Astra job ended during review after saving a 424-word structured draft
 and a 440-word repair; its queued companion expired. Neither produced a released

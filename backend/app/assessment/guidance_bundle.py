@@ -18,7 +18,9 @@ from typing import Any
 from .rules import assessment_standard_privacy_issues
 
 BUNDLE_SCHEMA = "legalbot.assessment-guidance-bundle.v1"
-BUNDLE_VERSION = "owner-standards-2026-09-23.4"
+BUNDLE_VERSION = "owner-law-folder-2026-09-25.1"
+# Version the sealed owner-decision manifest (the five marker rules) was applied to.
+DECISION_MANIFEST_BUNDLE_VERSION = "owner-standards-2026-08-14.1"
 OWNER_DECISION_MANIFEST_SHA256 = "be5916d6e3e40febb3819d1529df6f6ab4055de98baf275f8361b0fc31dda9a2"
 OWNER_VERIFICATION_SIGNAL = "owner_authored_policy_v1"
 OWNER_APPROVED_MARKER_SIGNAL = "owner_approved_marker_mapping_v1"
@@ -233,169 +235,197 @@ def _owner_approved_marker_rule(
     )
 
 
+# Approved by the owner on 2026-09-25 from docs/system-design/LAW_FOLDER_ANSWER_GUIDE.md;
+# each rule id names its guide section (u/e/p/g) or anti-pattern (a).
 OWNER_AUTHORED_RULES: tuple[AssessmentGuidanceRule, ...] = (
     _owner_rule(
-        "owner-universal-supported-analysis-v1",
-        grade_band="70+",
-        criterion="analysis",
-        task_type="any",
-        positive_target=(
-            "Explain the reasoning from verified authority to each material conclusion, "
-            "including important limits and uncertainty."
-        ),
+        'law-u1-answer-exact-question-v1',
+        grade_band='70+', criterion='thesis', task_type='any',
+        positive_target='Answer the exact question set from the first line to the last; every section advances an answer to the precise statement, party or outcome asked about.',
         anti_pattern=None,
-        repair_action="Add the missing reasoning step without changing verified legal propositions.",
+        repair_action='Reconnect each affected section conclusion to the precise question without changing verified propositions.',
     ),
     _owner_rule(
-        "owner-universal-authority-at-claim-v1",
-        grade_band="70+",
-        criterion="authority_accuracy",
-        task_type="any",
-        positive_target=(
-            "Support each material legal proposition at the point it is made with the "
-            "highest qualifying authority available in the frozen evidence pack. Check "
-            "that the cited passage applies to the issue, jurisdiction and legal date; "
-            "a relevant title or citation alone is insufficient."
-        ),
+        'law-u2-clear-defended-position-v1',
+        grade_band='70+', criterion='analysis', task_type='any',
+        positive_target='Take a clear position on each issue and defend it with reasons; decide the point wherever the evidence allows.',
         anti_pattern=None,
-        repair_action="Bind qualifying evidence beside the claim or narrow the claim to its support.",
+        repair_action='Replace undecided or hedged wording with a reasoned conclusion on the affected issue.',
     ),
     _owner_rule(
-        "owner-universal-unsupported-conclusion-v1",
-        grade_band="60-69",
-        criterion="analysis",
-        task_type="any",
-        positive_target="Connect every material conclusion to an explicit legal and factual reason.",
-        anti_pattern="Do not assert a conclusion without explaining the inferential link that supports it.",
-        repair_action="Insert the missing inference and preserve already verified sections.",
-    ),
-    _owner_rule(
-        "owner-universal-omitted-issue-v1",
-        grade_band="50-59",
-        criterion="issue_spotting",
-        task_type="any",
-        positive_target="Address or expressly rule out every material issue, including independent alternative legal routes; keep each route's conditions, deadlines and remedies distinct.",
-        anti_pattern="Do not omit a material issue, exception, defence, remedy or limiting authority.",
-        repair_action="Create an issue checklist and repair only the omitted issue or affected section.",
-    ),
-    _owner_rule(
-        "owner-problem-issue-application-v1",
-        grade_band="70+",
-        criterion="application",
-        task_type="problem",
-        positive_target=(
-            "Organise advice by party and issue, state the controlling rule, apply the "
-            "material facts, and give a supported intermediate conclusion."
-        ),
+        'law-u3-counterargument-then-position-v1',
+        grade_band='70+', criterion='counterargument', task_type='any',
+        positive_target='Present the strongest counterargument, dissent or alternative interpretation, then explain why the chosen position is better.',
         anti_pattern=None,
-        repair_action="Restore the rule–fact–inference–conclusion sequence for the affected issue.",
+        repair_action='Add the strongest opposing view on the affected issue and resolve it.',
     ),
     _owner_rule(
-        "owner-problem-ranked-outcomes-v1",
-        grade_band="70+",
-        criterion="application",
-        task_type="problem",
-        positive_target=(
-            "Test the strongest competing applications, identify missing material facts, "
-            "and rank likely outcomes proportionately. Do not invent evidence, bargaining power or alternatives: stated expenditure is not proof that an invoice exists. Identify the route to each remedy, "
-            "its limits and any incompatible election or double recovery. Track paid deposits, unpaid balances, additional demands, mitigation costs and claimed losses separately; a breach does not automatically extinguish the unpaid price."
-        ),
+        'law-u4-authority-at-point-v1',
+        grade_band='70+', criterion='authority_accuracy', task_type='any',
+        positive_target='Support each material legal proposition where it is made with the precise provision or the controlling highest-court authority in the evidence pack, and each evaluative or empirical claim with a supporting source.',
         anti_pattern=None,
-        repair_action="Add the strongest alternative and explain which fact would change the ranking.",
+        repair_action='Bind qualifying evidence beside the affected claim or narrow the claim to its support.',
     ),
     _owner_rule(
-        "owner-problem-partial-test-v1",
-        grade_band="60-69",
-        criterion="issue_spotting",
-        task_type="problem",
-        positive_target="State and apply every material element of the governing test before concluding.",
-        anti_pattern="Do not apply only part of a multi-element test or assume an unstated element is satisfied.",
-        repair_action="Add the omitted element, evidence and application to the affected issue.",
-    ),
-    _owner_rule(
-        "owner-problem-conclusory-application-v1",
-        grade_band="50-59",
-        criterion="application",
-        task_type="problem",
-        positive_target="Explain why each material fact supports, weakens or qualifies the conclusion.",
-        anti_pattern="Do not recite a rule and jump directly to an outcome without fact-specific application.",
-        repair_action="Add the fact-specific reasoning between the rule and conclusion.",
-    ),
-    _owner_rule(
-        "owner-essay-thesis-synthesis-v1",
-        grade_band="70+",
-        criterion="thesis",
-        task_type="essay",
-        positive_target=(
-            "State a qualified thesis that answers the precise proposition and make every "
-            "section advance, qualify or test it."
-        ),
+        'law-u7-exact-authority-v1',
+        grade_band='70+', criterion='authority_accuracy', task_type='any',
+        positive_target='Represent authority exactly: distinguish ratio from obiter and majority from dissent, and keep the precise formulation of any test.',
         anti_pattern=None,
-        repair_action="Rewrite the controlling proposition and reconnect each section conclusion to it.",
+        repair_action='Correct the description of the affected authority to match the evidence exactly.',
     ),
     _owner_rule(
-        "owner-essay-authority-synthesis-v1",
-        grade_band="70+",
-        criterion="authority_accuracy",
-        task_type="essay",
-        positive_target=(
-            "Compare the material authorities and relevant scholarship, explaining agreement, "
-            "tension, hierarchy and significance for the thesis. Distinguish holdings from "
-            "obiter comments, undecided issues and distinct doctrines. Distinguish original scholarly views from positions merely reported. Test each claimed doctrinal purpose against the actual rules and counterexamples. "
-            "Where relevant and supported, "
-            "evaluate the social, economic or institutional context and defend a reform position "
-            "separately from the statement of established law."
-        ),
+        'law-u8-secondary-sources-v1',
+        grade_band='70+', criterion='scholarship', task_type='any',
+        positive_target='Use academic and official secondary sources from the evidence pack to carry evaluation; group like-minded authors and contrast opposing scholarly views.',
         anti_pattern=None,
-        repair_action="Replace isolated summaries with a supported comparison tied to the thesis.",
+        repair_action='Add the relevant scholarly view from the evidence pack to the affected evaluative point.',
     ),
     _owner_rule(
-        "owner-essay-description-only-v1",
-        grade_band="60-69",
-        criterion="analysis",
-        task_type="essay",
-        positive_target="Evaluate how the authorities support or undermine the qualified thesis.",
-        anti_pattern="Do not stop at an accurate but descriptive survey of cases, legislation or commentary.",
-        repair_action="Add evaluation and connect the described material to the set proposition.",
-    ),
-    _owner_rule(
-        "owner-essay-quotation-dump-v1",
-        grade_band="50-59",
-        criterion="authority_accuracy",
-        task_type="essay",
-        positive_target="Paraphrase accurately and use only short quotations that perform an analytical function.",
-        anti_pattern="Do not substitute long quotations or case narratives for reasoned engagement.",
-        repair_action="Condense the source material and explain its significance in the analysis.",
-    ),
-    _owner_rule(
-        "owner-request-pinpoint-treatment-v1",
-        grade_band="70+",
-        criterion="citation_accuracy",
-        task_type="any",
-        positive_target=(
-            "Check that each cited provision or judgment paragraph supports the precise "
-            "proposition stated; distinguish the court's reasoning from a party's rejected submission."
-        ),
+        'law-u9-depth-where-it-counts-v1',
+        grade_band='70+', criterion='organisation', task_type='any',
+        positive_target='Give settled or preliminary points one or two sentences and spend the word budget on disputed or complex issues; develop fewer points fully rather than many briefly.',
         anti_pattern=None,
-        repair_action=(
-            "Recheck the cited passage and narrow, correct or remove the proposition when "
-            "the passage does not support it."
-        ),
+        repair_action='Compress the settled point and reallocate words to the most complex live issue.',
     ),
     _owner_rule(
-        "owner-request-concise-material-analysis-v1",
-        grade_band="70+",
-        criterion="precision",
-        task_type="any",
-        positive_target=(
-            "Use clear, concise sentences and spend the requested word budget on the "
-            "material issues, reasoning and supported qualifications."
-        ),
+        'law-u12-use-word-budget-v1',
+        grade_band='70+', criterion='organisation', task_type='any',
+        positive_target='Use the requested word range fully with substantive analysis and no padding.',
         anti_pattern=None,
-        repair_action=(
-            "Remove repetitive description and use the space to analyse the material "
-            "facts or competing legal arguments."
-        ),
+        repair_action='Expand the thinnest material analysis or cut repetition until the answer sits within the requested range.',
+    ),
+    _owner_rule(
+        'law-u13-precise-terms-no-contradiction-v1',
+        grade_band='70+', criterion='precision', task_type='any',
+        positive_target='Use legal terms in their legal meaning, keep supplied facts exact and keep every conclusion consistent with the others.',
+        anti_pattern=None,
+        repair_action='Correct the imprecise term or reconcile the contradictory conclusions.',
+    ),
+    _owner_rule(
+        'law-u14-explain-support-v1',
+        grade_band='70+', criterion='analysis', task_type='any',
+        positive_target='Explain how each authority supports the point it is cited for; citations never replace argument.',
+        anti_pattern=None,
+        repair_action='Add the missing explanatory step linking the evidence to the conclusion.',
+    ),
+    _owner_rule(
+        'law-u15-clear-academic-prose-v1',
+        grade_band='70+', criterion='precision', task_type='any',
+        positive_target='Write clear, concise academic prose in short sentences and short paragraphs, without contractions, colloquialisms or bullet-point argument.',
+        anti_pattern=None,
+        repair_action='Rewrite the affected passage as concise continuous prose.',
+    ),
+    _owner_rule(
+        'law-a-descriptive-not-analytical-v1',
+        grade_band='60-69', criterion='thesis', task_type='any',
+        positive_target='Analyse the statement or question throughout rather than reviewing the topic.',
+        anti_pattern='Describing the law or topic without analysing the statement or question set until the final section.',
+        repair_action='Restructure the affected section around the question and state what it shows about the answer.',
+    ),
+    _owner_rule(
+        'law-a-fence-sitting-v1',
+        grade_band='60-69', criterion='analysis', task_type='any',
+        positive_target='Reach a reasoned conclusion on each live issue.',
+        anti_pattern='Leaving live issues undecided or asserting outcomes with words such as clearly or likely instead of reasoning.',
+        repair_action='Replace the assertion with the reasoning and a definite conclusion.',
+    ),
+    _owner_rule(
+        'law-a-missing-controlling-authority-v1',
+        grade_band='50-59', criterion='authority_accuracy', task_type='any',
+        positive_target='Engage the controlling authority that goes to the heart of the issue, at the highest available court level.',
+        anti_pattern='Omitting the controlling authority, citing a lower court where an appellate decision exists, or naming a statute without its operative provision.',
+        repair_action='Replace or add the controlling authority and its operative provision from the evidence pack.',
+    ),
+    _owner_rule(
+        'law-a-case-law-only-v1',
+        grade_band='50-59', criterion='scholarship', task_type='any',
+        positive_target='Support evaluative claims with scholarly and official secondary sources as well as primary law.',
+        anti_pattern='Relying on primary sources alone for evaluative, empirical or reform claims.',
+        repair_action='Add the relevant secondary source to each affected evaluative claim.',
+    ),
+    _owner_rule(
+        'law-e1-thesis-led-introduction-v1',
+        grade_band='70+', criterion='thesis', task_type='essay',
+        positive_target='Open with a focused introduction that defines key terms, states the thesis the essay defends and names the two or three issues used to defend it.',
+        anti_pattern=None,
+        repair_action='Rewrite the introduction so it states the thesis and the issues that support it.',
+    ),
+    _owner_rule(
+        'law-e3-synthesis-not-summary-v1',
+        grade_band='70+', criterion='analysis', task_type='essay',
+        positive_target="Synthesise rather than summarise: compare authorities and scholarship, test a doctrine's claimed purposes against its operation, and draw analogies, flaws and own examples.",
+        anti_pattern=None,
+        repair_action='Replace the affected summary with comparison and evaluation that advances the thesis.',
+    ),
+    _owner_rule(
+        'law-e4-context-and-reform-v1',
+        grade_band='70+', criterion='analysis', task_type='essay',
+        positive_target='Engage the economic, social and political context and defend a persuasive view on effectiveness and reform, including its trade-offs.',
+        anti_pattern=None,
+        repair_action='Add the missing context or reform evaluation with its trade-offs.',
+    ),
+    _owner_rule(
+        'law-e6-conclusion-answers-question-v1',
+        grade_band='70+', criterion='thesis', task_type='essay',
+        positive_target='Explain any chosen focus and end with a conclusion that answers the question and follows from the analysis.',
+        anti_pattern=None,
+        repair_action='Rewrite the conclusion so it answers the question from the analysis made.',
+    ),
+    _owner_rule(
+        'law-p1-structure-by-party-v1',
+        grade_band='70+', criterion='organisation', task_type='problem',
+        positive_target='Structure the answer by party or claim following the question, open each section with a one-line finding and omit generic introductions and conclusions.',
+        anti_pattern=None,
+        repair_action='Reorganise the affected material under the relevant party or claim heading.',
+    ),
+    _owner_rule(
+        'law-p2-spot-every-issue-v1',
+        grade_band='70+', criterion='issue_spotting', task_type='problem',
+        positive_target='Treat each right, act, document and interest in the facts as a potential issue and address every live issue separately.',
+        anti_pattern=None,
+        repair_action='Add the omitted live issue as its own analysis.',
+    ),
+    _owner_rule(
+        'law-p3-full-test-applied-v1',
+        grade_band='70+', criterion='application', task_type='problem',
+        positive_target='State every element of each legal test, including exceptions, and apply each element to specific facts before concluding.',
+        anti_pattern=None,
+        repair_action='Add the missing element or exception and apply it to the facts.',
+    ),
+    _owner_rule(
+        'law-p5-state-assumptions-v1',
+        grade_band='70+', criterion='application', task_type='problem',
+        positive_target='Identify missing or ambiguous facts, state a reasonable assumption for each and apply it consistently.',
+        anti_pattern=None,
+        repair_action='State the assumption for the missing fact and align every dependent conclusion with it.',
+    ),
+    _owner_rule(
+        'law-p6-strongest-route-first-v1',
+        grade_band='70+', criterion='remedies', task_type='problem',
+        positive_target='Lead with the strongest legal route, then consider every materially available alternative route, defence and remedy.',
+        anti_pattern=None,
+        repair_action='Reorder routes by strength and add the omitted material alternative or remedy.',
+    ),
+    _owner_rule(
+        'law-p8-case-parallels-v1',
+        grade_band='70+', criterion='application', task_type='problem',
+        positive_target='Draw parallels with or distinguish the facts of decided cases, and resolve issues by elimination where the facts allow.',
+        anti_pattern=None,
+        repair_action='Compare the facts of the relevant authority with the scenario for the affected issue.',
+    ),
+    _owner_rule(
+        'law-a-partial-test-restated-facts-v1',
+        grade_band='50-59', criterion='application', task_type='problem',
+        positive_target='Apply every element of the full test to the specific facts.',
+        anti_pattern='Applying a partial test, overlooking exceptions, or restating the facts instead of applying the law to them.',
+        repair_action='Add the omitted element and apply it to the facts.',
+    ),
+    _owner_rule(
+        'law-g1-direct-practical-answer-v1',
+        grade_band='70+', criterion='thesis', task_type='general',
+        positive_target='Give the direct answer first, then the decisive conditions and deadlines, practical next steps and the missing facts that would change the outcome.',
+        anti_pattern=None,
+        repair_action='Move the direct answer first and add the missing condition, step or outcome-changing fact.',
     ),
 )
 
@@ -653,6 +683,13 @@ def instruction_for_rule(rule: AssessmentGuidanceRule) -> str:
     )
 
 
+def compact_instruction_for_rule(rule: AssessmentGuidanceRule) -> str:
+    """Short drafting form for small local models; scoring keeps the full form."""
+    if rule.grade_band == "70+":
+        return f"Target: {rule.positive_target}"
+    return f"Avoid: {rule.anti_pattern}"
+
+
 def _eligible_rules(
     rules: Sequence[AssessmentGuidanceRule], *, task_type: str, subject: str | None
 ) -> list[AssessmentGuidanceRule]:
@@ -698,11 +735,13 @@ def budget_assessment_guidance(
     task_type: str,
     subject: str | None,
     max_characters: int,
+    compact: bool = False,
 ) -> BudgetedAssessmentGuidance:
     """Select complete rules only; an over-budget rule is omitted, never cut."""
 
     if max_characters < 0:
         raise ValueError("max_characters must be non-negative")
+    render = compact_instruction_for_rule if compact else instruction_for_rule
     eligible = _eligible_rules(bundle.rules, task_type=task_type, subject=subject)
     positives = [rule for rule in eligible if rule.grade_band == "70+"]
     repairs = [rule for rule in eligible if rule.grade_band != "70+"]
@@ -716,7 +755,7 @@ def budget_assessment_guidance(
     # Reserve one complete target and one complete repair when a balanced pair
     # fits. A long first target must not crowd all corrective guidance out.
     pairs = [(a, b) for a in positives for b in repairs
-             if len(instruction_for_rule(a)) + len(instruction_for_rule(b)) <= max_characters]
+             if len(render(a)) + len(render(b)) <= max_characters]
     if pairs:
         a, b = pairs[0]
         interleaved = [a, b, *(r for r in interleaved if r not in (a, b))]
@@ -725,7 +764,7 @@ def budget_assessment_guidance(
     omitted: list[str] = []
     used = 0
     for rule in interleaved:
-        instruction = instruction_for_rule(rule)
+        instruction = render(rule)
         if used + len(instruction) > max_characters:
             omitted.append(rule.rule_id)
             continue

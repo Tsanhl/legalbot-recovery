@@ -45,6 +45,14 @@ _QUALIFICATION = re.compile(
 _ALTERNATIVE = re.compile(
     r"(?i)\b(?:alternative|competing|depends|missing fact|more likely|less likely|stronger|weaker)\b"
 )
+_HEDGE = re.compile(
+    r"(?i)\b(?:clearly|obviously|likely|possibly|arguably|may or may not|it depends|"
+    r"it is unclear|could go either way)\b"
+)
+_ASSUMPTION = re.compile(
+    r"(?i)\b(?:assum\w*|not stated|not told|unknown|missing fact|if (?:so|not)|unless)\b"
+)
+_SECONDARY_LANES = frozenset({"scholarship", "official_secondary"})
 _ELEMENT = re.compile(r"(?i)\b(?:defence|element|exception|limb|requirement|test)\b")
 _LONG_QUOTE = re.compile(r"[\"“][^\"”]{180,}[\"”]")
 _WORD = re.compile(r"[a-z][a-z'-]{2,}")
@@ -231,6 +239,29 @@ def _observable_features(
         bool(_REASONING.search(conclusion_text) or _COMPARISON.search(conclusion_text))
     )
     quotation_discipline = 0.0 if _LONG_QUOTE.search(full_text) else 1.0
+    hedge_ratio = _ratio(sum(bool(_HEDGE.search(claim.text)) for claim in material), len(material))
+    decisiveness = 0.6 * (1.0 - hedge_ratio) + 0.4 * float(
+        any(_POSITION.search(claim.text) for claim in material)
+    )
+    cited_lanes = [
+        str(evidence_by_id[evidence_id].lane)
+        for claim in material
+        if claim.id in supported
+        for evidence_id in claim.evidence_ids
+        if evidence_id in evidence_by_id
+    ]
+    # Plain-language GE answers are not marked on scholarship, and an answer
+    # cannot be faulted for not citing secondary sources the pack did not contain.
+    pack_has_secondary = any(
+        str(span.lane) in _SECONDARY_LANES for span in evidence_by_id.values()
+    )
+    general = str(draft.task_type) == "general"
+    secondary = (
+        1.0
+        if general or not pack_has_secondary
+        else min(1.0, sum(lane in _SECONDARY_LANES for lane in cited_lanes) / 2)
+    )
+    assumptions = min(1.0, sum(bool(_ASSUMPTION.search(claim.text)) for claim in material) / 1)
     readable_claim_ratio = _ratio(
         sum(8 <= len(claim.text.split()) <= 55 for claim in material), len(material)
     )
@@ -249,6 +280,11 @@ def _observable_features(
         "synthesis": synthesis,
         "quotation_discipline": quotation_discipline,
         "pinpoint": pinpoint_ratio,
+        "decisiveness": decisiveness,
+        # GE raises alternatives only when material, so it is not marked on this.
+        "counterargument": 1.0 if general else max(compare_ratio, alternative_ratio),
+        "secondary": secondary,
+        "assumptions": assumptions,
         "material_precision": (
             0.40 * readable_claim_ratio
             + 0.35 * question_alignment
@@ -277,6 +313,36 @@ def _rule_score(rule: AssessmentGuidanceRule, features: Mapping[str, float]) -> 
         "owner-amended-criminal-element-defence-v2": features["elements"],
         "owner-amended-question-engagement-v2": features["question_alignment"],
         "assessment-canonical-timely-authority-support-v1": features["support"],
+        # Law-folder guide rules (owner-approved 2026-09-25).
+        "law-u1-answer-exact-question-v1": features["question_alignment"],
+        "law-u2-clear-defended-position-v1": features["decisiveness"],
+        "law-u3-counterargument-then-position-v1": features["counterargument"],
+        "law-u4-authority-at-point-v1": features["support"],
+        "law-u7-exact-authority-v1": features["pinpoint"],
+        "law-u8-secondary-sources-v1": features["secondary"],
+        "law-u9-depth-where-it-counts-v1": features["material_precision"],
+        "law-u12-use-word-budget-v1": features["material_precision"],
+        "law-u13-precise-terms-no-contradiction-v1": features["material_precision"],
+        "law-u14-explain-support-v1": features["analysis"],
+        "law-u15-clear-academic-prose-v1": (
+            features["material_precision"] + features["quotation_discipline"]
+        ) / 2,
+        "law-a-descriptive-not-analytical-v1": features["analysis"],
+        "law-a-fence-sitting-v1": features["decisiveness"],
+        "law-a-missing-controlling-authority-v1": features["authority"],
+        "law-a-case-law-only-v1": features["secondary"],
+        "law-e1-thesis-led-introduction-v1": features["thesis"],
+        "law-e3-synthesis-not-summary-v1": features["authority_synthesis"],
+        "law-e4-context-and-reform-v1": (features["analysis"] + features["secondary"]) / 2,
+        "law-e6-conclusion-answers-question-v1": features["synthesis"],
+        "law-p1-structure-by-party-v1": features["issue_spotting"],
+        "law-p2-spot-every-issue-v1": features["issue_spotting"],
+        "law-p3-full-test-applied-v1": (features["elements"] + features["application"]) / 2,
+        "law-p5-state-assumptions-v1": features["assumptions"],
+        "law-p6-strongest-route-first-v1": features["alternatives"],
+        "law-p8-case-parallels-v1": features["application"],
+        "law-a-partial-test-restated-facts-v1": features["elements"],
+        "law-g1-direct-practical-answer-v1": features["thesis"],
     }
     if rule.rule_id not in explicit:
         raise ValueError(f"sealed assessment rule has no scoring implementation: {rule.rule_id}")

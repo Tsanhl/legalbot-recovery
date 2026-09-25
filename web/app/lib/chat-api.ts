@@ -1,6 +1,6 @@
 import type { QuestionRequest, QuestionAccepted, DevelopmentRouteId } from './contracts';
 
-export interface Connection { id: string; route_id: DevelopmentRouteId; remembered: boolean; expires_at: number; test_status: string }
+export interface Connection { id: string; route_id: DevelopmentRouteId; expires_at: number; test_status: string }
 export interface ChatMessage { id: string; role: 'user'|'assistant'; content: string; job_id: string|null; answer_id: string|null; selected_provider?:string; selected_model?:string; publication_status?:string; display_origin?:string }
 export interface ChatWindow { conversation_id: string; messages: ChatMessage[]; truncated: boolean; jobs: {id: string; status: string; stage: string; connection_id: string; jurisdiction: string; as_of_date: string; task_type: string; word_target: number}[] }
 export interface ChatSession { conversation_retention_days?: number; connections: Connection[]; routes: {route_id: DevelopmentRouteId; model_id: string; kind: string}[]; online_research_available: boolean; coverage: string }
@@ -15,7 +15,7 @@ async function call<T>(path: string, body?: unknown, headers: Record<string,stri
 }
 export const chatApi = {
   session: () => call<ChatSession>('/session', {}),
-  connect: (route_id: string, api_key: string, remember: boolean) => call<Connection>('/connections', {route_id, ...(api_key ? {api_key} : {}), remember}),
+  connect: (route_id: string) => call<Connection>('/connections', {route_id}),
   disconnect: (id: string) => call(`/connections/${encodeURIComponent(id)}/disconnect`, {}),
   test: (id: string) => call<{status:string}>(`/connections/${encodeURIComponent(id)}/test`, {}),
   conversations: () => call<{items:{id:string}[]}>('/conversations'),

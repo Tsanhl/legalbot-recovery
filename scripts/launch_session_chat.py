@@ -25,11 +25,6 @@ def main():
         type=Path,
         help="Existing reviewed development retrieval manifest; never an ACTIVE build",
     )
-    parser.add_argument("--api-model", default="gpt-5.5")
-    parser.add_argument("--codex-model", default="gpt-6-astra",
-                        help="Explicit signed-in Codex model; no automatic fallback")
-    parser.add_argument("--claude-model", default="claude-sonnet-4-6")
-    parser.add_argument("--gemini-model", default="gemini-2.5-pro")
     args = parser.parse_args()
     if not __import__("re").fullmatch(r"shared-chat-[a-z0-9-]{3,40}", args.state):
         raise ValueError("Use a fresh shared-chat- state ID")
@@ -96,9 +91,10 @@ def main():
         "LEGALBOT_DEVELOPMENT_CANDIDATE_BUILD_ID": candidate,
         "LEGALBOT_DEVELOPMENT_RETRIEVAL_MANIFEST_SHA256": prepared["manifest_sha256"],
         "LEGALBOT_START_QWEN": "1" if args.start_qwen else "0",
+        "LEGALBOT_RESEARCH_MODE": "true",
     }
     env.pop("LEGALBOT_DEVELOPMENT_CHAT_AUTHORITY_SHA256", None)
-    scope = "Owner approved shared chat implementation: session connections, encrypted conversations, indexed and reviewed online sources, twenty exposed cases per Codex/base Qwen, private diagnostics. No ACTIVE or public live promotion.\n"
+    scope = "Owner approved shared chat implementation: session connections, encrypted conversations, indexed and reviewed online sources, local Qwen only (hosted-API and Codex routes removed 2026-09-25), private diagnostics. No ACTIVE or public live promotion.\n"
     (run / "OWNER-SCOPE.md").write_text(scope)
     authority = json.loads(
         subprocess.check_output(
@@ -112,16 +108,6 @@ def main():
                 hashlib.sha256(scope.encode()).hexdigest(),
                 "--hours",
                 "24",
-                "--codex-model",
-                args.codex_model,
-                "--codex-auth-mode",
-                "chatgpt_signin",
-                "--api-model",
-                args.api_model,
-                "--claude-model",
-                args.claude_model,
-                "--gemini-model",
-                args.gemini_model,
             ],
             cwd=ROOT,
             env=env,
@@ -133,7 +119,7 @@ def main():
         k: v
         for k, v in env.items()
         if k.startswith("LEGALBOT_")
-        and k not in {"LEGALBOT_OWNER_IDENTIFIERS", "LEGALBOT_CODEX_BRIDGE_KEY"}
+        and k != "LEGALBOT_OWNER_IDENTIFIERS"
     }
     # Explicit list avoids copying unrelated environment secrets into receipts.
     allowed = (
@@ -151,6 +137,7 @@ def main():
         "LEGALBOT_DEVELOPMENT_CANDIDATE_BUILD_ID",
         "LEGALBOT_DEVELOPMENT_RETRIEVAL_MANIFEST_SHA256",
         "LEGALBOT_START_QWEN",
+        "LEGALBOT_RESEARCH_MODE",
         "LEGALBOT_DEVELOPMENT_CHAT_AUTHORITY_SHA256",
     )
     (run / "LAUNCH-CONFIG.json").write_text(

@@ -1,7 +1,8 @@
-"""Local browser sessions and per-connection credentials shared by API and worker.
+"""Local browser sessions and the session-owned Qwen connection.
 
-Only opaque IDs reach the browser. Temporary keys are encrypted with LocalCipher;
-remembered keys must use the native OS vault (no plaintext keyring fallback).
+Only opaque IDs reach the browser. Hosted-API keys and the Codex route were
+removed on 25 September 2026; a connection now only binds a session to the
+frozen local Qwen route and owns that session's conversations and jobs.
 """
 
 from __future__ import annotations
@@ -19,7 +20,6 @@ from .db import Database
 
 COOKIE = "legalbot_session"
 SESSION_SECONDS = 30 * 86400
-TEMP_SECONDS = 8 * 3600
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS chat_browser_sessions (
@@ -47,8 +47,8 @@ class ConnectionUnavailable(ValueError):
 
 
 class ConnectionStore:
-    def __init__(self, database: Database, cipher: LocalCipher, *, vault: Any = None) -> None:
-        self.db, self.cipher, self._vault = database, cipher, vault
+    def __init__(self, database: Database, cipher: LocalCipher) -> None:
+        self.db, self.cipher = database, cipher
         self.db.executescript(_SCHEMA)
 
     def session(self, token: str | None) -> str:
@@ -72,54 +72,18 @@ class ConnectionStore:
         )
         return identifier, token
 
-    def vault(self) -> Any:
-        if self._vault is not None:
-            return self._vault
-        import keyring
-
-        backend = keyring.get_keyring()
-        if not type(backend).__module__.startswith(
-            ("keyring.backends.macOS", "keyring.backends.Windows", "keyring.backends.SecretService")
-        ):
-            raise ConnectionUnavailable(
-                "A native operating-system credential store is required to remember a key"
-            )
-        return backend
-
-    def create(
-        self, session: str, route: dict[str, Any], *, secret: str | None, remember: bool
-    ) -> dict[str, Any]:
+    def create(self, session: str, route: dict[str, Any]) -> dict[str, Any]:
         from .evaluation.ge_development_chat_authority import route_sha256
 
-        remote_api = route["kind"] in {"hosted_api", "anthropic_api", "gemini_api"}
-        if remote_api and (not secret or not 8 <= len(secret) <= 4096):
-            raise ConnectionUnavailable("Enter an API key for the selected provider")
-        if not remote_api and secret:
-            raise ConnectionUnavailable("This route does not accept an API key")
+        if route["kind"] != "qwen_local":
+            raise ConnectionUnavailable("Only the local Qwen route is available")
         identifier = "connection-" + uuid4().hex
-        encrypted = None
-        if secret:
-            if remember:
-                self.vault().set_password("LegalBot.connections", identifier, secret)
-            else:
-                encrypted = self.cipher.encrypt_text(secret)
-        try:
-            self.db.execute(
-                "INSERT INTO chat_connections(id,session_id,route_id,route_sha256,remembered,secret,expires_at) VALUES (?,?,?,?,?,?,?)",
-                (
-                    identifier,
-                    session,
-                    route["route_id"],
-                    route_sha256(route),
-                    int(remember),
-                    encrypted,
-                    time.time() + (SESSION_SECONDS if remember else TEMP_SECONDS),
-                ),
-            )
-        except Exception:
-            if secret and remember:
-                self.vault().delete_password("LegalBot.connections", identifier)
-            raise
+        # remembered/secret columns are retained for schema compatibility only.
+        self.db.execute(
+            "INSERT INTO chat_connections(id,session_id,route_id,route_sha256,remembered,secret,expires_at) VALUES (?,?,?,?,?,?,?)",
+            (identifier, session, route["route_id"], route_sha256(route), 0, None,
+             time.time() + SESSION_SECONDS),
+        )
         return self.public(self.get(identifier, session))
 
     def get(self, identifier: str, session: str | None = None) -> Any:
@@ -131,17 +95,11 @@ class ConnectionStore:
             raise ConnectionUnavailable("Connection unavailable in this session")
         return row
 
-    def secret(self, identifier: str) -> str:
-        row = self.get(identifier)
-        if row["remembered"]:
-            return self.vault().get_password("LegalBot.connections", identifier) or ""
-        return self.cipher.decrypt_text(bytes(row["secret"])) if row["secret"] else ""
-
     @staticmethod
     def public(row: Any) -> dict[str, Any]:
         return {
             key: row[key]
-            for key in ("id", "route_id", "remembered", "expires_at", "test_status", "tested_at")
+            for key in ("id", "route_id", "expires_at", "test_status", "tested_at")
         }
 
     def list(self, session: str) -> list[dict[str, Any]]:
@@ -154,18 +112,10 @@ class ConnectionStore:
         ]
 
     def disconnect(self, identifier: str, session: str) -> None:
-        row = self.get(identifier, session)
-        # Revoke durable access first, even if the native vault is unavailable.
+        self.get(identifier, session)
         self.db.execute(
             "UPDATE chat_connections SET disconnected=1,secret=NULL WHERE id=?", (identifier,)
         )
-        if row["remembered"]:
-            try:
-                self.vault().delete_password("LegalBot.connections", identifier)
-            except Exception:
-                raise ConnectionUnavailable(
-                    "Connection revoked; credential-store deletion requires attention"
-                ) from None
 
     def claim_conversation(self, identifier: str, session: str) -> None:
         self.db.execute(

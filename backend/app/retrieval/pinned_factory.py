@@ -36,6 +36,14 @@ class PinnedRetrieverFactory:
             existing = self._cache.get(key)
             if existing is not None:
                 return existing
+            if self.settings.research_mode:
+                if key != self.settings.development_candidate_build_id:
+                    raise RuntimeError("research-mode pin differs from configured candidate")
+                from .unified_local import UnifiedLocalRetriever
+
+                research = UnifiedLocalRetriever(self.settings, key)
+                self._cache[key] = research
+                return research
             if self.settings.development_retrieval_manifest_sha256 is not None:
                 if key != self.settings.development_candidate_build_id:
                     raise RuntimeError("development retrieval pin differs from configured candidate")

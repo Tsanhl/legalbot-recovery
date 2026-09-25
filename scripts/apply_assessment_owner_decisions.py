@@ -23,7 +23,7 @@ if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
 from app.assessment.guidance_bundle import (  # noqa: E402
-    BUNDLE_VERSION,
+    DECISION_MANIFEST_BUNDLE_VERSION,
     OWNER_ASSESSMENT_BUNDLE,
     OWNER_DECISION_MANIFEST_SHA256,
     OWNER_DECISION_RULES,
@@ -86,7 +86,7 @@ def load_and_validate_manifest(project_root: Path = PROJECT_ROOT) -> dict[str, A
         raise ValueError("owner-decision manifest must omit source document content")
     if payload.get("owner_identity_included") is not False:
         raise ValueError("owner-decision manifest must omit owner identity")
-    if payload.get("resulting_bundle_version") != BUNDLE_VERSION:
+    if payload.get("resulting_bundle_version") != DECISION_MANIFEST_BUNDLE_VERSION:
         raise ValueError("owner-decision manifest bundle version mismatch")
 
     reaudit_path = project_root / "docs" / "reports" / REAUDIT_PATH.name

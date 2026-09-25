@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
 
-from ..jurisdictions import compatible
+from ..jurisdictions import admissible
 from ..types import EvidenceSpan
 from .schema_registry import ContractSchemaRegistry, canonical_json_bytes, seal_contract
 
@@ -232,7 +232,9 @@ def validate_retrieval_evidence_scope(
     if selected and not isinstance(plan_jurisdiction, str):
         raise ValueError("evidence pack requires a resolved plan jurisdiction")
     for item in selected:
-        if not compatible(plan_jurisdiction, item["jurisdiction"]):
+        if not admissible(
+            plan_jurisdiction, item["jurisdiction"], None, item.get("retrieval_route")
+        ):
             raise ValueError("evidence pack jurisdiction is outside the frozen query plan")
         reviewed = _optional_day(item.get("reviewed_as_of"), field="reviewed_as_of")
         if reviewed is None:
@@ -338,7 +340,12 @@ def build_retrieval_evidence_contracts(
             raise ValueError("selected evidence requires at least one issue binding")
         if not set(item.issue_ids) <= plan_issue_ids:
             raise ValueError("selected evidence issue is outside the frozen query plan")
-        if not compatible(plan_jurisdiction, item.span.jurisdiction, item.span.citation_data):
+        if not admissible(
+            plan_jurisdiction,
+            item.span.jurisdiction,
+            item.span.citation_data,
+            item.span.retrieval_route,
+        ):
             raise ValueError("selected evidence jurisdiction is outside the frozen query plan")
         if item.selected_token_count < 0:
             raise ValueError("selected evidence token count cannot be negative")

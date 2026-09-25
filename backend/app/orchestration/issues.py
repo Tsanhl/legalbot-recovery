@@ -13,6 +13,26 @@ MAX_NOTE_CHARS = 4_000
 MAX_PROPOSITIONS = 6
 MAX_QUERIES = 5
 MAX_QUERY_CHARS = 1_200
+# Up to this many issue queries come from knowledge-lane law-and-rules notes:
+# their section heading plus the authorities they name (never the note prose),
+# so the citable statutes and cases are retrieved from the authority index.
+MAX_KNOWLEDGE_QUERIES = 2
+MAX_QUERY_AUTHORITIES = 4
+_CASE_NAME = re.compile(
+    r"\b((?:R \(\w+\) v |Re |)[A-Z][\w.'&-]*(?: (?:and|of|the|&|[A-Z][\w.'&()-]*)){0,5}"
+    r"(?: v [A-Z][\w.'&-]*(?: (?:and|of|the|&|[A-Z][\w.'&()-]*)){0,5})?)"
+    r" [\[(](\d{4})[\])](?: \d+)? ?(UKSC|UKHL|UKPC|EWCA Civ|EWCA Crim|EWHC|AC|QB|KB|Ch|Fam|WLR|All ER|Crim LR|Cr App R|Lloyd's Rep)?"
+)
+_STATUTE = re.compile(
+    r"\b((?:[A-Z][\w()'-]*|of|and|the|for|in) (?:[\w()'-]+ ){0,8}Act \d{4})"
+    r"(?:,? (?:s|ss|art|Sch) ?[\w().–-]+)?"
+)
+_EU_CASE = re.compile(r"\b([A-Z][\w.'-]*(?: [A-Z(][\w.'()-]*){0,4}) \((C-\d+/\d+|\d+/\d+)")
+_LEAD_WORDS = frozenset({
+    "In", "The", "See", "Under", "A", "An", "Contrast", "Compare", "Following", "Applying",
+    "Approved", "Also", "Cf", "And", "Both", "Held", "Per", "Unlike", "After", "Before",
+})
+_TREATY = re.compile(r"\bArt(?:icle)?s? \d+(?:\(\d+\))? (?:TFEU|TEU|ECHR)\b")
 
 # Only fixed legal taxonomy labels may leave the private-note lane.  Names,
 # quotations and free-form teaching prose can never become query expansions.
@@ -152,6 +172,11 @@ def build_issue_plan(
 
     safe_question = _bounded_query_excerpt(safe_full_question, MAX_QUERY_CHARS)
     queries = [safe_question] if safe_question else []
+    knowledge_queries = _knowledge_queries(
+        selected_notes, jurisdiction=jurisdiction, subject=subject,
+        owner_identifiers=owner_identifiers,
+    )
+    taxonomy_limit = MAX_QUERIES - min(len(knowledge_queries), MAX_KNOWLEDGE_QUERIES)
     for key, label in propositions:
         # Repeating the entire question in every expansion lets its dominant
         # issue drown out the other issues in vector search. The original query
@@ -168,8 +193,13 @@ def build_issue_plan(
             expanded += f" Verify Consumer Rights Act 2015 {locators}."
         if expanded and expanded not in queries:
             queries.append(expanded)
+        if len(queries) >= taxonomy_limit:
+            break
+    for query in knowledge_queries:
         if len(queries) >= MAX_QUERIES:
             break
+        if query not in queries:
+            queries.append(query)
     if not queries:
         queries = [question[:MAX_QUERY_CHARS]]
     return IssuePlan(
@@ -181,6 +211,64 @@ def build_issue_plan(
         notes_used=len(safe_texts),
         unsafe_notes_excluded=unsafe_notes_excluded,
     )
+
+
+def note_authorities(text: str) -> list[str]:
+    """Statutes, treaty articles and cases named in a law-and-rules note."""
+
+    found: list[str] = []
+    for match in _STATUTE.finditer(text):
+        found.append(" ".join(match.group(0).split()).rstrip(".,;"))
+    for match in _TREATY.finditer(text):
+        found.append(match.group(0))
+    for match in _CASE_NAME.finditer(text):
+        words = match.group(1).split()
+        while words and words[0] in _LEAD_WORDS:
+            words = words[1:]
+        if words:
+            found.append(f"{' '.join(words)} [{match.group(2)}]")
+    for match in _EU_CASE.finditer(text):
+        words = match.group(1).split()
+        while words and words[0] in _LEAD_WORDS:
+            words = words[1:]
+        if words:
+            found.append(f"{' '.join(words)} ({match.group(2)})")
+    output: list[str] = []
+    for item in found:
+        if item not in output:
+            output.append(item)
+    return output
+
+
+def _knowledge_queries(
+    notes: Sequence[IssueSpottingNote],
+    *,
+    jurisdiction: str,
+    subject: str | None,
+    owner_identifiers: Sequence[str],
+) -> list[str]:
+    output: list[str] = []
+    for note in notes:
+        if not note.source_version_id.startswith("knowledge-"):
+            continue
+        text = scrub_pii(note.text[:MAX_NOTE_CHARS], owner_identifiers)
+        if not text.strip() or prompt_injection_hits(text):
+            continue
+        first, _, body = text.partition("\n")
+        heading = first.split(" — ")[-1].strip()
+        authorities = note_authorities(body)[:MAX_QUERY_AUTHORITIES]
+        if not heading or not authorities:
+            continue
+        query = (
+            f"{scrub_pii(jurisdiction, owner_identifiers)} {subject or note.subject}. "
+            f"Legal issue: {heading}. Authorities: {'; '.join(authorities)}."
+        )
+        query = _bounded_query_excerpt(query, MAX_QUERY_CHARS)
+        if query not in output:
+            output.append(query)
+        if len(output) >= MAX_KNOWLEDGE_QUERIES:
+            break
+    return output
 
 
 def _bounded_query_excerpt(value: str, limit: int) -> str:

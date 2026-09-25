@@ -97,8 +97,8 @@ class GenerateRequestTests(unittest.TestCase):
 class RuntimeConfigTests(unittest.TestCase):
     def test_default_memory_profile_is_bounded(self) -> None:
         memory = SafeMemoryConfig()
-        self.assertEqual(memory.context_window_tokens, 8192)
-        self.assertEqual(memory.max_output_tokens, 2048)
+        self.assertEqual(memory.context_window_tokens, 16384)
+        self.assertEqual(memory.max_output_tokens, 3072)
         self.assertTrue(memory.to_dict()["single_flight_generation"])
 
     def test_non_loopback_binding_is_rejected(self) -> None:
@@ -107,8 +107,8 @@ class RuntimeConfigTests(unittest.TestCase):
 
     def test_environment_cannot_raise_absolute_context_cap(self) -> None:
         with (
-            patch.dict(os.environ, {"LEGALBOT_MODEL_CONTEXT_TOKENS": "9000"}),
-            self.assertRaisesRegex(ValueError, "between 512 and 8192"),
+            patch.dict(os.environ, {"LEGALBOT_MODEL_CONTEXT_TOKENS": "20000"}),
+            self.assertRaisesRegex(ValueError, "between 512 and 16384"),
         ):
             SafeMemoryConfig.from_env()
 

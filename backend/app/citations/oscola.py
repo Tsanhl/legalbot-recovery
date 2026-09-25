@@ -156,8 +156,29 @@ def _title(value: str, style: str) -> str:
     raise CitationMetadataError("title_style must be italic or quoted")
 
 
+# OSCOLA 5 (2026) 2.1.5 names the High Court divisions 'KBD', 'QBD', 'Ch D' and
+# 'Fam'; OSCOLA 4 metadata may still carry the older short forms.
+_OSCOLA5_COURT_IDENTIFIERS = {"QB": "QBD", "KB": "KBD", "Ch": "Ch D", "ChD": "Ch D"}
+
+
+def _is_retrospective_neutral(neutral: str) -> bool:
+    """OSCOLA 5 1.1.1: neutral citations created retrospectively (pre-2001) are not used."""
+    match = re.match(r"^\[(\d{4})\]", neutral)
+    return bool(match) and int(match.group(1)) < 2001
+
+
 def render_oscola(data: Mapping[str, Any], locator: str | None = None) -> str:
-    """Render citation metadata supplied by a verified source record, never generated prose."""
+    """Render citation metadata supplied by a verified source record, never generated prose.
+
+    A ``research_note`` (research mode: what the official-record check could not
+    confirm, such as a case's later treatment) is shown after the citation.
+    """
+    rendered = _render_oscola(data, locator)
+    note = _clean(data.get("research_note"))
+    return f"{rendered} [{note}]" if note else rendered
+
+
+def _render_oscola(data: Mapping[str, Any], locator: str | None = None) -> str:
     source_type = _clean(data.get("source_type")).lower()
     raw_pinpoint = _clean(locator or data.get("pinpoint"))
 
@@ -172,6 +193,8 @@ def render_oscola(data: Mapping[str, Any], locator: str | None = None) -> str:
             )
         if neutral and not re.match(r"^\[\d{4}\]\s+", neutral):
             raise CitationMetadataError("A medium neutral citation must start with [year]")
+        if neutral and _is_retrospective_neutral(neutral) and (report or decision_date):
+            neutral = ""
         if report and not re.match(r"^(?:\[\d{4}\]|\(\d{4}\))\s+", report):
             raise CitationMetadataError("A report citation must start with [year] or (year)")
         neutral_court = _clean(data.get("neutral_court_identifier"))
@@ -181,6 +204,7 @@ def render_oscola(data: Mapping[str, Any], locator: str | None = None) -> str:
             base = f"*{case_name}* {neutral_part}, {report}"
         if not neutral:
             court = _clean(data.get("court_identifier"))
+            court = _OSCOLA5_COURT_IDENTIFIERS.get(court, court)
             if report:
                 if not court and data.get("court_identifier_not_required") is not True:
                     raise CitationMetadataError(
@@ -194,6 +218,11 @@ def render_oscola(data: Mapping[str, Any], locator: str | None = None) -> str:
                 base = f"*{case_name}* ({court}, {_date_text(decision_date, 'decision_date')})"
         pinpoint = _case_pinpoint(raw_pinpoint, data)
         return f"{base} {pinpoint}".strip()
+
+    if source_type == "unverified_source":
+        # Research mode: an unreviewed source is named, never presented as OSCOLA-verified.
+        (title,) = _require(data, "title")
+        return f"{title} [unverified source]"
 
     if source_type == "legislation":
         (title,) = _require(data, "title")

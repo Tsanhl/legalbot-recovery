@@ -25,6 +25,7 @@ from typing import Any, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from ..jurisdictions import attributed_foreign_use, compatible
 from ..privacy import contains_absolute_private_path, prompt_injection_hits
 from ..prompt_templates import (
     AI_EVIDENCE_REVIEWER_TEMPLATE_NAME,
@@ -33,6 +34,7 @@ from ..prompt_templates import (
 )
 from ..types import EvidenceSpan, StructuredDraft
 from .draft_identity import SOURCE_DRAFT_IDENTITY_SCHEMA, source_draft_sha256
+from .evidence import research_mode_unverified
 from .fact_provenance import verified_application_quotes
 
 AI_EVIDENCE_REVIEW_SCHEMA = "legalbot.ai-evidence-review.v5"
@@ -265,11 +267,16 @@ def freeze_material_claims(
                     raise ValueError("frozen EvidenceSpan contains prohibited path metadata")
                 if prompt_injection_hits(span.text):
                     raise ValueError("frozen EvidenceSpan failed prompt-injection safety")
-                if not span.identity_verified or not span.currentness_verified:
+                if (
+                    not (span.identity_verified and span.currentness_verified)
+                    and not research_mode_unverified(span)
+                ):
                     raise ValueError(
                         "frozen EvidenceSpan has not passed deterministic identity/currentness"
                     )
-                if span.jurisdiction != draft.jurisdiction:
+                if not compatible(
+                    draft.jurisdiction, span.jurisdiction, span.citation_data
+                ) and not attributed_foreign_use(claim.text, span.jurisdiction):
                     raise ValueError("frozen EvidenceSpan jurisdiction differs from the draft")
                 if str(span.lane) in {"private_teaching", "assessment_guidance"}:
                     raise ValueError("non-authority material cannot enter AI evidence review")

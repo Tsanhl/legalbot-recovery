@@ -24,7 +24,7 @@ from ..citations.oscola import bibliography_requested, render_answer
 from ..config import Settings
 from ..crypto import LocalCipher
 from ..db import Database
-from ..jurisdictions import compatible
+from ..jurisdictions import admissible
 from ..observability.live_tracing import (
     DatabaseOperation,
     TraceLevel,
@@ -768,6 +768,72 @@ class AnswerRunner:
         finally:
             self._issue_plan_metadata.pop(job_id, None)
 
+    async def _chat_retrieval_query(self, *, job_id: str, question: str) -> str:
+        """Standalone search query for a chat follow-up; drafting keeps the full text.
+
+        The chat facade freezes the saved conversation ahead of the current
+        message. Searching with that whole transcript dilutes retrieval, so in
+        research mode Qwen rewrites the current message into a self-contained
+        query used only for subject routing, teaching notes and issue queries.
+        Any rejection falls back to the full frozen question.
+        """
+        from ..conversations import ConversationQueryRewriter
+        from ..conversations.store import ConversationMessage
+
+        marker = "\n\nCURRENT USER MESSAGE:\n"
+        if not self.settings.research_mode or marker not in question:
+            return question
+        transcript, current = question.split(marker, 1)
+        parts = re.split(r"(?m)^(USER|ASSISTANT) MESSAGE (\d+):\n", transcript)
+        history = [
+            ConversationMessage(
+                id=f"frozen-{ordinal}", conversation_id="frozen", ordinal=int(ordinal),
+                role=role.lower(), content=content.strip(),  # type: ignore[arg-type]
+                content_sha256=hashlib.sha256(content.strip().encode()).hexdigest(),
+                estimated_tokens=0, job_id=None, answer_id=None, created_at="",
+            )
+            for role, ordinal, content in zip(parts[1::3], parts[2::3], parts[3::3], strict=True)
+        ]
+        if not history:
+            return question
+        input_digest = hashlib.sha256(question.encode()).hexdigest()
+        completed = self.database.completed_stage_attempt(job_id, "query-rewrite", "retrieval")
+        if completed is not None and completed["output_object_key"]:
+            value = self.objects.get_json(str(completed["output_object_key"]))
+            if value.get("input_digest") == input_digest:
+                return str(value["query"])
+        attempt_id = str(uuid4())
+        self.database.store_stage_attempt(
+            attempt_id=attempt_id, job_id=job_id, stage_key="query-rewrite",
+            section_key="retrieval",
+            attempt_number=self.database.next_stage_attempt_number(
+                job_id, "query-rewrite", "retrieval"
+            ),
+            status="running", encrypted_output=None, input_digest=input_digest,
+        )
+        result = await ConversationQueryRewriter(
+            cast(Any, self.model), enabled=True,
+            owner_identifiers=self.settings.owner_identifiers,
+        ).rewrite(question=current.strip(), history=history)
+        query = result.query if result.status == "rewritten" else question
+        output_key = self.objects.put_json(
+            namespace="conversation_query_rewrites",
+            value={
+                "schema": "legalbot.chat-retrieval-query.v1", "job_id": job_id,
+                "input_digest": input_digest, "query": query, "status": result.status,
+                "conversation_is_evidence": False,
+            },
+            metadata={
+                "purpose": "encrypted_non_evidence_retrieval_query",
+                "input_digest": input_digest, "conversation_is_evidence": False,
+            },
+        )
+        self.database.finish_stage_attempt(
+            attempt_id, status="complete", encrypted_output=None,
+            output_object_key=output_key, metrics=result.safe_metadata(),
+        )
+        return query
+
     async def _conversation_query_with_checkpoint(
         self,
         *,
@@ -911,8 +977,9 @@ class AnswerRunner:
             request=request,
         )
         question = rewrite.query
+        retrieval_question = await self._chat_retrieval_query(job_id=job_id, question=question)
         task_type = classify_task(question, request.task_type)
-        subject = classify_subject(question)
+        subject = classify_subject(retrieval_question)
         as_of = request.as_of_date or datetime.now(ZoneInfo("Europe/London")).date()
         upload_preparation = await asyncio.to_thread(
             self.uploads.prepare,
@@ -978,7 +1045,7 @@ class AnswerRunner:
             *upload_preparation.issue_notes,
             *list(
                 await self.retriever.retrieve_issue_spotting_notes(
-                    query=question,
+                    query=retrieval_question,
                     jurisdiction=request.jurisdiction,
                     subject=subject,
                     as_of_date=as_of,
@@ -988,7 +1055,7 @@ class AnswerRunner:
         ]
         safe_notes, unsafe_notes = self._screen_issue_notes(raw_notes)
         issue_plan = build_issue_plan(
-            question=question,
+            question=retrieval_question,
             jurisdiction=request.jurisdiction,
             subject=subject,
             notes=safe_notes,
@@ -1006,7 +1073,10 @@ class AnswerRunner:
                     "upload_review_required": upload_preparation.needs_review,
                 }
             )
-        issue_metadata["subject_routing"] = build_subject_routing_audit(classify_subjects(question))
+        issue_metadata["subject_routing"] = build_subject_routing_audit(
+            classify_subjects(retrieval_question)
+        )
+        issue_metadata["retrieval_query_rewritten"] = retrieval_question != question
         self._issue_plan_metadata[job_id] = issue_metadata
         if self._stop_if_cancelled(job_id):
             return
@@ -1137,7 +1207,9 @@ class AnswerRunner:
             span
             for span in evidence
             if evidence_span_eligible_for_drafting(span, as_of_date=as_of, database=self.database)
-            and compatible(request.jurisdiction, span.jurisdiction, span.citation_data)
+            and admissible(
+                request.jurisdiction, span.jurisdiction, span.citation_data, span.retrieval_route
+            )
         ]
         unsafe_source_ids = {
             span.source_version_id
@@ -1234,17 +1306,21 @@ class AnswerRunner:
                 upload_context=upload_preparation.contexts,
                 owner_identifiers=self.settings.owner_identifiers,
             )
-            selected_runtime_inputs = self._freeze_selected_runtime_inputs(
-                job_id=job_id,
-                question=question,
-                task_type=task_type,
-                answer_route=route,
-                jurisdiction=request.jurisdiction,
-                as_of_date=as_of,
-                issue_plan=issue_plan,
-                evidence=qualified,
-                visible_facts=visible_facts,
-            )
+            # Research mode (owner decision 2026-09-25) serves labelled unverified
+            # sources, so it must not issue the selected-chain certificate, which
+            # attests fully identity- and currentness-qualified evidence.
+            if not self.settings.research_mode:
+                selected_runtime_inputs = self._freeze_selected_runtime_inputs(
+                    job_id=job_id,
+                    question=question,
+                    task_type=task_type,
+                    answer_route=route,
+                    jurisdiction=request.jurisdiction,
+                    as_of_date=as_of,
+                    issue_plan=issue_plan,
+                    evidence=qualified,
+                    visible_facts=visible_facts,
+                )
 
         self.database.store_evidence([item.model_dump(mode="json") for item in qualified])
         self._record_teaching_verify_cite(job_id, issue_plan, qualified)
@@ -2146,7 +2222,9 @@ class AnswerRunner:
                 evidence_span_eligible_for_drafting(
                     span, as_of_date=as_of_date, database=self.database
                 )
-                and compatible(jurisdiction, span.jurisdiction, span.citation_data)
+                and admissible(
+                    jurisdiction, span.jurisdiction, span.citation_data, span.retrieval_route
+                )
             ):
                 continue
             document_view = json.dumps(
@@ -2181,6 +2259,7 @@ class AnswerRunner:
             task_type=str(task_type),
             subject=subject,
             max_characters=getattr(self.model, "assessment_character_budget", 1_800),
+            compact=bool(getattr(self.model, "compact_assessment_rules", False)),
         )
 
     def _assessment_rules(self, task_type: TaskType, subject: str | None) -> list[str]:
@@ -2275,6 +2354,7 @@ class AnswerRunner:
     ) -> tuple[str, ReleaseState]:
         if (
             self.settings.development_candidate_build_id is not None
+            and not self.settings.research_mode
             and selected_runtime_inputs is None
         ):
             raise RuntimeError("selected runtime inputs were not frozen before verification")

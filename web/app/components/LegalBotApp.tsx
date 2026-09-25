@@ -14,22 +14,8 @@ const TASKS: Array<{ value: TaskMode; label: string; description: string }> = [
 ];
 
 const PROVIDER_LABELS: Record<DevelopmentRouteId, string> = {
-  codex_bridge: "Codex",
-  codex_bridge_sol: "Codex",
-  codex_bridge_astra: "Codex",
-  codex_bridge_luna: "Codex",
   qwen_local: "Local Qwen",
-  local_endpoint: "Local endpoint",
-  hosted_api: "OpenAI API",
-  anthropic_api: "Claude API",
-  gemini_api: "Gemini API",
 };
-
-const CODEX_MODELS = [
-  { id: "gpt-6-sol", label: "6 Sol" },
-  { id: "gpt-6-astra", label: "6 Astra" },
-  { id: "gpt-6-luna", label: "6 Luna" },
-] as const;
 
 const STAGE_LABELS: Record<JobStage, string> = {
   queued: "Queued",
@@ -130,9 +116,6 @@ export function LegalBotApp() {
   const [session, setSession] = useState<ChatSession | null>(null);
   const [connections, setConnections] = useState<Connection[]>([]);
   const [connectionId, setConnectionId] = useState("");
-  const [route, setRoute] = useState<DevelopmentRouteId>("codex_bridge");
-  const [apiKey, setApiKey] = useState("");
-  const [remember, setRemember] = useState(false);
   const [consent, setConsent] = useState(false);
   const [panel, setPanel] = useState(false);
   const [connecting, setConnecting] = useState(false);
@@ -157,7 +140,6 @@ export function LegalBotApp() {
   const conversationRef = useRef(conversation);
   const selected = connections.find(c => c.id === connectionId);
   const selectedRoute = session?.routes.find(r => r.route_id === selected?.route_id);
-  const codexRoutes = session?.routes.filter(r => r.kind === 'codex_bridge') || [];
 
   const loadPreview = useCallback(async (id: string) => {
     const preview = await chatApi.draftPreview(id);
@@ -181,7 +163,7 @@ export function LegalBotApp() {
     void chatApi.session().then(async value => {
       if (!active) return;
       setSession(value); setConnections(value.connections);
-      setConnectionId(value.connections.find(c => c.route_id === 'codex_bridge')?.id || value.connections[0]?.id || '');
+      setConnectionId(value.connections.find(c => c.route_id === 'qwen_local')?.id || value.connections[0]?.id || '');
       const list = await chatApi.conversations();
       if (!active) return;
       setHistory(list.items);
@@ -233,28 +215,9 @@ export function LegalBotApp() {
   const connect = async () => {
     setConnecting(true); setError(''); setNotice('');
     try {
-      const connectRoute = route === 'codex_bridge' && selectedRoute?.kind === 'codex_bridge'
-        ? selectedRoute.route_id : route;
-      const value = await chatApi.connect(connectRoute, apiKey, remember);
-      setApiKey(''); setConnections(old => [...old, value]); setConnectionId(value.id);
+      const value = await chatApi.connect('qwen_local');
+      setConnections(old => [...old, value]); setConnectionId(value.id);
       setNotice('Connection saved. Run Test connection to check a real model response.');
-    } catch(e) { setError(formatApiError(e)); }
-    finally { setConnecting(false); }
-  };
-  const chooseCodexModel = async (modelId: string) => {
-    if (jobId || connecting) return;
-    const target = codexRoutes.find(item => item.model_id === modelId);
-    if (!target) return;
-    setError(''); setNotice('');
-    const existing = connections.find(item => item.route_id === target.route_id);
-    if (existing) { setConnectionId(existing.id); idempotency.current = ''; return; }
-    setConnecting(true);
-    try {
-      const value = await chatApi.connect(target.route_id, '', false);
-      setConnections(old => [...old, value]);
-      setConnectionId(value.id);
-      idempotency.current = '';
-      setNotice(`${modelId} selected for the next question. Run Test connection to check model access.`);
     } catch(e) { setError(formatApiError(e)); }
     finally { setConnecting(false); }
   };
@@ -270,11 +233,6 @@ export function LegalBotApp() {
   };
   const submit = async () => {
     if (!prompt.trim() || jobId || connecting) return;
-    if (/^(link|connect|use) (codex|claude|gemini|api|local model)[.!?]?$/i.test(prompt.trim())) {
-      const text = prompt.toLowerCase();
-      setRoute(text.includes('claude')?'anthropic_api':text.includes('gemini')?'gemini_api':text.includes('api')?'hosted_api':text.includes('local')?'qwen_local':'codex_bridge');
-      setPanel(true); setPrompt(''); return;
-    }
     setError(''); setNotice('');
     if (!selected) { setPanel(true); setError('Connect a model before sending your question.'); return; }
     if (selected.test_status === 'failed') { setPanel(true); setError('This model failed its connection test. Choose a working connection before sending your question.'); return; }
@@ -282,8 +240,8 @@ export function LegalBotApp() {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(asOfDate) || Number.isNaN(parsedLawDate.getTime()) || parsedLawDate.toISOString().slice(0, 10) !== asOfDate) {
       setError('Enter the law date as YYYY-MM-DD.'); return;
     }
-    if (!consent && (selected.route_id !== 'qwen_local' || onlineMode !== 'local_only')) {
-      setError('Confirm remote processing, or choose local Qwen with indexed sources only.'); return;
+    if (!consent && onlineMode !== 'local_only') {
+      setError('Allow official-source online research, or choose indexed sources only.'); return;
     }
     if (!idempotency.current) idempotency.current = crypto.randomUUID();
     try {
@@ -305,14 +263,9 @@ export function LegalBotApp() {
         <button type="button" className="text-button" onClick={()=>setPanel(!panel)}>Model connection</button>
       </header>
       {panel && <section className="connection-panel" aria-label="Model connection">
-        <h2>Choose your model</h2>
-        <p>Codex uses this Mac’s signed-in CLI and a remote model. Qwen runs on this Mac. API keys belong to this browser session.</p>
-        <label>Provider<select aria-label="Provider" value={route} onChange={e=>{setRoute(e.target.value as DevelopmentRouteId);setApiKey('');}}>
-          <option value="codex_bridge">Codex</option><option value="qwen_local">Local Qwen</option><option value="hosted_api">OpenAI API</option><option value="anthropic_api">Claude API</option><option value="gemini_api">Gemini API</option>
-        </select></label>
-        <p>{(route === 'codex_bridge' && selectedRoute?.kind === 'codex_bridge' ? selectedRoute : session?.routes.find(r=>r.route_id===route))?.model_id || 'This provider has not been configured by the local launcher.'}</p>
-        {['hosted_api','anthropic_api','gemini_api'].includes(route) && <><label>API key<input aria-label="API key" type="password" autoComplete="off" value={apiKey} onChange={e=>setApiKey(e.target.value)}/></label><label><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/>Remember connection in the operating system credential store</label></>}
-        <button type="button" disabled={connecting||!session?.routes.some(r=>r.route_id===route)} onClick={()=>void connect()}>Connect</button>
+        <h2>Local Qwen</h2>
+        <p>Qwen runs on this Mac. Questions and sources stay local unless you enable online research.</p>
+        <button type="button" disabled={connecting||!session?.routes.some(r=>r.route_id==='qwen_local')} onClick={()=>void connect()}>Connect</button>
         <label>Active connection<select aria-label="Active connection" value={connectionId} onChange={e=>setConnectionId(e.target.value)}><option value="">Choose connection</option>{connections.map(c=><option key={c.id} value={c.id}>{PROVIDER_LABELS[c.route_id]} · {session?.routes.find(r=>r.route_id===c.route_id)?.model_id || 'unknown model'} · {c.test_status}</option>)}</select></label>
         <button type="button" disabled={!selected||connecting} onClick={()=>void test()}>Test connection</button>
         <button type="button" disabled={!selected||connecting} onClick={()=>{if(selected) void chatApi.disconnect(selected.id).then(()=>{setConnections(old=>old.filter(c=>c.id!==selected.id));setConnectionId('');}).catch(e=>setError(formatApiError(e)));}}>Disconnect</button>
@@ -327,8 +280,8 @@ export function LegalBotApp() {
       <form className="composer" onSubmit={e=>{e.preventDefault();void submit();}}>
         {error && <p className="service-alert" role="alert">{error}</p>}{notice && <p role="status">{notice}</p>}
         <textarea aria-label="Your legal question" placeholder="Ask your legal question…" value={prompt} onChange={e=>{setPrompt(e.target.value);idempotency.current='';}} maxLength={30000} rows={4}/>
-        <div className="composer-controls"><label>Words<input aria-label="Words" type="number" min={100} max={10000} value={targetWords} onChange={e=>setTargetWords(Number(e.target.value))}/></label>{selectedRoute?.kind === 'codex_bridge' && <label>Model<select aria-label="Codex model" value={selectedRoute.model_id} onChange={e=>void chooseCodexModel(e.target.value)} disabled={Boolean(jobId)||connecting}>{!CODEX_MODELS.some(item=>item.id===selectedRoute.model_id) && <option value={selectedRoute.model_id}>{selectedRoute.model_id} (configured)</option>}{CODEX_MODELS.map(item=><option key={item.id} value={item.id} disabled={!codexRoutes.some(route=>route.model_id===item.id)}>{item.label}{codexRoutes.some(route=>route.model_id===item.id)?'':' (next session)'}</option>)}</select></label>}<label>Law as of<input aria-label="Law as of" type="text" inputMode="numeric" placeholder="YYYY-MM-DD" maxLength={10} value={asOfDate} onChange={e=>setAsOfDate(e.target.value)}/></label><label>Jurisdiction<input aria-label="Jurisdiction" value={jurisdiction} onChange={e=>setJurisdiction(e.target.value)} placeholder="Country and state or UK nation"/></label><label>Sources<select aria-label="Sources" value={onlineMode} onChange={e=>setOnlineMode(e.target.value as OnlineMode)}><option value="local_only">Indexed sources only</option><option value="auto">Index + online research</option></select></label></div>
-        <label className="remote-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Allow this question and selected context to be processed by the chosen remote provider and official-source research services</label>
+        <div className="composer-controls"><label>Words<input aria-label="Words" type="number" min={100} max={10000} value={targetWords} onChange={e=>setTargetWords(Number(e.target.value))}/></label><label>Law as of<input aria-label="Law as of" type="text" inputMode="numeric" placeholder="YYYY-MM-DD" maxLength={10} value={asOfDate} onChange={e=>setAsOfDate(e.target.value)}/></label><label>Jurisdiction<input aria-label="Jurisdiction" value={jurisdiction} onChange={e=>setJurisdiction(e.target.value)} placeholder="Country and state or UK nation"/></label><label>Sources<select aria-label="Sources" value={onlineMode} onChange={e=>setOnlineMode(e.target.value as OnlineMode)}><option value="local_only">Indexed sources only</option><option value="auto">Index + online research</option></select></label></div>
+        <label className="remote-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Allow online research on official legal sources (legislation.gov.uk, Find Case Law)</label>
         <button className="send-button" type="submit" disabled={!prompt.trim()||Boolean(jobId)||connecting} aria-label="Send question"><Icons.send size={22}/></button>
       </form>
     </main>

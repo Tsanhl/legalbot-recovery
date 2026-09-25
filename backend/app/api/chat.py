@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Request, Response
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, Field
 
 from ..connections import (
     COOKIE,
@@ -132,7 +132,7 @@ async def session(request: Request, response: Response) -> dict[str, Any]:
             {"route_id": r["route_id"], "model_id": r["model_id"], "kind": r["kind"]}
             for r in authority["routes"]
         ],
-        "default_route": "codex_bridge",
+        "default_route": "qwen_local",
         "online_research_available": services.settings.official_research_enabled,
         "coverage": "UK and USA; support is checked for each jurisdiction and date",
         "conversation_retention_days": services.settings.conversation_retention_days,
@@ -141,8 +141,6 @@ async def session(request: Request, response: Response) -> dict[str, Any]:
 
 class ConnectionInput(BaseModel):
     route_id: str = Field(min_length=3, max_length=128)
-    api_key: SecretStr | None = None
-    remember: bool = False
 
 
 @router.get("/connections")
@@ -158,17 +156,9 @@ async def connect(payload: ConnectionInput, request: Request) -> dict[str, Any]:
     vault, session_id = require_session(request, services)
     try:
         route = load_development_chat_route(services.settings, payload.route_id)
-        return vault.create(
-            session_id,
-            route,
-            secret=payload.api_key.get_secret_value() if payload.api_key else None,
-            remember=payload.remember,
-        )
+        return vault.create(session_id, route)
     except (ConnectionUnavailable, RuntimeError):
-        raise HTTPException(
-            422,
-            "Connection could not be created; check the provider, key and operating-system credential store",
-        ) from None
+        raise HTTPException(422, "Connection could not be created for the local Qwen route") from None
 
 
 @router.post("/connections/{connection_id}/disconnect")
@@ -177,9 +167,7 @@ async def disconnect(connection_id: str, request: Request) -> dict[str, Any]:
     try:
         vault.disconnect(connection_id, session_id)
     except ConnectionUnavailable:
-        raise HTTPException(
-            409, "Connection revoked or unavailable; check credential-store status"
-        ) from None
+        raise HTTPException(409, "Connection revoked or unavailable") from None
     return {"disconnected": True}
 
 

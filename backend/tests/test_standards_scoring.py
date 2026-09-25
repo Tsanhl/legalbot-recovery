@@ -60,8 +60,8 @@ def test_applicable_rules_are_complete_not_prompt_budgeted() -> None:
     )
     ids = {item.rule_id for item in rules}
     assert "owner-amended-criminal-element-defence-v2" in ids
-    assert "owner-problem-issue-application-v1" in ids
-    assert "owner-essay-thesis-synthesis-v1" not in ids
+    assert "law-p3-full-test-applied-v1" in ids
+    assert "law-e1-thesis-led-introduction-v1" not in ids
     assert len(ids) == len(rules)
 
 

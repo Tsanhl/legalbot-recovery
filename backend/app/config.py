@@ -66,6 +66,9 @@ class Settings:
     # Connected official-source access is an explicit operator/canary mode.
     # A plain API/worker start must remain offline by default.
     official_research_enabled: bool = _env_bool("LEGALBOT_OFFICIAL_RESEARCH_ENABLED", False)
+    # Owner decision 2026-09-25: answer from the unified local index, allowing
+    # unreviewed sources that are labelled "unverified" instead of blocked.
+    research_mode: bool = _env_bool("LEGALBOT_RESEARCH_MODE", False)
     xerj_enabled: bool = _env_bool("LEGALBOT_XERJ_ENABLED", False)
     phoenix_enabled: bool = _env_bool("LEGALBOT_PHOENIX_ENABLED", False)
     owner_identifiers: tuple[str, ...] = _env_identifiers()

@@ -2,13 +2,10 @@ from datetime import date
 
 import pytest
 
-from app.config import Settings
-from app.model_routes import CodexBridgeGateway
 from app.orchestration.answer_structure import canonical_heading, section_contract
 from app.orchestration.contracts import ModelDraft
 from app.orchestration.retry_policy import is_deterministic_safety_failure
 from app.orchestration.runner import _bind_model_draft_context
-from app.runtime_adapters import LoopbackModelGateway
 from app.types import StructuredDraft, TaskType
 
 
@@ -28,16 +25,6 @@ def test_host_owned_roles_survive_normalisation_without_model_heading_prose():
     assert canonical_heading("general", "unrecognised-id", 1) == "Analysis 1"
     assert section_contract("essay")[0]["id"] == "thesis"
 
-
-def test_hosted_provider_gets_its_own_budget_without_changing_qwen(tmp_path):
-    settings = Settings(project_root=tmp_path)
-    local = LoopbackModelGateway(settings)
-    codex = CodexBridgeGateway(settings, {"model_id": "gpt-5.5", "auth_mode": "chatgpt_signin"})
-    assert local.max_question_chars == 3500
-    assert codex.max_question_chars == 30000
-    assert codex.assessment_character_budget > local.assessment_character_budget
-    assert codex.output_token_budget > local.output_token_budget
-    assert codex._generation_config_sha256() != local._generation_config_sha256()
 
 
 def test_quality_repair_is_allowed_while_evidence_safety_still_stops():
@@ -141,20 +128,6 @@ def test_excess_length_has_a_scoped_repair_and_cannot_release_full(evidence):
     assert str(report.release_state)=="held_for_review"
 
 
-def test_selected_provider_identity_is_used_for_review_provenance(tmp_path):
-    from app.model_routes import RoutedModelGateway
-    settings=Settings(project_root=tmp_path)
-    router=RoutedModelGateway(settings)
-    assert router.selected_model_id==settings.model_id
-    selected=CodexBridgeGateway(settings,{"model_id":"gpt-5.5","auth_mode":"chatgpt_signin"})
-    token=router._selected.set(selected)
-    try:
-        assert router.selected_model_id=="gpt-5.5"
-        assert router.selected_generation_config_sha256==selected._generation_config_sha256()
-    finally:
-        router.reset(token)
-    assert router.selected_model_id==settings.model_id
-
 
 def test_checkpoint_cannot_reuse_an_answer_across_provider_budget_changes():
     from app.orchestration.runner import draft_checkpoint_input_sha256
@@ -172,16 +145,6 @@ def test_ge_prompt_leads_with_conclusion_without_forcing_repeated_analysis():
     assert drafting_section_contract('essay') == section_contract('essay')
     assert canonical_heading('general', 'conclusion', 5) == 'Conclusion'
 
-
-def test_codex_reasoning_profile_is_explicit_and_digest_bound(tmp_path):
-    gateway = CodexBridgeGateway(Settings(project_root=tmp_path), {
-        'model_id': 'gpt-5.5', 'auth_mode': 'chatgpt_signin',
-    })
-    assert gateway._reasoning_effort('draft') == 'high'
-    assert gateway._reasoning_effort('repair') == 'high'
-    assert gateway._reasoning_effort('semantic_verify') == 'medium'
-    from app.model_routes import HostedEvidenceGateway
-    assert gateway._generation_config_sha256() != HostedEvidenceGateway._generation_config_sha256(gateway)
 
 
 def test_possessive_s_is_not_a_statutory_section_reference():
