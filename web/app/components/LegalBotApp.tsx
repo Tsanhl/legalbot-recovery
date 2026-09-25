@@ -9,8 +9,8 @@ import { Icons } from "./Icons";
 const TASKS: Array<{ value: TaskMode; label: string; description: string }> = [
   { value: "auto", label: "Auto", description: "Detect the right legal answer structure" },
   { value: "essay", label: "Essay", description: "Critical argument and scholarship" },
-  { value: "problem", label: "Problem", description: "Issues, rules, application and outcome" },
-  { value: "general", label: "General", description: "Clear, authoritative explanation" },
+  { value: "problem", label: "Problem question", description: "Issues, rules, application and outcome" },
+  { value: "general", label: "General question", description: "Clear, authoritative explanation" },
 ];
 
 const PROVIDER_LABELS: Record<DevelopmentRouteId, string> = {
@@ -20,16 +20,16 @@ const PROVIDER_LABELS: Record<DevelopmentRouteId, string> = {
 const STAGE_LABELS: Record<JobStage, string> = {
   queued: "Queued",
   researching: "Researching sources",
-  qualifying_evidence: "Qualifying evidence",
-  drafting: "Drafting answer",
-  verifying: "Verifying every claim",
-  repairing: "Repairing weak sections",
-  assembling: "Assembling verified sections",
-  complete: "Verified answer ready",
-  limited: "Verified limited answer ready",
-  held_for_review: "Held for human review",
-  system_error: "Research could not be completed",
-  cancelled: "Research cancelled",
+  qualifying_evidence: "Checking sources",
+  drafting: "Writing the answer",
+  verifying: "Checking every claim",
+  repairing: "Fixing weak sections",
+  assembling: "Putting the answer together",
+  complete: "Answer ready",
+  limited: "Limited answer ready",
+  held_for_review: "Held for review",
+  system_error: "Something went wrong",
+  cancelled: "Cancelled",
 };
 
 const PROGRESS_STAGES: JobStage[] = [
@@ -41,61 +41,29 @@ const PROGRESS_STAGES: JobStage[] = [
   "assembling",
 ];
 
-const STARTERS = [
-  {
-    mode: "essay" as TaskMode,
-    icon: Icons.book,
-    title: "Build a critical essay",
-    copy: "Develop a defensible thesis with primary authority and current scholarship.",
-  },
-  {
-    mode: "problem" as TaskMode,
-    icon: Icons.target,
-    title: "Analyse a problem question",
-    copy: "Work through each issue, apply the facts and rank likely outcomes.",
-  },
-  {
-    mode: "general" as TaskMode,
-    icon: Icons.search,
-    title: "Explain a legal doctrine",
-    copy: "Start with the governing rule, limits and verified authorities.",
-  },
-];
-
 function stageIndex(stage: JobStage): number {
   return ["queued", ...PROGRESS_STAGES, "complete"].indexOf(stage);
 }
 
-function JobProgress({ stage, detail, createdAt }: { stage: JobStage; detail: string; createdAt?: string }) {
+function JobProgress({ stage, detail, createdAt, onCancel }: { stage: JobStage; detail: string; createdAt?: string; onCancel: () => void }) {
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
   const elapsed = createdAt ? Math.max(0, Math.floor((now - Date.parse(createdAt)) / 1000)) : 0;
-  const current = stageIndex(stage);
+  const current = Math.max(0, stageIndex(stage));
+  const percent = Math.min(100, Math.round((current / (PROGRESS_STAGES.length + 1)) * 100));
   return (
-    <div className="job-card" role="status" aria-live="polite">
-      <div className="job-card-head">
-        <div className="job-orb"><span /></div>
-        <div>
-          <strong>{STAGE_LABELS[stage]}</strong>
-          <p>{detail || "Working locally. You can leave this page and reconnect to the same job."}</p>
-        </div>
-        <strong aria-label="Elapsed time">{Math.floor(elapsed / 60)}m {elapsed % 60}s</strong>
+    <div className="progress" role="status" aria-live="polite">
+      <div className="progress-line">
+        <span className="progress-dot" aria-hidden="true" />
+        <strong>{STAGE_LABELS[stage]}</strong>
+        <span className="progress-time" aria-label="Elapsed time">{Math.floor(elapsed / 60)}m {elapsed % 60}s</span>
+        <button type="button" className="link-button" onClick={onCancel}>Cancel</button>
       </div>
-      <ol className="stage-track" aria-label="Answer progress">
-        {PROGRESS_STAGES.map((item) => {
-          const index = stageIndex(item);
-          const state = index < current ? "done" : index === current ? "active" : "pending";
-          return (
-            <li className={state} key={item}>
-              <span>{state === "done" ? <Icons.check size={13} /> : null}</span>
-              {STAGE_LABELS[item]}
-            </li>
-          );
-        })}
-      </ol>
+      <div className="progress-bar" aria-hidden="true"><span style={{ width: `${percent}%` }} /></div>
+      <p>{detail || "Working on this computer. You can leave and come back to the same question."}</p>
     </div>
   );
 }
@@ -104,11 +72,11 @@ type VisibleDraft = Extract<DraftPreview, {available: true}>;
 
 function DraftPreviewCard({ preview }: { preview: VisibleDraft }) {
   return <details className="draft-preview" aria-label="Private diagnostic draft">
-    <summary>Private diagnostic draft — unverified</summary>
-    <p>This is the model’s saved text, not a released legal answer. It may contain errors or unsupported claims. It is not added to the case facts for follow-up questions.</p>
+    <summary>Unchecked draft (not an answer)</summary>
+    <p>This is the model’s saved text before checking. It may contain errors or unsupported claims, and it is not used as a fact in follow-up questions.</p>
     <small>{preview.model_version} · version {preview.version} · {preview.word_count} words · {preview.review_complete ? 'Review findings below' : 'Review in progress'}</small>
     <pre>{preview.content}</pre>
-    {preview.review_findings.length > 0 && <details><summary>Why this draft was held ({preview.review_findings.length} findings shown)</summary><ul>{preview.review_findings.map((finding, i) => <li key={`${finding.code}-${i}`}><strong>{finding.code}:</strong> {finding.message}</li>)}</ul></details>}
+    {preview.review_findings.length > 0 && <details><summary>Why it was held ({preview.review_findings.length})</summary><ul>{preview.review_findings.map((finding, i) => <li key={`${finding.code}-${i}`}><strong>{finding.code}:</strong> {finding.message}</li>)}</ul></details>}
   </details>;
 }
 
@@ -134,6 +102,7 @@ export function LegalBotApp() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [sidebar, setSidebar] = useState(false);
+  const [options, setOptions] = useState(false);
   const [evidence, setEvidence] = useState<EvidenceSelection | null>(null);
   const idempotency = useRef("");
   const end = useRef<HTMLDivElement>(null);
@@ -217,31 +186,31 @@ export function LegalBotApp() {
     try {
       const value = await chatApi.connect('qwen_local');
       setConnections(old => [...old, value]); setConnectionId(value.id);
-      setNotice('Connection saved. Run Test connection to check a real model response.');
+      setNotice('Connected. Press Test to check that the model responds.');
     } catch(e) { setError(formatApiError(e)); }
     finally { setConnecting(false); }
   };
   const test = async () => {
     if (!selected) return;
-    setConnecting(true); setNotice('Testing a short model response…');
+    setConnecting(true); setNotice('Testing the model…');
     try {
       const result = await chatApi.test(selected.id);
       setConnections(old => old.map(c => c.id === selected.id ? {...c,test_status:result.status} : c));
-      setNotice(result.status === 'passed' ? 'Model responded. Legal answer quality is checked separately.' : 'Model test failed. This connection cannot answer questions; check model access or choose another connection.');
+      setNotice(result.status === 'passed' ? 'The model responded.' : 'The model did not respond. Check that Qwen is running, then test again.');
     } catch(e) { setError(formatApiError(e)); }
     finally { setConnecting(false); }
   };
   const submit = async () => {
     if (!prompt.trim() || jobId || connecting) return;
     setError(''); setNotice('');
-    if (!selected) { setPanel(true); setError('Connect a model before sending your question.'); return; }
-    if (selected.test_status === 'failed') { setPanel(true); setError('This model failed its connection test. Choose a working connection before sending your question.'); return; }
+    if (!selected) { setPanel(true); setError('Connect the model before sending a question.'); return; }
+    if (selected.test_status === 'failed') { setPanel(true); setError('The model failed its test. Fix the connection before sending a question.'); return; }
     const parsedLawDate = new Date(`${asOfDate}T00:00:00Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(asOfDate) || Number.isNaN(parsedLawDate.getTime()) || parsedLawDate.toISOString().slice(0, 10) !== asOfDate) {
-      setError('Enter the law date as YYYY-MM-DD.'); return;
+      setOptions(true); setError('Enter the law date as YYYY-MM-DD.'); return;
     }
     if (!consent && onlineMode !== 'local_only') {
-      setError('Allow official-source online research, or choose indexed sources only.'); return;
+      setOptions(true); setError('Allow online research on official sources, or choose local sources only.'); return;
     }
     if (!idempotency.current) idempotency.current = crypto.randomUUID();
     try {
@@ -254,37 +223,86 @@ export function LegalBotApp() {
     const id = `conversation-${crypto.randomUUID()}`; conversationRef.current = id; setConversation(id); setMessages([]); setDraftPreviews({}); setJobId(''); setJob(null); setError(''); idempotency.current='';
     window.history.replaceState({},'', '/'); setSidebar(false);
   };
+  const openConversation = (id: string) => {
+    conversationRef.current = id; setConversation(id); setJobId(''); setJob(null); setSidebar(false);
+    const url = new URL(location.href); url.searchParams.set('conversation', id); window.history.replaceState({}, '', url);
+    void refresh(id, true).catch(e => setError(formatApiError(e)));
+  };
   const chooseMode = (mode: TaskMode) => { setTaskMode(mode); setTargetWords(mode === 'essay' || mode === 'problem' ? 700 : 450); };
+  const status = !selected ? 'none' : selected.test_status === 'passed' ? 'ok' : selected.test_status === 'failed' ? 'failed' : 'pending';
+
   return <div className="app-shell">
-    {sidebar && <aside className="sidebar"><button type="button" onClick={newChat}>New conversation</button><h2>Saved conversations</h2><p>Private chats expire after {session?.conversation_retention_days || 30} days without a new message.</p>{history.map((item, i) => <button type="button" key={item.id} onClick={() => { conversationRef.current = item.id; setConversation(item.id); setJobId(''); setJob(null); setSidebar(false); const url=new URL(location.href); url.searchParams.set('conversation',item.id); window.history.replaceState({},'',url); void refresh(item.id, true).catch(e=>setError(formatApiError(e))); }}>Conversation {history.length-i}</button>)}</aside>}
+    <aside className={`sidebar${sidebar ? ' open' : ''}`} aria-label="Conversations">
+      <div className="sidebar-top">
+        <span className="brand">Law</span>
+        <button className="icon-button sidebar-close" type="button" aria-label="Close conversations" onClick={() => setSidebar(false)}><Icons.close size={18}/></button>
+      </div>
+      <button type="button" className="new-chat" onClick={newChat}><Icons.plus size={16}/>New chat</button>
+      {history.length > 0 && <p className="sidebar-label">Recent</p>}
+      <nav className="chat-list">
+        {history.map((item, i) => <button type="button" key={item.id} className={item.id === conversation ? 'active' : ''} onClick={() => openConversation(item.id)}>Conversation {history.length - i}</button>)}
+      </nav>
+      <p className="sidebar-note">Chats stay on this computer and are removed after {session?.conversation_retention_days || 30} days without a new message.</p>
+    </aside>
+    {sidebar && <button type="button" className="sidebar-scrim" aria-label="Close conversations" onClick={() => setSidebar(false)} tabIndex={-1}/>}
     <main className="main-panel">
-      <header className="topbar"><button className="icon-button" type="button" aria-label="Open conversations" onClick={()=>setSidebar(!sidebar)}><Icons.menu size={22}/></button>
-        <nav className="task-switcher" aria-label="Answer mode">{TASKS.map(item=><button type="button" className={taskMode===item.value?'active':''} key={item.value} onClick={()=>chooseMode(item.value)}>{item.label}</button>)}</nav>
-        <button type="button" className="text-button" onClick={()=>setPanel(!panel)}>Model connection</button>
+      <header className="topbar">
+        <button className="icon-button menu-button" type="button" aria-label="Open conversations" onClick={() => setSidebar(!sidebar)}><Icons.menu size={20}/></button>
+        <span className="topbar-title">Law</span>
+        <button type="button" className="model-pill" aria-expanded={panel} onClick={() => setPanel(!panel)}>
+          <span className={`status-dot ${status}`} aria-hidden="true"/>
+          {selected ? `Qwen · ${status === 'ok' ? 'ready' : status === 'failed' ? 'not working' : 'untested'}` : 'Not connected'}
+        </button>
       </header>
       {panel && <section className="connection-panel" aria-label="Model connection">
-        <h2>Local Qwen</h2>
-        <p>Qwen runs on this Mac. Questions and sources stay local unless you enable online research.</p>
-        <button type="button" disabled={connecting||!session?.routes.some(r=>r.route_id==='qwen_local')} onClick={()=>void connect()}>Connect</button>
-        <label>Active connection<select aria-label="Active connection" value={connectionId} onChange={e=>setConnectionId(e.target.value)}><option value="">Choose connection</option>{connections.map(c=><option key={c.id} value={c.id}>{PROVIDER_LABELS[c.route_id]} · {session?.routes.find(r=>r.route_id===c.route_id)?.model_id || 'unknown model'} · {c.test_status}</option>)}</select></label>
-        <button type="button" disabled={!selected||connecting} onClick={()=>void test()}>Test connection</button>
-        <button type="button" disabled={!selected||connecting} onClick={()=>{if(selected) void chatApi.disconnect(selected.id).then(()=>{setConnections(old=>old.filter(c=>c.id!==selected.id));setConnectionId('');}).catch(e=>setError(formatApiError(e)));}}>Disconnect</button>
+        <div className="panel-head"><h2>Model</h2><button className="icon-button" type="button" aria-label="Close model settings" onClick={() => setPanel(false)}><Icons.close size={16}/></button></div>
+        <p>Qwen runs on this computer. Your questions stay here unless you allow online research on official sources.</p>
+        <label>Connection<select aria-label="Active connection" value={connectionId} onChange={e => setConnectionId(e.target.value)}><option value="">Choose connection</option>{connections.map(c => <option key={c.id} value={c.id}>{PROVIDER_LABELS[c.route_id]} · {session?.routes.find(r => r.route_id === c.route_id)?.model_id || 'unknown model'} · {c.test_status}</option>)}</select></label>
+        <div className="panel-actions">
+          <button type="button" className="button" disabled={connecting || !session?.routes.some(r => r.route_id === 'qwen_local')} onClick={() => void connect()}>Connect</button>
+          <button type="button" className="button" disabled={!selected || connecting} onClick={() => void test()}>Test</button>
+          <button type="button" className="button subtle" disabled={!selected || connecting} onClick={() => { if (selected) void chatApi.disconnect(selected.id).then(() => { setConnections(old => old.filter(c => c.id !== selected.id)); setConnectionId(''); }).catch(e => setError(formatApiError(e))); }}>Disconnect</button>
+        </div>
+        {selectedRoute && selected && <small>{selectedRoute.model_id}</small>}
       </section>}
-      <div className="connection-status" role="status">{selectedRoute && selected ? `${PROVIDER_LABELS[selected.route_id]} · ${selectedRoute.model_id} · ${selected.test_status === 'passed' ? 'connection tested' : selected.test_status === 'failed' ? 'connection failed' : 'connection test pending'}` : 'No model connected'} · UK and USA coverage is checked per question.</div>
       <section className="chat-content" aria-label="Conversation">
-        {!messages.length && <section className="welcome"><div className="welcome-mark">A</div><p className="eyebrow">Evidence before assertion</p><h1>Legal research you can inspect.</h1><p>Ask for a critical essay, problem analysis or clear explanation. Inspect the sources used and any remaining limitations.</p><div className="starter-grid">{STARTERS.map(item=><button key={item.mode} type="button" className="starter-card" onClick={()=>chooseMode(item.mode)}><span><item.icon size={24}/></span><strong>{item.title}</strong><p>{item.copy}</p></button>)}</div><p>Claim-level evidence · Full OSCOLA by default · Advisory academic guidance</p></section>}
-        {messages.map(message=><article key={message.id} className={message.role==='user'?'question-card':'answer-card'} data-message-role={message.role} data-message-id={message.id}><header>{message.role==='user'?'You':'LegalBot'}</header>{message.role==='assistant'&&<small className="message-provenance">Selected: {message.selected_model || message.selected_provider || 'unknown'} · {message.display_origin==='released_answer'?'Reviewed answer':'System clarification or incomplete result'}</small>}<div className="answer-prose"><AnswerMarkdown content={message.content} onEvidence={citation=>{if(message.answer_id)setEvidence({answerId:message.answer_id,evidenceId:citation.evidenceId,citationLabel:citation.label});}}/></div>{message.role==='assistant' && !message.answer_id && message.job_id && draftPreviews[message.job_id] && <DraftPreviewCard preview={draftPreviews[message.job_id]}/>}</article>)}
-        {jobId && <><JobProgress stage={job?.stage||'queued'} detail={job?.message||'Your question is saved. Checking sources and selected model.'} createdAt={job?.created_at}/>{draftPreviews[jobId] && <DraftPreviewCard preview={draftPreviews[jobId]}/>}<button type="button" onClick={()=>void api.cancelJob(jobId).catch(e=>setError(formatApiError(e)))}>Cancel</button></>}
-        <div ref={end}/>
+        <div className="thread">
+          {!messages.length && !jobId && <div className="welcome"><h1>What would you like to ask?</h1><p>A legal question, an essay title or a problem question. Choose the answer type below.</p></div>}
+          {messages.map(message => message.role === 'user'
+            ? <div key={message.id} className="msg user" data-message-role={message.role} data-message-id={message.id}><div className="bubble">{message.content}</div></div>
+            : <div key={message.id} className="msg assistant" data-message-role={message.role} data-message-id={message.id}>
+                <div className="answer-prose"><AnswerMarkdown content={message.content} onEvidence={citation => { if (message.answer_id) setEvidence({ answerId: message.answer_id, evidenceId: citation.evidenceId, citationLabel: citation.label }); }}/></div>
+                <small className="message-provenance">{message.display_origin === 'released_answer' ? 'Checked answer' : 'Clarification or incomplete result'} · {message.selected_model || message.selected_provider || 'unknown model'}</small>
+                {!message.answer_id && message.job_id && draftPreviews[message.job_id] && <DraftPreviewCard preview={draftPreviews[message.job_id]}/>}
+              </div>)}
+          {jobId && <><JobProgress stage={job?.stage || 'queued'} detail={job?.message || 'Your question is saved. Checking sources.'} createdAt={job?.created_at} onCancel={() => void api.cancelJob(jobId).catch(e => setError(formatApiError(e)))}/>{draftPreviews[jobId] && <DraftPreviewCard preview={draftPreviews[jobId]}/>}</>}
+          <div ref={end}/>
+        </div>
       </section>
-      <form className="composer" onSubmit={e=>{e.preventDefault();void submit();}}>
-        {error && <p className="service-alert" role="alert">{error}</p>}{notice && <p role="status">{notice}</p>}
-        <textarea aria-label="Your legal question" placeholder="Ask your legal question…" value={prompt} onChange={e=>{setPrompt(e.target.value);idempotency.current='';}} maxLength={30000} rows={4}/>
-        <div className="composer-controls"><label>Words<input aria-label="Words" type="number" min={100} max={10000} value={targetWords} onChange={e=>setTargetWords(Number(e.target.value))}/></label><label>Law as of<input aria-label="Law as of" type="text" inputMode="numeric" placeholder="YYYY-MM-DD" maxLength={10} value={asOfDate} onChange={e=>setAsOfDate(e.target.value)}/></label><label>Jurisdiction<input aria-label="Jurisdiction" value={jurisdiction} onChange={e=>setJurisdiction(e.target.value)} placeholder="Country and state or UK nation"/></label><label>Sources<select aria-label="Sources" value={onlineMode} onChange={e=>setOnlineMode(e.target.value as OnlineMode)}><option value="local_only">Indexed sources only</option><option value="auto">Index + online research</option></select></label></div>
-        <label className="remote-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Allow online research on official legal sources (legislation.gov.uk, Find Case Law)</label>
-        <button className="send-button" type="submit" disabled={!prompt.trim()||Boolean(jobId)||connecting} aria-label="Send question"><Icons.send size={22}/></button>
+      <form className="composer" onSubmit={e => { e.preventDefault(); void submit(); }}>
+        {error && <p className="service-alert" role="alert">{error}</p>}
+        {notice && <p className="notice" role="status">{notice}</p>}
+        <div className="composer-box">
+          <textarea aria-label="Your legal question" placeholder="Ask a legal question…" value={prompt} rows={1} maxLength={30000}
+            onChange={e => { setPrompt(e.target.value); idempotency.current = ''; e.target.style.height = 'auto'; e.target.style.height = `${Math.min(e.target.scrollHeight, 260)}px`; }}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void submit(); } }}/>
+          <div className="composer-row">
+            <select className="chip" aria-label="Answer mode" value={taskMode} onChange={e => chooseMode(e.target.value as TaskMode)}>{TASKS.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
+            <button type="button" className="chip" aria-expanded={options} onClick={() => setOptions(!options)}>Options</button>
+            <span className="composer-summary">{jurisdiction} · law as of {asOfDate} · about {targetWords} words</span>
+            <button className="send-button" type="submit" disabled={!prompt.trim() || Boolean(jobId) || connecting} aria-label="Send question"><Icons.send size={18}/></button>
+          </div>
+          {options && <div className="composer-options">
+            <label>Words<input aria-label="Words" type="number" min={100} max={10000} value={targetWords} onChange={e => setTargetWords(Number(e.target.value))}/></label>
+            <label>Law as of<input aria-label="Law as of" type="text" inputMode="numeric" placeholder="YYYY-MM-DD" maxLength={10} value={asOfDate} onChange={e => setAsOfDate(e.target.value)}/></label>
+            <label>Jurisdiction<input aria-label="Jurisdiction" value={jurisdiction} onChange={e => setJurisdiction(e.target.value)} placeholder="e.g. England"/></label>
+            <label>Sources<select aria-label="Sources" value={onlineMode} onChange={e => setOnlineMode(e.target.value as OnlineMode)}><option value="local_only">Local sources only</option><option value="auto">Local and official online sources</option></select></label>
+            <label className="remote-consent"><input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}/>Allow online research on legislation.gov.uk and Find Case Law</label>
+          </div>}
+        </div>
+        <p className="composer-foot">Answers can be wrong. Check the cited sources before relying on them.</p>
       </form>
     </main>
-    {evidence && <EvidenceDrawer selection={evidence} onClose={()=>setEvidence(null)}/>}
+    {evidence && <EvidenceDrawer selection={evidence} onClose={() => setEvidence(null)}/>}
   </div>;
 }

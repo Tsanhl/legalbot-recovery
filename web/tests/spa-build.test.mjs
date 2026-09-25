@@ -21,8 +21,8 @@ test("one chat bundle excludes owner dashboards and privileged controls", async 
   const [html, bundle, entry] = await Promise.all([read("dist/index.html"), builtJavaScript(), read("src/main.tsx")]);
   assert.match(html, /assets\/[^"']+\.js/);
   assert.match(entry, /<LegalBotApp \/>/);
-  assert.match(bundle, /Legal research you can inspect/);
-  assert.match(bundle, /Full OSCOLA by default/);
+  assert.match(bundle, /What would you like to ask\?/);
+  assert.match(bundle, /Check the cited sources before relying on them/);
   assert.doesNotMatch(bundle, /Clean-room system|Local owner console|Live evaluation observability|Owner access key|authority hash/);
 });
 
