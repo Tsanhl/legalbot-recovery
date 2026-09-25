@@ -197,3 +197,34 @@ backup-pruning rule says to keep both until a newer restore drill exists.
   - About 600 untitled PDFs and Word files, and the 672 scholarship sources, need
     identification (Qwen titling) or a Crossref check before they can be
     verified.
+
+## 9. Owner decisions, 25 September (night)
+
+- **Only four source types may be cited:**
+  - legislation;
+  - case law;
+  - journal articles;
+  - books.
+
+  `scripts/build_unified_exclusions.py` (schema v2) classifies every indexed
+  source:
+  - Teaching material (seminars, lectures, tutorials, handouts, slides, module
+    guides, exam and revision material) is excluded.
+  - The owner's own work is excluded.
+  - Other types (official guidance, reports, web pages) are excluded.
+  - Unidentified sources are held.
+
+  The retriever skips excluded and held rows at query time. Held rows are
+  released after Qwen titling, when the script is re-run. Teaching knowledge
+  still reaches answers only through the law-only knowledge lane, and only as
+  search hints.
+- **The user's own uploaded documents can be cited.** In the chat, a paperclip
+  button attaches PDF, Word, text, Markdown or HTML files.
+  - In research mode, the most relevant passages (up to 12 passages, 12,000
+    characters) are both given to Qwen as context and offered as citable
+    evidence, labelled "Uploaded document N (supplied by you) [unverified
+    source]".
+  - The original filename never enters the prompt or the answer.
+  - An uploaded file is never treated as primary authority. Unclassified uploads
+    count as secondary material, and marking guides stay context-only.
+  - Outside research mode the previous context-only behaviour is unchanged.

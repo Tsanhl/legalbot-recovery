@@ -235,3 +235,12 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Attached documents */
+.attach-button { width: 32px; height: 32px; color: var(--text-soft); }
+.attach-button:disabled { opacity: .5; cursor: progress; }
+.attachments { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 8px 12px 0; }
+.attachment { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 6px 4px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--hover); font-size: 13px; color: var(--text-soft); }
+.attachment span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.attachment button { display: inline-flex; padding: 2px; border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer; }
+.attachment button:hover { background: var(--line); }

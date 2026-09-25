@@ -42,11 +42,12 @@ from ..ingestion.models import (
 )
 from ..ingestion.parsers import ParserRegistry
 from ..privacy import prompt_injection_hits, safe_source_name, scrub_pii
-from ..types import IssueSpottingNote, MaterialLane, UploadContextSpan
+from ..quality.evidence import RESEARCH_MODE_ROUTE
+from ..types import EvidenceSpan, IssueSpottingNote, MaterialLane, UploadContextSpan
 from .upload_vault import migrate_plaintext_upload, read_upload
 
-MAX_UPLOAD_CONTEXT_SPANS = 8
-MAX_UPLOAD_CONTEXT_CHARS = 6_000
+MAX_UPLOAD_CONTEXT_SPANS = 12
+MAX_UPLOAD_CONTEXT_CHARS = 12_000
 MAX_CONTEXT_SPAN_CHARS = 1_500
 _TOKEN_RE = re.compile(r"[a-z0-9]{2,}", re.IGNORECASE)
 _SAFE_DISPLAY_RE = re.compile(r"^source-[0-9a-f]{12}\.[a-z0-9]{1,12}$")
@@ -526,6 +527,7 @@ class QuestionUploadProcessor:
                     locator=locator,
                     subject=subject,
                     jurisdiction=jurisdiction,
+                    source_label=f"Uploaded document {ordinal}",
                 )
                 contexts.append(context)
                 notes.append(
@@ -548,7 +550,9 @@ class QuestionUploadProcessor:
                 MaterialLane.PRIMARY_AUTHORITY,
                 MaterialLane.OFFICIAL_SECONDARY,
                 MaterialLane.SCHOLARSHIP,
-            } and not self._has_reviewed_identity(upload.content_sha256):
+            } and not self.settings.research_mode and not self._has_reviewed_identity(
+                upload.content_sha256
+            ):
                 reasons.append(
                     f"{label} appears potentially citable but remains context-only until its "
                     "identity, currentness, rights and citation metadata are human-reviewed and "
@@ -756,3 +760,64 @@ def _ingestion_lane(value: MaterialLane) -> IngestionLane:
         MaterialLane.PRIVATE_TEACHING: IngestionLane.LECTURE_NOTE,
         MaterialLane.ASSESSMENT_GUIDANCE: IngestionLane.ASSESSMENT_FEEDBACK,
     }[value]
+
+
+UPLOAD_INDEX_BUILD_ID = "answer-scoped-upload"
+_UPLOAD_EVIDENCE_LANES = frozenset({
+    MaterialLane.PRIMARY_AUTHORITY,
+    MaterialLane.OFFICIAL_SECONDARY,
+    MaterialLane.SCHOLARSHIP,
+    MaterialLane.PRIVATE_TEACHING,
+})
+_UPLOAD_POLICY_SHA256 = hashlib.sha256(b"legalbot-research-upload-evidence-v1").hexdigest()
+
+
+def upload_research_evidence(
+    contexts: Sequence[UploadContextSpan], *, jurisdiction: str
+) -> tuple[EvidenceSpan, ...]:
+    """Research mode only: let the model cite the user's own uploaded documents.
+
+    Each span is labelled as the user's uploaded document and carries no
+    identity or currentness verification, so it takes the same labelled
+    "[unverified source]" path as other research-mode sources.  Marking
+    guides and similar assessment material stay context-only.
+    """
+
+    spans: list[EvidenceSpan] = []
+    for context in contexts:
+        if context.lane not in _UPLOAD_EVIDENCE_LANES:
+            continue
+        label = context.source_label or "Uploaded document"
+        digest = hashlib.sha256(context.id.encode("utf-8")).hexdigest()
+        spans.append(
+            EvidenceSpan(
+                id=f"U{digest[:15]}",
+                source_version_id=f"upload-{digest[:24]}",
+                chunk_id=context.id,
+                text=context.text,
+                locator=context.locator,
+                # Unclassified uploads are treated as secondary material, never as authority.
+                lane=(
+                    MaterialLane.SCHOLARSHIP
+                    if context.lane == MaterialLane.PRIVATE_TEACHING
+                    else context.lane
+                ),
+                jurisdiction=jurisdiction,
+                subject=context.subject or "",
+                citation_data={
+                    "source_type": "unverified_source",
+                    "title": f"{label} (supplied by you)",
+                },
+                content_sha256=hashlib.sha256(context.text.encode("utf-8")).hexdigest(),
+                index_build_id=UPLOAD_INDEX_BUILD_ID,
+                retrieval_relevance_score=1.0,
+                retrieval_route=RESEARCH_MODE_ROUTE,
+                retrieval_threshold=0.0,
+                retrieval_threshold_qualified=True,
+                retrieval_threshold_policy_sha256=_UPLOAD_POLICY_SHA256,
+                retrieval_qualification_reason="research_user_upload",
+                identity_verified=False,
+                currentness_verified=False,
+            )
+        )
+    return tuple(spans)

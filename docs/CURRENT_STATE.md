@@ -38,6 +38,14 @@ Also done (evening):
 
 See section 8 of the recovery plan.
 
+Also done (night):
+- Only legislation, case law, journal articles and books may be cited. Teaching
+  material and the owner's own work never are; unidentified sources are held.
+- Documents the user attaches in the chat can be read and cited by Qwen, labelled
+  as the user's uploaded document.
+
+See section 9 of the recovery plan.
+
 Not yet done:
 - finish the embedding, apply exclusions, and build the search indexes and the
   knowledge lane;

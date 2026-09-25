@@ -328,3 +328,57 @@ def test_verifier_normalises_crown_case_names() -> None:
         "The Pension Protection Fund (Compensation) Regulations 2005",
         "http://www.legislation.gov.uk/uksi/2005/670",
     )["instrument_number"] == "SI 2005/670"
+
+
+def test_uploaded_documents_become_labelled_citable_sources() -> None:
+    from app.jurisdictions import admissible
+    from app.orchestration.uploads import upload_research_evidence
+    from app.types import UploadContextSpan
+
+    def context(lane: MaterialLane, ordinal: int) -> UploadContextSpan:
+        return UploadContextSpan(
+            id=f"upload-context-{ordinal}", text="The trustee must act unanimously.",
+            lane=lane, locator="p 4", subject="trusts", jurisdiction="England",
+            source_label=f"Uploaded document {ordinal}",
+        )
+
+    spans = upload_research_evidence(
+        (
+            context(MaterialLane.SCHOLARSHIP, 1),
+            context(MaterialLane.PRIVATE_TEACHING, 2),
+            context(MaterialLane.ASSESSMENT_GUIDANCE, 3),
+        ),
+        jurisdiction="England",
+    )
+    assert [span.citation_data["title"] for span in spans] == [
+        "Uploaded document 1 (supplied by you)",
+        "Uploaded document 2 (supplied by you)",
+    ]
+    assert spans[1].lane == MaterialLane.SCHOLARSHIP  # never promoted to authority
+    for span in spans:
+        assert research_mode_unverified(span)
+        assert evidence_span_eligible_for_drafting(span, as_of_date=date(2026, 9, 25))
+        assert admissible("England", span.jurisdiction, span.citation_data, span.retrieval_route)
+        assert render_oscola(span.citation_data).endswith("[unverified source]")
+        assert "source-" not in span.citation_data["title"]
+
+
+def test_only_legislation_cases_journals_and_books_are_citable() -> None:
+    import importlib.util
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[2] / "scripts/build_unified_exclusions.py"
+    spec = importlib.util.spec_from_file_location("build_unified_exclusions", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    source_type = module.source_type
+    assert source_type("Seminar 4: easements", "scholarship", "article", "") == "teaching"
+    assert source_type("Week 3 handout", "primary_authority", "", "") == "teaching"
+    assert source_type("My essay", "scholarship", "student_work", "") == "own_work"
+    assert source_type("", "primary_authority", "", "judgment") == "case"
+    assert source_type("Land Registration Act 2002", "primary_authority", "", "") == "legislation"
+    assert source_type("Examination prior to purchase", "scholarship", "article", "") == "journal"
+    assert source_type("Gray & Gray, Elements of Land Law ch 5", "scholarship", "textbook_chapter", "") == "book"
+    assert source_type("HMRC guidance note", "official_secondary", "", "") == "other"
+    assert source_type("source-0123456789ab.pdf", "primary_authority", "", "") == "unknown"
+    assert module.CITABLE_TYPES == {"legislation", "case", "journal", "book"}

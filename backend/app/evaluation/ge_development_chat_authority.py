@@ -297,9 +297,12 @@ def _case_id_from_persisted_key(persisted: str) -> str:
 
 
 def _validate_scope(value: dict[str, Any], payload: QuestionRequest, consent: bool) -> None:
-    if payload.as_of_date is None or payload.upload_ids:
+    if payload.as_of_date is None:
         raise RuntimeError("development_chat_request_scope_invalid")
     if value["schema"] == GE_DEVELOPMENT_CHAT_SCHEMA:
+        # Only session chats may carry the user's own attached documents.
+        if payload.upload_ids:
+            raise RuntimeError("development_chat_request_scope_invalid")
         if payload.online_mode != OnlineMode.LOCAL_ONLY or payload.conversation_id or payload.connection_id:
             raise RuntimeError("development_chat_request_scope_invalid")
     elif payload.connection_id is None or payload.conversation_id is None:

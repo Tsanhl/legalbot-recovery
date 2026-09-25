@@ -364,6 +364,8 @@ class UploadContextSpan(Record):
     subject: str | None = None
     jurisdiction: str
     context_only: bool = True
+    # Neutral label ("Uploaded document 1"); never the original filename.
+    source_label: str | None = None
 
 
 class IssuePlan(Record):

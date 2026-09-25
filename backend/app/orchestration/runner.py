@@ -93,7 +93,7 @@ from .routing import ROUTER_VERSION, SectionTask, build_section_tasks
 from .subject_routing_audit import build_subject_routing_audit
 from .targeted_repair import failed_section_scope, verify_targeted_structured_repair
 from .teaching_verify import render_teaching_notes_view, run_teaching_verify_cite_flow
-from .uploads import QuestionUploadProcessor, UploadPreparation
+from .uploads import QuestionUploadProcessor, UploadPreparation, upload_research_evidence
 
 MAX_MERGED_EVIDENCE = 60
 _TARGETED_DRAFT_CORRECTION_CODES = frozenset({
@@ -1155,6 +1155,7 @@ class AnswerRunner:
             job_id=job_id, request=request, question=question, subject=subject,
             as_of=as_of, evidence=evidence, section_key="all-issues",
         )
+        evidence = self._with_upload_evidence(evidence, request, upload_preparation)
 
         if not evidence:
             retrieval_failure_code = getattr(self.retriever, "last_retrieval_code", None)
@@ -1919,6 +1920,20 @@ class AnswerRunner:
         )
         return tuple(batches)
 
+    def _with_upload_evidence(
+        self,
+        evidence: Sequence[EvidenceSpan],
+        request: QuestionRequest,
+        preparation: UploadPreparation,
+    ) -> tuple[EvidenceSpan, ...]:
+        """Research mode: add the user's uploaded documents as labelled, citable sources."""
+
+        if not self.settings.research_mode or not preparation.contexts:
+            return tuple(evidence)
+        uploaded = upload_research_evidence(preparation.contexts, jurisdiction=request.jurisdiction)
+        existing = {span.id for span in evidence}
+        return (*(span for span in uploaded if span.id not in existing), *evidence)
+
     async def _chat_online_evidence(
         self, *, job_id, request, question, subject, as_of, evidence, section_key,
     ):
@@ -2041,6 +2056,9 @@ class AnswerRunner:
                 )
                 augmented.append(enriched)
             found_batches = tuple(augmented)
+        found_batches = tuple(
+            self._with_upload_evidence(found, request, upload_preparation) for found in found_batches
+        )
         plan_ms = round((time.perf_counter() - retrieval_started) * 1000)
         retrieval_results = tuple(
             (

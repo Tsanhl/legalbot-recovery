@@ -256,7 +256,7 @@ class UnifiedLocalRetriever:
             for channel in channels:
                 for rank, record in enumerate(channel):
                     action = self._decisions.get(str(record["source_version_id"]), "")
-                    if action.startswith("exclude"):
+                    if action.startswith(("exclude", "hold")):
                         continue
                     if action == "relane_scholarship":
                         record = {**record, "lane": "scholarship"}

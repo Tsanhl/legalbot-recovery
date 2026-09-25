@@ -104,6 +104,9 @@ export function LegalBotApp() {
   const [sidebar, setSidebar] = useState(false);
   const [options, setOptions] = useState(false);
   const [evidence, setEvidence] = useState<EvidenceSelection | null>(null);
+  const [attachments, setAttachments] = useState<{id: string; name: string}[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
   const idempotency = useRef("");
   const end = useRef<HTMLDivElement>(null);
   const conversationRef = useRef(conversation);
@@ -214,11 +217,24 @@ export function LegalBotApp() {
     }
     if (!idempotency.current) idempotency.current = crypto.randomUUID();
     try {
-      const accepted = await chatApi.ask({question:prompt.trim(), task_type:taskMode, jurisdiction, as_of_date:asOfDate, word_target:targetWords, online_mode:onlineMode, upload_ids:[], conversation_id:conversation, connection_id:connectionId}, idempotency.current, consent);
+      const accepted = await chatApi.ask({question:prompt.trim(), task_type:taskMode, jurisdiction, as_of_date:asOfDate, word_target:targetWords, online_mode:onlineMode, upload_ids:attachments.map(item => item.id), conversation_id:conversation, connection_id:connectionId}, idempotency.current, consent);
       const url = new URL(location.href); url.searchParams.set('conversation', conversation); window.history.replaceState({},'',url);
-      setPrompt(''); setJob(null); setJobId(accepted.job_id); await refresh(conversation);
+      setPrompt(''); setAttachments([]); setJob(null); setJobId(accepted.job_id); await refresh(conversation);
     } catch(e) { setError(formatApiError(e)); }
   };
+  const attach = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setError(''); setUploading(true);
+    try {
+      for (const file of Array.from(files)) {
+        const stored = await api.upload(file);
+        setAttachments(current => [...current, {id: stored.upload_id, name: file.name}]);
+      }
+      idempotency.current = '';
+    } catch(e) { setError(formatApiError(e)); }
+    finally { setUploading(false); if (fileInput.current) fileInput.current.value = ''; }
+  };
+  const detach = (id: string) => { setAttachments(current => current.filter(item => item.id !== id)); idempotency.current = ''; };
   const newChat = () => {
     const id = `conversation-${crypto.randomUUID()}`; conversationRef.current = id; setConversation(id); setMessages([]); setDraftPreviews({}); setJobId(''); setJob(null); setError(''); idempotency.current='';
     window.history.replaceState({},'', '/'); setSidebar(false);
@@ -286,7 +302,13 @@ export function LegalBotApp() {
           <textarea aria-label="Your legal question" placeholder="Ask a legal question…" value={prompt} rows={1} maxLength={30000}
             onChange={e => { setPrompt(e.target.value); idempotency.current = ''; e.target.style.height = 'auto'; e.target.style.height = `${Math.min(e.target.scrollHeight, 260)}px`; }}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void submit(); } }}/>
+          {attachments.length > 0 && <ul className="attachments" aria-label="Attached documents">
+            {attachments.map(item => <li key={item.id} className="attachment"><Icons.file size={14}/><span>{item.name}</span>
+              <button type="button" aria-label={`Remove ${item.name}`} onClick={() => detach(item.id)}><Icons.close size={12}/></button></li>)}
+          </ul>}
           <div className="composer-row">
+            <input ref={fileInput} type="file" hidden multiple accept=".pdf,.docx,.doc,.odt,.txt,.md,.html,.htm" onChange={e => void attach(e.target.files)}/>
+            <button type="button" className="icon-button attach-button" aria-label="Attach a document" title="Attach a document (PDF, Word)" disabled={uploading} onClick={() => fileInput.current?.click()}><Icons.paperclip size={18}/></button>
             <select className="chip" aria-label="Answer mode" value={taskMode} onChange={e => chooseMode(e.target.value as TaskMode)}>{TASKS.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
             <button type="button" className="chip" aria-expanded={options} onClick={() => setOptions(!options)}>Options</button>
             <span className="composer-summary">{jurisdiction} · law as of {asOfDate} · about {targetWords} words</span>
